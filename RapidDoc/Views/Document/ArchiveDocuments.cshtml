@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = UIElementRes.UIElement.Dashboard;
+}
+
+<h3>
+    <span class="fa fa-archive"></span> @UIElementRes.UIElement.DocumentArchive
+
+    <small>
+        &nbsp
+        @Html.ActionLink(UIElementRes.UIElement.MyProcesses, "Index", "Home")
+    </small>
+</h3>
+
+<div>
+    @Html.Action("GetArchiveDocument", "Document")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/gridmvc")
+}
+@section jslaunch {
+    grid_init("@Url.Action("GetArchiveDocumentList", "Document")")
+
+    var detailsUrl = '@Url.Action("ShowDocument", "Document")';
+    pageGrids.ordersGrid.onRowSelect(function (e) {
+    window.location.href = detailsUrl  + '/' + e.row.Id;
+    });
+}

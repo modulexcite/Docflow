@@ -1,0 +1,50 @@
+﻿@model RapidDoc.Models.ViewModels.NumberSeriesView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Edit;
+}
+
+<h2>@UIElementRes.UIElement.Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.NumberSeriesName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.NumberSeriesName, new { @class = "form-control", @size = 20, @maxlength = 20, placeholder = "RequestsNum", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.NumberSeriesName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Prefix)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Prefix, new { @class = "form-control", @size = 5, @maxlength = 5, placeholder = "RQN" })
+            @Html.ValidationMessageFor(model => model.Prefix)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Size)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Size, new { @class = "form-control bfh-number" })
+            @Html.ValidationMessageFor(model => model.Size)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LastNum)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.LastNum, new { @class = "form-control bfh-number" })
+            @Html.ValidationMessageFor(model => model.LastNum)
+        </div>
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}

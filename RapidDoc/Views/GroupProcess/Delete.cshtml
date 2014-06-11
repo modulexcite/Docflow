@@ -1,0 +1,27 @@
+﻿@model RapidDoc.Models.ViewModels.GroupProcessView
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Delete;
+}
+
+<h2>@UIElementRes.UIElement.Delete</h2>
+
+<h3>@UIElementRes.UIElement.СonfirmDeletion</h3>
+<fieldset>
+    <legend></legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.GroupProcessName)
+    </div>
+    <div class="display-field text-danger">
+        @Html.DisplayFor(model => model.GroupProcessName)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <br>
+    <p>
+        <input class="btn btn-primary btn-sm" type="submit" value=@UIElementRes.UIElement.Delete />
+        @Html.ActionLink(UIElementRes.UIElement.Back, "Index")
+    </p>
+}

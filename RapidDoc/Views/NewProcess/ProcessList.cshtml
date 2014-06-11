@@ -1,0 +1,24 @@
+﻿@model IEnumerable<RapidDoc.Models.ViewModels.ProcessView>
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.CreateProcess;
+}
+<h1>@UIElementRes.UIElement.CreateProcess</h1>
+<hr />
+<ol class="breadcrumb">
+    <li><a href=@Url.Action("Index", "Home")>@UIElementRes.UIElement.Dashboard</a></li>
+    @foreach (RapidDoc.Models.DomainModels.GroupProcessTable item in ViewBag.BreadCrumbs)
+    {
+        <li><a href=@Url.Action("ProcessList", "NewProcess", new { groupProcessId = item.Id })>@item.GroupProcessName</a></li>
+    }
+</ol>
+
+@foreach (var item in Model)
+{
+    <div class="col-xs-6 col-md-4">
+        <a href=@Url.Action("Create", "Document", new { id=item.Id }) class="thumbnail tile">
+            <h4>@item.ProcessName</h4>
+            <p>@item.Description</p>
+        </a>
+    </div>
+}

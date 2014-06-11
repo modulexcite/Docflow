@@ -1,0 +1,25 @@
+﻿@model RapidDoc.Models.ViewModels.ProfileView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Edit;
+}
+
+<h2>@UIElementRes.UIElement.Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.ProfileName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.ProfileName, new { @class = "form-control", @size = 20, @maxlength = 20, placeholder = "CIO", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.ProfileName)
+        </div>
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}

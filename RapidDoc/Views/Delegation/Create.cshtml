@@ -1,0 +1,83 @@
+﻿@model RapidDoc.Models.ViewModels.DelegationView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.CreateDelegation;
+}
+
+<h2>@UIElementRes.UIElement.CreateDelegation</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.EmplTableFromId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("EmplTableFromId", (IEnumerable<SelectListItem>)ViewBag.EmplFromList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.EmplTableFromId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.EmplTableToId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("EmplTableToId", (IEnumerable<SelectListItem>)ViewBag.EmplToList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.EmplTableToId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.DateFrom)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.DateFrom, "{0:dd.MM.yyyy}", new { @class = "datepicker" })
+            @Html.ValidationMessageFor(model => model.DateFrom)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.DateTo)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.DateTo, "{0:dd.MM.yyyy}", new { @class = "datepicker" })
+            @Html.ValidationMessageFor(model => model.DateTo)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.GroupProcessTableId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("GroupProcessTableId", (IEnumerable<SelectListItem>)ViewBag.GroupProcessList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.GroupProcessTableId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.ProcessTableId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("ProcessTableId", (IEnumerable<SelectListItem>)ViewBag.ProcessList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.ProcessTableId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.AliasCompanyName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("CompanyTableId", (IEnumerable<SelectListItem>)ViewBag.CompanyList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.CompanyTableId)
+        </div>
+        
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    selectpicker_init();
+    datepicker_init("@UIElementRes.UIElement.LangName");
+}

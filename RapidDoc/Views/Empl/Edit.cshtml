@@ -1,0 +1,106 @@
+﻿@model RapidDoc.Models.ViewModels.EmplView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Edit;
+}
+
+<h2>@UIElementRes.UIElement.Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.FirstName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", @size = 70, @maxlength = 70, placeholder = "Ivan", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.SecondName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.SecondName, new { @class = "form-control", @size = 70, @maxlength = 70, placeholder = "Ivanov", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.SecondName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MiddleName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.MiddleName, new { @class = "form-control", @size = 70, @maxlength = 70, placeholder = "Ivanovich", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.MiddleName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TitleName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("TitleTableId", (IEnumerable<SelectListItem>)ViewBag.TitleList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.TitleTableId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FullNameParent)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("ManageId", (IEnumerable<SelectListItem>)ViewBag.ManageList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.ManageId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ProfileName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("ProfileTableId", (IEnumerable<SelectListItem>)ViewBag.ProfileList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.ProfileTableId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DepartmentName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("DepartmentTableId", (IEnumerable<SelectListItem>)ViewBag.DepartmentList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.DepartmentTableId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.WorkScheduleName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("WorkScheduleTableId", (IEnumerable<SelectListItem>)ViewBag.WorkScheduleList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.WorkScheduleTableId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.UserName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("ApplicationUserId", (IEnumerable<SelectListItem>)ViewBag.UserList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.ApplicationUserId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AliasCompanyName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("CompanyTableId", (IEnumerable<SelectListItem>)ViewBag.CompanyList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.CompanyTableId)
+        </div>
+
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    selectpicker_init();
+}

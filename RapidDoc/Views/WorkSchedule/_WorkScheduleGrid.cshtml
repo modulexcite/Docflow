@@ -1,0 +1,50 @@
+﻿@model RapidDoc.Models.Grids.WorkScheduleGrid
+@using GridMvc.Html;
+
+@helper EditField(RapidDoc.Models.ViewModels.WorkScheduleView item)
+{
+    <a href=@Url.Action("Edit", new { id=item.Id })><span class="fa fa-pencil fa-lg"></span></a>
+}
+
+@helper DetailField(RapidDoc.Models.ViewModels.WorkScheduleView item)
+{
+    <a href=@Url.Action("Detail", new { id=item.Id })><span class="fa fa-info-circle fa-lg"></span></a>
+}
+
+@helper DeleteField(RapidDoc.Models.ViewModels.WorkScheduleView item)
+{
+    <a href=@Url.Action("Delete", new { id=item.Id })><span class="fa fa-trash-o fa-lg"></span></a>
+}
+
+@helper Calendar(RapidDoc.Models.ViewModels.WorkScheduleView item)
+{
+    <a href=@Url.Action("Calendar", new { id=item.Id })><span class="fa fa-calendar fa-lg"></span></a>
+}
+
+@Html.Grid(Model).Named("ordersGrid").Columns(columns =>
+{
+    columns.Add(o => o.Id).Css("hidden");
+    columns.Add(o => o.WorkScheduleName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.WorkScheduleView)o.Columns).WorkScheduleName).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.WorkStartTime).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.WorkScheduleView)o.Columns).WorkStartTime).ToHtmlString()).Sortable(true);
+    columns.Add(o => o.WorkEndTime).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.WorkScheduleView)o.Columns).WorkEndTime).ToHtmlString()).Sortable(true);
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => Calendar(o));
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => EditField(o));
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => DetailField(o));
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => DeleteField(o));
+}).Selectable(true).SetLanguage(UIElementRes.UIElement.LangName).Sortable().WithPaging(30)

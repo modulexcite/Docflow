@@ -1,0 +1,56 @@
+﻿@model RapidDoc.Models.ViewModels.USR_REQ_IT_CTS_ReplacementWorkPlace_View
+@using RapidDoc.Extensions;
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.WorkPlaceMovementType)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => model.WorkPlaceMovementType, new { @class = "selectpicker" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.FromPlace)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.FromPlace, new { @class = "form-control", @rows = "3", placeholder = "Место установки", @autofocus = "required" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.ToPlace)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.ToPlace, new { @class = "form-control", @rows = "3", placeholder = "Место установки", @autofocus = "required" })
+</div>
+<hr />
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Users)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.Users, new { @class = "form-control", @data_role = "tagsinputEmpl", @size = 256, @maxlength = 256, placeholder = "Берик Серикович" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Phone)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.Phone, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Номер телефона пользователя" })
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#WorkPlaceMovementType').change(function () {
+
+            if ($('#WorkPlaceMovementType').val() == 1) {
+                if ($('#ToPlace').val() == "") {
+                    $('#ToPlace').val("-");
+                }
+
+                $('#ToPlace').prop('disabled', true);
+            }
+            else {
+                if ($('#ToPlace').val() == "-") {
+                    $('#ToPlace').val("");
+                }
+
+                $('#ToPlace').prop('disabled', false);
+            }
+        });
+    });
+</script>

@@ -1,0 +1,28 @@
+﻿@model RapidDoc.Models.ViewModels.EmplView
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Delete;
+}
+
+<h2>@UIElementRes.UIElement.Delete</h2>
+
+<h3>@UIElementRes.UIElement.СonfirmDeletion</h3>
+
+<fieldset>
+    <legend></legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.FullName)
+    </div>
+    <div class="display-field text-danger">
+        @Html.DisplayFor(model => model.FullName)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <br>
+    <p>
+        <input class="btn btn-primary btn-sm" type="submit" value=@UIElementRes.UIElement.Delete />
+        @Html.ActionLink(UIElementRes.UIElement.Back, "Index")
+    </p>
+}

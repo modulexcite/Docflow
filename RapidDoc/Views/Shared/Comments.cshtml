@@ -1,0 +1,20 @@
+﻿@model IEnumerable<RapidDoc.Models.ViewModels.CommentView>
+@using RapidDoc.Extensions;
+
+<div id="comments">
+@if (Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        <div class="bs-callout bs-callout-info">
+            <h4>@item.EmplName <small>@item.TitleName</small></h4>
+            <p>@item.Comment</p>
+            <h5><small class="pull-right">@item.CreatedDate</small></h5>
+        </div>
+    }
+}
+else
+{
+    <p class="text-center"><small class="text-center"><em>@UIElementRes.UIElement.NoItems</em></small></p>
+}
+</div>

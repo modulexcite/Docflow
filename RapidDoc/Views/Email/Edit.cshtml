@@ -1,0 +1,78 @@
+﻿@model RapidDoc.Models.ViewModels.EmailParameterView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.EmailParameter;
+}
+
+<h2>@UIElementRes.UIElement.EmailParameter</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.SmtpServer)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.SmtpServer, new { @class = "form-control", @size = 20, @maxlength = 256, placeholder = "smtp.contoso.com", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.SmtpServer)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SmtpPort)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.SmtpPort, new { @class = "form-control bfh-number", placeholder = "465" })
+            @Html.ValidationMessageFor(model => model.SmtpPort)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.Email)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @size = 20, @maxlength = 254, placeholder = "user@contoso.com", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.UserName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @size = 20, @maxlength = 256, placeholder = "user", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.Password)
+        </div>
+        <div class="editor-field">
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control", @size = 20, @maxlength = 256 })
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EnableSsl)
+        </div>
+        <div class="editor-field">
+            @Html.CheckBoxFor(model => model.EnableSsl)
+            @Html.ValidationMessageFor(model => model.EnableSsl)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Timeout)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Timeout, new { @class = "form-control bfh-number", placeholder = "5000" })
+            @Html.ValidationMessageFor(model => model.Timeout)
+        </div>
+
+        <br>
+        <p>
+            <input class="btn btn-primary btn-sm" type="submit" value=@UIElementRes.UIElement.Save />
+            @Html.ActionLink(UIElementRes.UIElement.Back, "Index", "Home")
+        </p>
+    </fieldset>
+}

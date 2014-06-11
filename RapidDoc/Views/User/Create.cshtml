@@ -1,0 +1,80 @@
+﻿@model RapidDoc.Models.ViewModels.UserViewModel
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.CreateUser;
+}
+
+<h2>@UIElementRes.UIElement.CreateUser</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.UserName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "IvanIvanov", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.Email)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @size = 254, @maxlength = 254, placeholder = "Ivan.Ivanov@contoso.com", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.AliasCompanyName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("CompanyTableId", (IEnumerable<SelectListItem>)ViewBag.CompanyList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.CompanyTableId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.TimeZoneName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("TimeZoneId", (IEnumerable<SelectListItem>)ViewBag.TimeZoneList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.TimeZoneId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.Lang)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Lang, new { @class = "form-control", @size = 5, @maxlength = 5, placeholder = "en-US" })
+            @Html.ValidationMessageFor(model => model.Lang)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.isDomainUser)
+        </div>
+        <div class="editor-field">
+            @Html.CheckBoxFor(model => model.isDomainUser)
+            @Html.ValidationMessageFor(model => model.isDomainUser)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.isEnable)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.isEnable)
+            @Html.ValidationMessageFor(model => model.isEnable)
+        </div>
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    selectpicker_init();
+}

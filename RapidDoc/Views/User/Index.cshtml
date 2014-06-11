@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = UIElementRes.UIElement.Users;
+}
+
+<h2>@UIElementRes.UIElement.Users</h2>
+
+@{Html.RenderPartial("_NewEntityBtn");}
+
+<div>
+    @Html.Action("Grid")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/gridmvc")
+}
+@section jslaunch {
+    grid_init("@Url.Action("GetUserList", "User")")
+
+    var detailsUrl = '@Url.Action("Edit", "User")';
+    pageGrids.ordersGrid.onRowSelect(function (e) {
+    window.location.href = detailsUrl  + '/' + e.row.Id;
+    });
+}

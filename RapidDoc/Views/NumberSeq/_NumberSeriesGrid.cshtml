@@ -1,0 +1,41 @@
+﻿@model RapidDoc.Models.Grids.NumberSeriesGrid
+@using GridMvc.Html;
+
+@helper EditField(RapidDoc.Models.ViewModels.NumberSeriesView item)
+{
+    <a href=@Url.Action("Edit", new { id=item.Id })><span class="fa fa-pencil fa-lg"></span></a>
+}
+
+@helper DetailField(RapidDoc.Models.ViewModels.NumberSeriesView item)
+{
+    <a href=@Url.Action("Detail", new { id=item.Id })><span class="fa fa-info-circle fa-lg"></span></a>
+}
+
+@helper DeleteField(RapidDoc.Models.ViewModels.NumberSeriesView item)
+{
+    <a href=@Url.Action("Delete", new { id=item.Id })><span class="fa fa-trash-o fa-lg"></span></a>
+}
+
+@Html.Grid(Model).Named("ordersGrid").Columns(columns =>
+{
+    columns.Add(o => o.Id).Css("hidden");
+    columns.Add(o => o.NumberSeriesName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.NumberSeriesView)o.Columns).NumberSeriesName).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.Prefix).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.NumberSeriesView)o.Columns).Prefix).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.Size).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.NumberSeriesView)o.Columns).Size).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.LastNum).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.NumberSeriesView)o.Columns).LastNum).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => EditField(o));
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => DetailField(o));
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => DeleteField(o));
+}).Selectable(true).SetLanguage(UIElementRes.UIElement.LangName).Sortable().WithPaging(30)

@@ -1,0 +1,142 @@
+﻿@model RapidDoc.Models.ViewModels.DocumentComposite
+@{
+    ViewBag.Title = UIElementRes.UIElement.New + " - " + Model.ProcessView.ProcessName;
+}
+
+<h2><span class="fa fa-file-o"></span> @ViewBag.Title <small class="pull-right">@Html.ActionLink(UIElementRes.UIElement.Cancel, "Index", "Home")</small></h2>
+
+@using (Html.BeginForm("PostDocument", "Document", new { processId = Model.ProcessView.Id, type = 1, fileId = Model.fileId, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false)
+
+    <fieldset>
+        <legend></legend>
+        @Html.HiddenFor(model => model.ProcessView.Id)
+        @Html.HiddenFor(model => model.fileId, new { @id = "documentFileId" })
+        @Html.Action("GetDocumentData", new { modelDoc = Model.docData, idProcess = Model.ProcessView.Id, viewType = "Edit" })
+        <br>
+        <h3>@UIElementRes.UIElement.AttachedFiles</h3>
+
+        <div class="row fileupload-buttonbar">
+            <div class="col-lg-7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success btn-xs fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>@UIElementRes.UIElement.AddFiles</span>
+                    <input type="file" name="files" multiple>
+                </span>
+                <button type="button" class="btn btn-danger btn-xs delete">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>@UIElementRes.UIElement.Delete</span>
+                </button>
+                <input type="checkbox" class="toggle">
+                <!-- The global file processing state -->
+                <span class="fileupload-process"></span>
+            </div>
+            <!-- The global progress state -->
+            <div class="col-lg-5 fileupload-progress fade">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+                <!-- The extended global progress state -->
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+        </div>
+
+        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+
+        <br>
+        <p>
+            <input class="btn btn-primary" type="submit" value=@UIElementRes.UIElement.Save />
+            <a href="@Url.Action("Index", "Home")" class="btn btn-default" role="button">@UIElementRes.UIElement.Cancel</a>
+        </p>
+    </fieldset>
+}
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i) { %}
+            <button class="btn btn-warning btn-xs cancel">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>@UIElementRes.UIElement.Cancel</span>
+            </button>
+            {% } %}
+        </td>
+    </tr>
+    {% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}">{%=file.name%}</a>
+                {% } else { %}
+                <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+            <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+            <button class="btn btn-danger btn-xs delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deletewithcredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
+                <i class="glyphicon glyphicon-trash"></i>
+                <span>@UIElementRes.UIElement.Delete</span>
+            </button>
+            <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+            <button class="btn btn-warning btn-xs cancel">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>@UIElementRes.UIElement.Cancel</span>
+            </button>
+            {% } %}
+        </td>
+    </tr>
+    {% } %}
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+    @Scripts.Render("~/bundles/fileupload")
+}
+@section jsinit {
+    var urlFileUpload = "@Url.Action("GetAllFileDocument", "Document")";
+}
+@section jslaunch {
+    selectpicker_init();
+    datepicker_init("@UIElementRes.UIElement.LangName");
+    datetimepicker_init("@UIElementRes.UIElement.LangName");
+    summernote_init("@UIElementRes.UIElement.LangFullName");
+    custom_tagsinputEmpl_init("@Url.Action("JsonEmpl", "Custom")");
+    custom_tagsinputEmpl2_init("@Url.Action("JsonEmpl", "Custom")");
+}

@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = UIElementRes.UIElement.Company;
+}
+@using GridMvc.Html;
+
+<h2>@UIElementRes.UIElement.Company</h2>
+
+@{Html.RenderPartial("_NewEntityBtn");}
+
+<div>
+    @Html.Action("Grid")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/gridmvc")
+}
+@section jslaunch {
+    grid_init("@Url.Action("GetCompanyList", "Company")")
+
+    var detailsUrl = '@Url.Action("Edit", "Company")';
+    pageGrids.ordersGrid.onRowSelect(function (e) {
+        window.location.href = detailsUrl  + '/' + e.row.Id;
+    });
+}

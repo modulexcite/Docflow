@@ -1,0 +1,25 @@
+﻿@model RapidDoc.Models.ViewModels.RoleViewModel
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.CreateRole;
+}
+
+<h2>@UIElementRes.UIElement.CreateRole</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.Name)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Administrator", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}

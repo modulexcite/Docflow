@@ -1,0 +1,37 @@
+﻿@model RapidDoc.Models.ViewModels.CompanyView
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Delete;
+}
+
+<h2>@UIElementRes.UIElement.Delete</h2>
+
+<h3>@UIElementRes.UIElement.СonfirmDeletion</h3>
+<fieldset>
+    <legend></legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.AliasCompanyName)
+    </div>
+    <div class="display-field text-danger">
+        @Html.DisplayFor(model => model.AliasCompanyName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CompanyName)
+    </div>
+    <div class="display-field text-danger">
+        @Html.DisplayFor(model => model.CompanyName)
+    </div>
+
+</fieldset>
+<br>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <br>
+    <p>
+        <input class="btn btn-primary btn-sm" type="submit" value=@UIElementRes.UIElement.Delete />
+        @Html.ActionLink(UIElementRes.UIElement.Back, "Index")
+    </p>
+}

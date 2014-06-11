@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = UIElementRes.UIElement.Processes;
+}
+
+<h2>@UIElementRes.UIElement.Processes</h2>
+
+@{Html.RenderPartial("_NewEntityBtn");}
+
+<div>
+    @Html.Action("Grid")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/gridmvc")
+}
+@section jslaunch {
+    grid_init("@Url.Action("GetProcessList", "Process")")
+
+    var detailsUrl = '@Url.Action("Edit", "Process")';
+    pageGrids.ordersGrid.onRowSelect(function (e) {
+    window.location.href = detailsUrl  + '/' + e.row.Id;
+    });
+}

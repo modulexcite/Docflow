@@ -1,0 +1,18 @@
+﻿@model RapidDoc.Models.Grids.RoleGrid
+@using GridMvc.Html;
+
+@helper EditField(RapidDoc.Models.ViewModels.RoleViewModel item)
+{
+    <a href=@Url.Action("Edit", new { id=item.Id })><span class="fa fa-pencil fa-lg"></span></a>
+}
+
+@Html.Grid(Model).Named("ordersGrid").Columns(columns =>
+{
+    columns.Add(o => o.Id).Css("hidden");
+    columns.Add(o => o.Name).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.RoleViewModel)o.Columns).Name).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => EditField(o));
+}).Selectable(true).SetLanguage(UIElementRes.UIElement.LangName).Sortable().WithPaging(30)

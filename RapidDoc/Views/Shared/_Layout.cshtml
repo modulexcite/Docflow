@@ -1,0 +1,105 @@
+﻿<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en-US"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en-US"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="cleartype" content="on" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="msthemecompatible" content="no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOCFLOW - @ViewBag.Title</title>
+    <meta name="application-name" content="Altyntau WF - @ViewBag.Title" />
+    <meta name="msapplication-tooltip" content="@UIElementRes.UIElement.ProgramDescription" />
+    <meta name="description" content="@UIElementRes.UIElement.ProgramDescription" />
+    <meta name="keywords" content="Enterprise, Workflow, RapidDoc" />
+    <meta name="author" content="Igor Dmitrov & Dmitriy Shkarendin" />
+    <meta name="copyright" content="(c) DOCFLOW">
+    <meta http-equiv="Reply-to" content="igdmitrov@gmail.com">
+
+    <link rel="shortcut icon" href="@Url.Content("~/Content/Custom/image-icon/favicon.ico")" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="@Url.Content("~/Content/Custom/image-icon/apple-touch-icon.png")" />
+    <link rel="apple-touch-icon" sizes="57x57" href="@Url.Content("~/Content/Custom/image-icon/apple-touch-icon-57x57.png")" />
+    <link rel="apple-touch-icon" sizes="72x72" href="@Url.Content("~/Content/Custom/image-icon/apple-touch-icon-72x72.png")" />
+    <link rel="apple-touch-icon" sizes="114x114" href="@Url.Content("~/Content/Custom/image-icon/apple-touch-icon-114x114.png")" />
+    <link rel="apple-touch-icon" sizes="144x144" href="@Url.Content("~/Content/Custom/image-icon/apple-touch-icon-144x144.png")" />
+    <link rel="apple-touch-icon" sizes="57x57" href="@Url.Content("~/Content/Custom/image-icon/apple-touch-icon-60x60.png")" />
+    <link rel="apple-touch-icon" sizes="72x72" href="@Url.Content("~/Content/Custom/image-icon/apple-touch-icon-120x120.png")" />
+    <link rel="apple-touch-icon" sizes="114x114" href="@Url.Content("~/Content/Custom/image-icon/apple-touch-icon-76x76.png")" />
+    <link rel="apple-touch-icon" sizes="144x144" href="@Url.Content("~/Content/Custom/image-icon/apple-touch-icon-152x152.png")" />
+    <meta name="msapplication-TileImage" content="Content/Custom/image-icon/apple-touch-icon-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="Content/Custom/image-icon/smalltile.png" />
+    <meta name="msapplication-square150x150logo" content="Content/Custom/image-icon/mediumtile.png" />
+    <meta name="msapplication-wide310x150logo" content="Content/Custom/image-icon/widetile.png" />
+    <meta name="msapplication-square310x310logo" content="Content/Custom/image-icon/largetile.png" />
+
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/bootstrap.min.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/bootstrap-datepicker.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/bootstrap-datetimepicker.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/bootstrap-timepicker.min.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/bootstrap-duallistbox.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Bootstrap/css/bootstrap-select.min.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Font-awesome/css/font-awesome.min.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Summernote/summernote.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Summernote/summernote-bs3.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Fullcalendar/fullcalendar.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Fullcalendar/fullcalendar.print.css")" media='print' />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/FileUpload/css/blueimp-gallery.min.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/FileUpload/css/jquery.fileupload.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/FileUpload/css/jquery.fileupload-ui.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/GridMvc/Gridmvc.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/Custom/global.css")" />
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+
+    <noscript>
+        @UIElementRes.UIElement.NoJS
+    </noscript>
+</head>
+<body>
+    @Html.Partial("_Menu")
+
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+    <footer class="panel-footer">
+        <p>&copy; @DateTime.Now.Year - DOCFLOW <a href="#top" class="topButton pull-right"><span class="fa fa-chevron-up fa-2x"></span></a></p>
+    </footer>
+
+    @if (IsSectionDefined("jsinit"))
+    {
+        <script type="text/javascript">
+            @RenderSection("jsinit", required: false)
+        </script>
+    }
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/main")
+    @RenderSection("scripts", required: false)
+
+    @if (IsSectionDefined("jslaunch"))
+    {
+        <script type="text/javascript">
+            $(function () {
+                @RenderSection("jslaunch", required: false)
+            });
+        </script>
+    }
+    
+    <script type="text/javascript">
+        $(function () {
+            $("a[href='#top']").click(function () {
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = UIElementRes.UIElement.Delegations;
+}
+
+<h2>@UIElementRes.UIElement.Delegations</h2>
+
+@{Html.RenderPartial("_NewEntityBtn");}
+
+<div>
+    @Html.Action("Grid")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/gridmvc")
+}
+@section jslaunch {
+    datepicker_init("@UIElementRes.UIElement.LangName");
+    grid_init("@Url.Action("GetDelegationList", "Delegation")")
+
+    var detailsUrl = '@Url.Action("Edit", "Delegation")';
+    pageGrids.ordersGrid.onRowSelect(function (e) {
+        window.location.href = detailsUrl  + '/' + e.row.Id;
+    });
+}

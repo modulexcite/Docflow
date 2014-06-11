@@ -1,0 +1,50 @@
+﻿@model RapidDoc.Models.ViewModels.CompanyView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Edit;
+}
+
+<h2>@UIElementRes.UIElement.Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.AliasCompanyName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.AliasCompanyName, new { @class = "form-control", @size = 20, @maxlength = 20, placeholder="DAT", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.AliasCompanyName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.CompanyName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.CompanyName, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Contoso Corporation", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.CompanyName)
+        </div>   
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DomainName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("DomainTableId", (IEnumerable<SelectListItem>)ViewBag.DomainList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.DomainTableId)
+        </div>
+        
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    selectpicker_init();
+}

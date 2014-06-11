@@ -1,0 +1,72 @@
+﻿@model RapidDoc.Models.ViewModels.ProcessView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.CreateProcess;
+}
+
+<h2>@UIElementRes.UIElement.CreateProcess</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.ProcessName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.ProcessName, new { @class = "form-control", @size = 70, @maxlength = 70, placeholder = "IT Incident", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.ProcessName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Description)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Description, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Incident Management", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.GroupProcessName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("GroupProcessTableId", (IEnumerable<SelectListItem>)ViewBag.GroupProcessList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.GroupProcessTableId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.WorkScheduleName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("WorkScheduleTableId", (IEnumerable<SelectListItem>)ViewBag.WorkScheduleList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.WorkScheduleTableId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TableName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.TableName, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "USR_REQ_IT_INCIDENT" })
+            @Html.ValidationMessageFor(model => model.TableName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.isApproved)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.isApproved)
+            @Html.ValidationMessageFor(model => model.isApproved)
+        </div>
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    selectpicker_init();
+}

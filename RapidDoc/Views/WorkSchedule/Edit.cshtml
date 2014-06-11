@@ -1,0 +1,56 @@
+﻿@model RapidDoc.Models.ViewModels.WorkScheduleView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Edit;
+}
+
+<h2>@UIElementRes.UIElement.Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.WorkScheduleName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.WorkScheduleName, new { @class = "form-control", @size = 20, @maxlength = 20, placeholder = "8x5" })
+            @Html.ValidationMessageFor(model => model.WorkScheduleName)
+        </div>
+
+        <br>
+        <blockquote>
+            <p>@UIElementRes.UIElement.CreateWorkTimeHint</p>
+        </blockquote>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.WorkStartTime)
+        </div>
+        <div class="bootstrap-timepicker input-group editor-field">
+            @Html.TextBoxFor(model => model.WorkStartTime, new { @class = "timepicker", @data_minute_step = "15" })
+            <span class="input-group-btn"><span class="glyphicon glyphicon-time"></span></span>
+            @Html.ValidationMessageFor(model => model.WorkStartTime)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.WorkEndTime)
+        </div>
+        <div class="bootstrap-timepicker input-group editor-field">
+            @Html.TextBoxFor(model => model.WorkEndTime, new { @class = "timepicker", @data_minute_step="15" })
+            <span class="input-group-btn"><span class="glyphicon glyphicon-time"></span></span>
+            @Html.ValidationMessageFor(model => model.WorkEndTime)
+        </div>
+
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    timepicker_init();
+}

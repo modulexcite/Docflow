@@ -1,0 +1,55 @@
+﻿@model RapidDoc.Models.ViewModels.SearchFormView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Search;
+    int searchNumber = ViewBag.SearchResult != null ? ((IEnumerable<RapidDoc.Models.ViewModels.SearchView>)ViewBag.SearchResult).Count() : 0;
+}
+
+@using (Html.BeginForm())
+{
+    <div class="form-group">
+        @Html.TextBoxFor(model => model.SearchText, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = UIElementRes.UIElement.SearchText, @autofocus = "required", @x_webkit_speech = "" })
+    </div>
+    <p>
+        <input class="btn btn-primary btn-sm pull-right" type="submit" value=@UIElementRes.UIElement.Search />
+    </p>
+}
+
+<br>
+<br>
+@if (ViewBag.SearchResult != null)
+{ 
+    <div>@(searchNumber > 0 ? UIElementRes.UIElement.SearchResultText + searchNumber.ToString() : "" )</div>
+    foreach (var item in ViewBag.SearchResult)
+    {
+        <div class="bs-callout bs-callout">
+            <h4>
+            @if(item.isShow == true)
+            {
+                @Html.ActionLink((string)item.DocumentNum, "ShowDocument", "Document", new { id = item.DocumentTableId, isAfterView = true }, null)
+            }
+            else
+            {
+                @item.DocumentNum
+            }
+            </h4>
+            @if (item.isShow == true)
+            {
+                <p>@(((string)item.DocumentText).Length > 256 ? ((string)item.DocumentText).Substring(0, 252) + " ..." : item.DocumentText)</p>
+            }
+            else
+            {
+                <p>@UIElementRes.UIElement.NoAccess</p>
+            }
+        </div>
+    }     
+}
+
+@section jslaunch {
+    $('input').keydown(function(e) {
+        if (e.keyCode == 13) {
+            $(this).closest('form').submit();
+        }
+    });
+}

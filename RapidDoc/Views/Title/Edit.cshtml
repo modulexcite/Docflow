@@ -1,0 +1,41 @@
+﻿@model RapidDoc.Models.ViewModels.TitleView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Edit;
+}
+
+<h2>@UIElementRes.UIElement.Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.TitleName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.TitleName, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Specialist", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.TitleName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ProfileName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("ProfileTableId", (IEnumerable<SelectListItem>)ViewBag.ProfileList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.ProfileTableId)
+        </div>
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    selectpicker_init();
+}

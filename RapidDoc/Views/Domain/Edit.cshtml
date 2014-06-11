@@ -1,0 +1,66 @@
+﻿@model RapidDoc.Models.ViewModels.DomainView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Edit;
+}
+
+<h2>@UIElementRes.UIElement.Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.DomainName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.DomainName, new { @class = "form-control", @size = 20, @maxlength = 20, placeholder = "contoso.com", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.DomainName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LDAPServer)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.LDAPServer, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "ldap.contoso.com", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.LDAPServer)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LDAPPort)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.LDAPPort, new { @class = "form-control bfh-number" })
+            @Html.ValidationMessageFor(model => model.LDAPPort)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LDAPLogin)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.LDAPLogin, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "ldapuser", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.LDAPLogin)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LDAPPassword)
+        </div>
+        <div class="editor-field">
+            @Html.PasswordFor(model => model.LDAPPassword, new { @class = "form-control", @size = 256, @maxlength = 256 })
+            @Html.ValidationMessageFor(model => model.LDAPPassword)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LDAPBaseDN)
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.LDAPBaseDN, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "dc=Contoso, dc=com" })
+            @Html.ValidationMessageFor(model => model.LDAPBaseDN)
+        </div>
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}

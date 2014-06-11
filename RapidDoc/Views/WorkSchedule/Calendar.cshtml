@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = UIElementRes.UIElement.Calendar;
+    Guid workScheduleId = ViewBag.WorkScheduleId;
+}
+
+<h2>@UIElementRes.UIElement.Calendar</h2>
+@Html.Hidden("WorkScheduleId", workScheduleId)
+
+<div id='calendar'></div>
+
+<br>
+<br>
+<p>
+    @Html.ActionLink(UIElementRes.UIElement.Back, "Index", null, new { @class = "btn btn-default btn-sm" })
+</p>        
+
+@section Scripts {
+    @Scripts.Render("~/bundles/fullcalendar")
+}
+@section jslaunch {
+    calendar_init("@Url.Action("CheckDayOff", "WorkSchedule")");
+}

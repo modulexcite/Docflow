@@ -1,0 +1,91 @@
+﻿<div class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            @if (this.Request.IsAuthenticated)
+            {
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            }
+            @Html.ActionLink("DOCFLOW", "Index", "Home", null, new { @class = "navbar-brand" })
+        </div>
+
+        @if (this.Request.IsAuthenticated)
+        {
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href=@Url.Action("Index", "NewProcess") class="btn-success"><span class="fa fa-plus fa-lg fa-fw"></span></a>
+                    </li>
+
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-header">@UIElementRes.UIElement.Basic</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Company, "Index", "Company")</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.NumberSeqs, "Index", "NumberSeq")</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Profiles, "Index", "Profile")</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Titles, "Index", "Title")</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Departments, "Index", "Department")</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Staff, "Index", "Empl")</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.GroupProcesses, "Index", "GroupProcess")</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Processes, "Index", "Process")</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.WorkSchedules, "Index", "WorkSchedule")</li>
+                                <li class="dropdown-header">@UIElementRes.UIElement.Identification</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Roles, "Index", "Role")</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Users, "Index", "User")</li>
+                                <li class="dropdown-header">@UIElementRes.UIElement.Additional</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Domains, "Index", "Domain")</li>
+                                <li>@Html.ActionLink(UIElementRes.UIElement.EmailParameter, "Edit", "Email")</li>
+                            </ul>
+                        </li>
+                    }
+                    @if (User.IsInRole("Delegations") || User.IsInRole("Administrator"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@UIElementRes.UIElement.Settings <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Delegations, "Index", "Delegation")</li>
+                            </ul>
+                        </li>
+                    }
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@UIElementRes.UIElement.Reports <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink(UIElementRes.UIElement.Performance, "Index", "Report")</li>
+                            </ul>
+                        </li>
+                    }
+                    
+                    <li class="dropdown">
+                        @Html.ActionLink(UIElementRes.UIElement.Search, "Index", "Search")
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@UICulture.Substring(0, 2).ToUpper() <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @foreach (var lang in RapidDoc.Models.Repository.Lang.langList)
+                            {
+                                <li>@Html.ActionLink(lang[1], "ChangeCulture", new { id = lang[0] }, null)</li>
+                            }
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><strong>@ViewContext.RouteData.Values["company"]</strong> <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @Html.Action("GetCompanyList", "Home")
+                        </ul>
+                    </li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        }
+    </div>
+</div>

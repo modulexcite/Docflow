@@ -1,0 +1,36 @@
+﻿@model IEnumerable<RapidDoc.Models.ViewModels.EmplView>
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Create + " " + UIElementRes.UIElement.Executor.ToLower();
+    Guid documentId = ViewBag.DocumentId;
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "duallistform" }))
+{
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+        <select multiple="multiple" size="10" class="duallist">
+            @foreach (var item in Model)
+            {
+                <option value="@item.ApplicationUserId" @Html.Raw((item.isActiveDualList) ? "selected='selected'" : "")>@item.FullName</option>
+            }
+        </select>
+        <br>
+        <br>
+        <p>
+            <input class="btn btn-primary" type="submit" value=@UIElementRes.UIElement.Save />
+            <a href="@Url.Action("ShowDocument", "Document", new { id = documentId })" class="btn btn-default" role="button">@UIElementRes.UIElement.Back</a>
+        </p>
+</fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    duallist_init("@UIElementRes.UIElement.Filter");
+}

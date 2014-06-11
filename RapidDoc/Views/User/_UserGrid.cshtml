@@ -1,0 +1,44 @@
+﻿@model RapidDoc.Models.Grids.UserGrid
+@using GridMvc.Html;
+
+@helper EditField(RapidDoc.Models.ViewModels.UserViewModel item)
+{
+    <a href=@Url.Action("Edit", new { id=item.Id })><span class="fa fa-pencil fa-lg"></span></a>
+}
+
+@helper AddRolesField(RapidDoc.Models.ViewModels.UserViewModel item)
+{
+    <a href=@Url.Action("AddRoles", new { id = item.Id })><span class="fa fa-plus fa-lg"></span></a>
+}
+
+@helper ChangePasswordField(RapidDoc.Models.ViewModels.UserViewModel item)
+{
+    <a href=@Url.Action("ChangePassword", new { id = item.Id })><span class="fa fa-lock fa-lg"></span></a>
+}
+
+@Html.Grid(Model).Named("ordersGrid").Columns(columns =>
+{
+    columns.Add(o => o.Id).Css("hidden");
+    columns.Add(o => o.UserName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.UserViewModel)o.Columns).UserName).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.Email).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.UserViewModel)o.Columns).Email).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.AliasCompanyName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.UserViewModel)o.Columns).AliasCompanyName).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.TimeZoneName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.UserViewModel)o.Columns).TimeZoneName).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.Lang).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.UserViewModel)o.Columns).Lang).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.isDomainUser).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.UserViewModel)o.Columns).isDomainUser).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.isEnable).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.UserViewModel)o.Columns).isEnable).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => EditField(o));
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => AddRolesField(o));
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => ChangePasswordField(o));
+}).Selectable(true).SetLanguage(UIElementRes.UIElement.LangName).Sortable().WithPaging(30)
