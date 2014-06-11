@@ -23,7 +23,7 @@ using System.Configuration;
 namespace RapidDoc.Models.Services
 {
     public interface IWorkflowService
-    {
+    {//TEST
         WFUserFunctionResult WFMatchingUpManager(Guid documentId, string currentUserName, int level = 1, string profileName = "");
         WFUserFunctionResult WFSpecificUser(Guid documentId, String userName);
         WFUserFunctionResult WFRoleUser(Guid documentId, String roleName);
