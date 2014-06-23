@@ -8,9 +8,9 @@ using GridMvc;
 
 namespace RapidDoc.Models.Grids
 {
-    public class DocumentGrid : Grid<DocumentListView>
+    public class DocumentGrid : Grid<DocumentTable>
     {
-        public DocumentGrid(IEnumerable<DocumentListView> items)
+        public DocumentGrid(IEnumerable<DocumentTable> items)
             : base(items)
         {
         }
@@ -18,7 +18,7 @@ namespace RapidDoc.Models.Grids
 
     public class DocumentAjaxPagingGrid : DocumentGrid
     {
-        public DocumentAjaxPagingGrid(IEnumerable<DocumentListView> items, int page, bool renderOnlyRows)
+        public DocumentAjaxPagingGrid(IEnumerable<DocumentTable> items, int page, bool renderOnlyRows)
             : base(items)
         {
             Pager = new AjaxGridPager(this) { CurrentPage = page }; //override  default pager

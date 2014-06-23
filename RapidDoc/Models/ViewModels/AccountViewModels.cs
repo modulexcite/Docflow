@@ -129,6 +129,8 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "isDomainUser", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public bool isDomainUser { get; set; }
+
+        public bool isRoleUser { get; set; }
     }
 
     public class ChangePassword

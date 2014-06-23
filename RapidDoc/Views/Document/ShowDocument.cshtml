@@ -5,7 +5,7 @@
 }
 
 <h2>
-    @if (Model.DocumentTable.isArchive() == true)
+    @if (Model.DocumentTable.isArchive == true)
 {
     <span class="fa fa-archive"></span>
 }
@@ -67,7 +67,7 @@
                                         <span class="label label-primary rowNum cellAligmentMiddle">@Html.DisplayFor(modelItem => trackerItem.RowNum)</span>
                                     </td>
                                     <td>
-                                        @if ((trackerItem.ManualExecutor == true && Model.DocumentTable.isSign()) || (User.IsInRole("Administrator") && trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting))
+                                        @if ((trackerItem.ManualExecutor == true && Model.DocumentTable.isSign) || (User.IsInRole("Administrator") && trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting))
                                         {
                                             <a href=@Url.Action("AddExecutor", new { id = Model.DocumentTable.Id, activityId = trackerItem.ActivityID })><span class="fa fa-users fa-lg"></span></a>
                                         }
@@ -114,7 +114,7 @@
             <h3>@FieldNameRes.FieldNameResource.Comments</h3>
             @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentTable.Id })
             <br>
-            @if ((Model.DocumentTable.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentTable.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentTable.isSign())
+            @if ((Model.DocumentTable.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentTable.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentTable.isSign)
             {
                 <input class="btn btn-success" type="submit" name="approveDoc" value=@UIElementRes.UIElement.Approve />
                 <input class="btn btn-danger" type="submit" name="rejectDoc" value=@UIElementRes.UIElement.Reject />
@@ -126,7 +126,7 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href=@Url.Action("AddReader", new { id = Model.DocumentTable.Id })>@UIElementRes.UIElement.Reader</a></li>
-                    @if (Model.DocumentTable.isArchive() == false)
+                    @if (Model.DocumentTable.isArchive == false)
                     {
                         <li><a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentTable.Id })>@UIElementRes.UIElement.ToArchive</a></li>
                     }

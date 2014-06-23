@@ -22,8 +22,8 @@ namespace RapidDoc.Models.Services
         ReviewDocLogTable FirstOrDefault(Expression<Func<ReviewDocLogTable, bool>> predicate);
         void SaveDomain(ReviewDocLogTable domainTable, string currentUserName = "");
         ReviewDocLogTable Find(Guid? id);
-        bool isNotReviewDocCurrentUser(Guid documentId, string currentUserName = "");
-        bool isArchive(Guid documentId, string currentUserName = "");
+        bool isNotReviewDocCurrentUser(Guid documentId, string currentUserName = "", ApplicationUser user = null);
+        bool isArchive(Guid documentId, string currentUserName = "", ApplicationUser user = null);
     }
 
     public class ReviewDocLogService : IReviewDocLogService
@@ -83,18 +83,24 @@ namespace RapidDoc.Models.Services
             return repo.Find(a => a.Id == id);
         }
 
-        public bool isNotReviewDocCurrentUser(Guid documentId, string currentUserName = "")
+        public bool isNotReviewDocCurrentUser(Guid documentId, string currentUserName = "", ApplicationUser user = null)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            if (user == null)
+            {
+                string localUserName = getCurrentUserName(currentUserName);
+                user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            }
 
             return repo.Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == documentId);
         }
 
-        public bool isArchive(Guid documentId, string currentUserName = "")
+        public bool isArchive(Guid documentId, string currentUserName = "", ApplicationUser user = null)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            if (user == null)
+            {
+                string localUserName = getCurrentUserName(currentUserName);
+                user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            }
 
             return repo.Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == documentId && x.isArchive == true);
         }

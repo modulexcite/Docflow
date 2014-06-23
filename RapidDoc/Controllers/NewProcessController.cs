@@ -73,5 +73,18 @@ namespace RapidDoc.Controllers
 
             return breadCrumbsList;
         }
+
+        public ActionResult SearchProcess(string searchText = "")
+        {
+            string searchString = searchText.Trim();
+
+            if (searchString.Length > 3)
+            {
+                var model = _ProcessService.GetPartialView(x => x.ProcessName.Contains(searchString));
+                return PartialView("_SearchResultProcess", model);
+            }
+
+            return null;
+        }
 	}
 }

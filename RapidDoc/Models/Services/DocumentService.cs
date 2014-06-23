@@ -18,8 +18,8 @@ namespace RapidDoc.Models.Services
     {
         Guid SaveDocument(dynamic model, string tableName, Guid processId, Guid fileId, string currentUserName = "");
         IEnumerable<DocumentTable> GetAll();
-        IEnumerable<DocumentListView> GetAllView();
-        IEnumerable<DocumentListView> GetArchiveView();
+        IEnumerable<DocumentTable> GetAllView();
+        IEnumerable<DocumentTable> GetArchiveView();
         IEnumerable<DocumentTable> GetPartial(Expression<Func<DocumentTable, bool>> predicate);
         DocumentTable Find(Guid? id);
         dynamic GetDocument(Guid documentId, string tableName = "");
@@ -27,11 +27,11 @@ namespace RapidDoc.Models.Services
         dynamic RouteCustomModelView(string customModel);
         dynamic RouteCustomModelDomain(string customModel);
         void UpdateDocument(DocumentTable domainTable, string currentUserName = "");
-        bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false);
+        bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null);
         bool isSignDocument(Guid documentId, Guid ProcessId, string currentUserName = "");
-        IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserName = "");
-        DateTime? GetLastSignDate(Guid documentId, bool SLAOffset = false, string currentUserName = "");
-        SLAStatusList SLAStatus(Guid documentId, string currentUserName = "");
+        IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserName = "", ApplicationUser user = null);
+        DateTime? GetLastSignDate(Guid documentId, bool SLAOffset = false, string currentUserName = "", ApplicationUser user = null);
+        SLAStatusList SLAStatus(Guid documentId, string currentUserName = "", ApplicationUser user = null);
         void SaveSignData(IEnumerable<WFTrackerTable> trackerTables, TrackerType trackerType);
         Guid SaveFile(FileTable file);
         FileTable GetFile(Guid Id);
@@ -56,10 +56,12 @@ namespace RapidDoc.Models.Services
         private readonly IDelegationService _DelegationService;
         private readonly IDocumentReaderService _DocumentReaderService;
         private readonly IWorkScheduleService _WorkScheduleService;
+        private readonly IReviewDocLogService _ReviewDocLogService;
 
         public DocumentService(IUnitOfWork uow, INumberSeqService numberSeqService, IProcessService processService, 
             IAccountService accountService, IEmplService emplService, IWorkflowTrackerService workflowTrackerService,
-            IDelegationService delegationService, IDocumentReaderService documentReaderService, IWorkScheduleService workScheduleService)
+            IDelegationService delegationService, IDocumentReaderService documentReaderService, IWorkScheduleService workScheduleService,
+            IReviewDocLogService reviewDocLogService)
         {
             _uow = uow;
             repoProcess = uow.GetRepository<ProcessTable>();
@@ -73,6 +75,7 @@ namespace RapidDoc.Models.Services
             _DelegationService = delegationService;
             _DocumentReaderService = documentReaderService;
             _WorkScheduleService = workScheduleService;
+            _ReviewDocLogService = reviewDocLogService;
         }
 
         public Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId, string currentUserName = "")
@@ -119,15 +122,166 @@ namespace RapidDoc.Models.Services
             return repoDocument.All();
         }
 
-        public IEnumerable<DocumentListView> GetAllView()
+        public IEnumerable<DocumentTable> GetAllView()
         {
-            var items = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentListView>>(GetAll().Where(x => x.isShow() == true && x.isArchive() == false).OrderBy(b => b.isNotReview()).ThenByDescending(n => n.CreatedDate));
+            string localUserName = getCurrentUserName();
+            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            DateTime currentDate = DateTime.UtcNow;
+            IEnumerable<DocumentTable> items = null;
+
+            ApplicationDbContext context = new ApplicationDbContext();
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+            if(user == null)
+            {
+                List<DocumentTable> errorData = new List<DocumentTable>();
+                return errorData;
+            }
+
+            if (UserManager.IsInRole(user.Id, "Administrator"))
+            {
+                items = from document in repoDocument.All()
+                        where !(_uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                        select new DocumentTable
+                        {
+                            Id = document.Id,
+                            CreatedDate = document.CreatedDate,
+                            ModifiedDate = document.ModifiedDate,
+                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
+                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
+                            DocumentNum = document.DocumentNum,
+                            ProcessTableId = document.ProcessTableId,
+                            EmplTableId = document.EmplTableId,
+                            RefDocumentId = document.RefDocumentId,
+                            WWFInstanceId = document.WWFInstanceId,
+                            FileId = document.FileId,
+                            DocumentState = document.DocumentState,
+                            ActivityName = document.ActivityName,
+                            ApplicationUserCreated = document.ApplicationUserCreated,
+                            ProcessTable = document.ProcessTable,
+                            isNotReview = _uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id),
+                            SLAStatus = SLAStatus(document.Id, "", user)
+                        };
+
+                items = items.OrderBy(b => b.isNotReview).ThenByDescending(n => n.CreatedDate);
+            }
+            else
+            {
+                var trackers = _uow.GetRepository<WFTrackerTable>().All().AsQueryable();
+
+                items = from document in repoDocument.All()
+                        where (document.ApplicationUserCreatedId == user.Id ||
+                            (_uow.GetRepository<WFTrackerTable>().Contains(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id))) ||
+                            (_uow.GetRepository<DocumentReaderTable>().Contains(r => r.DocumentTableId == document.Id && r.UserId == user.Id)) ||
+                          
+                            (_uow.GetRepository<DelegationTable>().All().AsQueryable().Any(d => d.EmplTableTo.ApplicationUserId == user.Id && d.DateFrom <= currentDate && d.DateTo >= currentDate && d.isArchive == false
+                                && d.CompanyTableId == user.CompanyTableId
+                                && (d.GroupProcessTableId == document.ProcessTable.Id || d.GroupProcessTableId == null)
+                                && (d.ProcessTableId == document.ProcessTableId || d.ProcessTableId == null
+                                && trackers.Any(w => w.DocumentTableId == document.Id && w.SignUserId == null && w.TrackerType == TrackerType.Waiting && w.Users.Any(b => b.UserId == d.EmplTableFrom.ApplicationUserId))
+                                )))
+                        
+                                ) &&
+                            !(_uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                        select new DocumentTable
+                        {
+                            Id = document.Id,
+                            CreatedDate = document.CreatedDate,
+                            ModifiedDate = document.ModifiedDate,
+                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
+                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
+                            DocumentNum = document.DocumentNum,
+                            ProcessTableId = document.ProcessTableId,
+                            EmplTableId = document.EmplTableId,
+                            RefDocumentId = document.RefDocumentId,
+                            WWFInstanceId = document.WWFInstanceId,
+                            FileId = document.FileId,
+                            DocumentState = document.DocumentState,
+                            ActivityName = document.ActivityName,
+                            ApplicationUserCreated = document.ApplicationUserCreated,
+                            ProcessTable = document.ProcessTable,
+                            isNotReview = _uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id),
+                            SLAStatus = SLAStatus(document.Id, "", user)
+                        };
+
+                items = items.OrderBy(b => b.isNotReview).ThenByDescending(n => n.CreatedDate);
+            }
             return items;
         }
 
-        public IEnumerable<DocumentListView> GetArchiveView()
+        public IEnumerable<DocumentTable> GetArchiveView()
         {
-            var items = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentListView>>(GetAll().Where(x => x.isShow() == true && x.isArchive() == true).OrderByDescending(n => n.CreatedDate));
+            string localUserName = getCurrentUserName();
+            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            DateTime currentDate = DateTime.UtcNow;
+            IEnumerable<DocumentTable> items = null;
+
+            ApplicationDbContext context = new ApplicationDbContext();
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+            if (UserManager.IsInRole(user.Id, "Administrator"))
+            {
+                items = from document in repoDocument.All()
+                        where !(_uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == false))
+                        select new DocumentTable
+                        {
+                            Id = document.Id,
+                            CreatedDate = document.CreatedDate,
+                            ModifiedDate = document.ModifiedDate,
+                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
+                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
+                            DocumentNum = document.DocumentNum,
+                            ProcessTableId = document.ProcessTableId,
+                            EmplTableId = document.EmplTableId,
+                            RefDocumentId = document.RefDocumentId,
+                            WWFInstanceId = document.WWFInstanceId,
+                            FileId = document.FileId,
+                            DocumentState = document.DocumentState,
+                            ActivityName = document.ActivityName,
+                            ApplicationUserCreated = document.ApplicationUserCreated,
+                            ProcessTable = document.ProcessTable,
+                            isNotReview = _uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id),
+                            SLAStatus = SLAStatus(document.Id, "", user)
+                        };
+
+                items = items.OrderBy(b => b.isNotReview).ThenByDescending(n => n.CreatedDate);
+            }
+            else
+            {
+                items = from document in repoDocument.All()
+                        where (document.ApplicationUserCreatedId == user.Id ||
+                            (_uow.GetRepository<WFTrackerTable>().Contains(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id))) ||
+                            (_uow.GetRepository<DocumentReaderTable>().Contains(r => r.DocumentTableId == document.Id && r.UserId == user.Id)) ||
+                            (_uow.GetRepository<DelegationTable>().Contains(x => x.EmplTableTo.ApplicationUserId == user.Id && x.DateFrom <= currentDate && x.DateTo >= currentDate && x.isArchive == false
+                                && x.CompanyTableId == user.CompanyTableId
+                                && (x.GroupProcessTableId == document.ProcessTable.Id || x.GroupProcessTableId == null)
+                                && (x.ProcessTableId == document.ProcessTableId || x.ProcessTableId == null)
+                                && _uow.GetRepository<WFTrackerTable>().Contains(w => w.DocumentTableId == document.Id && w.SignUserId == null && w.TrackerType == TrackerType.Waiting && w.Users.Any(b => b.UserId == x.EmplTableFrom.ApplicationUserId))))) &&
+                            !(_uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == false))
+                        select new DocumentTable
+                        {
+                            Id = document.Id,
+                            CreatedDate = document.CreatedDate,
+                            ModifiedDate = document.ModifiedDate,
+                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
+                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
+                            DocumentNum = document.DocumentNum,
+                            ProcessTableId = document.ProcessTableId,
+                            EmplTableId = document.EmplTableId,
+                            RefDocumentId = document.RefDocumentId,
+                            WWFInstanceId = document.WWFInstanceId,
+                            FileId = document.FileId,
+                            DocumentState = document.DocumentState,
+                            ActivityName = document.ActivityName,
+                            ApplicationUserCreated = document.ApplicationUserCreated,
+                            ProcessTable = document.ProcessTable,
+                            isNotReview = _uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id),
+                            SLAStatus = SLAStatus(document.Id, "", user)
+                        };
+
+                items = items.OrderBy(b => b.isNotReview).ThenByDescending(n => n.CreatedDate);
+            }
+         
             return items;
         }
 
@@ -173,13 +327,50 @@ namespace RapidDoc.Models.Services
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
             domainTable.ApplicationUserModifiedId = user.Id;
 
+            if (domainTable.DocumentState == DocumentState.Agreement || domainTable.DocumentState == DocumentState.Execution)
+            {
+                IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == domainTable.Id && x.TrackerType == TrackerType.Waiting);
+                string currentName = String.Empty;
+
+                if (items != null)
+                {
+                    foreach (var item in items)
+                    {
+                        currentName += item.ActivityName + "/";
+                    }
+                }
+
+                if (currentName != String.Empty)
+                {
+                    currentName = currentName.Remove(currentName.Length - 1);
+                }
+
+                domainTable.ActivityName = currentName;
+            }
+            else if (domainTable.DocumentState == DocumentState.Closed || domainTable.DocumentState == DocumentState.Cancelled)
+            {
+                domainTable.ActivityName = "";
+            }
+
             _uow.GetRepository<DocumentTable>().Update(domainTable);
             _uow.Save();
         }
 
-        public bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false)
+        public bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null)
         {
-            string localUserName = getCurrentUserName(currentUserName);
+            if (user == null)
+            {
+                string localUserName = getCurrentUserName(currentUserName);
+                user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            }
+
+            if (documentTable == null)
+                documentTable = Find(documentId);
+
+            if (user.Id == documentTable.ApplicationUserCreatedId)
+            {
+                return true;
+            }
 
             IEnumerable<WFTrackerTable> trackerTables = null;
 
@@ -190,14 +381,6 @@ namespace RapidDoc.Models.Services
             else
             {
                 trackerTables = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId);
-            }
-            
-            DocumentTable documentTable = Find(documentId);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
-            if (user.Id == documentTable.ApplicationUserCreatedId)
-            {
-                return true;
             }
 
             if (checkTrackUsers(trackerTables, user.Id))
@@ -351,9 +534,9 @@ namespace RapidDoc.Models.Services
             return signUsers;
         }
 
-        public SLAStatusList SLAStatus(Guid documentId, string currentUserName = "")
+        public SLAStatusList SLAStatus(Guid documentId, string currentUserName = "", ApplicationUser user = null)
         {
-            DateTime? date = GetLastSignDate(documentId, true, currentUserName);
+            DateTime? date = GetLastSignDate(documentId, true, currentUserName, user);
 
             if (date != null)
             {
@@ -389,10 +572,13 @@ namespace RapidDoc.Models.Services
             return false;
         }
 
-        public IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserName = "")
+        public IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserName = "", ApplicationUser user = null)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            if (user == null)
+            {
+                string localUserName = getCurrentUserName(currentUserName);
+                user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            }
             IEnumerable<WFTrackerTable> trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Waiting);
             DocumentTable document = Find(documentId);
             List<WFTrackerTable> signStep = new List<WFTrackerTable>();
@@ -464,16 +650,16 @@ namespace RapidDoc.Models.Services
             return signStep;
         }
 
-        public DateTime? GetLastSignDate(Guid documentId, bool SLAOffset = false, string currentUserName = "")
+        public DateTime? GetLastSignDate(Guid documentId, bool SLAOffset = false, string currentUserName = "", ApplicationUser user = null)
         {
-            IEnumerable<WFTrackerTable> items = GetCurrentSignStep(documentId, currentUserName);
-            WFTrackerTable item = items.FirstOrDefault(x => x.SLAOffset > 0);
+            //IEnumerable<WFTrackerTable> items = GetCurrentSignStep(documentId, currentUserName, user);
+            IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Waiting && x.SLAOffset > 0);
 
-            if (item != null)
+            if (items != null)
             {
+                WFTrackerTable item = items.FirstOrDefault();
                 return item.CreatedDate.AddHours(item.SLAOffset);
             }
-
             return null;
         }
 

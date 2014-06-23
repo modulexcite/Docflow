@@ -62,7 +62,7 @@ namespace RapidDoc
                     {
                         r.Constraints = new RouteValueDictionary();
                     }
-                    r.Constraints.Add("company", new CompanyConstraint("ATK", "ATR", "ATV"));
+                    r.Constraints.Add("company", new CompanyConstraint("ATK", "ATR"));
                 }
             }
         }

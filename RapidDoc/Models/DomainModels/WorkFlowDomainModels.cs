@@ -88,8 +88,9 @@ namespace RapidDoc.Models.DomainModels
 
     public class DocumentTable : BasicCompanyNullTable
     {
-        [StringLength(256)]
-        [Required]
+        [StringLength(256, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "DocumentNum", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string DocumentNum { get; set; }
 
         public Guid ProcessTableId { get; set; }
@@ -104,66 +105,49 @@ namespace RapidDoc.Models.DomainModels
 
         public Guid FileId { get; set; }
 
+        [Display(Name = "DocumentState", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public DocumentState DocumentState { get; set; }
 
-        public string CurrentActivityName()
+        [Display(Name = "GroupProcesses", ResourceType = typeof(UIElementRes.UIElement))]
+        public string GroupProcessName 
         {
-            if (DocumentState == DocumentState.Agreement || DocumentState == DocumentState.Execution)
+            get
             {
-                IWorkflowTrackerService _service = DependencyResolver.Current.GetService<IWorkflowTrackerService>();
-                IEnumerable<WFTrackerTable> items = _service.GetCurrentStep(x => x.DocumentTableId == Id && x.TrackerType == TrackerType.Waiting);
-                string currentName = String.Empty;
-
-                if (items != null)
+                if (this.ProcessTable != null && this.ProcessTable.GroupProcessTable != null)
                 {
-                    foreach (var item in items)
-                    {
-                        currentName += item.ActivityName + "/";
-                    }
+                    return this.ProcessTable.GroupProcessTable.GroupProcessName;
                 }
 
-                if (currentName != String.Empty)
-                {
-                    currentName = currentName.Remove(currentName.Length - 1);
-                }
-
-                return currentName;
-            }
-            else
-            {
-                return "";
+                return string.Empty;
             }
         }
 
-        public bool isShow(bool isAfterView = false)
+        [Display(Name = "Processes", ResourceType = typeof(UIElementRes.UIElement))]
+        public string ProcessName
         {
-            IDocumentService _service = DependencyResolver.Current.GetService<IDocumentService>();
-            return _service.isShowDocument(Id, ProcessTableId, "", isAfterView);
+            get
+            {
+                if (this.ProcessTable != null)
+                {
+                    return this.ProcessTable.ProcessName;
+                }
+
+                return string.Empty;
+            }
         }
 
-        public bool isSign()
-        {
-            IDocumentService _service = DependencyResolver.Current.GetService<IDocumentService>();
-            return _service.isSignDocument(Id, ProcessTableId);
-        }
+        [Display(Name = "CurrentActivityName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string ActivityName { get; set; }
 
-        public bool isNotReview()
-        {
-            IReviewDocLogService _service = DependencyResolver.Current.GetService<IReviewDocLogService>();
-            return _service.isNotReviewDocCurrentUser(Id);
-        }
+        public bool isSign { get; set; }
 
-        public bool isArchive()
-        {
-            IReviewDocLogService _service = DependencyResolver.Current.GetService<IReviewDocLogService>();
-            return _service.isArchive(Id);
-        }
+        public bool isArchive { get; set; }
 
-        public SLAStatusList SLAStatus()
-        {
-            IDocumentService _service = DependencyResolver.Current.GetService<IDocumentService>();
-            return _service.SLAStatus(Id);
-        }
+        public SLAStatusList SLAStatus { get; set; }
+
+        public bool isNotReview { get; set; }
+
+        public bool isShow { get; set; }
     }
 
     public class CommentTable : BasicCompanyNullTable

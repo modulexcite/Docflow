@@ -125,5 +125,66 @@ namespace RapidDoc.Controllers
                 return View();
             }
         }
+
+        public async Task<ActionResult> AddUsers(string id)
+        {
+            var roleTable = await RoleManager.FindByIdAsync(id);
+            if (roleTable == null)
+            {
+                return HttpNotFound();
+            }
+
+            var users = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(context.Users);
+
+            foreach (var user in users)
+            {
+                foreach (var userRole in roleTable.Users)
+                {
+                    if (userRole.UserId == user.Id)
+                    {
+                        user.isRoleUser = true;
+                    }
+                }
+            }
+
+            return View(users);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddUsers(string id, string[] listdata, bool? isAjax)
+        {
+            var roleTable = await RoleManager.FindByIdAsync(id);
+
+            if (roleTable == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (isAjax == true)
+            {
+                var allUsers = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(context.Users);
+
+                foreach (var user in allUsers)
+                {
+                    UserManager.RemoveFromRole(user.Id, roleTable.Name);
+                }
+            }
+
+            if (listdata != null)
+            {
+                foreach (string userId in listdata)
+                {
+                    var userTable = await UserManager.FindByIdAsync(userId);
+                    if (userTable == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+                    UserManager.AddToRole(userTable.Id, roleTable.Name);
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
 	}
 }

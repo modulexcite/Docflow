@@ -86,6 +86,8 @@ namespace RapidDoc.Models.ViewModels
         public bool isNotReview { get; set; }
 
         public bool isArchive { get; set; }
+
+        public bool isShow { get; set; }
     }
 
     public class WFTrackerListView : BasicCompanyNullView

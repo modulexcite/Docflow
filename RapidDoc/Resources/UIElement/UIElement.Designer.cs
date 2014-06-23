@@ -97,6 +97,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Добавить пользователей.
+        /// </summary>
+        public static string AddUsers {
+            get {
+                return ResourceManager.GetString("AddUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Применить.
         /// </summary>
         public static string Apply {

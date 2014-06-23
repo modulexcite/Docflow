@@ -15,12 +15,10 @@ namespace RapidDoc.Models.Infrastructure
     {
         protected override void Seed(ApplicationDbContext context)
         {
+            #region Roles Initialize
             var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             rm.Create(new IdentityRole("Administrator"));
             rm.Create(new IdentityRole("Delegations"));
-            //rm.Create(new IdentityRole("ChiefAccountant"));
-            //rm.Create(new IdentityRole("ExecutorERP"));
-            //rm.Create(new IdentityRole("ExecutorGZP"));
 
             rm.Create(new IdentityRole("ExecutorCTS_ATC"));
             rm.Create(new IdentityRole("ExecutorCTS_RADIO"));
@@ -36,7 +34,9 @@ namespace RapidDoc.Models.Infrastructure
             rm.Create(new IdentityRole("ExecutorLotus"));
             rm.Create(new IdentityRole("ExecutorSysAdmin"));
             rm.Create(new IdentityRole("ExecutorDelegation"));
-            
+            #endregion
+
+            #region Database Initialize
             var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             var user = new ApplicationUser() { UserName = "Admin", Email = "admin@mail.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", isEnable = true, Lang = "ru-RU" };
             um.Create(user, "123456aA");
@@ -48,28 +48,6 @@ namespace RapidDoc.Models.Infrastructure
             var user3 = new ApplicationUser() { UserName = "IlyaFilimonov", Email = "igor.dmitrov@altyntau.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", isEnable = true, Lang = "ru-RU" };
             um.Create(user3, "123456aA");
 
-            /*
-            var user2 = new ApplicationUser() { UserName = "IgorDmitrov", Email = "igor.dmitrov@altyntau.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", isEnable = true, Lang = "ru-RU" };
-            um.Create(user2, "123456aA");
-            um.AddToRole(user2.Id, "ExecutorERP");
-            um.AddToRole(user2.Id, "Administrator");
-
-            var user3 = new ApplicationUser() { UserName = "DmitriyShkarendin", Email = "dmitriy.shkarendin@altyntau.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", isEnable = true, Lang = "ru-RU" };
-            um.Create(user3, "123456aA");
-            um.AddToRole(user3.Id, "ExecutorERP");
-            um.AddToRole(user3.Id, "Administrator");
-
-            var user4 = new ApplicationUser() { UserName = "SergeyMashkov", Email = "igor.dmitrov@altyntau.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", isEnable = true, Lang = "ru-RU" };
-            um.Create(user4, "123456aA");
-
-            var user5 = new ApplicationUser() { UserName = "SaparbekIbragimov", Email = "igor.dmitrov@altyntau.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", isEnable = true, Lang = "ru-RU" };
-            um.Create(user5, "123456aA");
-            um.AddToRole(user5.Id, "ChiefAccountant");
-            var user6 = new ApplicationUser() { UserName = "MariannaKvarc", Email = "igor.dmitrov@altyntau.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", isEnable = true, Lang = "ru-RU" };
-            um.Create(user6, "123456aA");
-            um.AddToRole(user6.Id, "ExecutorGZP");
-            */
-
             context.DomainTable.Add(new DomainTable { DomainName = "altyntau.com", CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, LDAPBaseDN = "OU=ATK,OU=Altyntau,DC=altyntau,DC=com", LDAPLogin = "ldapuser@altyntau.com", LDAPPort = 389, LDAPPassword = "iHFh6JKm", LDAPServer = "ATK-S-100" });
             context.SaveChanges();
 
@@ -79,12 +57,6 @@ namespace RapidDoc.Models.Infrastructure
 
             context.TitleTable.Add(new TitleTable { TitleName = "И.о. главного бухгалтера", CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id });
             context.TitleTable.Add(new TitleTable { TitleName = "Управляющий Директор по Коммерции", CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id });
-            /*
-            context.TitleTable.Add(new TitleTable { TitleName = "Начальник управления", CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id });
-            context.TitleTable.Add(new TitleTable { TitleName = "Начальник службы", CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id });
-            context.TitleTable.Add(new TitleTable { TitleName = "Инженер – системотехник (разработчик)", CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id });
-            context.TitleTable.Add(new TitleTable { TitleName = "Начальник управления - Главный бухгалтер", CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id });
-            */
             context.SaveChanges();
 
             context.NumberSeriesTable.Add(new NumberSeriesTable { NumberSeriesName = "Заявка", Prefix = "RD", Size = 7, LastNum = 1, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id });
@@ -99,6 +71,9 @@ namespace RapidDoc.Models.Infrastructure
             context.SaveChanges();
 
             context.GroupProcessTable.Add(new GroupProcessTable { GroupProcessName = "ERP", NumberSeriesTableId = context.NumberSeriesTable.FirstOrDefault().Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, GroupProcessParentId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "ИТ сервисы").Id });
+            context.GroupProcessTable.Add(new GroupProcessTable { GroupProcessName = "Документооборот", NumberSeriesTableId = context.NumberSeriesTable.FirstOrDefault().Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, GroupProcessParentId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "ИТ сервисы").Id });
+            context.GroupProcessTable.Add(new GroupProcessTable { GroupProcessName = "Почта", NumberSeriesTableId = context.NumberSeriesTable.FirstOrDefault().Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, GroupProcessParentId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "ИТ сервисы").Id });
+            context.GroupProcessTable.Add(new GroupProcessTable { GroupProcessName = "Интернет", NumberSeriesTableId = context.NumberSeriesTable.FirstOrDefault().Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, GroupProcessParentId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "ИТ сервисы").Id });
             context.GroupProcessTable.Add(new GroupProcessTable { GroupProcessName = "Аппаратное обеспечение", NumberSeriesTableId = context.NumberSeriesTable.FirstOrDefault().Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, GroupProcessParentId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "ИТ сервисы").Id });
             context.GroupProcessTable.Add(new GroupProcessTable { GroupProcessName = "Радиосвязь и телефония", NumberSeriesTableId = context.NumberSeriesTable.FirstOrDefault().Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, GroupProcessParentId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "ИТ сервисы").Id });
             context.GroupProcessTable.Add(new GroupProcessTable { GroupProcessName = "Программное обеспечение", NumberSeriesTableId = context.NumberSeriesTable.FirstOrDefault().Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, GroupProcessParentId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "ИТ сервисы").Id });
@@ -125,19 +100,6 @@ namespace RapidDoc.Models.Infrastructure
             user3.CompanyTableId = ATRId;
             um.Update(user3);
             context.SaveChanges();
-            /*
-            user4.CompanyTableId = context.CompanyTable.FirstOrDefault().Id;
-            um.Update(user4);
-            context.SaveChanges();
-
-            user5.CompanyTableId = context.CompanyTable.FirstOrDefault().Id;
-            um.Update(user5);
-            context.SaveChanges();
-
-            user6.CompanyTableId = context.CompanyTable.FirstOrDefault().Id;
-            um.Update(user5);
-            context.SaveChanges();
-            */
 
             context.DepartmentTable.Add(new DepartmentTable { DepartmentName = "Управляющий Директор по Коммерции", CompanyTableId = ATRId, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, ApplicationUserModifiedId = user.Id });
             context.DepartmentTable.Add(new DepartmentTable { DepartmentName = "Департамент бухгалтерского учета и отчетности", CompanyTableId = ATRId, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, ApplicationUserModifiedId = user.Id });
@@ -147,20 +109,11 @@ namespace RapidDoc.Models.Infrastructure
             context.EmplTable.Add(new EmplTable { FirstName = "Максат", SecondName = "Кульчиков", MiddleName = "Жазылканович", TitleTableId = context.TitleTable.FirstOrDefault(x => x.TitleName == "И.о. главного бухгалтера").Id, DepartmentTableId = context.DepartmentTable.FirstOrDefault(x => x.DepartmentName == "Департамент бухгалтерского учета и отчетности").Id, CompanyTableId = ATRId, ApplicationUserId = context.Users.FirstOrDefault(x => x.UserName == "MaksatKulchikov").Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, ApplicationUserModifiedId = user.Id, WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id });
             context.SaveChanges();
 
-            /*
-            context.EmplTable.Add(new EmplTable { FirstName = "Сергей", SecondName = "Машков", MiddleName = "Валериевич", TitleTableId = context.TitleTable.FirstOrDefault(x => x.TitleName == "Начальник управления").Id, CompanyTableId = context.CompanyTable.FirstOrDefault().Id, ApplicationUserId = context.Users.FirstOrDefault(x => x.UserName == "SergeyMashkov").Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, ApplicationUserModifiedId = user.Id, WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id });
-            context.SaveChanges();
-
-            context.EmplTable.Add(new EmplTable { FirstName = "Игорь", SecondName = "Дмитров", MiddleName = "Васильевич", TitleTableId = context.TitleTable.FirstOrDefault(x => x.TitleName == "Начальник службы").Id, CompanyTableId = context.CompanyTable.FirstOrDefault().Id, ApplicationUserId = context.Users.FirstOrDefault(x => x.UserName == "IgorDmitrov").Id, ManageId = context.EmplTable.FirstOrDefault(x => x.FirstName == "Сергей").Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, ApplicationUserModifiedId = user.Id, WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id });
-            context.EmplTable.Add(new EmplTable { FirstName = "Дмитрий", SecondName = "Шкарендин", MiddleName = "Викторович", TitleTableId = context.TitleTable.FirstOrDefault(x => x.TitleName == "Инженер – системотехник (разработчик)").Id, CompanyTableId = context.CompanyTable.FirstOrDefault().Id, ApplicationUserId = context.Users.FirstOrDefault(x => x.UserName == "DmitriyShkarendin").Id, ManageId = context.EmplTable.FirstOrDefault(x => x.FirstName == "Сергей").Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, ApplicationUserModifiedId = user.Id, WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id });
-            context.EmplTable.Add(new EmplTable { FirstName = "Сапарбек", SecondName = "Ибрагимов", MiddleName = "Жармуханбетович", TitleTableId = context.TitleTable.FirstOrDefault(x => x.TitleName == "Начальник управления - Главный бухгалтер").Id, CompanyTableId = context.CompanyTable.FirstOrDefault().Id, ApplicationUserId = context.Users.FirstOrDefault(x => x.UserName == "SaparbekIbragimov").Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, ApplicationUserModifiedId = user.Id, WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id });
-            context.EmplTable.Add(new EmplTable { FirstName = "Марианна", SecondName = "Кварацхелия", MiddleName = "Бадриевна", TitleTableId = context.TitleTable.FirstOrDefault(x => x.TitleName == "Начальник службы").Id, CompanyTableId = context.CompanyTable.FirstOrDefault().Id, ApplicationUserId = context.Users.FirstOrDefault(x => x.UserName == "MariannaKvarc").Id, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, ApplicationUserModifiedId = user.Id, WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id });           
-            context.SaveChanges();
-            */
-
             context.EmailParameterTable.Add(new EmailParameterTable { SmtpServer = "192.168.254.14", SmtpPort = 25, Email = "workflow.altyntau@altyntau.com", UserName = "altyntau.workflow", Password = "dctdjkjl123456aA", Timeout = 5000, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id });
             context.SaveChanges();
+            #endregion
 
+            #region Радиосвязь и телефония
             numId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "Радиосвязь и телефония").Id;
             context.ProcessTable.Add(new ProcessTable
             {
@@ -343,7 +296,9 @@ namespace RapidDoc.Models.Infrastructure
                 CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
                 ApplicationUserCreatedId = user.Id
             });
+            #endregion
 
+            #region ERP
             numId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "ERP").Id;
             context.ProcessTable.Add(new ProcessTable
             {
@@ -428,8 +383,9 @@ namespace RapidDoc.Models.Infrastructure
                 CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
                 ApplicationUserCreatedId = user.Id
             });
+            #endregion
 
-            //----
+            #region Аппаратное обеспечение
             numId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "Аппаратное обеспечение").Id;
             context.ProcessTable.Add(new ProcessTable
             {
@@ -601,37 +557,10 @@ namespace RapidDoc.Models.Infrastructure
                 CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
                 ApplicationUserCreatedId = user.Id
             });
+            #endregion
 
-            //---
+            #region Программное обеспечение
             numId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "Программное обеспечение").Id;
-            context.ProcessTable.Add(new ProcessTable
-            {
-                ProcessName = "Запрос на удаление подписи/документа в Lotus Notes",
-                Description = "Ошиблись при согласовании в Lotus?",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_RemoveSignLotus",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
-                ProcessName = "Запрос на создание списка рассылки в MS Outlook",
-                Description = "Нужна новая группа рассылки?",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_CreateSubscription",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
             context.ProcessTable.Add(new ProcessTable
             {
                 ProcessName = "Запрос на создание сетевой папки",
@@ -648,52 +577,10 @@ namespace RapidDoc.Models.Infrastructure
 
             context.ProcessTable.Add(new ProcessTable
             {
-                ProcessName = "Запрос на делегирования писем в Exchange server",
-                Description = "",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_DelegationExchServ",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
-                ProcessName = "Запрос на добавление пользователей в группу рассылки",
-                Description = "Включить вас в группу рассылки",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_AddUserSubscription",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
                 ProcessName = "Запрос на смену пароля учетной записи в Active Directory",
                 Description = "Забыли или потеряли пароль?",
                 GroupProcessTableId = numId,
                 TableName = "USR_REQ_IT_CAP_ChangePassAD",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
-                ProcessName = "Запрос на смену пароля в Lotus Notes",
-                Description = "Забыли или потеряли пароль?",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_ChangePassLotus",
                 isApproved = true,
                 CreatedDate = DateTime.UtcNow,
                 WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
@@ -732,94 +619,10 @@ namespace RapidDoc.Models.Infrastructure
 
             context.ProcessTable.Add(new ProcessTable
             {
-                ProcessName = "Запрос на предоставление прав доступа в Lotus Notes",
-                Description = "Нужен доступ к Lotus Notes?",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_AccessRightLotus",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
-                ProcessName = "Запрос на предоставление доступа по отправке на рассылки в Lotus Notes",
-                Description = "Требуется доступ к рассылке?",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_AccessSendLotus",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
-                ProcessName = "Запрос на предоставление доступа к FTP ресурсу",
-                Description = "Нужен доступ к FTP ресурсу?",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_AccessRightFTP",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
                 ProcessName = "Запрос на предоставление доступа к сетевым папкам",
                 Description = "Нужен доступ к сетевым папкам?",
                 GroupProcessTableId = numId,
                 TableName = "USR_REQ_IT_CAP_AccessRightNetworkFolder",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
-                ProcessName = "Запрос на предоставление доступа в Internet",
-                Description = "Нужен доступ к интернету?",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_AccessRightInternet",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
-                ProcessName = "Запрос на предоставление доступа в Internet (Для сотрудников ЗИФ)",
-                Description = "Нужен доступ к интернету?",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_AccessRightInternetZIF",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
-                ProcessName = "Запрос на делегирование Документооборот",
-                Description = "",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_DelegationDocflow",
                 isApproved = true,
                 CreatedDate = DateTime.UtcNow,
                 WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
@@ -858,38 +661,10 @@ namespace RapidDoc.Models.Infrastructure
 
             context.ProcessTable.Add(new ProcessTable
             {
-                ProcessName = "Запрос на архивацию почты",
-                Description = "У вас полный ящик писем?",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_ArchiveMail",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
                 ProcessName = "Запрос на создание пользователя в Lync",
                 Description = "Завести нового пользователя?",
                 GroupProcessTableId = numId,
                 TableName = "USR_REQ_IT_CAP_CreateUserLync",
-                isApproved = true,
-                CreatedDate = DateTime.UtcNow,
-                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
-                ModifiedDate = DateTime.UtcNow,
-                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
-                ApplicationUserCreatedId = user.Id
-            });
-
-            context.ProcessTable.Add(new ProcessTable
-            {
-                ProcessName = "Запрос на создание контакта в Exchange",
-                Description = "Завести новый контакт?",
-                GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_CreateUserExchange",
                 isApproved = true,
                 CreatedDate = DateTime.UtcNow,
                 WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
@@ -914,10 +689,142 @@ namespace RapidDoc.Models.Infrastructure
 
             context.ProcessTable.Add(new ProcessTable
             {
-                ProcessName = "Нет доступа к интернету",
-                Description = "Не доступен сайт?",
+                ProcessName = "Запрос на обслуживание программного обеспечения и оборудования",
+                Description = "Проводите плановое обслуживание?",
                 GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_NoLinkInternet",
+                TableName = "USR_REQ_IT_CAP_HardSoftwareMaintenance",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+            #endregion
+
+            #region Документооборот
+            numId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "Документооборот").Id;
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на удаление подписи/документа в Lotus Notes",
+                Description = "Ошиблись при согласовании в Lotus?",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_RemoveSignLotus",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на смену пароля в Lotus Notes",
+                Description = "Забыли или потеряли пароль?",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_ChangePassLotus",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на предоставление прав доступа в Lotus Notes",
+                Description = "Нужен доступ к Lotus Notes?",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_AccessRightLotus",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на предоставление доступа по отправке на рассылки в Lotus Notes",
+                Description = "Требуется доступ к рассылке?",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_AccessSendLotus",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на делегирование Документооборот",
+                Description = "",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_DelegationDocflow",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+            #endregion
+
+            #region Почта
+            numId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "Почта").Id;
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на создание списка рассылки в MS Outlook",
+                Description = "Нужна новая группа рассылки?",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_CreateSubscription",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на делегирования писем в Exchange server",
+                Description = "",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_DelegationExchServ",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на добавление пользователей в группу рассылки",
+                Description = "Включить вас в группу рассылки",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_AddUserSubscription",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на архивацию почты",
+                Description = "У вас полный ящик писем?",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_ArchiveMail",
                 isApproved = true,
                 CreatedDate = DateTime.UtcNow,
                 WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
@@ -942,10 +849,69 @@ namespace RapidDoc.Models.Infrastructure
 
             context.ProcessTable.Add(new ProcessTable
             {
-                ProcessName = "Запрос на обслуживание программного обеспечения и оборудования",
-                Description = "Проводите плановое обслуживание?",
+                ProcessName = "Запрос на создание контакта в Exchange",
+                Description = "Завести новый контакт?",
                 GroupProcessTableId = numId,
-                TableName = "USR_REQ_IT_CAP_HardSoftwareMaintenance",
+                TableName = "USR_REQ_IT_CAP_CreateUserExchange",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+            #endregion
+
+            #region Интернет
+            numId = context.GroupProcessTable.FirstOrDefault(x => x.GroupProcessName == "Интернет").Id;
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на предоставление доступа к FTP ресурсу",
+                Description = "Нужен доступ к FTP ресурсу?",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_AccessRightFTP",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Нет доступа к интернету",
+                Description = "Не доступен сайт?",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_NoLinkInternet",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на предоставление доступа в Internet",
+                Description = "Нужен доступ к интернету?",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_AccessRightInternet",
+                isApproved = true,
+                CreatedDate = DateTime.UtcNow,
+                WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
+            });
+
+            context.ProcessTable.Add(new ProcessTable
+            {
+                ProcessName = "Запрос на предоставление доступа в Internet (Для сотрудников ЗИФ)",
+                Description = "Нужен доступ к интернету?",
+                GroupProcessTableId = numId,
+                TableName = "USR_REQ_IT_CAP_AccessRightInternetZIF",
                 isApproved = true,
                 CreatedDate = DateTime.UtcNow,
                 WorkScheduleTableId = context.WorkScheduleTable.FirstOrDefault().Id,
@@ -955,6 +921,7 @@ namespace RapidDoc.Models.Infrastructure
             });
 
             context.SaveChanges();
+            #endregion
 
             base.Seed(context);
 

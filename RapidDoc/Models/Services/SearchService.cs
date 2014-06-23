@@ -28,12 +28,14 @@ namespace RapidDoc.Models.Services
         private IRepository<SearchTable> repo;
         private IUnitOfWork _uow;
         private readonly IAccountService _AccountService;
+        private readonly IDocumentService _DocumentService;
 
-        public SearchService(IUnitOfWork uow, IAccountService accountService)
+        public SearchService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService)
         {
             _uow = uow;
             repo = uow.GetRepository<SearchTable>();
             _AccountService = accountService;
+            _DocumentService = documentService;
         }
 
         public IEnumerable<SearchTable> GetPartial(Expression<Func<SearchTable, bool>> predicate)
@@ -44,6 +46,13 @@ namespace RapidDoc.Models.Services
         public IEnumerable<SearchView> GetPartialView(Expression<Func<SearchTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<SearchTable>, IEnumerable<SearchView>>(GetPartial(predicate));
+
+            foreach (var item in items)
+            {
+                DocumentTable docuTable = _DocumentService.Find(item.DocumentTableId);
+                item.isShow = _DocumentService.isShowDocument(docuTable.Id, docuTable.ProcessTableId, "", true);
+            }
+
             return items;
         }
 
@@ -54,7 +63,11 @@ namespace RapidDoc.Models.Services
 
         public SearchView FirstOrDefaultView(Expression<Func<SearchTable, bool>> predicate)
         {
-            return Mapper.Map<SearchTable, SearchView>(FirstOrDefault(predicate));
+            var item = Mapper.Map<SearchTable, SearchView>(FirstOrDefault(predicate));
+            DocumentTable docuTable = _DocumentService.Find(item.DocumentTableId);
+            item.isShow = _DocumentService.isShowDocument(docuTable.Id, docuTable.ProcessTableId, "", true);
+
+            return item;
         }
 
         public void SaveDomain(SearchTable domainTable, string currentUserName = "")

@@ -85,15 +85,9 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
                 .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
                 .ForMember(x => x.CreatedDate, opt => opt.Ignore())
-                .ForMember(x => x.ModifiedDate, opt => opt.Ignore()); 
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
 
-            Mapper.CreateMap<DocumentTable, DocumentListView>()
-                .ForMember(x => x.ProcessName, o => o.MapFrom(m => m.ProcessTable.ProcessName))
-                .ForMember(x => x.GroupProcessName, o => o.MapFrom(m => m.ProcessTable.GroupProcessTable.GroupProcessName))
-                .ForMember(x => x.ActivityName, o => o.MapFrom(m => m.CurrentActivityName()))
-                .ForMember(x => x.SLAStatus, o => o.MapFrom(m => m.SLAStatus()))
-                .ForMember(x => x.isNotReview, o => o.MapFrom(m => m.isNotReview()))
-                .ForMember(x => x.isArchive, o => o.MapFrom(m => m.isArchive()));
+            Mapper.CreateMap<DocumentTable, DocumentListView>();
 
             Mapper.CreateMap<NumberSeriesTable, NumberSeriesView>();
             Mapper.CreateMap<NumberSeriesView, NumberSeriesTable>()
@@ -124,7 +118,6 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.ProcessName, o => o.MapFrom(m => m.DocumentTable.ProcessTable.ProcessName));
 
             Mapper.CreateMap<SearchTable, SearchView>()
-                .ForMember(x => x.isShow, o => o.MapFrom(m => m.DocumentTable.isShow(true)))
                 .ForMember(x => x.DocumentNum, o => o.MapFrom(m => m.DocumentTable.DocumentNum))
                 .ForMember(x => x.ProcessName, o => o.MapFrom(m => m.DocumentTable.ProcessTable.ProcessName));
 

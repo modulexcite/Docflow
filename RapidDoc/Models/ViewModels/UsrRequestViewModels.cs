@@ -456,6 +456,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Объем")]
         public StorageVolume StorageVolume { get; set; }
 
+        [Display(Name = "Количество")]
         public int Qty { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]

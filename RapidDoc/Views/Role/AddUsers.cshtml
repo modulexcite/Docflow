@@ -1,0 +1,31 @@
+﻿@model IEnumerable<RapidDoc.Models.ViewModels.UserViewModel>
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.AddUsers;
+}
+
+<h2>@UIElementRes.UIElement.AddUsers</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "duallistform" }))
+{
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+        <select multiple="multiple" size="10" class="duallist">
+            @foreach (var item in Model)
+            {
+                <option value="@item.Id" @Html.Raw((item.isRoleUser) ? "selected='selected'" : "")>@item.UserName</option>
+            }
+        </select>
+        <br>
+        @{Html.RenderPartial("SaveBackBtn");}
+</fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    duallist_init("@UIElementRes.UIElement.Filter");
+}

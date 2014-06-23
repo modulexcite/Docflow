@@ -15,7 +15,10 @@ namespace RapidDoc.Models.DomainModels
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
 
+        [Display(Name = "CreatedDate", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public DateTime CreatedDate { get; set; }
+
+        [Display(Name = "ModifiedDate", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public DateTime ModifiedDate { get; set; }
 
         public string ApplicationUserCreatedId { get; set; }
@@ -24,6 +27,7 @@ namespace RapidDoc.Models.DomainModels
         public string ApplicationUserModifiedId { get; set; }
         public virtual ApplicationUser ApplicationUserModified { get; set; }
 
+        [Display(Name = "CreatedBy", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string CreatedBy
         {
             get
@@ -37,6 +41,7 @@ namespace RapidDoc.Models.DomainModels
             }
         }
 
+        [Display(Name = "ModifiedBy", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string ModifiedBy
         {
             get

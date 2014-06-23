@@ -6,10 +6,20 @@
     <a href=@Url.Action("Edit", new { id=item.Id })><span class="fa fa-pencil fa-lg"></span></a>
 }
 
+@helper AddUsersField(RapidDoc.Models.ViewModels.RoleViewModel item)
+{
+    <a href=@Url.Action("AddUsers", new { id = item.Id })><span class="fa fa-plus fa-lg"></span></a>
+}
+
 @Html.Grid(Model).Named("ordersGrid").Columns(columns =>
 {
     columns.Add(o => o.Id).Css("hidden");
     columns.Add(o => o.Name).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.RoleViewModel)o.Columns).Name).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => AddUsersField(o));
     columns.Add()
         .Encoded(false)
         .Sanitized(false)

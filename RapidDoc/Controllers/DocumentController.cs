@@ -108,7 +108,7 @@ namespace RapidDoc.Controllers
 
             DocumentTable docuTable = _DocumentService.Find(id);
             ProcessView process = _ProcessService.FindView(docuTable.ProcessTableId);
-            if (docuTable == null || process == null || docuTable.isShow(isAfterView) == false)
+            if (docuTable == null || process == null || _DocumentService.isShowDocument(docuTable.Id, process.Id ?? Guid.Empty, "", isAfterView) == false)
             {
                 return RedirectToAction("PageNotFound", "Error");
             }
@@ -174,6 +174,9 @@ namespace RapidDoc.Controllers
         {
             var viewModel = new DocumentComposite();
             viewModel.ProcessView = process;
+
+            docuTable.isSign = _DocumentService.isSignDocument(docuTable.Id, docuTable.ProcessTableId);
+            docuTable.isArchive = _ReviewDocLogService.isArchive(docuTable.Id, "", userTable);
             viewModel.DocumentTable = docuTable;
             viewModel.docData = _DocumentService.GetDocumentView(id);
             viewModel.fileId = docuTable.FileId;
@@ -254,6 +257,13 @@ namespace RapidDoc.Controllers
                 {
                     //Save Document
                     var documentId = _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
+
+                    /*
+                    for (int i = 0; i < 100; i++ )
+                    {
+                        _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
+                    }
+                    */
                     _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId });
                     _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
                     SaveSearchData(docModel, actionModelName, documentId);

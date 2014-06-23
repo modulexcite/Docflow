@@ -419,7 +419,8 @@ namespace RapidDoc.Models.DomainModels
 
     public class USR_REQ_IT_CTP_IncidentIT_Table : BasicDocumentRequestTable
     {
-
+        [Required]
+        public string Phone { get; set; }
     }
 
     // Служба администрирования и информационной безопасности
@@ -731,7 +732,7 @@ namespace RapidDoc.Models.DomainModels
     public class USR_REQ_IT_CAP_CreateUserLync_Table : BasicDocumentTable
     {
         [Required]
-        public string UserName { get; set; }
+        public string Users { get; set; }
 
         [Required]
         public string InternalPhone { get; set; }
@@ -740,7 +741,7 @@ namespace RapidDoc.Models.DomainModels
     public class USR_REQ_IT_CAP_CreateUserExchange_Table : BasicDocumentTable
     {
         [Required]
-        public string UserName { get; set; }
+        public string Users { get; set; }
 
         [Required]
         public string Email { get; set; }
