@@ -18,7 +18,7 @@ namespace RapidDoc.Controllers
     public class DomainController : BasicController
     {
         private readonly IDomainService _Service;
-
+        //Igor Dmitrov
         public DomainController(IDomainService Service)
         {
             _Service = Service;
