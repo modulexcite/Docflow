@@ -8,6 +8,7 @@ using System.Web.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net.Http;
+using System.Data.SqlClient;
 
 namespace RapidDoc.Models.Infrastructure
 {
