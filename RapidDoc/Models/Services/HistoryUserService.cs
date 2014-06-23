@@ -60,7 +60,7 @@ namespace RapidDoc.Models.Services
             var items = Mapper.Map<IEnumerable<HistoryUserTable>, IEnumerable<HistoryUserView>>(GetPartial(predicate));
             return items;
         }
-
+        //4654645654
         public HistoryUserTable FirstOrDefault(Expression<Func<HistoryUserTable, bool>> predicate)
         {
             return repo.Find(predicate);
