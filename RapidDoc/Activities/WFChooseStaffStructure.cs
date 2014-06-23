@@ -45,7 +45,7 @@ namespace RapidDoc.Activities
             _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
 
             outputBookmark.Set(context, this.DisplayName.Replace("<step>", ""));
-            outputSkipStep.Set(context, userFunctionResult.Skip);
+            outputSkipStep.Set(context, executionStep ? false : userFunctionResult.Skip);
             outputStep.Set(context, documentStep);
         }
     }
