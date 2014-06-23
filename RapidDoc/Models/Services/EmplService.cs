@@ -35,7 +35,6 @@ namespace RapidDoc.Models.Services
         SelectList GetDropListEmplNull(Guid? id);
         object GetJsonEmpl();
     }
-    //4753254
     public class EmplService : IEmplService
     {
         private IRepository<EmplTable> repo;

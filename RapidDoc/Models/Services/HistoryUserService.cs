@@ -54,7 +54,6 @@ namespace RapidDoc.Models.Services
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<HistoryUserView> GetPartialView(Expression<Func<HistoryUserTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<HistoryUserTable>, IEnumerable<HistoryUserView>>(GetPartial(predicate));
