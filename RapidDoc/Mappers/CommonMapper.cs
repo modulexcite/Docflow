@@ -121,6 +121,14 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.DocumentNum, o => o.MapFrom(m => m.DocumentTable.DocumentNum))
                 .ForMember(x => x.ProcessName, o => o.MapFrom(m => m.DocumentTable.ProcessTable.ProcessName));
 
+            Mapper.CreateMap<ServiceIncidentTable, ServiceIncidentView>();
+            Mapper.CreateMap<ServiceIncidentView, ServiceIncidentTable>()
+                .ForMember(x => x.CompanyTableId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
             //Custom Requests
             Mapper.CreateMap<USR_REQ_IT_CTS_DeliveryOfPinCode_Table, USR_REQ_IT_CTS_DeliveryOfPinCode_View>();
             Mapper.CreateMap<USR_REQ_IT_CTS_DeliveryOfPinCode_View, USR_REQ_IT_CTS_DeliveryOfPinCode_Table>()

@@ -923,7 +923,15 @@ namespace RapidDoc.Models.Infrastructure
 
             context.SaveChanges();
             #endregion
-
+            context.ServiceIncidentTable.Add(new ServiceIncidentTable
+            {
+                ServiceName = "ERP сервис",
+                Description = "Система учета ресурсов предприятия",
+                PriorityIncident = Repository.PriorityIncident.Hight,
+                SLAIncident = Repository.SLAIncident.FourHour,
+                FirstRoleTableId = rm.FindByName("ExecutorCTS_ATC").Id,
+                SecondRoleTableId = rm.FindByName("ExecutorCTP").Id   
+            });
             base.Seed(context);
 
             GetLDAPData().Wait(30000);

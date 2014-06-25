@@ -78,6 +78,7 @@ namespace RapidDoc.App_Start
             kernel.Bind<IEmailService>().To<EmailService>();
             kernel.Bind<IHistoryUserService>().To<HistoryUserService>();
             kernel.Bind<ISearchService>().To<SearchService>();
+            kernel.Bind<IServiceIncidentService>().To<ServiceIncidentService>();
         }        
     }
 }

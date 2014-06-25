@@ -6,6 +6,7 @@ using RapidDoc.Models.Repository;
 using System.ComponentModel.DataAnnotations.Schema;
 using RapidDoc.Models.Services;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Models.DomainModels
 {
@@ -262,5 +263,30 @@ namespace RapidDoc.Models.DomainModels
 
         public Guid DocumentTableId { get; set; }
         public virtual DocumentTable DocumentTable { get; set; }
+    }
+
+    public class ServiceIncidentTable : BasicCompanyNullTable
+    {
+        [StringLength(70)]
+        [Required]
+        public string ServiceName { get; set; }
+
+        [StringLength(256)]
+        [Required]
+        public string Description { get; set; }
+
+        public PriorityIncident PriorityIncident { get; set; }
+        public SLAIncident SLAIncident { get; set; }
+
+        [Required]
+        [StringLength(256)]
+        public string FirstRoleTableId { get; set; }
+        public virtual IdentityRole FirstRoleTable { get; set; }
+
+        [Required]
+        [StringLength(256)]
+        public string SecondRoleTableId { get; set; }
+        public virtual IdentityRole SecondRoleTable { get; set; } 
+
     }
 }

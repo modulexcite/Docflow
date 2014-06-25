@@ -37,6 +37,7 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<EmailParameterTable> EmailParameterTable { get; set; }
         public DbSet<HistoryUserTable> HistoryUserTable { get; set; }
         public DbSet<SearchTable> SearchTable { get; set; }
+        public DbSet<ServiceIncidentTable> ServiceIncidentTable { get; set; }
 
         //Custom Requests
         public DbSet<USR_REQ_IT_CTS_DeliveryOfPinCode_Table> USR_REQ_IT_CTS_DeliveryOfPinCode_Table { get; set; }

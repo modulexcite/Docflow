@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Repository;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Models.ViewModels
 {
@@ -147,5 +148,25 @@ namespace RapidDoc.Models.ViewModels
     public class SearchFormView
     {
         public string SearchText { get; set; }
+    }
+
+    public class ServiceIncidentView : BasicCompanyNullView
+    {
+        [StringLength(70, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ProcessName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string ProcessName { get; set; }
+
+        [StringLength(256, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
+        [Display(Name = "Description", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string Description { get; set; }
+
+        public PriorityIncident PriorityIncident { get; set; }
+        public SLAIncident SLAIncident { get; set; }
+
+        public Guid? FirstRoleTableId { get; set; }
+        public Guid? SecondRoleTableId { get; set; }
+        public string SecondRoleName { get; set; }
+        public string FirstRoleName { get; set; }
     }
 }
