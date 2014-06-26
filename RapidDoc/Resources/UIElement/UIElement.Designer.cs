@@ -340,6 +340,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Новый сервис инцидента.
+        /// </summary>
+        public static string CreateServiceIncident {
+            get {
+                return ResourceManager.GetString("CreateServiceIncident", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Новая должность.
         /// </summary>
         public static string CreateTitle {

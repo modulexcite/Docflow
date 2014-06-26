@@ -394,19 +394,4 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Критический")]
         Critical = 3,
     }
-
-    public enum SLAIncident : byte
-    {
-        [Display(Name = "1 час")]
-        OneHour = 0,
-
-        [Display(Name = "2 часа")]
-        TwoHour = 1,
-
-        [Display(Name = "4 часов")]
-        FourHour = 2,
-
-        [Display(Name = "8 часов")]
-        EightHour = 3,
-    }
 }

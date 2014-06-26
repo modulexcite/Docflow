@@ -928,9 +928,13 @@ namespace RapidDoc.Models.Infrastructure
                 ServiceName = "ERP сервис",
                 Description = "Система учета ресурсов предприятия",
                 PriorityIncident = Repository.PriorityIncident.Hight,
-                SLAIncident = Repository.SLAIncident.FourHour,
+                SLAIncident = 2,
                 FirstRoleTableId = rm.FindByName("ExecutorCTS_ATC").Id,
-                SecondRoleTableId = rm.FindByName("ExecutorCTP").Id   
+                SecondRoleTableId = rm.FindByName("ExecutorCTP").Id,  
+                CreatedDate = DateTime.UtcNow,
+                ModifiedDate = DateTime.UtcNow,
+                CompanyTableId = context.CompanyTable.FirstOrDefault().Id,
+                ApplicationUserCreatedId = user.Id
             });
             base.Seed(context);
 

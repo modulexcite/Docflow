@@ -1,0 +1,75 @@
+﻿@model RapidDoc.Models.ViewModels.ServiceIncidentView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Edit;
+}
+
+<h2>@UIElementRes.UIElement.Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.ServiceName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.ServiceName, new { @class = "form-control", @size = 70, @maxlength = 20, placeholder = "ERP сервис", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.ServiceName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Description)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Description, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "ldap.contoso.com", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.PriorityIncident)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => model.PriorityIncident, new { @class = "selectpicker" } )
+            @Html.ValidationMessageFor(model => model.PriorityIncident)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SLAIncident)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.SLAIncident, new { @class = "form-control bfh-number" })
+            @Html.ValidationMessageFor(model => model.SLAIncident)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FirstRoleName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("FirstRoleTableId", (IEnumerable<SelectListItem>)ViewBag.RoleList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.FirstRoleTableId)
+        </div>
+
+        <div class="editor-label">
+        @Html.LabelFor(model => model.SecondRoleName)
+        </div>
+        <div class="editor-field">
+        @Html.DropDownList("SecondRoleTableId", (IEnumerable<SelectListItem>)ViewBag.RoleList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+        @Html.ValidationMessageFor(model => model.SecondRoleTableId)
+        </div>
+    
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    selectpicker_init();
+}

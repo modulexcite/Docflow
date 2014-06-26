@@ -10,6 +10,8 @@ using System.Web;
 using RapidDoc.Models.Repository;
 using System.Web.Mvc;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Models.Services
 {
@@ -27,6 +29,10 @@ namespace RapidDoc.Models.Services
         void Delete(Guid id);
         ServiceIncidentTable Find(Guid? id);
         ServiceIncidentView FindView(Guid id);
+        SelectList GetDropListServiceIncidentNull(Guid? id);
+        SelectList GetDropListServiceIncident(Guid? id);
+        SelectList GetDropListRole(string id);
+        SelectList GetDropListRoleNull(Guid? id);
     }
 
     public class ServiceIncidentService : IServiceIncidentService
@@ -126,6 +132,37 @@ namespace RapidDoc.Models.Services
         public ServiceIncidentView FindView(Guid id)
         {
             return Mapper.Map<ServiceIncidentTable, ServiceIncidentView>(Find(id));
+        }
+
+        public SelectList GetDropListServiceIncidentNull(Guid? id)
+        {
+            var items = GetAllView().ToList();
+            items.Insert(0, new ServiceIncidentView { ServiceName = UIElementRes.UIElement.NoValue, Id = null });
+            return new SelectList(items, "Id", "ServiceName", id);
+        }
+
+        public SelectList GetDropListRole(string id)
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            var roles = RoleManager.Roles.ToList();
+
+            return new SelectList(roles, "Id", "Name", id);
+        }
+        public SelectList GetDropListRoleNull(Guid? id)
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            var roles = RoleManager.Roles.ToList();
+
+            roles.Insert(0, new IdentityRole { Name = UIElementRes.UIElement.NoValue, Id = null });
+            return new SelectList(roles, "Id", "Name", id);
+        }
+
+        public SelectList GetDropListServiceIncident(Guid? id)
+        {
+            var items = GetAllView().ToList();
+            return new SelectList(items, "Id", "ServiceName", id);
         }
 
         public void Delete(Guid id)

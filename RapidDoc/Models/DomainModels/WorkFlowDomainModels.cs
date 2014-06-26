@@ -12,7 +12,7 @@ namespace RapidDoc.Models.DomainModels
 {
     public class GroupProcessTable : BasicTable
     {
-        [StringLength(40)]
+        [StringLength(40)] 
         [Required]
         public string GroupProcessName { get; set; }
 
@@ -276,7 +276,7 @@ namespace RapidDoc.Models.DomainModels
         public string Description { get; set; }
 
         public PriorityIncident PriorityIncident { get; set; }
-        public SLAIncident SLAIncident { get; set; }
+        public int SLAIncident { get; set; }
 
         [Required]
         [StringLength(256)]

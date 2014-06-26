@@ -155,18 +155,25 @@ namespace RapidDoc.Models.ViewModels
         [StringLength(70, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "ProcessName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
-        public string ProcessName { get; set; }
+        public string ServiceName { get; set; }
 
         [StringLength(256, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
         [Display(Name = "Description", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string Description { get; set; }
 
+        [Display(Name = "Приоритеты инцидентов")]
         public PriorityIncident PriorityIncident { get; set; }
-        public SLAIncident SLAIncident { get; set; }
 
-        public Guid? FirstRoleTableId { get; set; }
-        public Guid? SecondRoleTableId { get; set; }
+        [Display(Name = "SLA инцидентов")]
+        public int SLAIncident { get; set; }
+
+        public string FirstRoleTableId { get; set; }
+        public string SecondRoleTableId { get; set; }
+
+        [Display(Name = "2 линия IT")]
         public string SecondRoleName { get; set; }
+
+        [Display(Name = "1 линия IT")]
         public string FirstRoleName { get; set; }
     }
 }

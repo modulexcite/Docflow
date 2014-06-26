@@ -14,6 +14,8 @@ using RapidDoc.Extensions;
 using RapidDoc.Models.Grids;
 using System.Reflection;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Controllers
 {
@@ -53,6 +55,7 @@ namespace RapidDoc.Controllers
 
         public ActionResult Create()
         {
+            ViewBag.RoleList = _Service.GetDropListRoleNull(null);
             return View(_Service.GetNewModel());
         }
 
@@ -71,7 +74,82 @@ namespace RapidDoc.Controllers
                     ModelState.AddModelError(string.Empty, e.GetOriginalException().Message);
                 }
             }
+            ViewBag.RoleList = _Service.GetDropListRole(model.FirstRoleTableId);
+            return View(model);
+        }
 
+        public ActionResult Edit(Guid id)
+        {
+            var model = _Service.FindView(id);
+
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.RoleList = _Service.GetDropListRole(model.FirstRoleTableId);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(ServiceIncidentView model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _Service.Save(model);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError(string.Empty, e.GetOriginalException().Message);
+                }
+            }
+            ViewBag.RoleList = _Service.GetDropListRole(model.FirstRoleTableId);
+            return View(model);
+        }
+
+        public ActionResult Delete(Guid id)
+        {
+            var model = _Service.FindView(id);
+
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(Guid id)
+        {
+            try
+            {
+                _Service.Delete(id);
+                return RedirectToAction("Index");
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError(string.Empty, e.GetOriginalException().Message);
+            }
+
+            var model = _Service.FindView(id);
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(model);
+        }
+
+        public ActionResult Detail(Guid id)
+        {
+            var model = _Service.FindView(id);
+
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
             return View(model);
         }
 
