@@ -1,0 +1,24 @@
+﻿@model RapidDoc.Models.ViewModels.USR_REQ_IT_CTP_IncidentIT_View
+@using RapidDoc.Extensions;
+
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.DocumentTableId)
+@Html.HiddenFor(model => model.Phone)
+@Html.HiddenFor(model => model.RequestText)
+@Html.HiddenFor(model => model.Users)
+<hr>
+<h3>Заполняет администратор HelpDesk</h3>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Priority)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => model.Priority, new { @class = "selectpicker" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.ServiceIncidentTableId)
+</div>
+<div class="editor-field">
+    @Html.DropDownList("ServiceIncidentTableId", (IEnumerable<SelectListItem>)ViewBag.ServiceIncidentList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+    @Html.ValidationMessageFor(model => model.ServiceIncidentTableId)
+</div>

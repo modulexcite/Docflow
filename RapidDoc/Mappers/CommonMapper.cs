@@ -122,8 +122,7 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.ProcessName, o => o.MapFrom(m => m.DocumentTable.ProcessTable.ProcessName));
 
             Mapper.CreateMap<ServiceIncidentTable, ServiceIncidentView>()
-                .ForMember(x => x.FirstRoleName, o => o.MapFrom(m => m.FirstRoleTable.Name))
-                .ForMember(x => x.SecondRoleName, o => o.MapFrom(m => m.SecondRoleTable.Name));
+                .ForMember(x => x.RoleName, o => o.MapFrom(m => m.IdentityRole.Name));
             Mapper.CreateMap<ServiceIncidentView, ServiceIncidentTable>()
                 .ForMember(x => x.CompanyTableId, opt => opt.Ignore())
                 .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())

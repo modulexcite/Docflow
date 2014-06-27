@@ -553,7 +553,13 @@ namespace RapidDoc.Models.ViewModels
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Контактный номер телефона")]
-        public string Phone { get; set; }
+        public string Phone { get; set; } 
+
+        [Display(Name = "Приоритет")]
+        public PriorityIncident Priority { get; set; }
+
+        [Display(Name = "Сервис")]
+        public Guid? ServiceIncidentTableId { get; set; }
     }
 
     // Служба администрирования и информационной безопасности

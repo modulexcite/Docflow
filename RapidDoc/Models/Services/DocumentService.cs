@@ -6,6 +6,7 @@ using System.Web;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.CSharp.RuntimeBinder;
 using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Infrastructure;
 using RapidDoc.Models.Interfaces;
@@ -27,6 +28,7 @@ namespace RapidDoc.Models.Services
         dynamic RouteCustomModelView(string customModel);
         dynamic RouteCustomModelDomain(string customModel);
         void UpdateDocument(DocumentTable domainTable, string currentUserName = "");
+        void UpdateDocumentFields(dynamic viewTable, Guid processId);
         bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null);
         bool isSignDocument(Guid documentId, Guid ProcessId, string currentUserName = "");
         IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserName = "", ApplicationUser user = null);
@@ -115,6 +117,23 @@ namespace RapidDoc.Models.Services
             _uow.Save();
 
             return docuTable.Id;
+        }
+
+        public void UpdateDocumentFields(dynamic viewTable, Guid processId)
+        {
+            ProcessTable process = _ProcessService.Find(processId);
+            var domainTable = RouteCustomRepository(process.TableName).GetById(viewTable.Id);
+
+            if (domainTable != null)
+            {
+                Type typeDomain = Type.GetType("RapidDoc.Models.DomainModels." + process.TableName + "_Table");
+                Type typeDomainView = Type.GetType("RapidDoc.Models.ViewModels." + process.TableName + "_View");
+                Mapper.Map(viewTable, domainTable, typeDomainView, typeDomain);
+
+                domainTable.ModifiedDate = DateTime.UtcNow;
+                RouteCustomRepository(process.TableName).Update(domainTable);
+                _uow.Save();
+            }
         }
 
         public IEnumerable<DocumentTable> GetAll()

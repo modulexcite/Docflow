@@ -611,6 +611,7 @@ namespace RapidDoc.Controllers
                     view = Create(processId, docModel, fileId, actionModelName, documentData);
                     break;
                 case 2:
+                    _DocumentService.UpdateDocumentFields(docModel, processId);
                     view = ShowDocument(localDocumentId, approveDoc, rejectDoc, documentData, lastComment);
                     break;
                 default:
@@ -652,6 +653,18 @@ namespace RapidDoc.Controllers
                         DateTime? valueDate = collection[key] == "" ? null : (DateTime?)DateTime.Parse(collection[key]);
                         propertyInfo.SetValue(actionModel, valueDate, null);
                         documentData.Add(key, valueDate);
+                    }
+                    else if (propertyInfo.PropertyType == typeof(Guid?))
+                    {
+                        Guid? valueNotGuid = collection[key] == "" ? null : (Guid?)Guid.Parse(collection[key]);
+                        propertyInfo.SetValue(actionModel, valueNotGuid, null);
+                        documentData.Add(key, valueNotGuid);
+                    }
+                    else if (propertyInfo.PropertyType == typeof(Guid))
+                    {
+                        Guid valueGuid = Guid.Parse(collection[key]);
+                        propertyInfo.SetValue(actionModel, valueGuid, null);
+                        documentData.Add(key, valueGuid);
                     }
                     else
                     {

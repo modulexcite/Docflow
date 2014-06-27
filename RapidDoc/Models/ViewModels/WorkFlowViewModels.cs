@@ -167,13 +167,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "SLA инцидентов")]
         public int SLAIncident { get; set; }
 
-        public string FirstRoleTableId { get; set; }
-        public string SecondRoleTableId { get; set; }
+        public string RoleTableId { get; set; }
 
-        [Display(Name = "2 линия IT")]
-        public string SecondRoleName { get; set; }
-
-        [Display(Name = "1 линия IT")]
-        public string FirstRoleName { get; set; }
+        [Display(Name = "Роль")]
+        public string RoleName { get; set; }
     }
 }

@@ -279,14 +279,7 @@ namespace RapidDoc.Models.DomainModels
         public int SLAIncident { get; set; }
 
         [Required]
-        [StringLength(256)]
-        public string FirstRoleTableId { get; set; }
-        public virtual IdentityRole FirstRoleTable { get; set; }
-
-        [Required]
-        [StringLength(256)]
-        public string SecondRoleTableId { get; set; }
-        public virtual IdentityRole SecondRoleTable { get; set; } 
-
+        public string RoleTableId { get; set; }
+        public virtual IdentityRole IdentityRole { get; set; }
     }
 }

@@ -74,7 +74,7 @@ namespace RapidDoc.Controllers
                     ModelState.AddModelError(string.Empty, e.GetOriginalException().Message);
                 }
             }
-            ViewBag.RoleList = _Service.GetDropListRole(model.FirstRoleTableId);
+            ViewBag.RoleList = _Service.GetDropListRole(model.RoleTableId);
             return View(model);
         }
 
@@ -86,7 +86,7 @@ namespace RapidDoc.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.RoleList = _Service.GetDropListRole(model.FirstRoleTableId);
+            ViewBag.RoleList = _Service.GetDropListRole(model.RoleTableId);
             return View(model);
         }
 
@@ -105,7 +105,7 @@ namespace RapidDoc.Controllers
                     ModelState.AddModelError(string.Empty, e.GetOriginalException().Message);
                 }
             }
-            ViewBag.RoleList = _Service.GetDropListRole(model.FirstRoleTableId);
+            ViewBag.RoleList = _Service.GetDropListRole(model.RoleTableId);
             return View(model);
         }
 

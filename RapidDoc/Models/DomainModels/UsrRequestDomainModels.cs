@@ -421,6 +421,11 @@ namespace RapidDoc.Models.DomainModels
     {
         [Required]
         public string Phone { get; set; }
+
+        public PriorityIncident Priority { get; set; }
+
+        public Guid? ServiceIncidentTableId { get; set; }
+        public virtual ServiceIncidentTable ServiceIncidentTable { get; set; }
     }
 
     // Служба администрирования и информационной безопасности
