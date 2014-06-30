@@ -52,8 +52,11 @@ namespace RapidDoc.Controllers
             if (document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution
                 || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Closed || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Cancelled)
             {
-                ViewBag.CurrentIncidentServiceName = _ServiceIncidentService.Find(model.ServiceIncidentTableId).ServiceName;
-                return PartialView("USR_REQ_IT_CTP_IncidentIT_View_Administrator", model);
+                if (model.ServiceIncidentTableId != null)
+                {
+                    ViewBag.CurrentIncidentServiceName = _ServiceIncidentService.Find(model.ServiceIncidentTableId).ServiceName;
+                    return PartialView("USR_REQ_IT_CTP_IncidentIT_View_Administrator", model);
+                }
             }
 
             return PartialView("_Empty");

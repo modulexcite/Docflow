@@ -280,6 +280,8 @@ namespace RapidDoc.Models.DomainModels
 
         [Required]
         public string RoleTableId { get; set; }
+
+        [ForeignKey("RoleTableId")]
         public virtual IdentityRole IdentityRole { get; set; }
     }
 }
