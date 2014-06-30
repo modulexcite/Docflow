@@ -29,6 +29,7 @@ namespace RapidDoc.Models.Services
         WFUserFunctionResult WFRoleUser(Guid documentId, String roleName);
         WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate, string currentUserName);
         WFUserFunctionResult WFCreatedUser(Guid documentId);
+        string WFChooseSpecificUserFromService(Guid serviceId);
         void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData);
@@ -45,6 +46,7 @@ namespace RapidDoc.Models.Services
         private readonly IWorkflowTrackerService _WorkflowTrackerService;
         private readonly IEmailService _EmailService;
         private readonly IHistoryUserService _HistoryUserService;
+        private readonly IServiceIncidentService _ServiceIncidentService;
         
         private static SqlWorkflowInstanceStore instanceStore;
         private static AutoResetEvent instanceUnloaded = new AutoResetEvent(false);
@@ -55,7 +57,7 @@ namespace RapidDoc.Models.Services
         private const string keyForStep = "<step>";
 
 
-        public WorkflowService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService)
+        public WorkflowService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService, IServiceIncidentService serviceIncidentService)
         {
             _uow = uow;
             _AccountService = accountService;
@@ -64,6 +66,7 @@ namespace RapidDoc.Models.Services
             _WorkflowTrackerService = workflowTrackerService;
             _EmailService = emailService;
             _HistoryUserService = historyUserService;
+            _ServiceIncidentService = serviceIncidentService;
         }
 
         public WFUserFunctionResult WFMatchingUpManager(Guid documentId, string currentUserName, int level = 1, string profileName = "")
@@ -165,6 +168,15 @@ namespace RapidDoc.Models.Services
             userList.Add(new WFTrackerUsersTable { UserId = documentTable.ApplicationUserCreatedId });
 
             return new WFUserFunctionResult { Users = userList, Skip = false };
+        }
+
+        public string WFChooseSpecificUserFromService(Guid serviceId)
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+            var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            IdentityRole identityRole = rm.FindById(_ServiceIncidentService.Find(serviceId).RoleTableId);
+
+            return identityRole.Name;
         }
 
         public void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData)
@@ -333,7 +345,10 @@ namespace RapidDoc.Models.Services
                     instanceUnloaded.WaitOne();             
                 }
             }
-            _DocumentService.SaveSignData(bookmarks, _trackerType);
+            if (((DocumentState)outputParameters["outputStep"] == DocumentState.Agreement) && (_trackerType == TrackerType.Cancelled))
+                _DocumentService.SaveCanceledData(bookmarks);       
+            else
+                _DocumentService.SaveSignData(bookmarks, _trackerType);
 
             documentTable.WWFInstanceId = application.Id;
             documentTable.DocumentState = (DocumentState)outputParameters["outputStep"];
@@ -355,16 +370,23 @@ namespace RapidDoc.Models.Services
 
         public void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUser, string activityId, bool useManual, int slaOffset, bool executionStep)
         {
+            WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
+            trackerTable.Users = null;
+            _WorkflowTrackerService.SaveDomain(trackerTable, currentUser);
+            
+
             if ((step != DocumentState.Cancelled) &&
                 (step != DocumentState.Closed))
             {
-                WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
+               /* WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);*/
                 trackerTable.ActivityName = bookmarkName.Replace(keyForStep, "");
                 trackerTable.Users = listUser;
                 trackerTable.TrackerType = TrackerType.Waiting;
                 trackerTable.ManualExecutor = useManual;
                 trackerTable.SLAOffset = slaOffset;
                 trackerTable.ExecutionStep = executionStep;
+                trackerTable.SignDate = null;
+                trackerTable.SignUserId = null;
                 _WorkflowTrackerService.SaveDomain(trackerTable, currentUser);
             }
         }

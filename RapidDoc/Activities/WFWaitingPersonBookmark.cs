@@ -19,6 +19,7 @@ namespace RapidDoc.Activities
         public InArgument<string> inputBookmarkName { get; set; }
         public OutArgument<DocumentState> outputStep { get; set; }
         public OutArgument<string> outputCurrentUser { get; set; }
+        public OutArgument<Dictionary<String, Object>> outputDocumentData { get; set; }
 
         protected override bool CanInduceIdle
         {
@@ -48,11 +49,12 @@ namespace RapidDoc.Activities
 
         void resumeBookmark(NativeActivityContext context, Bookmark bookmark, object obj)
         {
-            context = CreateTrackingRecord(context.GetValue<DocumentState>(inputStep), context);
 
+            context = CreateTrackingRecord(context.GetValue<DocumentState>(inputStep), context);
             IDictionary<string, object> inputArguments = (IDictionary<string, object>)obj;
             context.SetValue(outputStep, (DocumentState)inputArguments["inputStep"]);
             context.SetValue(outputCurrentUser, (string)inputArguments["inputCurrentUser"]);
+            context.SetValue(outputDocumentData, (Dictionary<String, Object>)inputArguments["documentData"]);
         }
 
     }

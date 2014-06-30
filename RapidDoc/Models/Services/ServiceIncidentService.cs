@@ -182,5 +182,6 @@ namespace RapidDoc.Models.Services
                 return HttpContext.Current.User.Identity.Name;
             }
         }
+
     }
 }

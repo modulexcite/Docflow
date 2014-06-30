@@ -42,6 +42,7 @@ namespace RapidDoc.Models.Services
         List<ApplicationUser> GetSignUsers(DocumentTable docuTable);
         List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status);
         DateTime? GetSLAPerformDate(Guid DocumentId, DateTime CreatedDate, double SLAOffset);
+        void SaveCanceledData(IEnumerable<WFTrackerTable> trackerTables);
     }
 
     public class DocumentService : IDocumentService
@@ -122,17 +123,28 @@ namespace RapidDoc.Models.Services
         public void UpdateDocumentFields(dynamic viewTable, Guid processId)
         {
             ProcessTable process = _ProcessService.Find(processId);
-            var domainTable = RouteCustomRepository(process.TableName).GetById(viewTable.Id);
 
-            if (domainTable != null)
+            try
             {
-                Type typeDomain = Type.GetType("RapidDoc.Models.DomainModels." + process.TableName + "_Table");
-                Type typeDomainView = Type.GetType("RapidDoc.Models.ViewModels." + process.TableName + "_View");
-                Mapper.Map(viewTable, domainTable, typeDomainView, typeDomain);
+                if (viewTable.Id != null)
+                {
+                    var domainTable = RouteCustomRepository(process.TableName).GetById(viewTable.id);
 
-                domainTable.ModifiedDate = DateTime.UtcNow;
-                RouteCustomRepository(process.TableName).Update(domainTable);
-                _uow.Save();
+                    if (domainTable != null)
+                    {
+                        Type typeDomain = Type.GetType("RapidDoc.Models.DomainModels." + process.TableName + "_Table");
+                        Type typeDomainView = Type.GetType("RapidDoc.Models.ViewModels." + process.TableName + "_View");
+                        Mapper.Map(viewTable, domainTable, typeDomainView, typeDomain);
+
+                        domainTable.ModifiedDate = DateTime.UtcNow;
+                        RouteCustomRepository(process.TableName).Update(domainTable);
+                        _uow.Save();
+                    }
+                }
+            }
+            catch
+            {
+                return;
             }
         }
 
@@ -695,6 +707,18 @@ namespace RapidDoc.Models.Services
             }
         }
 
+        public void SaveCanceledData(IEnumerable<WFTrackerTable> trackerTables)
+        {
+            foreach (var trackerTable in trackerTables)
+            {
+                trackerTable.TrackerType = TrackerType.NonActive;
+                trackerTable.SignDate = null;
+                trackerTable.SignUserId = null;
+                trackerTable.Users = null;
+                _WorkflowTrackerService.SaveDomain(trackerTable);
+            } 
+        }
+          
         public Guid SaveFile(FileTable file)
         {
             string localUserName = getCurrentUserName();
