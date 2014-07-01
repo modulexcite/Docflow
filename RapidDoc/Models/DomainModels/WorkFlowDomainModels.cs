@@ -190,11 +190,11 @@ namespace RapidDoc.Models.DomainModels
         {
             if(SLAOffset > 0)
             {
-                if (CreatedDate.AddHours(SLAOffset) < DateTime.UtcNow)
+                if (ModifiedDate.AddHours(SLAOffset) < DateTime.UtcNow)
                 {
                     return SLAStatusList.Disturbance;
                 }
-                else if (CreatedDate.AddHours(SLAOffset) >= DateTime.UtcNow && CreatedDate.AddHours(SLAOffset-1) <= DateTime.UtcNow)
+                else if (ModifiedDate.AddHours(SLAOffset) >= DateTime.UtcNow && ModifiedDate.AddHours(SLAOffset - 1) <= DateTime.UtcNow)
                 {
                     return SLAStatusList.Warning;
                 }
@@ -208,7 +208,7 @@ namespace RapidDoc.Models.DomainModels
             if (SLAOffset > 0)
             {
                 IDocumentService _service = DependencyResolver.Current.GetService<IDocumentService>();
-                return _service.GetSLAPerformDate(DocumentTableId, CreatedDate, SLAOffset);
+                return _service.GetSLAPerformDate(DocumentTableId, ModifiedDate, SLAOffset);
             }
 
             return null;

@@ -354,11 +354,33 @@ namespace RapidDoc.Models.Services
             documentTable.DocumentState = (DocumentState)outputParameters["outputStep"];
             _DocumentService.UpdateDocument(documentTable);
 
+            CustomParamUpdate(documentTable, documentData);
+
             if(documentTable.DocumentState == DocumentState.Closed)
             {
                 _EmailService.SendInitiatorClosedEmail(documentTable.Id);
             }
+        }
 
+        public void CustomParamUpdate(DocumentTable document, IDictionary<string, object> documentData)
+        {
+            if(document.ProcessTable.TableName == "USR_REQ_IT_CTP_IncidentIT")
+            {
+                if (document.ActivityName == "Исполнитель")
+                {
+                    var serviceIncident = _ServiceIncidentService.Find((Guid)documentData["ServiceIncidentTableId"]);
+                    if(serviceIncident != null)
+                    {
+                        var items = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == document.Id && x.ActivityName == document.ActivityName).ToList();
+
+                        foreach (var item in items)
+                        {
+                            item.SLAOffset = serviceIncident.SLAIncident;
+                            _WorkflowTrackerService.SaveDomain(item);
+                        }
+                    }
+                }
+            }
         }
 
         public void ChooseRightWorkflow(string _tableName)
@@ -371,7 +393,7 @@ namespace RapidDoc.Models.Services
         public void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUser, string activityId, bool useManual, int slaOffset, bool executionStep)
         {
             WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
-            trackerTable.Users = null;
+            trackerTable.Users.Clear();
             _WorkflowTrackerService.SaveDomain(trackerTable, currentUser);
             
 

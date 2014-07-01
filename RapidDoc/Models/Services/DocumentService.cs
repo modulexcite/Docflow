@@ -27,6 +27,7 @@ namespace RapidDoc.Models.Services
         dynamic GetDocumentView(Guid documentId);
         dynamic RouteCustomModelView(string customModel);
         dynamic RouteCustomModelDomain(string customModel);
+        dynamic RouteCustomRepository(string customModel);
         void UpdateDocument(DocumentTable domainTable, string currentUserName = "");
         void UpdateDocumentFields(dynamic viewTable, Guid processId);
         bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null);
@@ -128,7 +129,7 @@ namespace RapidDoc.Models.Services
             {
                 if (viewTable.Id != null)
                 {
-                    var domainTable = RouteCustomRepository(process.TableName).GetById(viewTable.id);
+                    var domainTable = RouteCustomRepository(process.TableName).GetById(viewTable.Id);
 
                     if (domainTable != null)
                     {
@@ -715,6 +716,8 @@ namespace RapidDoc.Models.Services
                 trackerTable.SignDate = null;
                 trackerTable.SignUserId = null;
                 trackerTable.Users = null;
+                trackerTable.SLAOffset = 0;
+                trackerTable.ManualExecutor = false;
                 _WorkflowTrackerService.SaveDomain(trackerTable);
             } 
         }
