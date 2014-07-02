@@ -7,6 +7,7 @@ using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Models.DomainModels
 {
+    #region Заявки Связи
     public class USR_REQ_IT_CTS_DeliveryOfPinCode_Table : BasicDocumentRequestTable
     {
         [Required]
@@ -167,7 +168,9 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Phone { get; set; }
     }
+    #endregion
 
+    #region Заявки ERP
     public class USR_REQ_IT_ERP_RequestPermission1C8Salary_Table : BasicDocumentRequestTable
     {
 
@@ -259,8 +262,9 @@ namespace RapidDoc.Models.DomainModels
         public string Department { get; set; }
         public string Other { get; set; }
     }
+    #endregion
 
-    // Служба тех. поддержки
+    #region Заявки СТП
     public class USR_REQ_IT_CTP_EquipmentInstallation_Table : BasicDocumentTable
     {
         [Required]
@@ -427,8 +431,9 @@ namespace RapidDoc.Models.DomainModels
         public Guid? ServiceIncidentTableId { get; set; }
         public virtual ServiceIncidentTable ServiceIncidentTable { get; set; }
     }
+    #endregion
 
-    // Служба администрирования и информационной безопасности
+    #region Заявки САиИБ
     public class USR_REQ_IT_CAP_RemoveSignLotus_Table : BasicDocumentTable
     {
         public DeleteSignLotus DeleteSignLotus { get; set; }
@@ -801,4 +806,5 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Description { get; set; }
     }
+    #endregion
 }

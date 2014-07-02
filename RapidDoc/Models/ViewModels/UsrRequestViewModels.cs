@@ -7,6 +7,7 @@ using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Models.ViewModels
 {
+    #region Заявки Связи
     public class USR_REQ_IT_CTS_DeliveryOfPinCode_View : BasicDocumentRequestView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -248,7 +249,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Номер телефона")]
         public string Phone { get; set; }
     }
+    #endregion
 
+    #region Заявки ERP
     public class USR_REQ_IT_ERP_RequestPermission1C8Salary_View : BasicDocumentRequestView
     {
 
@@ -356,8 +359,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Другое")]
         public string Other { get; set; }
     }
+    #endregion
 
-    // Служба тех. поддержки
+    #region Заявки СТП
     public class USR_REQ_IT_CTP_EquipmentInstallation_View : BasicDocumentView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -561,8 +565,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Сервис")]
         public Guid? ServiceIncidentTableId { get; set; }
     }
+    #endregion
 
-    // Служба администрирования и информационной безопасности
+    #region Заявки САиИБ
     public class USR_REQ_IT_CAP_RemoveSignLotus_View : BasicDocumentView
     {
         [Display(Name = "Что необходимо удалить")]
@@ -1102,4 +1107,5 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Description { get; set; }
     }
+    #endregion
 }

@@ -72,10 +72,7 @@ namespace RapidDoc.Controllers
             ViewBag.CompanyList = _CompanyService.GetDropListCompany(null);
             ViewBag.TimeZoneList = _AccountService.GetTimeZoneList(null);
 
-            UserViewModel model = new UserViewModel();
-            model.isEnable = true;
-
-            return View(model);
+            return View();
         }
 
         [HttpPost]
@@ -96,7 +93,6 @@ namespace RapidDoc.Controllers
                 domainModel.UserName = viewModel.UserName;
                 domainModel.Email = viewModel.Email;
                 domainModel.TimeZoneId = viewModel.TimeZoneId;
-                domainModel.isEnable = viewModel.isEnable;
                 domainModel.Lang = viewModel.Lang;
                 domainModel.CompanyTableId = viewModel.CompanyTableId;
                 domainModel.isDomainUser = viewModel.isDomainUser;
@@ -175,7 +171,6 @@ namespace RapidDoc.Controllers
                 domainModel.Email = viewModel.Email;
                 domainModel.CompanyTableId = viewModel.CompanyTableId;
                 domainModel.TimeZoneId = viewModel.TimeZoneId;
-                domainModel.isEnable = viewModel.isEnable;
                 domainModel.Lang = viewModel.Lang;
                 domainModel.isDomainUser = viewModel.isDomainUser;
 

@@ -259,7 +259,6 @@ namespace RapidDoc.Controllers
                 domainModel.UserName = _userId;
                 domainModel.Email = _email;
                 domainModel.TimeZoneId = "Central Asia Standard Time";
-                domainModel.isEnable = true;
                 domainModel.Lang = "ru-RU";
                 domainModel.isDomainUser = true;
                 domainModel.CompanyTableId = _companyId;
@@ -267,6 +266,7 @@ namespace RapidDoc.Controllers
 
                 var loginInfo = new UserLoginInfo("Windows", _sid);
                 um.AddLogin(domainModel.Id, loginInfo);
+                um.AddToRole(domainModel.Id, "ActiveUser");
 
                 domainModel = um.FindByName(_userId);
             }

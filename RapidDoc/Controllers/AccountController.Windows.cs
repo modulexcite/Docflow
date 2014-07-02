@@ -20,7 +20,6 @@ using RapidDoc.Models.DomainModels;
 
 namespace RapidDoc.Controllers
 {
-  [Authorize]
   public partial class AccountController : BasicController
   {
     //

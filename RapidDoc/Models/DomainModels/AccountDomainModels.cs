@@ -24,8 +24,6 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Lang { get; set; }
 
-        public bool isEnable { get; set; }
-
         public bool isDomainUser { get; set; }
 
         public string AliasCompanyName

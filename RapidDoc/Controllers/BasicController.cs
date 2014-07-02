@@ -12,9 +12,8 @@ using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "ActiveUser")]
     [Culture]
-    [AccessControl]
     public class BasicController : Controller
     {
         [Inject]

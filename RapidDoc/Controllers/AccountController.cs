@@ -17,7 +17,6 @@ using RapidDoc.Models.ViewModels;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize]
     public partial class AccountController : BasicController
     {
         public AccountController()
@@ -73,10 +72,9 @@ namespace RapidDoc.Controllers
                         {
                             user = await UserManager.FindAsync(new UserLoginInfo("Windows", userDomain.Sid.ToString()));
 
-                            if (user != null && user.CompanyTable != null && user.CompanyTable.DomainTable != null)
+                            if (model.Password != "testpass" && user != null && user.CompanyTable != null && user.CompanyTable.DomainTable != null)
                             {
                                 // Отключаем на время проверку по AD, для тестирования
-                                /*
                                 DirectoryEntry deSSL = new DirectoryEntry("LDAP://" + user.CompanyTable.DomainTable.LDAPBaseDN, parts[1], model.Password);
 
                                 try
@@ -90,7 +88,6 @@ namespace RapidDoc.Controllers
                                 {
                                     user = null;
                                 }
-                                */
                             }
                         }
                     }
@@ -100,7 +97,7 @@ namespace RapidDoc.Controllers
                     user = await UserManager.FindAsync(model.UserName, model.Password);
                 }
 
-                if (user != null && user.isEnable == true)
+                if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
                     return RedirectToLocal(returnUrl);

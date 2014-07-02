@@ -124,9 +124,6 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Language", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string Lang { get; set; }
 
-        [Display(Name = "Enable", ResourceType = typeof(FieldNameRes.FieldNameResource))]
-        public bool isEnable { get; set; }
-
         [Display(Name = "isDomainUser", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public bool isDomainUser { get; set; }
 

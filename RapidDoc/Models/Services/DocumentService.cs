@@ -759,7 +759,7 @@ namespace RapidDoc.Models.Services
 
         public List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status)
         {
-            IEnumerable<WFTrackerTable> items = GetCurrentSignStep(docuTable.Id);
+            IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting);
             List<WFTrackerUsersTable> users = new List<WFTrackerUsersTable>();
 
             foreach(var item in items)

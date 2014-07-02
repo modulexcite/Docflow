@@ -20,6 +20,7 @@ namespace RapidDoc.Models.Infrastructure
             var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             rm.Create(new IdentityRole("Administrator"));
             rm.Create(new IdentityRole("Delegations"));
+            rm.Create(new IdentityRole("ActiveUser"));
 
             rm.Create(new IdentityRole("ExecutorCTS_ATC"));
             rm.Create(new IdentityRole("ExecutorCTS_RADIO"));
@@ -39,15 +40,18 @@ namespace RapidDoc.Models.Infrastructure
 
             #region Database Initialize
             var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            var user = new ApplicationUser() { UserName = "Admin", Email = "admin@mail.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", isEnable = true, Lang = "ru-RU" };
+            var user = new ApplicationUser() { UserName = "Admin", Email = "admin@mail.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", Lang = "ru-RU" };
             um.Create(user, "123456aA");
             um.AddToRole(user.Id, "Administrator");
+            um.AddToRole(user.Id, "ActiveUser");
 
-            var user2 = new ApplicationUser() { UserName = "MaksatKulchikov", Email = "igor.dmitrov@altyntau.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", isEnable = true, Lang = "ru-RU" };
+            var user2 = new ApplicationUser() { UserName = "MaksatKulchikov", Email = "igor.dmitrov@altyntau.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", Lang = "ru-RU" };
             um.Create(user2, "123456aA");
+            um.AddToRole(user2.Id, "ActiveUser");
 
-            var user3 = new ApplicationUser() { UserName = "IlyaFilimonov", Email = "igor.dmitrov@altyntau.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", isEnable = true, Lang = "ru-RU" };
+            var user3 = new ApplicationUser() { UserName = "IlyaFilimonov", Email = "igor.dmitrov@altyntau.com", CompanyTableId = null, TimeZoneId = "Central Asia Standard Time", Lang = "ru-RU" };
             um.Create(user3, "123456aA");
+            um.AddToRole(user3.Id, "ActiveUser");
 
             context.DomainTable.Add(new DomainTable { DomainName = "altyntau.com", CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, ApplicationUserCreatedId = user.Id, LDAPBaseDN = "OU=ATK,OU=Altyntau,DC=altyntau,DC=com", LDAPLogin = "ldapuser@altyntau.com", LDAPPort = 389, LDAPPassword = "iHFh6JKm", LDAPServer = "ATK-S-100" });
             context.SaveChanges();

@@ -24,6 +24,7 @@ namespace RapidDoc.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult GetCompanyList()
         {
             return PartialView("~/Views/Home/CompanyList.cshtml", _CompanyService.GetAllView());
