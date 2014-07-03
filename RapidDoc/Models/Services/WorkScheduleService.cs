@@ -33,6 +33,7 @@ namespace RapidDoc.Models.Services
         void SaveDayToCalendar(Guid workScheduleId, DateTime date, string currentUserName = "");
         bool CheckDayType(Guid workScheduleId, DateTime date);
         DateTime[] GetDaysOff(Guid workScheduleId);
+        bool CheckWorkTime(Guid? workScheduleId, DateTime date);
     }
 
     public class WorkScheduleService : IWorkScheduleService
@@ -206,6 +207,39 @@ namespace RapidDoc.Models.Services
             }
 
             return false;
+        }
+
+        public bool CheckWorkTime(Guid? workScheduleId, DateTime date)
+        {
+            WorkScheduleTable schedule = null;
+
+            if(workScheduleId == null)
+            {
+                schedule = repo.Find(x => x.WorkScheduleName != null);
+            }
+            else
+            {
+                schedule = repo.GetById(workScheduleId ?? Guid.Empty);
+            }
+
+            if (schedule != null)
+            {
+                DateTime startTime = new DateTime(date.Year, date.Month, date.Day) + schedule.WorkStartTime;
+                DateTime endTime = new DateTime(date.Year, date.Month, date.Day) + schedule.WorkEndTime;
+
+                if (startTime > date || endTime < date)
+                {
+                    return false;
+                }
+
+                СalendarTable calendar = repoCalendar.Find(x => x.WorkScheduleTableId == workScheduleId && x.Date == date.Date);
+                if (calendar.DateType == DateType.DayOff)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public DateTime[] GetDaysOff(Guid workScheduleId)

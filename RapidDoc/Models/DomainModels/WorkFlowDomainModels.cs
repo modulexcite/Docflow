@@ -186,23 +186,6 @@ namespace RapidDoc.Models.DomainModels
 
         public bool ExecutionStep { get; set; }
 
-        public SLAStatusList SLAStatus()
-        {
-            if(SLAOffset > 0)
-            {
-                if (ModifiedDate.AddHours(SLAOffset) < DateTime.UtcNow)
-                {
-                    return SLAStatusList.Disturbance;
-                }
-                else if (ModifiedDate.AddHours(SLAOffset) >= DateTime.UtcNow && ModifiedDate.AddHours(SLAOffset - 1) <= DateTime.UtcNow)
-                {
-                    return SLAStatusList.Warning;
-                }
-            }
-            
-            return SLAStatusList.NoWarning;
-        }
-
         public DateTime? PerformToDate()
         {
             if (SLAOffset > 0)

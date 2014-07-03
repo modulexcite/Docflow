@@ -21,6 +21,7 @@ namespace RapidDoc.Controllers
             IEmailService _Emailservice = DependencyResolver.Current.GetService<IEmailService>();
             IDocumentService _Documentservice = DependencyResolver.Current.GetService<IDocumentService>();
             IReviewDocLogService _ReviewDocLogService = DependencyResolver.Current.GetService<IReviewDocLogService>();
+            IWorkScheduleService _WorkScheduleService = DependencyResolver.Current.GetService<IWorkScheduleService>();
             var allDocument = _Documentservice.GetPartial(x => x.CompanyTable.AliasCompanyName == companyId);
 
             if (allDocument == null)
@@ -29,22 +30,28 @@ namespace RapidDoc.Controllers
             switch(id)
             {
                 case 1:
-                    foreach (var document in allDocument)
+                    if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
                     {
-                        var users = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Warning);
-                        foreach(var user in users)
+                        foreach (var document in allDocument)
                         {
-                            _Emailservice.SendSLAWarningEmail(document, user.UserId);
+                            var users = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Warning);
+                            foreach (var user in users)
+                            {
+                                _Emailservice.SendSLAWarningEmail(document, user.UserId);
+                            }
                         }
                     }
                     break;
                 case 2:
-                    foreach (var document in allDocument)
+                    if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
                     {
-                        var users = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Disturbance);
-                        foreach (var user in users)
+                        foreach (var document in allDocument)
                         {
-                            _Emailservice.SendSLADisturbanceEmail(document, user.UserId);
+                            var users = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Disturbance);
+                            foreach (var user in users)
+                            {
+                                _Emailservice.SendSLADisturbanceEmail(document, user.UserId);
+                            }
                         }
                     }
                     break;

@@ -33,7 +33,6 @@ namespace RapidDoc.Models.Services
         bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null);
         bool isSignDocument(Guid documentId, Guid ProcessId, string currentUserName = "");
         IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserName = "", ApplicationUser user = null);
-        DateTime? GetLastSignDate(Guid documentId, bool SLAOffset = false, string currentUserName = "", ApplicationUser user = null);
         SLAStatusList SLAStatus(Guid documentId, string currentUserName = "", ApplicationUser user = null);
         void SaveSignData(IEnumerable<WFTrackerTable> trackerTables, TrackerType trackerType);
         Guid SaveFile(FileTable file);
@@ -568,17 +567,23 @@ namespace RapidDoc.Models.Services
 
         public SLAStatusList SLAStatus(Guid documentId, string currentUserName = "", ApplicationUser user = null)
         {
-            DateTime? date = GetLastSignDate(documentId, true, currentUserName, user);
+            IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Waiting && x.SLAOffset > 0);
 
-            if (date != null)
+            if (items != null)
             {
-                if(date < DateTime.UtcNow)
+                WFTrackerTable item = items.FirstOrDefault();
+                DateTime? date = GetSLAPerformDate(documentId, item.ModifiedDate, item.SLAOffset);
+
+                if (date != null)
                 {
-                    return SLAStatusList.Disturbance;
-                }
-                else if (date >= DateTime.UtcNow && date.Value.AddHours(-1) <= DateTime.UtcNow)
-                {
-                    return SLAStatusList.Warning;
+                    if (date < DateTime.UtcNow)
+                    {
+                        return SLAStatusList.Disturbance;
+                    }
+                    else if (date >= DateTime.UtcNow && date.Value.AddHours(-1) <= DateTime.UtcNow)
+                    {
+                        return SLAStatusList.Warning;
+                    }
                 }
             }
 
@@ -682,19 +687,6 @@ namespace RapidDoc.Models.Services
             return signStep;
         }
 
-        public DateTime? GetLastSignDate(Guid documentId, bool SLAOffset = false, string currentUserName = "", ApplicationUser user = null)
-        {
-            //IEnumerable<WFTrackerTable> items = GetCurrentSignStep(documentId, currentUserName, user);
-            IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Waiting && x.SLAOffset > 0);
-
-            if (items != null)
-            {
-                WFTrackerTable item = items.FirstOrDefault();
-                return item.CreatedDate.AddHours(item.SLAOffset);
-            }
-            return null;
-        }
-
         public void SaveSignData(IEnumerable<WFTrackerTable> trackerTables, TrackerType trackerType)
         {
             ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == HttpContext.Current.User.Identity.Name);
@@ -759,21 +751,31 @@ namespace RapidDoc.Models.Services
 
         public List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status)
         {
-            IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting);
             List<WFTrackerUsersTable> users = new List<WFTrackerUsersTable>();
+            IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting && x.SLAOffset > 0);
 
-            foreach(var item in items)
+            foreach (var item in items)
             {
-                if (item.SLAStatus() == status)
+                DateTime? date = GetSLAPerformDate(docuTable.Id, item.ModifiedDate, item.SLAOffset);
+
+                if (date != null)
                 {
-                    users.AddRange(item.Users);
+                    if (SLAStatusList.Disturbance == status && date < DateTime.UtcNow)
+                    {
+                        users.AddRange(item.Users);
+                    }
+
+                    if (SLAStatusList.Warning == status && date >= DateTime.UtcNow && date.Value.AddHours(-1) <= DateTime.UtcNow)
+                    {
+                        users.AddRange(item.Users);
+                    }
                 }
             }
 
             return users;
         }
 
-        public DateTime? GetSLAPerformDate(Guid DocumentId, DateTime CreatedDate, double SLAOffset)
+        public DateTime? GetSLAPerformDate(Guid DocumentId, DateTime Date, double SLAOffset)
         {
             DocumentTable documentTable = Find(DocumentId);
 
@@ -782,35 +784,34 @@ namespace RapidDoc.Models.Services
                 WorkScheduleTable scheduleTable = _WorkScheduleService.Find(documentTable.ProcessTable.WorkScheduleTableId);
                 if(scheduleTable != null)
                 {
-                    CreatedDate = GetWorkStartDate(CreatedDate, scheduleTable);
+                    Date = GetWorkStartDate(Date, scheduleTable);
                     double SLAMinutes = (SLAOffset * 60);
 
-                    return GetSLAAddOffset(scheduleTable, CreatedDate, SLAMinutes);
+                    return GetSLAAddOffset(scheduleTable, Date, SLAMinutes);
                 }
             }
 
             return null;
         }
 
-        private DateTime GetSLAAddOffset(WorkScheduleTable scheduleTable, DateTime CreatedDate, double SLAMinutes)
+        private DateTime GetSLAAddOffset(WorkScheduleTable scheduleTable, DateTime Date, double SLAMinutes)
         {
-            if ((scheduleTable.WorkEndTime - CreatedDate.TimeOfDay).TotalMinutes >= SLAMinutes)
+            if ((scheduleTable.WorkEndTime - Date.TimeOfDay).TotalMinutes >= SLAMinutes)
             {
-                return CreatedDate.AddMinutes(SLAMinutes);
+                return Date.AddMinutes(SLAMinutes);
             }
             else
             {
-                SLAMinutes = SLAMinutes - (scheduleTable.WorkEndTime - CreatedDate.TimeOfDay).TotalMinutes;
-                CreatedDate = GetWorkStartDate(CreatedDate.Date.AddDays(1), scheduleTable);
+                SLAMinutes = SLAMinutes - (scheduleTable.WorkEndTime - Date.TimeOfDay).TotalMinutes;
+                Date = GetWorkStartDate(Date.Date.AddDays(1), scheduleTable);
 
-                return GetSLAAddOffset(scheduleTable, CreatedDate, SLAMinutes);
+                return GetSLAAddOffset(scheduleTable, Date, SLAMinutes);
             }
-
         }
 
-        private DateTime GetWorkStartDate(DateTime createdDate, WorkScheduleTable scheduleTable)
+        private DateTime GetWorkStartDate(DateTime date, WorkScheduleTable scheduleTable)
         {
-            DateTime tempCreatedDate = createdDate;
+            DateTime tempCreatedDate = date;
 
             tempCreatedDate = FindWorkDay(scheduleTable.Id, tempCreatedDate);
 
