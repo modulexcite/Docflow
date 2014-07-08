@@ -258,12 +258,11 @@ namespace RapidDoc.Controllers
                     //Save Document
                     var documentId = _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
 
-                    /*
-                    for (int i = 0; i < 100; i++ )
+                    for (int i = 0; i < 24000; i++ )
                     {
                         _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
                     }
-                    */
+
                     _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId });
                     _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
                     SaveSearchData(docModel, actionModelName, documentId);

@@ -27,10 +27,12 @@ namespace RapidDoc
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            /*
             #if DEBUG
                 Database.SetInitializer<ApplicationDbContext>(new CompositeDBInitializer<ApplicationDbContext>(new DropCreateDatabaseAlways<ApplicationDbContext>(),
                     new DataDBInitializer()));
             #endif
+            */
         }
 
         protected void Application_AcquireRequestState(object sender, EventArgs e)

@@ -232,8 +232,9 @@ namespace RapidDoc.Models.Services
                     return false;
                 }
 
-                СalendarTable calendar = repoCalendar.Find(x => x.WorkScheduleTableId == workScheduleId && x.Date == date.Date);
-                if (calendar.DateType == DateType.DayOff)
+                СalendarTable calendar = repoCalendar.Find(x => x.WorkScheduleTableId == schedule.Id && x.Date == date.Date);
+
+                if (calendar != null && calendar.DateType == DateType.DayOff)
                 {
                     return false;
                 }

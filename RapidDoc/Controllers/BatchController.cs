@@ -22,6 +22,7 @@ namespace RapidDoc.Controllers
             IDocumentService _Documentservice = DependencyResolver.Current.GetService<IDocumentService>();
             IReviewDocLogService _ReviewDocLogService = DependencyResolver.Current.GetService<IReviewDocLogService>();
             IWorkScheduleService _WorkScheduleService = DependencyResolver.Current.GetService<IWorkScheduleService>();
+            IAccountService _AccountService = DependencyResolver.Current.GetService<IAccountService>();
             var allDocument = _Documentservice.GetPartial(x => x.CompanyTable.AliasCompanyName == companyId);
 
             if (allDocument == null)
@@ -32,26 +33,40 @@ namespace RapidDoc.Controllers
                 case 1:
                     if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
                     {
+                        var users = _AccountService.GetPartial(x => x.Email != null);
+                        List<CheckSLAStatus> checkData = new List<CheckSLAStatus>();
+
                         foreach (var document in allDocument)
                         {
-                            var users = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Warning);
-                            foreach (var user in users)
-                            {
-                                _Emailservice.SendSLAWarningEmail(document, user.UserId);
-                            }
+                            var checkUser = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Warning);
+                            checkData.Add(new CheckSLAStatus(document, checkUser));
+                        }
+
+                        foreach (var user in users)
+                        {
+                            var userDocuments = checkData.Where(x => x.TrackerUsers.Any(a => a.UserId == user.Id)).GroupBy(b => b.DocumentTable).Select(group => group.Key).ToList();
+                            if (userDocuments.Count() > 0)
+                                _Emailservice.SendSLAWarningEmail(user.Id, userDocuments);
                         }
                     }
                     break;
                 case 2:
                     if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
                     {
+                        var users = _AccountService.GetPartial(x => x.Email != null);
+                        List<CheckSLAStatus> checkData = new List<CheckSLAStatus>();
+
                         foreach (var document in allDocument)
                         {
-                            var users = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Disturbance);
-                            foreach (var user in users)
-                            {
-                                _Emailservice.SendSLADisturbanceEmail(document, user.UserId);
-                            }
+                            var checkUser = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Disturbance);
+                            checkData.Add(new CheckSLAStatus(document, checkUser));
+                        }
+
+                        foreach (var user in users)
+                        {
+                            var userDocuments = checkData.Where(x => x.TrackerUsers.Any(a => a.UserId == user.Id)).GroupBy(b => b.DocumentTable).Select(group => group.Key).ToList();
+                            if (userDocuments.Count() > 0)
+                                _Emailservice.SendSLAWarningEmail(user.Id, userDocuments);
                         }
                     }
                     break;
@@ -81,5 +96,17 @@ namespace RapidDoc.Controllers
                     break;
             }
         }
+    }
+
+    public class CheckSLAStatus
+    {
+        public CheckSLAStatus(DocumentTable documentTable, IEnumerable<WFTrackerUsersTable> trackerUsers)
+        {
+            DocumentTable = documentTable;
+            TrackerUsers = trackerUsers;
+        }
+
+        public DocumentTable DocumentTable { get; set; }
+        public IEnumerable<WFTrackerUsersTable> TrackerUsers { get; set; }
     }
 }
