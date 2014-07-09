@@ -15,8 +15,10 @@ namespace RapidDoc.Models.Repository
         T Find(Expression<Func<T, bool>> predicate);
         IEnumerable<T> FindAll(Expression<Func<T, bool>> predicate);
         bool Any();
+        bool Any(Expression<Func<T, bool>> predicate);
         bool Contains(Expression<Func<T, bool>> predicate);
         int Count { get; }
+        IQueryable<T> AllQuery();
 
         //--CRUD Operations
         void Add(T entity);

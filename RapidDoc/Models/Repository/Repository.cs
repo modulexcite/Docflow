@@ -95,5 +95,15 @@ namespace RapidDoc.Models.Repository
                 return _dbset.Count();
             }
         }
+
+        public virtual IQueryable<T> AllQuery()
+        {
+            return _dbset;
+        }
+
+        public virtual bool Any(Expression<Func<T, bool>> predicate)
+        {
+            return _dbset.Any(predicate);
+        }
     }
 }

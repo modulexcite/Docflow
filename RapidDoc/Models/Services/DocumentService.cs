@@ -19,8 +19,8 @@ namespace RapidDoc.Models.Services
     {
         Guid SaveDocument(dynamic model, string tableName, Guid processId, Guid fileId, string currentUserName = "");
         IEnumerable<DocumentTable> GetAll();
-        IEnumerable<DocumentTable> GetAllView();
-        IEnumerable<DocumentTable> GetArchiveView();
+        IQueryable<DocumentTable> GetAllView();
+        IQueryable<DocumentTable> GetArchiveView();
         IEnumerable<DocumentTable> GetPartial(Expression<Func<DocumentTable, bool>> predicate);
         DocumentTable Find(Guid? id);
         dynamic GetDocument(Guid documentId, string tableName = "");
@@ -153,164 +153,92 @@ namespace RapidDoc.Models.Services
             return repoDocument.All();
         }
 
-        public IEnumerable<DocumentTable> GetAllView()
+        public IQueryable<DocumentTable> GetAllView()
         {
             string localUserName = getCurrentUserName();
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
             DateTime currentDate = DateTime.UtcNow;
-            IEnumerable<DocumentTable> items = null;
-
-            ApplicationDbContext context = new ApplicationDbContext();
-            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            IQueryable<DocumentTable> items = null;
 
             if(user == null)
             {
                 List<DocumentTable> errorData = new List<DocumentTable>();
-                return errorData;
+                return errorData.AsQueryable();
             }
+
+            ApplicationDbContext contextQuery = new ApplicationDbContext();
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(contextQuery));
 
             if (UserManager.IsInRole(user.Id, "Administrator"))
             {
-                items = from document in repoDocument.All()
-                        where !(_uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                        select new DocumentTable
-                        {
-                            Id = document.Id,
-                            CreatedDate = document.CreatedDate,
-                            ModifiedDate = document.ModifiedDate,
-                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
-                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
-                            DocumentNum = document.DocumentNum,
-                            ProcessTableId = document.ProcessTableId,
-                            EmplTableId = document.EmplTableId,
-                            RefDocumentId = document.RefDocumentId,
-                            WWFInstanceId = document.WWFInstanceId,
-                            FileId = document.FileId,
-                            DocumentState = document.DocumentState,
-                            ActivityName = document.ActivityName,
-                            ApplicationUserCreated = document.ApplicationUserCreated,
-                            ProcessTable = document.ProcessTable,
-                            isNotReview = _uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id),
-                            SLAStatus = SLAStatus(document.Id, "", user)
-                        };
-
-                items = items.OrderBy(b => b.isNotReview).ThenByDescending(n => n.CreatedDate);
+                items = from document in contextQuery.DocumentTable
+                        where !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                        orderby document.CreatedDate descending
+                        select document;
             }
             else
             {
-                var trackers = _uow.GetRepository<WFTrackerTable>().All().AsQueryable();
-
-                items = from document in repoDocument.All()
-                        where (document.ApplicationUserCreatedId == user.Id ||
-                            (_uow.GetRepository<WFTrackerTable>().Contains(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id))) ||
-                            (_uow.GetRepository<DocumentReaderTable>().Contains(r => r.DocumentTableId == document.Id && r.UserId == user.Id)) ||
-                          
-                            (_uow.GetRepository<DelegationTable>().All().AsQueryable().Any(d => d.EmplTableTo.ApplicationUserId == user.Id && d.DateFrom <= currentDate && d.DateTo >= currentDate && d.isArchive == false
+                items = from document in contextQuery.DocumentTable
+                        where
+                            (document.ApplicationUserCreatedId == user.Id ||
+                                contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id)) ||
+                                contextQuery.DocumentReaderTable.Any(r => r.DocumentTableId == document.Id && r.UserId == user.Id) ||
+                                (contextQuery.DelegationTable.Any(d => d.EmplTableTo.ApplicationUserId == user.Id && d.DateFrom <= currentDate && d.DateTo >= currentDate && d.isArchive == false
                                 && d.CompanyTableId == user.CompanyTableId
                                 && (d.GroupProcessTableId == document.ProcessTable.Id || d.GroupProcessTableId == null)
                                 && (d.ProcessTableId == document.ProcessTableId || d.ProcessTableId == null
-                                && trackers.Any(w => w.DocumentTableId == document.Id && w.SignUserId == null && w.TrackerType == TrackerType.Waiting && w.Users.Any(b => b.UserId == d.EmplTableFrom.ApplicationUserId))
+                                && contextQuery.WFTrackerTable.Any(w => w.DocumentTableId == document.Id && w.SignUserId == null && w.TrackerType == TrackerType.Waiting && w.Users.Any(b => b.UserId == d.EmplTableFrom.ApplicationUserId))
                                 )))
-                        
-                                ) &&
-                            !(_uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                        select new DocumentTable
-                        {
-                            Id = document.Id,
-                            CreatedDate = document.CreatedDate,
-                            ModifiedDate = document.ModifiedDate,
-                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
-                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
-                            DocumentNum = document.DocumentNum,
-                            ProcessTableId = document.ProcessTableId,
-                            EmplTableId = document.EmplTableId,
-                            RefDocumentId = document.RefDocumentId,
-                            WWFInstanceId = document.WWFInstanceId,
-                            FileId = document.FileId,
-                            DocumentState = document.DocumentState,
-                            ActivityName = document.ActivityName,
-                            ApplicationUserCreated = document.ApplicationUserCreated,
-                            ProcessTable = document.ProcessTable,
-                            isNotReview = _uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id),
-                            SLAStatus = SLAStatus(document.Id, "", user)
-                        };
-
-                items = items.OrderBy(b => b.isNotReview).ThenByDescending(n => n.CreatedDate);
+                            )
+                            &&
+                            !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                        orderby document.CreatedDate descending
+                        select document;
             }
+
             return items;
         }
 
-        public IEnumerable<DocumentTable> GetArchiveView()
+        public IQueryable<DocumentTable> GetArchiveView()
         {
             string localUserName = getCurrentUserName();
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
             DateTime currentDate = DateTime.UtcNow;
-            IEnumerable<DocumentTable> items = null;
+            IQueryable<DocumentTable> items = null;
 
-            ApplicationDbContext context = new ApplicationDbContext();
-            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            if (user == null)
+            {
+                List<DocumentTable> errorData = new List<DocumentTable>();
+                return errorData.AsQueryable();
+            }
+
+            ApplicationDbContext contextQuery = new ApplicationDbContext();
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(contextQuery));
 
             if (UserManager.IsInRole(user.Id, "Administrator"))
             {
-                items = from document in repoDocument.All()
-                        where !(_uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == false))
-                        select new DocumentTable
-                        {
-                            Id = document.Id,
-                            CreatedDate = document.CreatedDate,
-                            ModifiedDate = document.ModifiedDate,
-                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
-                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
-                            DocumentNum = document.DocumentNum,
-                            ProcessTableId = document.ProcessTableId,
-                            EmplTableId = document.EmplTableId,
-                            RefDocumentId = document.RefDocumentId,
-                            WWFInstanceId = document.WWFInstanceId,
-                            FileId = document.FileId,
-                            DocumentState = document.DocumentState,
-                            ActivityName = document.ActivityName,
-                            ApplicationUserCreated = document.ApplicationUserCreated,
-                            ProcessTable = document.ProcessTable,
-                            isNotReview = _uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id),
-                            SLAStatus = SLAStatus(document.Id, "", user)
-                        };
-
-                items = items.OrderBy(b => b.isNotReview).ThenByDescending(n => n.CreatedDate);
+                items = from document in contextQuery.DocumentTable
+                        where (contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                        orderby document.CreatedDate descending
+                        select document;
             }
             else
             {
-                items = from document in repoDocument.All()
-                        where (document.ApplicationUserCreatedId == user.Id ||
-                            (_uow.GetRepository<WFTrackerTable>().Contains(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id))) ||
-                            (_uow.GetRepository<DocumentReaderTable>().Contains(r => r.DocumentTableId == document.Id && r.UserId == user.Id)) ||
-                            (_uow.GetRepository<DelegationTable>().Contains(x => x.EmplTableTo.ApplicationUserId == user.Id && x.DateFrom <= currentDate && x.DateTo >= currentDate && x.isArchive == false
-                                && x.CompanyTableId == user.CompanyTableId
-                                && (x.GroupProcessTableId == document.ProcessTable.Id || x.GroupProcessTableId == null)
-                                && (x.ProcessTableId == document.ProcessTableId || x.ProcessTableId == null)
-                                && _uow.GetRepository<WFTrackerTable>().Contains(w => w.DocumentTableId == document.Id && w.SignUserId == null && w.TrackerType == TrackerType.Waiting && w.Users.Any(b => b.UserId == x.EmplTableFrom.ApplicationUserId))))) &&
-                            !(_uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == false))
-                        select new DocumentTable
-                        {
-                            Id = document.Id,
-                            CreatedDate = document.CreatedDate,
-                            ModifiedDate = document.ModifiedDate,
-                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
-                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
-                            DocumentNum = document.DocumentNum,
-                            ProcessTableId = document.ProcessTableId,
-                            EmplTableId = document.EmplTableId,
-                            RefDocumentId = document.RefDocumentId,
-                            WWFInstanceId = document.WWFInstanceId,
-                            FileId = document.FileId,
-                            DocumentState = document.DocumentState,
-                            ActivityName = document.ActivityName,
-                            ApplicationUserCreated = document.ApplicationUserCreated,
-                            ProcessTable = document.ProcessTable,
-                            isNotReview = _uow.GetRepository<ReviewDocLogTable>().Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id),
-                            SLAStatus = SLAStatus(document.Id, "", user)
-                        };
-
-                items = items.OrderBy(b => b.isNotReview).ThenByDescending(n => n.CreatedDate);
+                items = from document in contextQuery.DocumentTable
+                    where
+                        (document.ApplicationUserCreatedId == user.Id ||
+                            contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id)) ||
+                            contextQuery.DocumentReaderTable.Any(r => r.DocumentTableId == document.Id && r.UserId == user.Id) ||
+                            (contextQuery.DelegationTable.Any(d => d.EmplTableTo.ApplicationUserId == user.Id && d.DateFrom <= currentDate && d.DateTo >= currentDate && d.isArchive == false
+                            && d.CompanyTableId == user.CompanyTableId
+                            && (d.GroupProcessTableId == document.ProcessTable.Id || d.GroupProcessTableId == null)
+                            && (d.ProcessTableId == document.ProcessTableId || d.ProcessTableId == null
+                            && contextQuery.WFTrackerTable.Any(w => w.DocumentTableId == document.Id && w.SignUserId == null && w.TrackerType == TrackerType.Waiting && w.Users.Any(b => b.UserId == d.EmplTableFrom.ApplicationUserId))
+                            )))
+                        )
+                        && (contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                    orderby document.CreatedDate descending
+                    select document;
             }
          
             return items;
