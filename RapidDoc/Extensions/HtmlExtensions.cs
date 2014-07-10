@@ -77,18 +77,21 @@ namespace RapidDoc.Extensions
             return MvcHtmlString.Create(output);
         }
 
-        public static MvcHtmlString DateTimeLocalFor<TModel, TValue>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TValue>> expression)  
+        public static MvcHtmlString DateTimeLocalFor<TModel, TValue>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TValue>> expression, string timeZone = "")  
         {
             var name = ExpressionHelper.GetExpressionText(expression);
             var metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
 
-            ApplicationDbContext context = new ApplicationDbContext();
-            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            var num = HttpContext.Current.User.Identity.GetUserId();
-            ApplicationUser user = UserManager.FindByName(HttpContext.Current.User.Identity.Name);
-            context.Dispose();
+            if (timeZone == String.Empty)
+            {
+                ApplicationDbContext context = new ApplicationDbContext();
+                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                ApplicationUser user = UserManager.FindByName(HttpContext.Current.User.Identity.Name);
+                context.Dispose();
+                timeZone = user.TimeZoneId;
+            }
 
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
             string convertedTime = TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(metadata.Model), timeZoneInfo).ToString();
 
             return new MvcHtmlString(convertedTime);

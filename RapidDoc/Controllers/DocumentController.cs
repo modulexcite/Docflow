@@ -64,12 +64,18 @@ namespace RapidDoc.Controllers
 
         public ActionResult GetAllDocument()
         {
+            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ViewBag.CurrentTimeId = user.TimeZoneId;
+
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), 1, false);
             return PartialView("~/Views/Document/DocumentList.cshtml", grid);
         }
 
         public ActionResult GetArchiveDocument()
         {
+            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ViewBag.CurrentTimeId = user.TimeZoneId;
+
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetArchiveView(), 1, false);
             return PartialView("~/Views/Document/DocumentList.cshtml", grid);
         }
@@ -77,6 +83,9 @@ namespace RapidDoc.Controllers
         public JsonResult GetDocumentList(int page)
         {
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), page, true);
+
+            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ViewBag.CurrentTimeId = user.TimeZoneId;
 
             return Json(new
             {
@@ -88,6 +97,9 @@ namespace RapidDoc.Controllers
         public JsonResult GetArchiveDocumentList(int page)
         {
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetArchiveView(), page, true);
+
+            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ViewBag.CurrentTimeId = user.TimeZoneId;
 
             return Json(new
             {
@@ -123,7 +135,6 @@ namespace RapidDoc.Controllers
             }
 
             object viewModel = InitialViewShowDocument(id, process, docuTable, userTable, emplTable);
-
             return View(viewModel);
         }
         
@@ -257,12 +268,6 @@ namespace RapidDoc.Controllers
                 {
                     //Save Document
                     var documentId = _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
-
-                    for (int i = 0; i < 24000; i++ )
-                    {
-                        _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
-                    }
-
                     _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId });
                     _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
                     SaveSearchData(docModel, actionModelName, documentId);
