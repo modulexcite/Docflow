@@ -108,6 +108,34 @@ namespace RapidDoc.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetAllAgreedDocument()
+        {
+            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ViewBag.CurrentTimeId = user.TimeZoneId;
+
+            var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), 1, false);
+            return PartialView("~/Views/Document/DocumentList.cshtml", grid);
+        }
+
+        public JsonResult GetAgreedDocumentList(int page)
+        {
+            var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), page, true);
+
+            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ViewBag.CurrentTimeId = user.TimeZoneId;
+
+            return Json(new
+            {
+                Html = RenderPartialViewToString("DocumentList", grid),
+                HasItems = grid.DisplayingItemsCount >= grid.Pager.PageSize
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AgreedDocuments()
+        {
+            return View();
+        }
+
         public ActionResult ShowDocument(Guid id, bool isAfterView = false)
         {
             var previousModelState = TempData["ModelState"] as ModelStateDictionary;
