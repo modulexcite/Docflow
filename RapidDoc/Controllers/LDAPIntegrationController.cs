@@ -146,7 +146,7 @@ namespace RapidDoc.Controllers
                             }
                             catch 
                             { 
-                                return; 
+                                continue; 
                             }
                         }
                         else
@@ -271,9 +271,15 @@ namespace RapidDoc.Controllers
             }
             else
             {
-                domainModel.Email = _email;
-                um.Update(domainModel);
-                domainModel = um.FindByName(_userId);
+                try
+                {
+                    domainModel.Email = _email;
+                    um.Update(domainModel);
+                }
+                catch
+                {
+                    domainModel = um.FindByName(_userId);
+                }
             }
             return domainModel == null ? "" : domainModel.Id;
         }
