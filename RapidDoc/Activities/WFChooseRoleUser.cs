@@ -42,7 +42,7 @@ namespace RapidDoc.Activities
 
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
             WFUserFunctionResult userFunctionResult = _service.WFRoleUser(documentId, roleName);
-            if (userFunctionResult.Skip == false && executionStep != true)
+            if (userFunctionResult.Skip == false && executionStep == true)
             _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
 
             outputBookmark.Set(context, this.DisplayName.Replace("<step>", ""));

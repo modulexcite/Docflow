@@ -410,10 +410,15 @@ namespace RapidDoc.Models.Services
         public void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUser, string activityId, bool useManual, int slaOffset, bool executionStep)
         {
             WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
-            trackerTable.Users.Clear();
-            _WorkflowTrackerService.SaveDomain(trackerTable, currentUser);
-            
 
+            IEnumerable<WFTrackerTable> trackerTableAll = _WorkflowTrackerService.GetPartial(x => x.ActivityID == activityId && x.DocumentTableId == documentId && x.LineNum >= trackerTable.LineNum);
+
+            foreach (var trackerTableClear in trackerTableAll)
+            {
+                trackerTableClear.Users.Clear();
+                _WorkflowTrackerService.SaveDomain(trackerTableClear, currentUser);
+            }
+            
             if ((step != DocumentState.Cancelled) &&
                 (step != DocumentState.Closed))
             {
