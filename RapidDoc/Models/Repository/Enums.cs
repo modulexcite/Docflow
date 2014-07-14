@@ -380,19 +380,4 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Прочее оборудование")]
         Other = 8
     }
-
-    public enum PriorityIncident : byte
-    {
-        [Display(Name = "Низкий")]
-        Low = 0,
-
-        [Display(Name = "Средний")]
-        Middle = 1,
-
-        [Display(Name = "Высокий")]
-        Hight = 2,
-
-        [Display(Name = "Критический")]
-        Critical = 3,
-    }
 }

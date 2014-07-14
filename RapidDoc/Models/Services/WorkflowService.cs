@@ -203,7 +203,7 @@ namespace RapidDoc.Models.Services
         public void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
             ChooseRightWorkflow(TableName);
-            this.printActivityTree(activity);   
+            this.printActivityTree(activity);
             SetupInstanceStore();
             LoadAOrCompleteInstance(documentId, DocumentState.Cancelled, TrackerType.Cancelled, documentData);
             DeleteInstanceStoreOwner();
@@ -218,7 +218,8 @@ namespace RapidDoc.Models.Services
                 instanceStore =
                     new SqlWorkflowInstanceStore(ConfigurationManager.ConnectionStrings["WFConnection"].ToString());
                 instanceStore.InstanceCompletionAction = InstanceCompletionAction.DeleteNothing;
-
+                instanceStore.HostLockRenewalPeriod = TimeSpan.FromSeconds(20);
+                instanceStore.InstanceLockedExceptionAction = InstanceLockedExceptionAction.BasicRetry;
                 InstanceHandle handle = instanceStore.CreateInstanceHandle();
                 InstanceView view = instanceStore.Execute(handle, new CreateWorkflowOwnerCommand(), TimeSpan.FromSeconds(30));
                 handle.Free();
@@ -230,7 +231,6 @@ namespace RapidDoc.Models.Services
             {
                 throw ex;
             }
-
         }
 
         private static void DeleteInstanceStoreOwner()
@@ -277,6 +277,11 @@ namespace RapidDoc.Models.Services
                     instanceUnloaded.Set();
                 };
 
+                application.OnUnhandledException = (e) =>
+                {
+                    return UnhandledExceptionAction.Terminate;
+                };
+
                 #endregion Workflow Delegates
 
                 application.Persist();
@@ -296,69 +301,81 @@ namespace RapidDoc.Models.Services
 
         public void LoadAOrCompleteInstance(Guid _documentId, DocumentState _state, TrackerType _trackerType, IDictionary<string, object> documentData)
         {
-            var documentTable = _DocumentService.Find(_documentId);
-            IEnumerable<WFTrackerTable> bookmarks;
-
-            IDictionary<string, object> inputArguments = new Dictionary<string, object>();
-            inputArguments.Add("inputStep", _state);
-            inputArguments.Add("inputCurrentUser", HttpContext.Current.User.Identity.Name);
-            inputArguments.Add("documentData", documentData);
-
-            WorkflowApplication application = new WorkflowApplication(activity);
-            application.InstanceStore = instanceStore;
-            application.Extensions.Add(new WFTrackingParticipant());
-
-            #region Workflow Delegates
-
-            application.PersistableIdle = (e) =>
+            try
             {
-                var ex = e.GetInstanceExtensions<WFTrackingParticipant>();
-                outputParameters = ex.Last().Outputs;
-                //instanceUnloaded.Set();
-                return PersistableIdleAction.Unload;
-            };
+                var documentTable = _DocumentService.Find(_documentId);
+                IEnumerable<WFTrackerTable> bookmarks;
 
-            application.Completed = (e) =>
-            {
-                outputParameters = e.Outputs;
-            };
+                IDictionary<string, object> inputArguments = new Dictionary<string, object>();
+                inputArguments.Add("inputStep", _state);
+                inputArguments.Add("inputCurrentUser", HttpContext.Current.User.Identity.Name);
+                inputArguments.Add("documentData", documentData);
 
-            application.Unloaded = (workflowApplicationEventArgs) =>
-            {
-                instanceUnloaded.Set();
+                WorkflowApplication application = new WorkflowApplication(activity);
+                application.InstanceStore = instanceStore;
+                application.Extensions.Add(new WFTrackingParticipant());
 
-            };
+                #region Workflow Delegates
 
-            #endregion Workflow Delegates
-
-            application.Load(documentTable.WWFInstanceId);
-
-            bookmarks = _DocumentService.GetCurrentSignStep(_documentId, HttpContext.Current.User.Identity.Name);
-
-            if (bookmarks != null)
-            {
-                foreach (var bookmark in bookmarks)
+                application.PersistableIdle = (e) =>
                 {
-                    application.ResumeBookmark(bookmark.ActivityName, inputArguments);
+                    var ex = e.GetInstanceExtensions<WFTrackingParticipant>();
+                    outputParameters = ex.Last().Outputs;
+                    //instanceUnloaded.Set();
+                    return PersistableIdleAction.Unload;
+                };
 
-                    application.Persist();
-                    instanceUnloaded.WaitOne();             
+                application.Completed = (e) =>
+                {
+                    outputParameters = e.Outputs;
+                };
+
+                application.Unloaded = (workflowApplicationEventArgs) =>
+                {
+                    instanceUnloaded.Set();
+
+                };
+
+                application.OnUnhandledException = (e) =>
+                {
+                    return UnhandledExceptionAction.Terminate;
+                };
+
+                #endregion Workflow Delegates
+
+                application.Load(documentTable.WWFInstanceId);
+
+                bookmarks = _DocumentService.GetCurrentSignStep(_documentId, HttpContext.Current.User.Identity.Name);
+
+                if (bookmarks != null)
+                {
+                    foreach (var bookmark in bookmarks)
+                    {
+                        application.ResumeBookmark(bookmark.ActivityName, inputArguments);
+
+                        application.Persist();
+                        instanceUnloaded.WaitOne();             
+                    }
+                }
+                if (((DocumentState)outputParameters["outputStep"] == DocumentState.Agreement) && (_trackerType == TrackerType.Cancelled))
+                    _DocumentService.SaveCanceledData(bookmarks);       
+                else
+                    _DocumentService.SaveSignData(bookmarks, _trackerType);
+
+                documentTable.WWFInstanceId = application.Id;
+                documentTable.DocumentState = (DocumentState)outputParameters["outputStep"];
+                _DocumentService.UpdateDocument(documentTable);
+
+                CustomParamUpdate(documentTable, documentData);
+
+                if(documentTable.DocumentState == DocumentState.Closed)
+                {
+                    _EmailService.SendInitiatorClosedEmail(documentTable.Id);
                 }
             }
-            if (((DocumentState)outputParameters["outputStep"] == DocumentState.Agreement) && (_trackerType == TrackerType.Cancelled))
-                _DocumentService.SaveCanceledData(bookmarks);       
-            else
-                _DocumentService.SaveSignData(bookmarks, _trackerType);
-
-            documentTable.WWFInstanceId = application.Id;
-            documentTable.DocumentState = (DocumentState)outputParameters["outputStep"];
-            _DocumentService.UpdateDocument(documentTable);
-
-            CustomParamUpdate(documentTable, documentData);
-
-            if(documentTable.DocumentState == DocumentState.Closed)
+            catch (Exception ex)
             {
-                _EmailService.SendInitiatorClosedEmail(documentTable.Id);
+                throw ex;
             }
         }
 

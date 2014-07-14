@@ -97,8 +97,7 @@ namespace RapidDoc.Controllers
                     string[] emplName = new string[3];
 
                     ldapData = result.Properties["description"][0].ToString();
-                    //mail = result.Properties["mail"][0].ToString();
-                    mail = "igor.dmitrov@altyntau.com";
+                    mail = result.Properties["mail"][0].ToString();
 
                     emplName = DecodeLDAPNameUsers(ldapData, 0);
 
@@ -268,6 +267,12 @@ namespace RapidDoc.Controllers
                 um.AddLogin(domainModel.Id, loginInfo);
                 um.AddToRole(domainModel.Id, "ActiveUser");
 
+                domainModel = um.FindByName(_userId);
+            }
+            else
+            {
+                domainModel.Email = _email;
+                um.Update(domainModel);
                 domainModel = um.FindByName(_userId);
             }
             return domainModel == null ? "" : domainModel.Id;

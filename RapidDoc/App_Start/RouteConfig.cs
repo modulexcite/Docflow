@@ -40,6 +40,12 @@ namespace RapidDoc
                 defaults: new { controller = "Document", action = "DownloadFile", id = UrlParameter.Optional }
             ).RouteHandler = new DefaultMvcRouteHandler();
 
+            routes.MapRoute(
+                name: "DocumentDelete",
+                url: "Document/DeleteFile/{id}",
+                defaults: new { controller = "Document", action = "DeleteFile", id = UrlParameter.Optional }
+            ).RouteHandler = new DefaultMvcRouteHandler();
+
             foreach (Route r in routes)
             {
                 if (!(r.RouteHandler is DefaultMvcRouteHandler) && !(r.RouteHandler is System.Web.Http.WebHost.HttpControllerRouteHandler)

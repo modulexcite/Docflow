@@ -311,7 +311,7 @@ namespace RapidDoc.Models.Services
             if (docuTable != null)
             {
                 ApplicationUser userTable = _AccountService.Find(docuTable.ApplicationUserCreatedId);
-                if (userTable.Email != String.Empty)
+                if (userTable.Email != String.Empty && userTable.UserName != HttpContext.Current.User.Identity.Name)
                 {
                     string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
                     CreateMessange(EmailTemplateType.Comment, docuTable, userTable, @"Views\\EmailTemplate\\CommentEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorCommentEmail, String.Format("Новый комментарий в документе [{0}]", docuTable.DocumentNum), new string[] { lastComment });

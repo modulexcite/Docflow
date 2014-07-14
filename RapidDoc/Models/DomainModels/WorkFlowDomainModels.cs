@@ -258,7 +258,6 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Description { get; set; }
 
-        public PriorityIncident PriorityIncident { get; set; }
         public int SLAIncident { get; set; }
 
         [Required]

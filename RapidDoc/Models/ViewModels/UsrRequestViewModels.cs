@@ -559,9 +559,6 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Контактный номер телефона")]
         public string Phone { get; set; } 
 
-        [Display(Name = "Приоритет")]
-        public PriorityIncident Priority { get; set; }
-
         [Display(Name = "Сервис")]
         public Guid? ServiceIncidentTableId { get; set; }
     }

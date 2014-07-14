@@ -161,9 +161,6 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Description", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string Description { get; set; }
 
-        [Display(Name = "Приоритеты инцидентов")]
-        public PriorityIncident PriorityIncident { get; set; }
-
         [Display(Name = "SLA инцидентов")]
         public int SLAIncident { get; set; }
 
