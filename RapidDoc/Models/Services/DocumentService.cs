@@ -22,6 +22,7 @@ namespace RapidDoc.Models.Services
         IQueryable<DocumentTable> GetAllView();
         IQueryable<DocumentTable> GetArchiveView();
         IEnumerable<DocumentTable> GetPartial(Expression<Func<DocumentTable, bool>> predicate);
+        IQueryable<DocumentTable> GetAgreedDocument();
         DocumentTable Find(Guid? id);
         dynamic GetDocument(Guid documentId, string tableName = "");
         dynamic GetDocumentView(Guid documentId);
@@ -33,7 +34,7 @@ namespace RapidDoc.Models.Services
         bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null);
         bool isSignDocument(Guid documentId, Guid ProcessId, string currentUserName = "");
         IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserName = "", ApplicationUser user = null);
-        SLAStatusList SLAStatus(Guid documentId, string currentUserName = "", ApplicationUser user = null);
+        SLAStatusList SLAStatus(Guid documentId, string currentUserName = "");
         void SaveSignData(IEnumerable<WFTrackerTable> trackerTables, TrackerType trackerType);
         Guid SaveFile(FileTable file);
         FileTable GetFile(Guid Id);
@@ -241,6 +242,24 @@ namespace RapidDoc.Models.Services
                     select document;
             }
          
+            return items;
+        }
+
+        public IQueryable<DocumentTable> GetAgreedDocument()
+        {
+            string localUserName = getCurrentUserName();
+            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            IQueryable<DocumentTable> items = null;
+            ApplicationDbContext contextQuery = new ApplicationDbContext();
+
+            items = from document in contextQuery.DocumentTable
+                where
+                    (contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == user.Id && x.TrackerType == TrackerType.Approved))
+                    &&
+                    !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                orderby document.CreatedDate descending
+                select document;
+
             return items;
         }
 
@@ -493,7 +512,7 @@ namespace RapidDoc.Models.Services
             return signUsers;
         }
 
-        public SLAStatusList SLAStatus(Guid documentId, string currentUserName = "", ApplicationUser user = null)
+        public SLAStatusList SLAStatus(Guid documentId, string currentUserName = "")
         {
             IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Waiting && x.SLAOffset > 0);
 

@@ -10,11 +10,11 @@ using RapidDoc.Models.Services;
 
 namespace RapidDoc.Models.Grids
 {
-    public class DocumentGrid : Grid<DocumentTable>
+    public class AgreedDocumentGrid : Grid<DocumentTable>
     {
         private IEnumerable<DocumentTable> _displayingItems;
 
-        public DocumentGrid(IQueryable<DocumentTable> items)
+        public AgreedDocumentGrid(IQueryable<DocumentTable> items)
             : base(items)
         {
         }
@@ -30,11 +30,9 @@ namespace RapidDoc.Models.Grids
             IDocumentService _DocumentService = DependencyResolver.Current.GetService<IDocumentService>();
             IAccountService _AccountService = DependencyResolver.Current.GetService<IAccountService>();
 
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == HttpContext.Current.User.Identity.Name);
-
             foreach (var displayedItem in _displayingItems)
             {
-                displayedItem.isNotReview = _ReviewDocLogService.isNotReviewDocCurrentUser(displayedItem.Id, "", user);
+                displayedItem.isNotReview = false;
                 displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id);
             }
 
@@ -42,9 +40,9 @@ namespace RapidDoc.Models.Grids
         }
     }
 
-    public class DocumentAjaxPagingGrid : DocumentGrid
+    public class AgreedDocumentAjaxPagingGrid : DocumentGrid
     {
-        public DocumentAjaxPagingGrid(IQueryable<DocumentTable> items, int page, bool renderOnlyRows)
+        public AgreedDocumentAjaxPagingGrid(IQueryable<DocumentTable> items, int page, bool renderOnlyRows)
             : base(items)
         {
             Pager = new AjaxGridPager(this) { CurrentPage = page }; //override  default pager
