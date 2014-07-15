@@ -416,12 +416,10 @@ namespace RapidDoc.Models.Services
             {
                 WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
 
-                trackerTable.Users.Clear();
-                _WorkflowTrackerService.SaveDomain(trackerTable, currentUser);
-
                 trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
                 trackerTable.ActivityName = bookmarkName.Replace(keyForStep, "");
-                trackerTable.Users = listUser;
+                if (trackerTable.Users == null || trackerTable.Users.Count() == 0)
+                    trackerTable.Users = listUser;
                 trackerTable.TrackerType = TrackerType.Waiting;
                 trackerTable.ManualExecutor = useManual;
                 trackerTable.SLAOffset = slaOffset;

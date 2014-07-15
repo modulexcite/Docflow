@@ -43,9 +43,10 @@ namespace RapidDoc.Activities
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
             WFUserFunctionResult userFunctionResult = _service.WFSpecificUser(documentId, userName);
 
-            if (userFunctionResult.Skip == false || executionStep == true)
-            _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
-
+            if (userFunctionResult.Skip == false) 
+                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users,  currentUser, this.Id, useManual, slaOffset, executionStep);
+            else if(executionStep == true)
+                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
             outputBookmark.Set(context, this.DisplayName.Replace("<step>", ""));
             outputSkipStep.Set(context, executionStep ? false : userFunctionResult.Skip);
             outputStep.Set(context, documentStep);
