@@ -43,7 +43,6 @@ namespace RapidDoc.Models.Services
         List<ApplicationUser> GetSignUsers(DocumentTable docuTable);
         List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status);
         DateTime? GetSLAPerformDate(Guid DocumentId, DateTime CreatedDate, double SLAOffset);
-        void SaveCanceledData(IEnumerable<WFTrackerTable> trackerTables);
     }
 
     public class DocumentService : IDocumentService
@@ -645,20 +644,6 @@ namespace RapidDoc.Models.Services
                 trackerTable.TrackerType = trackerType;
                 _WorkflowTrackerService.SaveDomain(trackerTable);
             }
-        }
-
-        public void SaveCanceledData(IEnumerable<WFTrackerTable> trackerTables)
-        {
-            foreach (var trackerTable in trackerTables)
-            {
-                trackerTable.TrackerType = TrackerType.NonActive;
-                trackerTable.SignDate = null;
-                trackerTable.SignUserId = null;
-                trackerTable.Users = null;
-                trackerTable.SLAOffset = 0;
-                trackerTable.ManualExecutor = false;
-                _WorkflowTrackerService.SaveDomain(trackerTable);
-            } 
         }
           
         public Guid SaveFile(FileTable file)

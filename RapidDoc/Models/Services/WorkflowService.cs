@@ -46,6 +46,7 @@ namespace RapidDoc.Models.Services
         private readonly IWorkflowTrackerService _WorkflowTrackerService;
         private readonly IEmailService _EmailService;
         private readonly IHistoryUserService _HistoryUserService;
+        private readonly IReviewDocLogService _ReviewDocLogService;
         private readonly IServiceIncidentService _ServiceIncidentService;
         
         private static SqlWorkflowInstanceStore instanceStore;
@@ -57,7 +58,9 @@ namespace RapidDoc.Models.Services
         private const string keyForStep = "<step>";
 
 
-        public WorkflowService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService, IServiceIncidentService serviceIncidentService)
+        public WorkflowService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, 
+            IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService,
+            IServiceIncidentService serviceIncidentService, IReviewDocLogService reviewDocLogService)
         {
             _uow = uow;
             _AccountService = accountService;
@@ -66,6 +69,7 @@ namespace RapidDoc.Models.Services
             _WorkflowTrackerService = workflowTrackerService;
             _EmailService = emailService;
             _HistoryUserService = historyUserService;
+            _ReviewDocLogService = reviewDocLogService;
             _ServiceIncidentService = serviceIncidentService;
         }
 
@@ -345,7 +349,7 @@ namespace RapidDoc.Models.Services
 
                 application.Load(documentTable.WWFInstanceId);
 
-                bookmarks = _DocumentService.GetCurrentSignStep(_documentId, HttpContext.Current.User.Identity.Name);
+                bookmarks = _DocumentService.GetCurrentSignStep(_documentId, HttpContext.Current.User.Identity.Name).ToList();
 
                 if (bookmarks != null)
                 {
@@ -357,9 +361,7 @@ namespace RapidDoc.Models.Services
                         instanceUnloaded.WaitOne();             
                     }
                 }
-                if (((DocumentState)outputParameters["outputStep"] == DocumentState.Agreement) && (_trackerType == TrackerType.Cancelled))
-                    _DocumentService.SaveCanceledData(bookmarks);       
-                else
+                if (!(((DocumentState)outputParameters["outputStep"] == DocumentState.Agreement) && (_trackerType == TrackerType.Cancelled)))
                     _DocumentService.SaveSignData(bookmarks, _trackerType);
 
                 documentTable.WWFInstanceId = application.Id;
@@ -409,20 +411,15 @@ namespace RapidDoc.Models.Services
 
         public void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUser, string activityId, bool useManual, int slaOffset, bool executionStep)
         {
-            WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
-
-            IEnumerable<WFTrackerTable> trackerTableAll = _WorkflowTrackerService.GetPartial(x => x.ActivityID == activityId && x.DocumentTableId == documentId && x.LineNum >= trackerTable.LineNum);
-
-            foreach (var trackerTableClear in trackerTableAll)
-            {
-                trackerTableClear.Users.Clear();
-                _WorkflowTrackerService.SaveDomain(trackerTableClear, currentUser);
-            }
-            
             if ((step != DocumentState.Cancelled) &&
                 (step != DocumentState.Closed))
             {
-               /* WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);*/
+                WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
+
+                trackerTable.Users.Clear();
+                _WorkflowTrackerService.SaveDomain(trackerTable, currentUser);
+
+                trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
                 trackerTable.ActivityName = bookmarkName.Replace(keyForStep, "");
                 trackerTable.Users = listUser;
                 trackerTable.TrackerType = TrackerType.Waiting;
@@ -432,6 +429,23 @@ namespace RapidDoc.Models.Services
                 trackerTable.SignDate = null;
                 trackerTable.SignUserId = null;
                 _WorkflowTrackerService.SaveDomain(trackerTable, currentUser);
+
+                foreach(var user in listUser)
+                {
+                    _ReviewDocLogService.Delete(documentId, user.UserId);
+                }
+
+                IEnumerable<WFTrackerTable> trackerTableCancel = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == trackerTable.DocumentTableId && x.LineNum > trackerTable.LineNum && x.ActivityID != trackerTable.ActivityID).ToList();
+                foreach (var item in trackerTableCancel)
+                {
+                    item.TrackerType = TrackerType.NonActive;
+                    item.SignDate = null;
+                    item.SignUserId = null;
+                    item.Users.Clear();
+                    item.SLAOffset = 0;
+                    item.ManualExecutor = false;
+                    _WorkflowTrackerService.SaveDomain(item, currentUser);
+                }
             }
         }
 

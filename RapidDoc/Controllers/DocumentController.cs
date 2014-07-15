@@ -183,6 +183,12 @@ namespace RapidDoc.Controllers
                 if (userTable == null) return HttpNotFound();
 
                 DateTime checkRejectDate = DateTime.UtcNow.AddMinutes(-5);
+                HistoryUserTable history = _HistoryUserService.FirstOrDefault(x => x.DocumentTableId == id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
+                if (history != null && history.CreatedDate > checkRejectDate)
+                {
+                    checkRejectDate = history.CreatedDate;
+                }
+
                 if (!_CommentService.Contains(x => x.ApplicationUserCreatedId == userTable.Id && x.DocumentTableId == id && x.CreatedDate >= checkRejectDate))
                 {
                     EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuTable.ApplicationUserCreatedId);
@@ -194,19 +200,29 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            ProcessTable processTable = docuTable.ProcessTable;
-            if (_DocumentService.isSignDocument(id, processTable.Id))
+            if (ModelState.IsValid)
             {
-                if (approveDoc != String.Empty)
+                ProcessTable processTable = docuTable.ProcessTable;
+                if (_DocumentService.isSignDocument(id, processTable.Id))
                 {
-                    _WorkflowService.AgreementWorkflowApprove(id, processTable.TableName, documentData);
+                    if (approveDoc != String.Empty)
+                    {
+                        _WorkflowService.AgreementWorkflowApprove(id, processTable.TableName, documentData);
+                    }
+                    else if (rejectDoc != String.Empty)
+                    {
+                        _WorkflowService.AgreementWorkflowReject(id, processTable.TableName, documentData);
+                    }
                 }
-                else if (rejectDoc != String.Empty)
-                {
-                    _WorkflowService.AgreementWorkflowReject(id, processTable.TableName, documentData);
-                }
+                return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction("Index", "Home");
+
+            ApplicationUser userResult = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            EmplTable emplResult = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuTable.ApplicationUserCreatedId);
+            ProcessView processResult = _ProcessService.FindView(docuTable.ProcessTableId);
+            object viewModelResult = InitialViewShowDocument(id, processResult, docuTable, userResult, emplResult);
+
+            return View("~/Views/Document/ShowDocument.cshtml", viewModelResult);
         }
 
         private object InitialViewShowDocument(Guid id, ProcessView process, DocumentTable docuTable, ApplicationUser userTable, EmplTable emplTable)
@@ -831,6 +847,14 @@ namespace RapidDoc.Controllers
                 if (actionModel.BirthDay == null)
                 {
                     ModelState.AddModelError(string.Empty, "Дата с должна быть заполнена");
+                }
+            }
+
+            if (type == (new USR_REQ_IT_CTP_IncidentIT_View()).GetType())
+            {
+                if (actionModel.ServiceIncidentTableId == null && actionModel.Id != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан сервис ИТ");
                 }
             }
         }
