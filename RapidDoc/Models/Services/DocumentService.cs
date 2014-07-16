@@ -34,7 +34,7 @@ namespace RapidDoc.Models.Services
         bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null);
         bool isSignDocument(Guid documentId, Guid ProcessId, string currentUserName = "");
         IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserName = "", ApplicationUser user = null);
-        SLAStatusList SLAStatus(Guid documentId, string currentUserName = "");
+        SLAStatusList SLAStatus(Guid documentId, string currentUserName = "", ApplicationUser user = null);
         void SaveSignData(IEnumerable<WFTrackerTable> trackerTables, TrackerType trackerType);
         Guid SaveFile(FileTable file);
         FileTable GetFile(Guid Id);
@@ -511,24 +511,32 @@ namespace RapidDoc.Models.Services
             return signUsers;
         }
 
-        public SLAStatusList SLAStatus(Guid documentId, string currentUserName = "")
+        public SLAStatusList SLAStatus(Guid documentId, string currentUserName = "", ApplicationUser user = null)
         {
             IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Waiting && x.SLAOffset > 0);
 
             if (items != null)
             {
-                WFTrackerTable item = items.FirstOrDefault();
-                DateTime? date = GetSLAPerformDate(documentId, item.ModifiedDate, item.SLAOffset);
-
-                if (date != null)
+                if (user == null)
                 {
-                    if (date < DateTime.UtcNow)
+                    string localUserName = getCurrentUserName(currentUserName);
+                    user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+                }
+                if (items.Any(x => x.Users.Any(a => a.UserId == user.Id)))
+                {
+                    WFTrackerTable item = items.FirstOrDefault();
+                    DateTime? date = GetSLAPerformDate(documentId, item.ModifiedDate, item.SLAOffset);
+
+                    if (date != null)
                     {
-                        return SLAStatusList.Disturbance;
-                    }
-                    else if (date >= DateTime.UtcNow && date.Value.AddHours(-1) <= DateTime.UtcNow)
-                    {
-                        return SLAStatusList.Warning;
+                        if (date < DateTime.UtcNow)
+                        {
+                            return SLAStatusList.Disturbance;
+                        }
+                        else if (date >= DateTime.UtcNow && date.Value.AddHours(-1) <= DateTime.UtcNow)
+                        {
+                            return SLAStatusList.Warning;
+                        }
                     }
                 }
             }

@@ -35,7 +35,7 @@ namespace RapidDoc.Models.Grids
             foreach (var displayedItem in _displayingItems)
             {
                 displayedItem.isNotReview = _ReviewDocLogService.isNotReviewDocCurrentUser(displayedItem.Id, "", user);
-                displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id);
+                displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id, "", user);
             }
 
             return _displayingItems;
