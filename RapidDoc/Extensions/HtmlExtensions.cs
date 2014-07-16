@@ -97,6 +97,23 @@ namespace RapidDoc.Extensions
             return new MvcHtmlString(convertedTime);
         }
 
+        public static MvcHtmlString DateTimeLocal(this HtmlHelper helper, DateTime value, string timeZone = "")
+        {
+            if (timeZone == String.Empty)
+            {
+                ApplicationDbContext context = new ApplicationDbContext();
+                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                ApplicationUser user = UserManager.FindByName(HttpContext.Current.User.Identity.Name);
+                context.Dispose();
+                timeZone = user.TimeZoneId;
+            }
+
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            string convertedTime = TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(value), timeZoneInfo).ToString();
+
+            return new MvcHtmlString(convertedTime);
+        }
+
         public static string GetDescription(this Enum enumValue)
         {
             FieldInfo fi = enumValue.GetType().GetField(enumValue.ToString());

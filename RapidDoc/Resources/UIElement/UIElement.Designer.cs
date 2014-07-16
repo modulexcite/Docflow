@@ -448,6 +448,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Документ отменен:.
+        /// </summary>
+        public static string DocumentReject {
+            get {
+                return ResourceManager.GetString("DocumentReject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Домены.
         /// </summary>
         public static string Domains {

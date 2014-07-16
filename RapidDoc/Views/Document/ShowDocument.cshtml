@@ -108,6 +108,15 @@
                             }
                         </tbody>
                     </table>
+                    @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0)
+                    {
+                        <ul>
+                        @foreach(var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)
+                        {
+                            <li>@UIElementRes.UIElement.DocumentReject @history.CreatedBy в @Html.DateTimeLocal(history.CreatedDate)</li>
+                        }
+                        </ul>
+                    }
                 </div>
             }
             <br>

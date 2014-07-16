@@ -253,6 +253,8 @@ namespace RapidDoc.Controllers
                 ViewBag.CompanyName = String.Empty;
             }
 
+            ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuTable.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
+
             return viewModel;
         }
 
