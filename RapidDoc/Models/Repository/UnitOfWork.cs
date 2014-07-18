@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Transactions;
 using System.Web;
 using Microsoft.AspNet.Identity.EntityFramework;
 using RapidDoc.Models.DomainModels;

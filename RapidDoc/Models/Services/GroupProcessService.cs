@@ -21,7 +21,6 @@ namespace RapidDoc.Models.Services
         IEnumerable<GroupProcessView> GetPartialView(Expression<Func<GroupProcessTable, bool>> predicate);
         GroupProcessTable FirstOrDefault(Expression<Func<GroupProcessTable, bool>> predicate);
         GroupProcessView FirstOrDefaultView(Expression<Func<GroupProcessTable, bool>> predicate);
-        GroupProcessView GetNewModel();
         void Save(GroupProcessView viewTable);
         void SaveDomain(GroupProcessTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -74,12 +73,6 @@ namespace RapidDoc.Models.Services
         public GroupProcessView FirstOrDefaultView(Expression<Func<GroupProcessTable, bool>> predicate)
         {
             return Mapper.Map<GroupProcessTable, GroupProcessView>(FirstOrDefault(predicate));
-        }
-
-        public GroupProcessView GetNewModel()
-        {
-            var model = new GroupProcessView();
-            return model;
         }
 
         public void Save(GroupProcessView viewTable)

@@ -25,7 +25,6 @@ namespace RapidDoc.Models.Services
         IEnumerable<ProcessView> GetPartialIntercompanyView(Expression<Func<ProcessTable, bool>> predicate);
         ProcessTable FirstOrDefault(Expression<Func<ProcessTable, bool>> predicate);
         ProcessView FirstOrDefaultView(Expression<Func<ProcessTable, bool>> predicate);
-        ProcessView GetNewModel();
         void Save(ProcessView viewTable);
         void SaveDomain(ProcessTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -93,12 +92,6 @@ namespace RapidDoc.Models.Services
         public ProcessView FirstOrDefaultView(Expression<Func<ProcessTable, bool>> predicate)
         {
             return Mapper.Map<ProcessTable, ProcessView>(FirstOrDefault(predicate));
-        }
-
-        public ProcessView GetNewModel()
-        {
-            var model = new ProcessView();
-            return model;
         }
 
         public void Save(ProcessView viewTable)

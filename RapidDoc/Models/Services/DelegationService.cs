@@ -25,7 +25,6 @@ namespace RapidDoc.Models.Services
         IEnumerable<DelegationView> GetPartialIntercompanyView(Expression<Func<DelegationTable, bool>> predicate);
         DelegationTable FirstOrDefault(Expression<Func<DelegationTable, bool>> predicate);
         DelegationView FirstOrDefaultView(Expression<Func<DelegationTable, bool>> predicate);
-        DelegationView GetNewModel();
         void Save(DelegationView viewTable);
         void SaveDomain(DelegationTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -91,12 +90,6 @@ namespace RapidDoc.Models.Services
         public DelegationView FirstOrDefaultView(Expression<Func<DelegationTable, bool>> predicate)
         {
             return Mapper.Map<DelegationTable, DelegationView>(FirstOrDefault(predicate));
-        }
-
-        public DelegationView GetNewModel()
-        {
-            var model = new DelegationView();
-            return model;
         }
 
         public void Save(DelegationView viewTable)

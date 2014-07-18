@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Dynamic;
 using System.Text.RegularExpressions;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Infrastructure;
 
 namespace RapidDoc.Controllers
 {
@@ -310,22 +311,18 @@ namespace RapidDoc.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                //Save Document
+                for (int num = 0; num < 10; num++)
                 {
-                    //Save Document
                     var documentId = _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
                     _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId });
                     _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
                     SaveSearchData(docModel, actionModelName, documentId);
                     _WorkflowService.RunWorkflow(documentId, process.TableName, documentData);
                     _EmailService.SendInitiatorEmail(documentId);
+                }
 
-                    return RedirectToAction("Index", "Home");
-                }
-                catch (Exception e)
-                {
-                    ModelState.AddModelError(string.Empty, e.Message);
-                }
+                return RedirectToAction("Index", "Home");
             }
 
             var viewModel = new DocumentComposite();
@@ -389,16 +386,7 @@ namespace RapidDoc.Controllers
         public ActionResult AddReader(Guid id)
         {
             ViewBag.DocumentId = id;
-            var empls = _EmplService.GetPartialIntercompanyView(x => x.ApplicationUserId != null);
-
-            foreach(var empl in empls)
-            {
-                if (_DocumentReaderService.Contains(x => x.DocumentTableId == id && x.UserId == empl.ApplicationUserId))
-                {
-                    empl.isActiveDualList = true;
-                }
-            }
-
+            var empls = InitializeReaderView(id);
             return View(empls);
         }
 
@@ -407,10 +395,36 @@ namespace RapidDoc.Controllers
         {
             if (isAjax == true)
             {
-                List<string> newReader = _DocumentReaderService.SaveReader(id, listdata);
-                _EmailService.SendReaderEmail(id, newReader);
+                try
+                {
+                    List<string> newReader = _DocumentReaderService.SaveReader(id, listdata);
+                    _EmailService.SendReaderEmail(id, newReader);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(String.Empty, ex.Message);
+                    ViewBag.DocumentId = id;
+                    var empls = InitializeReaderView(id);
+                    return View(empls);
+                }
+                
             }
             return RedirectToAction("ShowDocument", new { id = id });
+        }
+
+        private IEnumerable<EmplView> InitializeReaderView(Guid id)
+        {
+            var empls = _EmplService.GetPartialIntercompanyView(x => x.ApplicationUserId != null);
+
+            foreach (var empl in empls)
+            {
+                if (_DocumentReaderService.Contains(x => x.DocumentTableId == id && x.UserId == empl.ApplicationUserId))
+                {
+                    empl.isActiveDualList = true;
+                }
+            }
+
+            return empls;
         }
 
         public ActionResult AddExecutor(Guid id, string activityId)

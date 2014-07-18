@@ -23,7 +23,6 @@ namespace RapidDoc.Models.Services
         IEnumerable<ServiceIncidentView> GetPartialView(Expression<Func<ServiceIncidentTable, bool>> predicate);
         ServiceIncidentTable FirstOrDefault(Expression<Func<ServiceIncidentTable, bool>> predicate);
         ServiceIncidentView FirstOrDefaultView(Expression<Func<ServiceIncidentTable, bool>> predicate);
-        ServiceIncidentView GetNewModel();
         void Save(ServiceIncidentView viewTable);
         void SaveDomain(ServiceIncidentTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -78,11 +77,6 @@ namespace RapidDoc.Models.Services
         public ServiceIncidentView FirstOrDefaultView(Expression<Func<ServiceIncidentTable, bool>> predicate)
         {
             return Mapper.Map<ServiceIncidentTable, ServiceIncidentView>(FirstOrDefault(predicate));
-        }
-
-        public ServiceIncidentView GetNewModel()
-        {
-            return new ServiceIncidentView();
         }
 
         public void Save(ServiceIncidentView viewTable)

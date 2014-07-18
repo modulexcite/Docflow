@@ -56,7 +56,7 @@ namespace RapidDoc.Controllers
         public ActionResult Create()
         {
             ViewBag.RoleList = _Service.GetDropListRoleNull(null);
-            return View(_Service.GetNewModel());
+            return View();
         }
 
         [HttpPost]

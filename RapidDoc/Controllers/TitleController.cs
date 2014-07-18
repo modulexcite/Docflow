@@ -51,7 +51,7 @@ namespace RapidDoc.Controllers
         public ActionResult Create()
         {
             ViewBag.ProfileList = _ProfileService.GetDropListProfileNull(null);
-            return View(_Service.GetNewModel());
+            return View();
         }
 
         [HttpPost]

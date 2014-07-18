@@ -39,8 +39,6 @@ namespace RapidDoc.Models.Services
         void SendDelegationEmplEmail(DelegationView delegationView);
         void SendReaderEmail(Guid documentId, List<string> newReader);
         void SendNewExecutorEmail(Guid documentId, string userId);
-        //void SendSLAWarningEmail(DocumentTable docuTable, string userId);
-        //void SendSLADisturbanceEmail(DocumentTable docuTable, string userId);
         void SendSLAWarningEmail(string userId, IEnumerable<DocumentTable> documents);
         void SendSLADisturbanceEmail(string userId, IEnumerable<DocumentTable> documents);
     }

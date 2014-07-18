@@ -55,7 +55,7 @@ namespace RapidDoc.Controllers
         {
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(null);
             ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(null);
-            return View(_Service.GetNewModel());
+            return View();
         }
 
 

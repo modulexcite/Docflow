@@ -26,7 +26,6 @@ namespace RapidDoc.Models.Services
         TitleTable FirstOrDefault(Expression<Func<TitleTable, bool>> predicate);
         TitleView FirstOrDefaultView(Expression<Func<TitleTable, bool>> predicate);
         bool Contains(Expression<Func<TitleTable, bool>> predicate);
-        TitleView GetNewModel();
         void Save(TitleView viewTable);
         void SaveDomain(TitleTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -95,12 +94,6 @@ namespace RapidDoc.Models.Services
         public bool Contains(Expression<Func<TitleTable, bool>> predicate)
         {
             return repo.Contains(predicate);
-        }
-
-        public TitleView GetNewModel()
-        {
-            TitleView model = new TitleView();
-            return model;
         }
 
         public void Save(TitleView viewTable)

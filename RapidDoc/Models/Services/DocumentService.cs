@@ -102,6 +102,12 @@ namespace RapidDoc.Models.Services
 
             Guid numberSeqId = _ProcessService.Find(processId).GroupProcessTable.NumberSeriesTableId ?? Guid.Empty;
             docuTable.DocumentNum = _NumberSeqService.GetDocumentNum(numberSeqId);
+
+            while(_uow.GetRepository<DocumentTable>().Contains(x => x.DocumentNum == docuTable.DocumentNum))
+            {
+                docuTable.DocumentNum = _NumberSeqService.GetDocumentNum(numberSeqId);
+            }
+
             _uow.GetRepository<DocumentTable>().Add(docuTable);
             _uow.Save();
 
@@ -647,10 +653,17 @@ namespace RapidDoc.Models.Services
 
             foreach (var trackerTable in trackerTables)
             {
-                trackerTable.SignDate = DateTime.UtcNow;
-                trackerTable.SignUserId = userTable.Id;
-                trackerTable.TrackerType = trackerType;
-                _WorkflowTrackerService.SaveDomain(trackerTable);
+                try
+                {
+                    trackerTable.SignDate = DateTime.UtcNow;
+                    trackerTable.SignUserId = userTable.Id;
+                    trackerTable.TrackerType = trackerType;
+                    _WorkflowTrackerService.SaveDomain(trackerTable);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
           
@@ -800,6 +813,7 @@ namespace RapidDoc.Models.Services
             Type type = Type.GetType("RapidDoc.Models.ViewModels." + customModel + "_View");
             if (type != null)
                 return Activator.CreateInstance(type) as IDocument;
+
             return null;
         }
 

@@ -21,7 +21,6 @@ namespace RapidDoc.Models.Services
         IEnumerable<ProfileView> GetPartialView(Expression<Func<ProfileTable, bool>> predicate);
         ProfileTable FirstOrDefault(Expression<Func<ProfileTable, bool>> predicate);
         ProfileView FirstOrDefaultView(Expression<Func<ProfileTable, bool>> predicate);
-        ProfileView GetNewModel();
         void Save(ProfileView viewTable);
         void SaveDomain(ProfileTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -74,12 +73,6 @@ namespace RapidDoc.Models.Services
         public ProfileView FirstOrDefaultView(Expression<Func<ProfileTable, bool>> predicate)
         {
             return Mapper.Map<ProfileTable, ProfileView>(FirstOrDefault(predicate));
-        }
-
-        public ProfileView GetNewModel()
-        {
-            var model = new ProfileView();
-            return model;
         }
 
         public void Save(ProfileView viewTable)

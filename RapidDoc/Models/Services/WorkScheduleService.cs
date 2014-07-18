@@ -21,7 +21,6 @@ namespace RapidDoc.Models.Services
         IEnumerable<WorkScheduleView> GetPartialView(Expression<Func<WorkScheduleTable, bool>> predicate);
         WorkScheduleTable FirstOrDefault(Expression<Func<WorkScheduleTable, bool>> predicate);
         WorkScheduleView FirstOrDefaultView(Expression<Func<WorkScheduleTable, bool>> predicate);
-        WorkScheduleView GetNewModel();
         void Save(WorkScheduleView viewTable);
         void SaveDomain(WorkScheduleTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -81,12 +80,6 @@ namespace RapidDoc.Models.Services
         public WorkScheduleView FirstOrDefaultView(Expression<Func<WorkScheduleTable, bool>> predicate)
         {
             return Mapper.Map<WorkScheduleTable, WorkScheduleView>(FirstOrDefault(predicate));
-        }
-
-        public WorkScheduleView GetNewModel()
-        {
-            var model = new WorkScheduleView();
-            return model;
         }
 
         public void Save(WorkScheduleView viewTable)

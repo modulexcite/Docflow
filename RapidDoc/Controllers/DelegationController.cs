@@ -64,7 +64,7 @@ namespace RapidDoc.Controllers
             var droplistTmp = _EmplService.GetDropListEmplNull(null);
             ViewBag.EmplToList = droplistTmp;
             ViewBag.EmplFromList = droplistTmp;
-            return View(_Service.GetNewModel());
+            return View();
         }
 
         [HttpPost]

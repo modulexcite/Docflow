@@ -21,7 +21,6 @@ namespace RapidDoc.Models.Services
         IEnumerable<CompanyView> GetPartialView(Expression<Func<CompanyTable, bool>> predicate);
         CompanyTable FirstOrDefault(Expression<Func<CompanyTable, bool>> predicate);
         CompanyView FirstOrDefaultView(Expression<Func<CompanyTable, bool>> predicate);
-        CompanyView GetNewModel();
         void Save(CompanyView viewTable);
         void SaveDomain(CompanyTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -74,11 +73,6 @@ namespace RapidDoc.Models.Services
         public CompanyView FirstOrDefaultView(Expression<Func<CompanyTable, bool>> predicate)
         {
             return Mapper.Map<CompanyTable, CompanyView>(FirstOrDefault(predicate));
-        }
-
-        public CompanyView GetNewModel()
-        {
-            return new CompanyView();
         }
 
         public void Save(CompanyView viewTable)

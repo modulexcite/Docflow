@@ -11,6 +11,9 @@ using System.Web;
 using RapidDoc.Models.Repository;
 using System.Web.Mvc;
 using System.Linq.Expressions;
+using System.Data.Entity.Core;
+using System.Transactions;
+using System.Data.Entity.Infrastructure;
 
 namespace RapidDoc.Models.Services
 {
@@ -22,7 +25,6 @@ namespace RapidDoc.Models.Services
         IEnumerable<NumberSeriesView> GetPartialView(Expression<Func<NumberSeriesTable, bool>> predicate);
         NumberSeriesTable FirstOrDefault(Expression<Func<NumberSeriesTable, bool>> predicate);
         NumberSeriesView FirstOrDefaultView(Expression<Func<NumberSeriesTable, bool>> predicate);
-        NumberSeriesView GetNewModel();
         void Save(NumberSeriesView viewTable);
         void SaveDomain(NumberSeriesTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -76,12 +78,6 @@ namespace RapidDoc.Models.Services
         public NumberSeriesView FirstOrDefaultView(Expression<Func<NumberSeriesTable, bool>> predicate)
         {
             return Mapper.Map<NumberSeriesTable, NumberSeriesView>(FirstOrDefault(predicate));
-        }
-
-        public NumberSeriesView GetNewModel()
-        {
-            var model = new NumberSeriesView();
-            return model;
         }
 
         public void Save(NumberSeriesView viewTable)
@@ -154,11 +150,34 @@ namespace RapidDoc.Models.Services
 
         public string GetDocumentNum(Guid id)
         {
+            bool success = false;
             var numberSeq = Find(id);
-            string num = numberSeq.Prefix + numberSeq.LastNum.ToString("D"+numberSeq.Size.ToString());
-            numberSeq.LastNum++;
-            SaveDomain(numberSeq);
-            return num;
+
+            do
+            {
+                try
+                {
+                    numberSeq = Find(id);
+                    numberSeq.LastNum++;
+                    SaveDomain(numberSeq);
+                    string num = numberSeq.Prefix + numberSeq.LastNum.ToString("D" + numberSeq.Size.ToString());
+                    success = true;
+                    return num;
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    var entry = ex.Entries.Single();
+                    var databaseValues = (NumberSeriesTable)entry.GetDatabaseValues().ToObject();
+                    var clientValues = (NumberSeriesTable)entry.Entity;
+                    numberSeq.TimeStamp = databaseValues.TimeStamp;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            } while (!success);
+
+            return String.Empty;
         }
 
         private string getCurrentUserName(string currentUserName = "")

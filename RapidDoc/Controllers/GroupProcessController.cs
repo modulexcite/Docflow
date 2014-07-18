@@ -52,7 +52,7 @@ namespace RapidDoc.Controllers
         {
             ViewBag.NumberSeqList = _NumberSeqService.GetDropListNumberSeqNull(null);
             ViewBag.GroupProcessParent = _Service.GetDropListGroupProcessNull(null);
-            return View(_Service.GetNewModel());
+            return View();
         }
 
         [HttpPost]

@@ -49,12 +49,9 @@ namespace RapidDoc.Models.Services
         private readonly IReviewDocLogService _ReviewDocLogService;
         private readonly IServiceIncidentService _ServiceIncidentService;
         
-        private static SqlWorkflowInstanceStore instanceStore;
-        private static AutoResetEvent instanceUnloaded = new AutoResetEvent(false);
-        private static Activity activity;
         IDictionary<string, object> outputParameters;
 
-        private static List<Array> allSteps = new List<Array>();
+        private List<Array> allSteps = new List<Array>();
         private const string keyForStep = "<step>";
 
 
@@ -185,128 +182,100 @@ namespace RapidDoc.Models.Services
 
         public void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
-            ChooseRightWorkflow(TableName);
-            _WorkflowTrackerService.SaveTrackList(documentId, printActivityTree(activity));      
-            SetupInstanceStore();
-            StartAndPersistInstance(documentId, DocumentState.Agreement, documentData);
-            DeleteInstanceStoreOwner();
+            Activity activity = ChooseRightWorkflow(TableName);
+            _WorkflowTrackerService.SaveTrackList(documentId, printActivityTree(activity));
+            SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
+            StartAndPersistInstance(documentId, DocumentState.Agreement, documentData, instanceStore, activity);
+            DeleteInstanceStoreOwner(instanceStore);
             _EmailService.SendExecutorEmail(documentId);
         }
 
         public void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
-            ChooseRightWorkflow(TableName);
+            Activity activity = ChooseRightWorkflow(TableName);
             this.printActivityTree(activity);
-            SetupInstanceStore();
-            LoadAOrCompleteInstance(documentId, DocumentState.Agreement, TrackerType.Approved, documentData);
-            DeleteInstanceStoreOwner();
+            SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
+            LoadAOrCompleteInstance(documentId, DocumentState.Agreement, TrackerType.Approved, documentData, instanceStore, activity);
+            DeleteInstanceStoreOwner(instanceStore);
             _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.ApproveDocument });
             _EmailService.SendExecutorEmail(documentId);
         }
 
         public void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
-            ChooseRightWorkflow(TableName);
+            Activity activity = ChooseRightWorkflow(TableName);
             this.printActivityTree(activity);
-            SetupInstanceStore();
-            LoadAOrCompleteInstance(documentId, DocumentState.Cancelled, TrackerType.Cancelled, documentData);
-            DeleteInstanceStoreOwner();
+            SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
+            LoadAOrCompleteInstance(documentId, DocumentState.Cancelled, TrackerType.Cancelled, documentData, instanceStore, activity);
+            DeleteInstanceStoreOwner(instanceStore);
             _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.CancelledDocument });
             _EmailService.SendInitiatorRejectEmail(documentId);
         }
 
-        private static void SetupInstanceStore()
+        private SqlWorkflowInstanceStore SetupInstanceStore()
         {
-            try
-            {
-                instanceStore =
-                    new SqlWorkflowInstanceStore(ConfigurationManager.ConnectionStrings["WFConnection"].ToString());
-                instanceStore.InstanceCompletionAction = InstanceCompletionAction.DeleteNothing;
-                instanceStore.HostLockRenewalPeriod = TimeSpan.FromSeconds(20);
-                instanceStore.InstanceLockedExceptionAction = InstanceLockedExceptionAction.BasicRetry;
-                InstanceHandle handle = instanceStore.CreateInstanceHandle();
-                InstanceView view = instanceStore.Execute(handle, new CreateWorkflowOwnerCommand(), TimeSpan.FromSeconds(30));
-                handle.Free();
+            SqlWorkflowInstanceStore instanceStore =
+                new SqlWorkflowInstanceStore(ConfigurationManager.ConnectionStrings["WFConnection"].ToString());
+            InstanceView view = instanceStore.Execute(instanceStore.CreateInstanceHandle(), new CreateWorkflowOwnerCommand(), TimeSpan.FromSeconds(30));
+            instanceStore.DefaultInstanceOwner = view.InstanceOwner;
 
-                instanceStore.DefaultInstanceOwner = view.InstanceOwner;
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return instanceStore;
         }
 
-        private static void DeleteInstanceStoreOwner()
+        private void DeleteInstanceStoreOwner(SqlWorkflowInstanceStore instanceStore)
         {
-            try
-            {
-                InstanceHandle handle = instanceStore.CreateInstanceHandle();
-                InstanceView view = instanceStore.Execute(handle, new DeleteWorkflowOwnerCommand(), TimeSpan.FromSeconds(30));
-                handle.Free();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            InstanceView view = instanceStore.Execute(instanceStore.CreateInstanceHandle(instanceStore.DefaultInstanceOwner), new DeleteWorkflowOwnerCommand(), TimeSpan.FromSeconds(30));
         }
 
-        public void StartAndPersistInstance(Guid _documentId, DocumentState _state, IDictionary<string, object> documentData)
+        public void StartAndPersistInstance(Guid _documentId, DocumentState _state, IDictionary<string, object> documentData, SqlWorkflowInstanceStore instanceStore, Activity activity)
         {
-            try
+            AutoResetEvent instanceUnloaded = new AutoResetEvent(false);
+            var documentTable = _DocumentService.Find(_documentId);
+            IDictionary<string, object> inputArguments = new Dictionary<string, object>();
+            inputArguments.Add("inputStep" ,  _state);
+            inputArguments.Add("inputDocumentId" ,  _documentId);
+            inputArguments.Add("inputCurrentUser", HttpContext.Current.User.Identity.Name);
+            inputArguments.Add("documentData", documentData);
+
+            WorkflowApplication application = new WorkflowApplication(activity, inputArguments);
+            application.InstanceStore = instanceStore;
+            application.Extensions.Add(new WFTrackingParticipant());
+
+            #region Workflow Delegates
+
+            application.PersistableIdle = (e) =>
             {
-                var documentTable = _DocumentService.Find(_documentId);
-                IDictionary<string, object> inputArguments = new Dictionary<string, object>();
-                inputArguments.Add("inputStep" ,  _state);
-                inputArguments.Add("inputDocumentId" ,  _documentId);
-                inputArguments.Add("inputCurrentUser", HttpContext.Current.User.Identity.Name);
-                inputArguments.Add("documentData", documentData);
+                var ex = e.GetInstanceExtensions<WFTrackingParticipant>();
+                outputParameters = ex.First().Outputs;
+                return PersistableIdleAction.Unload;
 
-                WorkflowApplication application = new WorkflowApplication(activity, inputArguments);
-                application.InstanceStore = instanceStore;
-                application.Extensions.Add(new WFTrackingParticipant());
-
-                #region Workflow Delegates
-
-                application.PersistableIdle = (e) =>
-                {
-                    var ex = e.GetInstanceExtensions<WFTrackingParticipant>();
-                    outputParameters = ex.First().Outputs;
-                    //instanceUnloaded.Set();
-                    return PersistableIdleAction.Unload;
-
-                };
-                application.Unloaded = (e) =>
-                {
-                    instanceUnloaded.Set();
-                };
-
-                application.OnUnhandledException = (e) =>
-                {
-                    return UnhandledExceptionAction.Terminate;
-                };
-
-                #endregion Workflow Delegates
-
-                application.Persist();
-                application.Run();
-                instanceUnloaded.WaitOne();
-
-                documentTable.WWFInstanceId = application.Id;
-                documentTable.DocumentState = (DocumentState)outputParameters["outputStep"];
-                _DocumentService.UpdateDocument(documentTable);
-
-            }
-            catch (Exception ex)
+            };
+            application.Unloaded = (e) =>
             {
-                throw ex;
-            }
+                instanceUnloaded.Set();
+            };
+
+            application.OnUnhandledException = (e) =>
+            {
+                return UnhandledExceptionAction.Terminate;
+            };
+
+            #endregion Workflow Delegates
+
+            application.Persist();
+            application.Run();
+            instanceUnloaded.WaitOne();
+
+            documentTable.WWFInstanceId = application.Id;
+            documentTable.DocumentState = (DocumentState)outputParameters["outputStep"];
+            _DocumentService.UpdateDocument(documentTable);
         }
 
-        public void LoadAOrCompleteInstance(Guid _documentId, DocumentState _state, TrackerType _trackerType, IDictionary<string, object> documentData)
+        public void LoadAOrCompleteInstance(Guid _documentId, DocumentState _state, TrackerType _trackerType, IDictionary<string, object> documentData, SqlWorkflowInstanceStore instanceStore, Activity activity)
         {
             try
             {
+                AutoResetEvent instanceUnloaded = new AutoResetEvent(false);
                 var documentTable = _DocumentService.Find(_documentId);
                 IEnumerable<WFTrackerTable> bookmarks;
 
@@ -325,7 +294,6 @@ namespace RapidDoc.Models.Services
                 {
                     var ex = e.GetInstanceExtensions<WFTrackingParticipant>();
                     outputParameters = ex.Last().Outputs;
-                    //instanceUnloaded.Set();
                     return PersistableIdleAction.Unload;
                 };
 
@@ -402,11 +370,13 @@ namespace RapidDoc.Models.Services
             }
         }
 
-        public void ChooseRightWorkflow(string _tableName)
+        public Activity ChooseRightWorkflow(string _tableName)
         {
             Type type = Type.GetType("RapidDoc.Activities." + _tableName);
             if (type != null)
-                activity = Activator.CreateInstance(type) as Activity;
+                return Activator.CreateInstance(type) as Activity;
+
+            return null;
         }
 
         public void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUser, string activityId, bool useManual, int slaOffset, bool executionStep)
@@ -415,8 +385,6 @@ namespace RapidDoc.Models.Services
                 (step != DocumentState.Closed))
             {
                 WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
-
-                trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
                 trackerTable.ActivityName = bookmarkName.Replace(keyForStep, "");
                 if (trackerTable.Users == null || trackerTable.Users.Count() == 0)
                     trackerTable.Users = listUser;
@@ -430,7 +398,13 @@ namespace RapidDoc.Models.Services
 
                 foreach(var user in listUser)
                 {
-                    _ReviewDocLogService.Delete(documentId, user.UserId);
+                    try
+                    {
+                        _ReviewDocLogService.Delete(documentId, user.UserId);
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
 
                 IEnumerable<WFTrackerTable> trackerTableCancel = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == trackerTable.DocumentTableId && x.LineNum > trackerTable.LineNum && x.ActivityID != trackerTable.ActivityID).ToList();

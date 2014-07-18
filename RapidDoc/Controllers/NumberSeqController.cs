@@ -48,7 +48,7 @@ namespace RapidDoc.Controllers
 
         public ActionResult Create()
         {
-            return View(_Service.GetNewModel());
+            return View();
         }
 
         [HttpPost]

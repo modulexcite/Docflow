@@ -178,8 +178,7 @@ function custom_tagsinputEmpl_init(url_json) {
     }, elt));
 
     currentValue = $('input[data-role=tagsinputEmpl]').val();
-    if (currentValue != null)
-    {
+    if (currentValue != null) {
         currentArrData = currentValue.split(",");
         $('input[data-role=tagsinputEmpl]').val('');
 

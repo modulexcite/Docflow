@@ -69,7 +69,7 @@ namespace RapidDoc.Controllers
             ViewBag.DepartmentList = _DepartmentService.GetDropListDepartmentNull(null);
             ViewBag.UserList = _AccountService.GetDropListUser(null);
             ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(null);
-            return View(_Service.GetNewModel());
+            return View();
         }
 
 

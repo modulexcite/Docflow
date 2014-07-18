@@ -12,6 +12,7 @@ namespace RapidDoc.Models.DomainModels
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [ConcurrencyCheck]
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
 

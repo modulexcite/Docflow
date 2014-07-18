@@ -26,7 +26,6 @@ namespace RapidDoc.Models.Services
         DepartmentTable FirstOrDefault(Expression<Func<DepartmentTable, bool>> predicate);
         DepartmentView FirstOrDefaultView(Expression<Func<DepartmentTable, bool>> predicate);
         bool Contains(Expression<Func<DepartmentTable, bool>> predicate);
-        DepartmentView GetNewModel();
         void Save(DepartmentView viewTable);
         void SaveDomain(DepartmentTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -99,12 +98,6 @@ namespace RapidDoc.Models.Services
         public bool Contains(Expression<Func<DepartmentTable, bool>> predicate)
         {
             return repo.Contains(predicate);
-        }
-
-        public DepartmentView GetNewModel()
-        {
-            var model = new DepartmentView();
-            return model;
         }
 
         public void Save(DepartmentView viewTable)

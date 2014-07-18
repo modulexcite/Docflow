@@ -54,7 +54,7 @@ namespace RapidDoc.Controllers
         public ActionResult Create()
         {
             ViewBag.DomainList = _DomainService.GetDropListDomainNull(null);
-            return View(_Service.GetNewModel());
+            return View();
         }
 
 

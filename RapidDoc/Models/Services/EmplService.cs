@@ -26,7 +26,6 @@ namespace RapidDoc.Models.Services
         EmplTable FirstOrDefault(Expression<Func<EmplTable, bool>> predicate);
         EmplView FirstOrDefaultView(Expression<Func<EmplTable, bool>> predicate);
         bool Contains(Expression<Func<EmplTable, bool>> predicate);
-        EmplView GetNewModel();
         void Save(EmplView viewTable);
         void SaveDomain(EmplTable domainTable, string currentUserName = "");
         void Delete(Guid id);
@@ -98,12 +97,6 @@ namespace RapidDoc.Models.Services
         public bool Contains(Expression<Func<EmplTable, bool>> predicate)
         {
             return repo.Contains(predicate);
-        }
-
-        public EmplView GetNewModel()
-        {
-            var model = new EmplView();
-            return model;
         }
 
         public void Save(EmplView viewTable)

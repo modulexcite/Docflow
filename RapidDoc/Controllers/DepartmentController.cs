@@ -49,7 +49,7 @@ namespace RapidDoc.Controllers
         public ActionResult Create()
         {
             ViewBag.DepartmentList = _Service.GetDropListDepartmentNull(null);
-            return View(_Service.GetNewModel());
+            return View();
         }
 
         [HttpPost]
