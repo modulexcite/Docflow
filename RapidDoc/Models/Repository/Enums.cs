@@ -380,4 +380,28 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Прочее оборудование")]
         Other = 8
     }
+
+    public enum ServiceIncidientPriority : byte
+    {
+        [Display(Name = "Средний")]
+        Medium = 0,
+
+        [Display(Name = "Критический")]
+        Critical = 1,
+
+        [Display(Name = "Высокий")]
+        High = 2,
+
+        [Display(Name = "Низкий")]
+        Low = 3
+    }
+
+    public enum ServiceIncidientLevel : byte
+    {
+        [Display(Name = "1 линия поддержки")]
+        OneLevel = 0,
+
+        [Display(Name = "2 линия поддержки")]
+        TwoLevel = 1
+    }
 }

@@ -29,7 +29,7 @@ namespace RapidDoc.Models.Services
         WFUserFunctionResult WFRoleUser(Guid documentId, String roleName);
         WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate, string currentUserName);
         WFUserFunctionResult WFCreatedUser(Guid documentId);
-        string WFChooseSpecificUserFromService(Guid serviceId);
+        string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level);
         void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData);
@@ -171,13 +171,19 @@ namespace RapidDoc.Models.Services
             return new WFUserFunctionResult { Users = userList, Skip = false };
         }
 
-        public string WFChooseSpecificUserFromService(Guid serviceId)
+        public string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level)
         {
             ApplicationDbContext context = new ApplicationDbContext();
             var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            IdentityRole identityRole = rm.FindById(_ServiceIncidentService.Find(serviceId).RoleTableId);
+            ServiceIncidentTable incidentTable = _ServiceIncidentService.FirstOrDefault(x => x.ServiceName == serviceName && x.ServiceIncidientLevel == level && x.ServiceIncidientPriority == priority);
 
-            return identityRole.Name;
+            if (incidentTable != null)
+            {
+                IdentityRole identityRole = rm.FindById(incidentTable.RoleTableId);
+                return identityRole.Name;
+            }
+
+            return String.Empty;
         }
 
         public void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData)
@@ -355,7 +361,10 @@ namespace RapidDoc.Models.Services
             {
                 if (document.ActivityName == "Исполнитель")
                 {
-                    var serviceIncident = _ServiceIncidentService.Find((Guid)documentData["ServiceIncidentTableId"]);
+                    ServiceIncidientPriority priority = ((ServiceIncidientPriority)documentData["ServiceIncidientPriority"]);
+                    ServiceIncidientLevel level = ((ServiceIncidientLevel)documentData["ServiceIncidientLevel"]);
+
+                    var serviceIncident = _ServiceIncidentService.GetAll().ToList().FirstOrDefault(x => x.ServiceName == ((string)documentData["ServiceName"]) && x.ServiceIncidientPriority == priority && x.ServiceIncidientLevel == level);
                     if(serviceIncident != null)
                     {
                         var items = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == document.Id && x.ActivityName == document.ActivityName).ToList();

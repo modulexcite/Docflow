@@ -9,9 +9,21 @@
 <hr>
 <h3>Заполняет администратор HelpDesk</h3>
 <div class="editor-label">
-    @Html.LabelFor(model => model.ServiceIncidentTableId)
+    @Html.LabelFor(model => model.ServiceName)
 </div>
 <div class="editor-field">
-    @Html.DropDownList("ServiceIncidentTableId", (IEnumerable<SelectListItem>)ViewBag.ServiceIncidentList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
-    @Html.ValidationMessageFor(model => model.ServiceIncidentTableId)
+    @Html.DropDownList("ServiceName", (IEnumerable<SelectListItem>)ViewBag.ServiceIncidentList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+    @Html.ValidationMessageFor(model => model.ServiceName)
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.ServiceIncidientPriority)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => model.ServiceIncidientPriority, new { @class = "selectpicker" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.ServiceIncidientLevel)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => model.ServiceIncidientLevel, new { @class = "selectpicker" })
 </div>

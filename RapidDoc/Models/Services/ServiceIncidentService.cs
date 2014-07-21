@@ -28,8 +28,7 @@ namespace RapidDoc.Models.Services
         void Delete(Guid id);
         ServiceIncidentTable Find(Guid? id);
         ServiceIncidentView FindView(Guid id);
-        SelectList GetDropListServiceIncidentNull(Guid? id);
-        SelectList GetDropListServiceIncident(Guid? id);
+        SelectList GetDropListServiceIncident(string id);
         SelectList GetDropListRole(string id);
         SelectList GetDropListRoleNull(Guid? id);
     }
@@ -128,13 +127,6 @@ namespace RapidDoc.Models.Services
             return Mapper.Map<ServiceIncidentTable, ServiceIncidentView>(Find(id));
         }
 
-        public SelectList GetDropListServiceIncidentNull(Guid? id)
-        {
-            var items = GetAllView().ToList();
-            items.Insert(0, new ServiceIncidentView { ServiceName = UIElementRes.UIElement.NoValue, Id = null });
-            return new SelectList(items, "Id", "ServiceName", id);
-        }
-
         public SelectList GetDropListRole(string id)
         {
             ApplicationDbContext context = new ApplicationDbContext();
@@ -153,10 +145,10 @@ namespace RapidDoc.Models.Services
             return new SelectList(roles, "Id", "Name", id);
         }
 
-        public SelectList GetDropListServiceIncident(Guid? id)
+        public SelectList GetDropListServiceIncident(string id)
         {
-            var items = GetAllView().ToList();
-            return new SelectList(items, "Id", "ServiceName", id);
+            var items = GetAllView().GroupBy(x => new { x.ServiceName, x.Description }).Select(x => new ServiceIncidentList { Id = x.Key.ServiceName, Description = x.Key.Description }).ToList();
+            return new SelectList(items, "Id", "Description", id);
         }
 
         public void Delete(Guid id)
@@ -177,5 +169,11 @@ namespace RapidDoc.Models.Services
             }
         }
 
+    }
+
+    public class ServiceIncidentList
+    {
+        public string Id { get; set; }
+        public string Description { get; set; }
     }
 }

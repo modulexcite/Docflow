@@ -560,7 +560,13 @@ namespace RapidDoc.Models.ViewModels
         public string Phone { get; set; } 
 
         [Display(Name = "Сервис")]
-        public Guid? ServiceIncidentTableId { get; set; }
+        public string ServiceName { get; set; }
+
+        [Display(Name = "Приоритет")]
+        public ServiceIncidientPriority ServiceIncidientPriority { get; set; }
+
+        [Display(Name = "Уровень поддержки")]
+        public ServiceIncidientLevel ServiceIncidientLevel { get; set; }
     }
     #endregion
 

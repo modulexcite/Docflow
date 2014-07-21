@@ -43,7 +43,7 @@ namespace RapidDoc.Controllers
                 {
                     if(current.Any(x => x.ActivityName == "Администратор"))
                     {
-                        ViewBag.ServiceIncidentList = _ServiceIncidentService.GetDropListServiceIncidentNull(null);
+                        ViewBag.ServiceIncidentList = _ServiceIncidentService.GetDropListServiceIncident(String.Empty);
                         return PartialView("USR_REQ_IT_CTP_IncidentIT_Edit_Administrator", model);
                     }
                 }
@@ -52,9 +52,8 @@ namespace RapidDoc.Controllers
             if (document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution
                 || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Closed || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Cancelled)
             {
-                if (model.ServiceIncidentTableId != null)
+                if (model.ServiceName != null)
                 {
-                    ViewBag.CurrentIncidentServiceName = _ServiceIncidentService.Find(model.ServiceIncidentTableId).ServiceName;
                     return PartialView("USR_REQ_IT_CTP_IncidentIT_View_Administrator", model);
                 }
             }

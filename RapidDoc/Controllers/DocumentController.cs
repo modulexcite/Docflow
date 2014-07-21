@@ -18,6 +18,7 @@ using System.Dynamic;
 using System.Text.RegularExpressions;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Infrastructure;
+using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Controllers
 {
@@ -36,12 +37,13 @@ namespace RapidDoc.Controllers
         private readonly IEmailService _EmailService;
         private readonly IHistoryUserService _HistoryUserService;
         private readonly ISearchService _SearchService;
+        private readonly IServiceIncidentService _ServiceIncidentService;
 
         public DocumentController(IDocumentService documentService, IProcessService processService, 
             IWorkflowService workflowService, IEmplService emplService, IAccountService accountService, ISystemService systemService,
             IWorkflowTrackerService workflowTrackerService, IReviewDocLogService reviewDocLogService,
             IDocumentReaderService documentReaderService, ICommentService commentService, IEmailService emailService,
-            IHistoryUserService historyUserService, ISearchService searchService)
+            IHistoryUserService historyUserService, ISearchService searchService, IServiceIncidentService serviceIncidentService)
         {
             _DocumentService = documentService;
             _ProcessService = processService;
@@ -56,6 +58,7 @@ namespace RapidDoc.Controllers
             _EmailService = emailService;
             _HistoryUserService = historyUserService;
             _SearchService = searchService;
+            _ServiceIncidentService = serviceIncidentService;
         }
 
         public ActionResult ArchiveDocuments()
@@ -312,15 +315,13 @@ namespace RapidDoc.Controllers
             if (ModelState.IsValid)
             {
                 //Save Document
-                for (int num = 0; num < 10; num++)
-                {
-                    var documentId = _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
-                    _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId });
-                    _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
-                    SaveSearchData(docModel, actionModelName, documentId);
-                    _WorkflowService.RunWorkflow(documentId, process.TableName, documentData);
-                    _EmailService.SendInitiatorEmail(documentId);
-                }
+
+                var documentId = _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
+                _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId });
+                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
+                SaveSearchData(docModel, actionModelName, documentId);
+                _WorkflowService.RunWorkflow(documentId, process.TableName, documentData);
+                _EmailService.SendInitiatorEmail(documentId);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -868,9 +869,19 @@ namespace RapidDoc.Controllers
 
             if (type == (new USR_REQ_IT_CTP_IncidentIT_View()).GetType())
             {
-                if (actionModel.ServiceIncidentTableId == null && actionModel.Id != null)
+                if (actionModel.ServiceName == null && actionModel.Id != null)
                 {
                     ModelState.AddModelError(string.Empty, "Не указан сервис ИТ");
+                }
+
+                if (actionModel.ServiceName != null && actionModel.Id != null)
+                {
+                    ServiceIncidentTable incidentTable = _ServiceIncidentService.GetAll().FirstOrDefault(x => x.ServiceName == actionModel.ServiceName && x.ServiceIncidientLevel == ((ServiceIncidientLevel)actionModel.ServiceIncidientLevel) && x.ServiceIncidientPriority == ((ServiceIncidientPriority)actionModel.ServiceIncidientPriority));
+
+                    if(incidentTable == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Не правильно указан сервис ИТ");
+                    }
                 }
             }
         }

@@ -29,6 +29,9 @@ namespace RapidDoc.Activities
 
         [Inject]
         public IWorkflowService _service { get; set; }
+
+        [Inject]
+        public IServiceIncidentService _serviceServiceIncident { get; set; }
      
         protected override void Execute(CodeActivityContext context)
         {
@@ -39,12 +42,15 @@ namespace RapidDoc.Activities
             bool useManual = context.GetValue(this.useManual);
             int slaOffset = context.GetValue(this.slaOffset);
             bool executionStep = context.GetValue(this.executionStep);
-            Guid id = (Guid)currentService["ServiceIncidentTableId"];
+            String serviceName = (string)currentService["ServiceName"];
+            ServiceIncidientPriority priority = (ServiceIncidientPriority)currentService["ServiceIncidientPriority"];
+            ServiceIncidientLevel level = (ServiceIncidientLevel)currentService["ServiceIncidientLevel"];
 
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
+            _serviceServiceIncident = DependencyResolver.Current.GetService<IServiceIncidentService>();
 
-            string userName = _service.WFChooseSpecificUserFromService(id);
-            WFUserFunctionResult userFunctionResult = _service.WFRoleUser(documentId, userName);
+            string roleName = _service.WFChooseSpecificUserFromService(serviceName, priority, level);
+            WFUserFunctionResult userFunctionResult = _service.WFRoleUser(documentId, roleName);
 
             if (userFunctionResult.Skip == false) 
                 _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);

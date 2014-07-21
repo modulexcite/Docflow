@@ -6,12 +6,28 @@
 @Html.HiddenFor(model => model.Phone)
 @Html.HiddenFor(model => model.RequestText)
 @Html.HiddenFor(model => model.Users)
+@Html.HiddenFor(model => model.ServiceName)
+@Html.HiddenFor(model => model.ServiceIncidientLevel)
+@Html.HiddenFor(model => model.ServiceIncidientPriority)
 <hr>
 <h3>Заполняет администратор HelpDesk</h3>
 <div class="editor-label">
-    @Html.LabelFor(model => model.ServiceIncidentTableId)
+    @Html.LabelFor(model => model.ServiceName)
 </div>
 <div class="editor-field">
-    @ViewBag.CurrentIncidentServiceName
+    @Html.DisplayTextFor(model => model.ServiceName)
 </div>
-@Html.HiddenFor(model => model.ServiceIncidentTableId)
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.ServiceIncidientLevel)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => Model.ServiceIncidientLevel, new { @disabled = true })
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.ServiceIncidientPriority)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => Model.ServiceIncidientPriority, new { @disabled = true })
+</div>

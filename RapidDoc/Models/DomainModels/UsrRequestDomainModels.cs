@@ -426,8 +426,9 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Phone { get; set; }
 
-        public Guid? ServiceIncidentTableId { get; set; }
-        public virtual ServiceIncidentTable ServiceIncidentTable { get; set; }
+        public string ServiceName { get; set; }
+        public ServiceIncidientPriority ServiceIncidientPriority { get; set; }
+        public ServiceIncidientLevel ServiceIncidientLevel { get; set; }
     }
     #endregion
 
