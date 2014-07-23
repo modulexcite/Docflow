@@ -30,7 +30,7 @@ namespace RapidDoc.Models.Services
         WFUserFunctionResult WFRoleUser(Guid documentId, String roleName);
         WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate, string currentUserName);
         WFUserFunctionResult WFCreatedUser(Guid documentId);
-        WFUserFunctionResult WFUsersDocument(Guid documentId);
+        WFUserFunctionResult WFUsersDocument(Guid documentId, string currentUserName);
         string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location);
         void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData);
@@ -173,7 +173,7 @@ namespace RapidDoc.Models.Services
             return new WFUserFunctionResult { Users = userList, Skip = false };
         }
 
-        public WFUserFunctionResult WFUsersDocument(Guid documentId)
+        public WFUserFunctionResult WFUsersDocument(Guid documentId, string currentUserName)
         {
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
@@ -190,9 +190,12 @@ namespace RapidDoc.Models.Services
 
                     foreach(var item in result)
                     {
-                        if (item != documentTable.ApplicationUserCreatedId)
+                        Guid emplId = Guid.Parse(item);
+                        EmplTable empl = _EmplService.Find(emplId, currentUserName);
+
+                        if (empl != null && empl.ApplicationUserId != null && empl.ApplicationUserId != documentTable.ApplicationUserCreatedId)
                         {
-                            userList.Add(new WFTrackerUsersTable { UserId = item });
+                            userList.Add(new WFTrackerUsersTable { UserId = empl.ApplicationUserId });
                         }
                     }
                 }

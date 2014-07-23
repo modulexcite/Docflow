@@ -39,7 +39,7 @@ namespace RapidDoc.Activities
             bool executionStep = context.GetValue(this.executionStep);
 
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
-            WFUserFunctionResult userFunctionResult = _service.WFUsersDocument(documentId);
+            WFUserFunctionResult userFunctionResult = _service.WFUsersDocument(documentId, currentUser);
 
             if (userFunctionResult.Skip == false)
                 _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);

@@ -480,7 +480,9 @@ namespace RapidDoc.Models.Services
                     {
                         foreach (var trackUser in trackerTable.Users)
                         {
-                            signUsers.Add(_AccountService.Find(trackUser.UserId));
+                            ApplicationUser user = _AccountService.Find(trackUser.UserId);
+                            if (user != null)
+                                signUsers.Add(user);
                         }
                     }
                 }
