@@ -429,6 +429,7 @@ namespace RapidDoc.Models.DomainModels
         public string ServiceName { get; set; }
         public ServiceIncidientPriority ServiceIncidientPriority { get; set; }
         public ServiceIncidientLevel ServiceIncidientLevel { get; set; }
+        public ServiceIncidientLocation ServiceIncidientLocation { get; set; }
     }
     #endregion
 

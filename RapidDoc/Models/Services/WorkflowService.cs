@@ -19,6 +19,7 @@ using RapidDoc.Activities;
 using System.ServiceModel.Activities.Description;
 using RapidDoc.Models.Services;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace RapidDoc.Models.Services
 {
@@ -29,7 +30,8 @@ namespace RapidDoc.Models.Services
         WFUserFunctionResult WFRoleUser(Guid documentId, String roleName);
         WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate, string currentUserName);
         WFUserFunctionResult WFCreatedUser(Guid documentId);
-        string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level);
+        WFUserFunctionResult WFUsersDocument(Guid documentId);
+        string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location);
         void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData);
@@ -171,11 +173,40 @@ namespace RapidDoc.Models.Services
             return new WFUserFunctionResult { Users = userList, Skip = false };
         }
 
-        public string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level)
+        public WFUserFunctionResult WFUsersDocument(Guid documentId)
+        {
+            var documentTable = _DocumentService.Find(documentId);
+            List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
+            var domainTable = _DocumentService.RouteCustomRepository(documentTable.ProcessTable.TableName).GetById(documentTable.RefDocumentId);
+
+            if (domainTable != null)
+            {
+                if(domainTable.Users != null)
+                {
+                    string users = domainTable.Users;
+                    string[] array = users.Split(',');
+                    Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
+                    string[] result = array.Where(a => isGuid.IsMatch(a) == true).ToArray();
+
+                    foreach(var item in result)
+                    {
+                        if (item != documentTable.ApplicationUserCreatedId)
+                        {
+                            userList.Add(new WFTrackerUsersTable { UserId = item });
+                        }
+                    }
+                }
+            }
+
+            userList.Add(new WFTrackerUsersTable { UserId = documentTable.ApplicationUserCreatedId });
+            return new WFUserFunctionResult { Users = userList, Skip = false };
+        }
+
+        public string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location)
         {
             ApplicationDbContext context = new ApplicationDbContext();
             var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            ServiceIncidentTable incidentTable = _ServiceIncidentService.FirstOrDefault(x => x.ServiceName == serviceName && x.ServiceIncidientLevel == level && x.ServiceIncidientPriority == priority);
+            ServiceIncidentTable incidentTable = _ServiceIncidentService.FirstOrDefault(x => x.ServiceName == serviceName && x.ServiceIncidientLevel == level && x.ServiceIncidientPriority == priority && x.ServiceIncidientLocation == location);
 
             if (incidentTable != null)
             {
@@ -363,8 +394,9 @@ namespace RapidDoc.Models.Services
                 {
                     ServiceIncidientPriority priority = ((ServiceIncidientPriority)documentData["ServiceIncidientPriority"]);
                     ServiceIncidientLevel level = ((ServiceIncidientLevel)documentData["ServiceIncidientLevel"]);
+                    ServiceIncidientLocation location = ((ServiceIncidientLocation)documentData["ServiceIncidientLocation"]);
 
-                    var serviceIncident = _ServiceIncidentService.GetAll().ToList().FirstOrDefault(x => x.ServiceName == ((string)documentData["ServiceName"]) && x.ServiceIncidientPriority == priority && x.ServiceIncidientLevel == level);
+                    var serviceIncident = _ServiceIncidentService.GetAll().ToList().FirstOrDefault(x => x.ServiceName == ((string)documentData["ServiceName"]) && x.ServiceIncidientPriority == priority && x.ServiceIncidientLevel == level && x.ServiceIncidientLocation == location);
                     if(serviceIncident != null)
                     {
                         var items = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == document.Id && x.ActivityName == document.ActivityName).ToList();

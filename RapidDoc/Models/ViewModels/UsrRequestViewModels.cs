@@ -567,6 +567,9 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "Уровень поддержки")]
         public ServiceIncidientLevel ServiceIncidientLevel { get; set; }
+
+        [Display(Name = "Местоположение")]
+        public ServiceIncidientLocation ServiceIncidientLocation { get; set; }
     }
     #endregion
 

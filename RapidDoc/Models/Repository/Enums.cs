@@ -404,4 +404,13 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "2 линия поддержки")]
         TwoLevel = 1
     }
+
+    public enum ServiceIncidientLocation : byte
+    {
+        [Display(Name = "ATK")]
+        Element1 = 0,
+
+        [Display(Name = "ЗИФ")]
+        Element2 = 1
+    }
 }

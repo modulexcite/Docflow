@@ -45,11 +45,12 @@ namespace RapidDoc.Activities
             String serviceName = (string)currentService["ServiceName"];
             ServiceIncidientPriority priority = (ServiceIncidientPriority)currentService["ServiceIncidientPriority"];
             ServiceIncidientLevel level = (ServiceIncidientLevel)currentService["ServiceIncidientLevel"];
+            ServiceIncidientLocation location = (ServiceIncidientLocation)currentService["ServiceIncidientLocation"];
 
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
             _serviceServiceIncident = DependencyResolver.Current.GetService<IServiceIncidentService>();
 
-            string roleName = _service.WFChooseSpecificUserFromService(serviceName, priority, level);
+            string roleName = _service.WFChooseSpecificUserFromService(serviceName, priority, level, location);
             WFUserFunctionResult userFunctionResult = _service.WFRoleUser(documentId, roleName);
 
             if (userFunctionResult.Skip == false) 

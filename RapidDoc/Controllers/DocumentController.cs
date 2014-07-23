@@ -876,7 +876,7 @@ namespace RapidDoc.Controllers
 
                 if (actionModel.ServiceName != null && actionModel.Id != null)
                 {
-                    ServiceIncidentTable incidentTable = _ServiceIncidentService.GetAll().FirstOrDefault(x => x.ServiceName == actionModel.ServiceName && x.ServiceIncidientLevel == ((ServiceIncidientLevel)actionModel.ServiceIncidientLevel) && x.ServiceIncidientPriority == ((ServiceIncidientPriority)actionModel.ServiceIncidientPriority));
+                    ServiceIncidentTable incidentTable = _ServiceIncidentService.GetAll().FirstOrDefault(x => x.ServiceName == actionModel.ServiceName && x.ServiceIncidientLevel == ((ServiceIncidientLevel)actionModel.ServiceIncidientLevel) && x.ServiceIncidientPriority == ((ServiceIncidientPriority)actionModel.ServiceIncidientPriority) && x.ServiceIncidientLocation == ((ServiceIncidientLocation)actionModel.ServiceIncidientLocation));
 
                     if(incidentTable == null)
                     {
