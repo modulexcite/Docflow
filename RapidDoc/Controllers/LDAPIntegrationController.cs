@@ -29,6 +29,18 @@ namespace RapidDoc.Controllers
             CompanyTable company = _Companyservice.FirstOrDefault(x => x.AliasCompanyName == "ATK");
             BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "");
             BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "", true);
+
+            //Отключаем на всякий случай VIP группу
+            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
+            var empls = _EmplService.GetPartialIntercompany(x => x.DepartmentTable.DepartmentName == "VIP").ToList();
+
+            foreach (var item in empls)
+            {
+                item.ManageId = null;
+                _EmplService.SaveDomain(item);
+            }
+            //---
+
             return response;
         }
 
@@ -122,7 +134,7 @@ namespace RapidDoc.Controllers
                         manager = result.Properties["manager"][0].ToString();
                     }
 
-                    if (emplName[0] != null && emplName[1] != null)
+                    if (emplName[0] != null && emplName[1] != null && !String.IsNullOrEmpty(userid))
                     {
                         if (afterUpdate == true)
                         {

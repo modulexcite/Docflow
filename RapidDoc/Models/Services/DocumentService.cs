@@ -31,6 +31,7 @@ namespace RapidDoc.Models.Services
         dynamic RouteCustomRepository(string customModel);
         void UpdateDocument(DocumentTable domainTable, string currentUserName = "");
         void UpdateDocumentFields(dynamic viewTable, Guid processId);
+        void SaveDocumentText(DocumentTable domainTable, string currentUserName = "");
         bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null);
         bool isSignDocument(Guid documentId, Guid ProcessId, string currentUserName = "");
         IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserName = "", ApplicationUser user = null);
@@ -339,6 +340,12 @@ namespace RapidDoc.Models.Services
             _uow.Save();
         }
 
+        public void SaveDocumentText(DocumentTable domainTable, string currentUserName = "")
+        {
+            _uow.GetRepository<DocumentTable>().Update(domainTable);
+            _uow.Save();
+        }
+
         public bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserName = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null)
         {
             if (user == null)
@@ -491,7 +498,7 @@ namespace RapidDoc.Models.Services
 
                 foreach (var user in delegationUserCheck)
                 {
-                    var delegationItems = _DelegationService.GetPartial(x => x.EmplTableTo.ApplicationUserId == user.Id
+                    var delegationItems = _DelegationService.GetPartial(x => x.EmplTableFrom.ApplicationUserId == user.Id
                         && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
                         && x.isArchive == false && x.CompanyTableId == user.CompanyTableId);
 
@@ -501,16 +508,16 @@ namespace RapidDoc.Models.Services
                         {
                             if (delegationItem.ProcessTableId == docuTable.ProcessTableId)
                             {
-                                signUsers.Add(_AccountService.Find(delegationItem.EmplTableFrom.ApplicationUserId));
+                                signUsers.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
                             }
                             else if (_ProcessService.Find(docuTable.ProcessTableId).GroupProcessTableId == delegationItem.GroupProcessTableId)
                             {
-                                signUsers.Add(_AccountService.Find(delegationItem.EmplTableFrom.ApplicationUserId));
+                                signUsers.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
                             }
                         }
                         else
                         {
-                            signUsers.Add(_AccountService.Find(delegationItem.EmplTableFrom.ApplicationUserId));
+                            signUsers.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
                         }
                     }
                 }
@@ -722,7 +729,7 @@ namespace RapidDoc.Models.Services
                             users.AddRange(item.Users);
                         }
 
-                        if (SLAStatusList.Warning == status && date >= DateTime.UtcNow && date.Value.AddHours(-1) <= DateTime.UtcNow)
+                        if (SLAStatusList.Warning == status && date >= DateTime.UtcNow && item.ModifiedDate.AddMinutes(2) < date.Value.AddHours(-1) && date.Value.AddHours(-1) <= DateTime.UtcNow)
                         {
                             users.AddRange(item.Users);
                         }

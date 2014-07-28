@@ -17,13 +17,15 @@ namespace RapidDoc.Controllers
         private readonly IGroupProcessService _GroupProcessService;
         private readonly IEmplService _EmplService;
         private readonly IAccountService _AccountService;
+        private readonly IDocumentService _DocumentService;
 
-        public NewProcessController(IProcessService processService, IGroupProcessService groupProcessService, IEmplService emplService, IAccountService accountService)
+        public NewProcessController(IProcessService processService, IGroupProcessService groupProcessService, IEmplService emplService, IAccountService accountService, IDocumentService documentService)
         {
             _ProcessService = processService;
             _GroupProcessService = groupProcessService;
             _EmplService = emplService;
             _AccountService = accountService;
+            _DocumentService = documentService;
         }
 
         public ActionResult Index()
@@ -39,6 +41,19 @@ namespace RapidDoc.Controllers
             {
                 ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorEmplNotFound, User.Identity.Name));
             }
+
+            List<ProcessView> topProcess = new List<ProcessView>();
+            var processes = _DocumentService.GetAll().GroupBy(x => x.ProcessTableId).Select(g => new { ProcessTableId = g.Key, Count = g.Count() }).OrderByDescending(i => i.Count).Select(y => y.ProcessTableId).Take(6).ToList();
+
+            if (processes != null)
+            {
+                foreach (var processId in processes)
+                {
+                    topProcess.Add(_ProcessService.FindView(processId));
+                }
+            }
+
+            ViewBag.TopProcess = topProcess;
 
             return View(_GroupProcessService.GetPartialView(x => x.GroupProcessParentId == null));
         }
@@ -78,7 +93,7 @@ namespace RapidDoc.Controllers
         {
             string searchString = searchText.Trim();
 
-            if (searchString.Length > 3)
+            if (searchString.Length > 2)
             {
                 var model = _ProcessService.GetPartialView(x => x.ProcessName.Contains(searchString));
                 return PartialView("_SearchResultProcess", model);

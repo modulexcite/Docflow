@@ -5,28 +5,6 @@
 }
 <h1>@UIElementRes.UIElement.CreateProcess</h1>
 <hr />
-<div class="row">
-    <div class="col-md-2"><p class="featurette-heading">Выбрать</p></div>
-    <div class="col-md-10">
-        <ol class="breadcrumb">
-            <li><a href=@Url.Action("Index", "Home")>@UIElementRes.UIElement.Dashboard</a></li>
-            <li class="active">@UIElementRes.UIElement.GroupProcesses</li>
-        </ol>
-
-        @Html.ValidationSummary(true)
-        @foreach (var item in Model)
-        {
-
-            <div class="col-sm-4 col-md-4">
-                <a href=@Url.Action("ProcessList", "NewProcess", new { groupProcessId = item.Id }) class="thumbnail">
-                    <h4 class="text-center">@item.GroupProcessName</h4>
-                </a>
-            </div>
-        }
-    </div>
-</div>
-
-<hr class="featurette-divider">
 @using (Ajax.BeginForm("SearchProcess", new AjaxOptions { UpdateTargetId = "searchResult", OnComplete = "clearTextSearch" }))
 {
 <div class="row">
@@ -42,6 +20,45 @@
 </div>
 }
 <div id="searchResult"></div>
+
+<hr class="featurette-divider">
+
+<div class="row">
+    <div class="col-md-2"><p class="featurette-heading">Выбрать</p></div>
+    <div class="col-md-10">
+        <ol class="breadcrumb">
+            <li><a href=@Url.Action("Index", "Home")>@UIElementRes.UIElement.Dashboard</a></li>
+            <li class="active">@UIElementRes.UIElement.GroupProcesses</li>
+        </ol>
+        @Html.ValidationSummary(true)
+        @foreach (var item in Model)
+        {
+
+            <div class="col-sm-4 col-md-4">
+                <a href=@Url.Action("ProcessList", "NewProcess", new { groupProcessId = item.Id }) class="thumbnail">
+                    <h4 class="text-center">@item.GroupProcessName</h4>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<hr class="featurette-divider">
+
+<div class="row">
+    <div class="col-md-2"><p class="featurette-heading">ТОП</p></div>
+    <div class="col-md-10">
+        @foreach (var item in (List<RapidDoc.Models.ViewModels.ProcessView>)ViewBag.TopProcess)
+        {
+            <div class="col-xs-6 col-md-4">
+                <a href=@Url.Action("Create", "Document", new { id=item.Id }) class="thumbnail tile">
+                    <h4>@item.ProcessName</h4>
+                    <p>@item.Description</p>
+                </a>
+            </div>
+        }
+    </div>
+</div>
 
 <script type="text/javascript">
     function clearTextSearch(result) {

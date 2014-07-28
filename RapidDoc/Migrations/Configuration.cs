@@ -164,6 +164,11 @@ namespace RapidDoc.Migrations
                 new RapidDoc.Models.DomainModels.ServiceIncidentTable { ApplicationUserCreatedId = user.Id, ApplicationUserModifiedId = user.Id, CompanyTableId = user.CompanyTableId, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, RoleTableId = context.Roles.FirstOrDefault(x => x.Name == "ExecutorCTP_ZIF").Id, Description = "Оргтехника", ServiceName = "Оргтехника", SLAIncident = 8, ServiceIncidientLevel = Models.Repository.ServiceIncidientLevel.OneLevel, ServiceIncidientPriority = Models.Repository.ServiceIncidientPriority.Low, ServiceIncidientLocation = Models.Repository.ServiceIncidientLocation.Element2 }
             );
             */
+            var documents = context.DocumentTable;
+            foreach(var item in documents)
+            {
+                item.DocumentText = context.SearchTable.FirstOrDefault(x => x.DocumentTableId == item.Id).DocumentText;
+            }
         }
     }
 }

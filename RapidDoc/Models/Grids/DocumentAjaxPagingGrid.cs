@@ -29,6 +29,7 @@ namespace RapidDoc.Models.Grids
             IReviewDocLogService _ReviewDocLogService = DependencyResolver.Current.GetService<IReviewDocLogService>();
             IDocumentService _DocumentService = DependencyResolver.Current.GetService<IDocumentService>();
             IAccountService _AccountService = DependencyResolver.Current.GetService<IAccountService>();
+            ISearchService _SearchService = DependencyResolver.Current.GetService<ISearchService>();
 
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == HttpContext.Current.User.Identity.Name);
 
@@ -36,6 +37,11 @@ namespace RapidDoc.Models.Grids
             {
                 displayedItem.isNotReview = _ReviewDocLogService.isNotReviewDocCurrentUser(displayedItem.Id, "", user);
                 displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id, "", user);
+
+                if (displayedItem.DocumentText.Length > 80)
+                {
+                    displayedItem.DocumentText = displayedItem.DocumentText.Substring(0, 80) + "...";
+                }
             }
 
             return _displayingItems;

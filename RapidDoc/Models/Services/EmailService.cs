@@ -212,10 +212,10 @@ namespace RapidDoc.Models.Services
                 switch (type)
                 {
                     case EmailTemplateType.Default:
-                        body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", docuTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = bodyText });
+                        body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", docuTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = bodyText, DocumentText = parameters2[0] });
                         break;
                     case EmailTemplateType.Comment:
-                        body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", docuTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = bodyText, LastComment = parameters[0] });
+                        body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", docuTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = bodyText, LastComment = parameters[0], DocumentText = parameters2[0] });
                         break;
 
                     case EmailTemplateType.Delegation:
@@ -248,7 +248,7 @@ namespace RapidDoc.Models.Services
                     documentUri = documentUri.Substring(0, documentUri.Length - 36);
                     documentUri = documentUri + docuTable.Id.ToString();
 
-                    CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorEmail, String.Format("Вы создали новый документ [{0}]", docuTable.DocumentNum), new string[] { });
+                    CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorEmail, String.Format("Вы создали новый документ [{0}]", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                 }
             }
         }
@@ -266,7 +266,7 @@ namespace RapidDoc.Models.Services
                     if (user.Email != String.Empty)
                     {
                         string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
-                        CreateMessange(EmailTemplateType.Default, docuTable, user, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendExecutorEmail, String.Format("Требуется ваша подпись, документ [{0}]", docuTable.DocumentNum), new string[] { });
+                        CreateMessange(EmailTemplateType.Default, docuTable, user, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendExecutorEmail, String.Format("Требуется ваша подпись, документ [{0}]", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                     }
                 }
             }
@@ -282,7 +282,7 @@ namespace RapidDoc.Models.Services
                 if (userTable.Email != String.Empty)
                 {
                     string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
-                    CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorRejectEmail, String.Format("Ваш документ [{0}] был отменен", docuTable.DocumentNum), new string[] { });
+                    CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorRejectEmail, String.Format("Ваш документ [{0}] был отменен", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                 }
             }
         }
@@ -297,7 +297,7 @@ namespace RapidDoc.Models.Services
                 if (userTable.Email != String.Empty)
                 {
                     string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
-                    CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorClosedEmail, String.Format("Ваш документ [{0}] закрыт", docuTable.DocumentNum), new string[] { });
+                    CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorClosedEmail, String.Format("Ваш документ [{0}] закрыт", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                 }
             }
         }
@@ -312,7 +312,7 @@ namespace RapidDoc.Models.Services
                 if (userTable.Email != String.Empty && userTable.UserName != HttpContext.Current.User.Identity.Name)
                 {
                     string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
-                    CreateMessange(EmailTemplateType.Comment, docuTable, userTable, @"Views\\EmailTemplate\\CommentEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorCommentEmail, String.Format("Новый комментарий в документе [{0}]", docuTable.DocumentNum), new string[] { lastComment });
+                    CreateMessange(EmailTemplateType.Comment, docuTable, userTable, @"Views\\EmailTemplate\\CommentEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorCommentEmail, String.Format("Новый комментарий в документе [{0}]", docuTable.DocumentNum), new string[] { lastComment }, new string[] { docuTable.DocumentText });
                 }
             }
         }
@@ -344,7 +344,7 @@ namespace RapidDoc.Models.Services
                 if (userTable.Email != String.Empty)
                 {
                     string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
-                    CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendReaderEmail, String.Format("Вас добавили читателем, документ [{0}]", docuTable.DocumentNum), new string[] { });
+                    CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendReaderEmail, String.Format("Вас добавили читателем, документ [{0}]", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                 }
             }
         }
@@ -357,7 +357,7 @@ namespace RapidDoc.Models.Services
             if (userTable.Email != String.Empty)
             {
                 string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
-                CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendExecutorEmail, String.Format("Требуется ваша подпись, документ [{0}]", docuTable.DocumentNum), new string[] { });
+                CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendExecutorEmail, String.Format("Требуется ваша подпись, документ [{0}]", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
             }
         }
 
@@ -377,7 +377,7 @@ namespace RapidDoc.Models.Services
                     documentNums.Add(document.DocumentNum + " - " + document.ProcessName);
                 }
 
-                CreateMessange(EmailTemplateType.SLAStatus, null, userTable, @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml", null, UIElementRes.UIElement.SendSLAWarningEmail, String.Format("Срок исполнения подходит подходит к концу"), documentUrls.ToArray(), documentNums.ToArray());
+                CreateMessange(EmailTemplateType.SLAStatus, null, userTable, @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml", null, UIElementRes.UIElement.SendSLAWarningEmail, String.Format("Срок исполнения подходит к концу"), documentUrls.ToArray(), documentNums.ToArray());
             }
         }
 

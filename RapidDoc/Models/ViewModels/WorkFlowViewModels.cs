@@ -82,6 +82,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "CurrentActivityName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string ActivityName { get; set; }
 
+        [Display(Name = "DocumentText", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string DocumentText { get; set; }
+
         public SLAStatusList SLAStatus { get; set; }
 
         public bool isNotReview { get; set; }

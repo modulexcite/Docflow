@@ -100,6 +100,9 @@ namespace RapidDoc.Models.DomainModels
         public Guid EmplTableId { get; set; }
         public virtual EmplTable EmplTable { get; set; }
 
+        [Display(Name = "DocumentText", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string DocumentText { get; set; }
+
         public Guid RefDocumentId { get; set; }
 
         public Guid WWFInstanceId { get; set; }

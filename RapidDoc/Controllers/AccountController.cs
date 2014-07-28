@@ -36,8 +36,10 @@ namespace RapidDoc.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            LoginViewModel model = new LoginViewModel();
+            model.UserName = @"altyntau\";
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(model);
         }
 
         //

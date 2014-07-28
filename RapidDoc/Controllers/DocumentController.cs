@@ -321,7 +321,7 @@ namespace RapidDoc.Controllers
                 _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
                 SaveSearchData(docModel, actionModelName, documentId);
                 _WorkflowService.RunWorkflow(documentId, process.TableName, documentData);
-                _EmailService.SendInitiatorEmail(documentId);
+                //_EmailService.SendInitiatorEmail(documentId);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -477,7 +477,10 @@ namespace RapidDoc.Controllers
                     {
                         foreach (string data in listdata)
                         {
-                            tracker.Users.Add(new WFTrackerUsersTable { UserId = data, InitiatorUserId = userTable.Id });
+                            if (tracker.Users.Exists(x => x.UserId == data) == false)
+                            {
+                                tracker.Users.Add(new WFTrackerUsersTable { UserId = data, InitiatorUserId = userTable.Id });
+                            }
                         }
                     }
 
@@ -923,6 +926,10 @@ namespace RapidDoc.Controllers
                     }
                 }
             }
+
+            DocumentTable document = _DocumentService.Find(documentId);
+            document.DocumentText = allStringData;
+            _DocumentService.SaveDocumentText(document);
 
             _SearchService.SaveDomain(new SearchTable { DocumentText = allStringData, DocumentTableId = documentId });
         }

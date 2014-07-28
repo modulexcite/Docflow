@@ -52,11 +52,8 @@ namespace RapidDoc.Activities
 
             string roleName = _service.WFChooseSpecificUserFromService(serviceName, priority, level, location);
             WFUserFunctionResult userFunctionResult = _service.WFRoleUser(documentId, roleName);
-
-            if (userFunctionResult.Skip == false) 
-                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
-            else if (executionStep == true)
-                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
+          
+            _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);      
 
             outputBookmark.Set(context, this.DisplayName.Replace("<step>", ""));
             outputSkipStep.Set(context, executionStep ? false : userFunctionResult.Skip);

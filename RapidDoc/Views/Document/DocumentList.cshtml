@@ -26,10 +26,10 @@
         .isCssColClass(true)
         .RenderValueAs(o => StatusField(o));
     columns.Add(o => o.DocumentNum).Titled("#").Sortable(true).Filterable(true);
-    columns.Add(o => o.GroupProcessName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).GroupProcessName).ToHtmlString()).Sortable(false).Filterable(true).Css("hidden-sm hidden-xs");
-    columns.Add(o => o.ProcessName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).ProcessName).ToHtmlString()).Sortable(false).Filterable(true);
-    columns.Add(o => o.CreatedDate).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).CreatedDate).ToHtmlString()).Sortable(true).Filterable(true).RenderValueAs(o => Html.DateTimeLocalFor(modelItem => o.CreatedDate, (string)ViewBag.CurrentTimeId));
+    columns.Add(o => o.ProcessName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).ProcessName).ToHtmlString()).Sortable(false).Filterable(false);
+    columns.Add(o => o.DocumentText).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).DocumentText).ToHtmlString()).Sortable(false).Filterable(true);
     columns.Add(o => o.ActivityName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).ActivityName).ToHtmlString()).Sortable(true).Filterable(true);
     columns.Add(o => o.DocumentState).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).DocumentState).ToHtmlString()).Sortable(true).Filterable(true).RenderValueAs(o => o.DocumentState.GetDescription());
-    columns.Add(o => o.CreatedBy).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).CreatedBy).ToHtmlString()).Sortable(false).Filterable(true);
+    columns.Add(o => o.CreatedDate).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).CreatedDate).ToHtmlString()).Sortable(true).Filterable(false).RenderValueAs(o => Html.DateTimeLocalFor(modelItem => o.CreatedDate, (string)ViewBag.CurrentTimeId));
+    columns.Add(o => o.CreatedBy).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).CreatedBy).ToHtmlString()).Sortable(false).Filterable(false);
 }).Selectable(true).SetLanguage(UIElementRes.UIElement.LangName).WithPaging(30).SetColCssClasses(o => o.isNotReview ? "" : "info allocation text-center")
