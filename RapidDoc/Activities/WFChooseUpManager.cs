@@ -31,6 +31,7 @@ namespace RapidDoc.Activities
         public InArgument<bool> executionStep { get; set; }
         public OutArgument<bool> outputSkipStep { get; set; }
         public OutArgument<DocumentState> outputStep { get; set; }
+        public InArgument<bool> noneSkip { get; set; }
         
         [Inject]
         public IWorkflowService _service { get; set; }
@@ -45,13 +46,16 @@ namespace RapidDoc.Activities
             int slaOffset = context.GetValue(this.slaOffset);
             string profileName = context.GetValue(this.profileName);
             bool executionStep = context.GetValue(this.executionStep);
+            bool noneSkipStep = context.GetValue(this.noneSkip);
 
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
             WFUserFunctionResult userFunctionResult = _service.WFMatchingUpManager(documentId, currentUser, level, profileName);
+
             if (userFunctionResult.Skip == false)
                 _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
-            else if (executionStep == true)
+            else if (executionStep == true || noneSkipStep == true)
                 _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
+
             outputBookmark.Set(context, this.DisplayName.Replace("<step>", ""));
             outputSkipStep.Set(context, executionStep ? false : userFunctionResult.Skip);
             outputStep.Set(context, documentStep);
