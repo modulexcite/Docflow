@@ -736,7 +736,7 @@ namespace UIElementRes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Performance by department.
+        ///   Looks up a localized string similar to Исполнение по подразделениям.
         /// </summary>
         public static string PerformanceDepartment {
             get {

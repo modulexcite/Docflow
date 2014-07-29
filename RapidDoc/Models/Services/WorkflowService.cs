@@ -435,6 +435,7 @@ namespace RapidDoc.Models.Services
                 trackerTable.TrackerType = TrackerType.Waiting;
                 trackerTable.ManualExecutor = useManual;
                 trackerTable.SLAOffset = slaOffset;
+                trackerTable.StartDateSLA = DateTime.UtcNow;
                 trackerTable.ExecutionStep = executionStep;
                 trackerTable.SignDate = null;
                 trackerTable.SignUserId = null;
@@ -459,6 +460,7 @@ namespace RapidDoc.Models.Services
                     item.SignUserId = null;
                     item.Users.Clear();
                     item.SLAOffset = 0;
+                    item.StartDateSLA = null;
                     item.ManualExecutor = false;
                     _WorkflowTrackerService.SaveDomain(item, currentUser);
                 }

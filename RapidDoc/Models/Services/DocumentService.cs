@@ -43,7 +43,7 @@ namespace RapidDoc.Models.Services
         string DeleteFile(Guid Id);
         List<ApplicationUser> GetSignUsers(DocumentTable docuTable);
         List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status);
-        DateTime? GetSLAPerformDate(Guid DocumentId, DateTime CreatedDate, double SLAOffset);
+        DateTime? GetSLAPerformDate(Guid DocumentId, DateTime? CreatedDate, double SLAOffset);
     }
 
     public class DocumentService : IDocumentService
@@ -540,7 +540,7 @@ namespace RapidDoc.Models.Services
                 if (items.Any(x => x.Users.Any(a => a.UserId == user.Id)))
                 {
                     WFTrackerTable item = items.FirstOrDefault();
-                    DateTime? date = GetSLAPerformDate(documentId, item.ModifiedDate, item.SLAOffset);
+                    DateTime? date = GetSLAPerformDate(documentId, item.StartDateSLA, item.SLAOffset);
 
                     if (date != null)
                     {
@@ -720,7 +720,7 @@ namespace RapidDoc.Models.Services
             {
                 foreach (var item in items)
                 {
-                    DateTime? date = GetSLAPerformDate(docuTable.Id, item.ModifiedDate, item.SLAOffset);
+                    DateTime? date = GetSLAPerformDate(docuTable.Id, item.StartDateSLA, item.SLAOffset);
 
                     if (date != null)
                     {
@@ -740,43 +740,48 @@ namespace RapidDoc.Models.Services
             return users;
         }
 
-        public DateTime? GetSLAPerformDate(Guid DocumentId, DateTime CreatedDate, double SLAOffset)
+        public DateTime? GetSLAPerformDate(Guid DocumentId, DateTime? CreatedDate, double SLAOffset)
         {
-            DocumentTable documentTable = Find(DocumentId);
-
-            if (documentTable != null && documentTable.ProcessTable != null)
+            if (CreatedDate != null)
             {
-                WorkScheduleTable scheduleTable = _WorkScheduleService.Find(documentTable.ProcessTable.WorkScheduleTableId);
-                if(scheduleTable != null)
-                {
-                    CreatedDate = GetWorkStartDate(CreatedDate, scheduleTable);
-                    double SLAMinutes = (SLAOffset * 60);
+                DocumentTable documentTable = Find(DocumentId);
 
-                    return GetSLAAddOffset(scheduleTable, CreatedDate, SLAMinutes);
+                if (documentTable != null && documentTable.ProcessTable != null)
+                {
+                    WorkScheduleTable scheduleTable = _WorkScheduleService.Find(documentTable.ProcessTable.WorkScheduleTableId);
+                    if (scheduleTable != null)
+                    {
+                        CreatedDate = GetWorkStartDate(CreatedDate, scheduleTable);
+                        double SLAMinutes = (SLAOffset * 60);
+
+                        return GetSLAAddOffset(scheduleTable, CreatedDate, SLAMinutes);
+                    }
                 }
             }
 
             return null;
         }
 
-        private DateTime GetSLAAddOffset(WorkScheduleTable scheduleTable, DateTime CreatedDate, double SLAMinutes)
+        private DateTime GetSLAAddOffset(WorkScheduleTable scheduleTable, DateTime? CreatedDate, double SLAMinutes)
         {
-            if ((scheduleTable.WorkEndTime - CreatedDate.TimeOfDay).TotalMinutes >= SLAMinutes)
+            DateTime tempCreatedDate = CreatedDate ?? DateTime.MinValue;
+
+            if ((scheduleTable.WorkEndTime - tempCreatedDate.TimeOfDay).TotalMinutes >= SLAMinutes)
             {
-                return CreatedDate.AddMinutes(SLAMinutes);
+                return tempCreatedDate.AddMinutes(SLAMinutes);
             }
             else
             {
-                SLAMinutes = SLAMinutes - (scheduleTable.WorkEndTime - CreatedDate.TimeOfDay).TotalMinutes;
-                CreatedDate = GetWorkStartDate(CreatedDate.Date.AddDays(1), scheduleTable);
+                SLAMinutes = SLAMinutes - (scheduleTable.WorkEndTime - tempCreatedDate.TimeOfDay).TotalMinutes;
+                tempCreatedDate = GetWorkStartDate(tempCreatedDate.Date.AddDays(1), scheduleTable);
 
-                return GetSLAAddOffset(scheduleTable, CreatedDate, SLAMinutes);
+                return GetSLAAddOffset(scheduleTable, tempCreatedDate, SLAMinutes);
             }
         }
 
-        private DateTime GetWorkStartDate(DateTime CreatedDate, WorkScheduleTable scheduleTable)
+        private DateTime GetWorkStartDate(DateTime? CreatedDate, WorkScheduleTable scheduleTable)
         {
-            DateTime tempCreatedDate = CreatedDate;
+            DateTime tempCreatedDate = CreatedDate ?? DateTime.MinValue;
 
             tempCreatedDate = FindWorkDay(scheduleTable.Id, tempCreatedDate);
 

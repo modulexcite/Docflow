@@ -109,6 +109,8 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "PerformToDate", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public DateTime? PerformToDate { get; set; }
 
+        public DateTime? StartDateSLA { get; set; }
+
         public int SLAOffset { get; set; }
 
         [Display(Name = "Date", ResourceType = typeof(FieldNameRes.FieldNameResource))]

@@ -185,6 +185,8 @@ namespace RapidDoc.Models.DomainModels
 
         public bool ManualExecutor { get; set; }
 
+        public DateTime? StartDateSLA { get; set; }
+
         public int SLAOffset { get; set; }
 
         public bool ExecutionStep { get; set; }
@@ -194,7 +196,7 @@ namespace RapidDoc.Models.DomainModels
             if (SLAOffset > 0)
             {
                 IDocumentService _service = DependencyResolver.Current.GetService<IDocumentService>();
-                return _service.GetSLAPerformDate(DocumentTableId, ModifiedDate, SLAOffset);
+                return _service.GetSLAPerformDate(DocumentTableId, StartDateSLA, SLAOffset);
             }
 
             return null;

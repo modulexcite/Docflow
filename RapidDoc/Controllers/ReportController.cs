@@ -93,7 +93,7 @@ namespace RapidDoc.Controllers
             Response.Flush();
             Response.End();
 
-            return RedirectToAction("PerformanceDepartment");
+            return RedirectToAction("Index", "Home");
         }
 	}
 
