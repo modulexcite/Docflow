@@ -736,6 +736,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Performance by department.
+        /// </summary>
+        public static string PerformanceDepartment {
+            get {
+                return ResourceManager.GetString("PerformanceDepartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Процессы.
         /// </summary>
         public static string Processes {
