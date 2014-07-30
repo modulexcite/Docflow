@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using RapidDoc.Models.Infrastructure;
+using RapidDoc.Models.Repository;
 using RapidDoc.Models.Services;
 using RapidDoc.Models.ViewModels;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace RapidDoc.Controllers
 {
@@ -26,9 +29,15 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerateReport(ReportParametersBasicView model)
+        public FileContentResult GenerateReport(ReportParametersBasicView model)
         {
             ApplicationDbContext context = new ApplicationDbContext();
+
+            Excel.Application excelAppl;
+            Excel.Workbook excelWorkbook;
+            Excel.Worksheet excelWorksheet;
+
+            int rowCount = 3;
 
             var flatData = from wfTracker in context.WFTrackerTable
                        join user in context.Users on wfTracker.SignUserId equals user.Id
@@ -39,6 +48,7 @@ namespace RapidDoc.Controllers
                        join process in context.ProcessTable on document.ProcessTableId equals process.Id
                        where wfTracker.ExecutionStep == true && wfTracker.SignUserId != null
                        && (wfTracker.SignDate >= model.StartDate && wfTracker.SignDate <= model.EndDate)
+                       && wfTracker.TrackerType == TrackerType.Approved
                        select new ReportPerformanceDepartmentModel
                        {
                            FullName = empl.SecondName + " " + empl.FirstName + " " + empl.MiddleName,
@@ -78,22 +88,43 @@ namespace RapidDoc.Controllers
                                CountError = gflat.Count(x => x.SignDate > x.PerformDate && x.PerformDate != null)
                            }).ToList();
 
-            System.Web.UI.WebControls.GridView gv = new System.Web.UI.WebControls.GridView();
-            gv.DataSource = gridData;
-            gv.DataBind();
-            Response.ClearContent();
-            Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=Report.xls");
-            Response.ContentType = "application/ms-excel";
-            Response.Charset = "";
-            System.IO.StringWriter sw = new System.IO.StringWriter();
-            System.Web.UI.HtmlTextWriter htw = new System.Web.UI.HtmlTextWriter(sw);
-            gv.RenderControl(htw);
-            Response.Output.Write(sw.ToString());
-            Response.Flush();
-            Response.End();
+            excelAppl = new Excel.Application();
+            excelAppl.Visible = false;
+            excelAppl.DisplayAlerts = false;
+            excelWorkbook = excelAppl.Workbooks.Add(@"\\atk-s-051\Template\ReportDeparmentTemplate.xlsx");
+            excelWorksheet = (Excel.Worksheet)excelWorkbook.ActiveSheet;
 
-            return RedirectToAction("Index", "Home");
+            Excel.Range range = excelWorksheet.get_Range("ReportDate");
+            range.Value = model.StartDate.ToShortDateString() + " - " + model.EndDate.ToShortDateString();
+
+            foreach (var line in gridData)
+            {
+                rowCount++;
+                excelWorksheet.Cells[rowCount, 1] = line.FullName.ToString();
+                excelWorksheet.Cells[rowCount, 2] = line.UserName.ToString();
+                excelWorksheet.Cells[rowCount, 3] = line.TitleName.ToString();
+                excelWorksheet.Cells[rowCount, 4] = line.DepartmentName.ToString();
+                excelWorksheet.Cells[rowCount, 5] = line.ProcessName.ToString();
+                excelWorksheet.Cells[rowCount, 6] = line.Count.ToString();
+                excelWorksheet.Cells[rowCount, 7] = line.CountError.ToString();
+            }
+
+            object misValue = System.Reflection.Missing.Value;
+            string path = @"\\atk-s-051\Template\Result\" + Guid.NewGuid().ToString() + ".xlsx";
+            excelWorkbook.SaveAs(path, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, misValue, 
+                misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue, 
+                misValue, misValue, misValue, misValue);
+            excelWorkbook.Close(true, misValue, misValue);
+            excelAppl.Quit();
+            FileInfo file = new FileInfo(path);
+
+            byte[] buff = null;
+            FileStream fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read);
+            BinaryReader br = new BinaryReader(fs);
+            long numBytes = new FileInfo(file.FullName).Length;
+            buff = br.ReadBytes((int)numBytes);
+
+            return File(buff, "application/vnd.ms-excel", "ReportDepartment.xls");
         }
 	}
 

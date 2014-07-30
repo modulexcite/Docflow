@@ -75,6 +75,9 @@ namespace RapidDoc
             bundles.Add(new ScriptBundle("~/bundles/scaffolding").Include(
                         "~/Scripts/scaffolding.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/chart").Include(
+                        "~/Scripts/Chart.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/main").Include(
                         "~/Scripts/main.js"));
         }

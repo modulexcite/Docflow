@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = UIElementRes.UIElement.Monitoring;
+}
+<h1>@UIElementRes.UIElement.Monitoring</h1>
+<hr />
+
+<div style="width: 50%">
+    <canvas id="canvas" height="450" width="600"></canvas>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/chart")
+}
+@section jslaunch {
+
+    $.getJSON('@Url.Action("PerformanceDepartment", "Monitoring")', null).done(function(data) {
+
+	    var barChartData = {
+		    labels : data.labels,
+		    datasets : [
+			    {
+				    fillColor : "rgba(220,220,220,0.5)",
+				    strokeColor : "rgba(220,220,220,0.8)",
+				    highlightFill: "rgba(220,220,220,0.75)",
+				    highlightStroke: "rgba(220,220,220,1)",
+				    data : data.dataCount
+			    },
+			    {
+				    fillColor : "rgba(151,187,205,0.5)",
+				    strokeColor : "rgba(151,187,205,0.8)",
+				    highlightFill : "rgba(151,187,205,0.75)",
+				    highlightStroke : "rgba(151,187,205,1)",
+				    data : data.dataErrorCount
+			    }
+		    ]
+	    }
+
+        var ctx = document.getElementById("canvas").getContext("2d");
+        window.myBar = new Chart(ctx).Bar(barChartData, {
+			    responsive : true
+        });
+    });
+}
+

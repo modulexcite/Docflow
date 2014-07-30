@@ -592,6 +592,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Мониторинг.
+        /// </summary>
+        public static string Monitoring {
+            get {
+                return ResourceManager.GetString("Monitoring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Активные документы.
         /// </summary>
         public static string MyProcesses {
