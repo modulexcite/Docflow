@@ -4,8 +4,14 @@
 <h1>@UIElementRes.UIElement.Monitoring</h1>
 <hr />
 
-<div style="width: 50%">
-    <canvas id="canvas" height="450" width="600"></canvas>
+<div class="row">
+    <div class="col-md-6">
+        <canvas id="canvasBar" height="450" width="600"></canvas>
+    </div>
+
+    <div class="col-md-6 text-center">
+        <canvas id="canvasPie" width="300" height="300"></canvas>
+    </div>
 </div>
 
 
@@ -14,32 +20,58 @@
 }
 @section jslaunch {
 
-    $.getJSON('@Url.Action("PerformanceDepartment", "Monitoring")', null).done(function(data) {
-
-	    var barChartData = {
-		    labels : data.labels,
+    $.getJSON('@Url.Action("PerformanceDepartment", "Monitoring")', null).done(function(data) {	   
+      
+    
+    var barChartData = {
+		    labels : data.barLabels,
 		    datasets : [
 			    {
-				    fillColor : "rgba(220,220,220,0.5)",
+				    fillColor : "#46BFBD",
 				    strokeColor : "rgba(220,220,220,0.8)",
 				    highlightFill: "rgba(220,220,220,0.75)",
 				    highlightStroke: "rgba(220,220,220,1)",
-				    data : data.dataCount
+				    data : data.barDataCount
 			    },
 			    {
-				    fillColor : "rgba(151,187,205,0.5)",
+				    fillColor : "#F7464A",
 				    strokeColor : "rgba(151,187,205,0.8)",
 				    highlightFill : "rgba(151,187,205,0.75)",
 				    highlightStroke : "rgba(151,187,205,1)",
-				    data : data.dataErrorCount
+				    data : data.barDataErrorCount
 			    }
 		    ]
 	    }
 
-        var ctx = document.getElementById("canvas").getContext("2d");
-        window.myBar = new Chart(ctx).Bar(barChartData, {
+    var pieData = [			
+				{
+					value: data.pieCountErrorListValue,
+					color: "#F7464A",
+					highlight: "#F7464A",
+					label: "Закрытые просроченные"
+				},
+				{
+					value: data.pieOpenCountListValue,
+					color: "#4D5360",
+					highlight: "#A8B3C5",
+					label: "Открытые не просроченные"
+				},
+				{
+					value: data.pieOpenCountErrorListValue,
+					color: "#FDB45C",
+					highlight: "#FFC870",
+					label: "Открытые просроченные"
+				}
+			];
+    var ctxBar = document.getElementById("canvasBar").getContext("2d");
+        window.myBar = new Chart(ctxBar).Bar(barChartData, {
 			    responsive : true
         });
+            
+    var ctxPie = document.getElementById("canvasPie").getContext("2d");
+		window.myPie = new Chart(ctxPie).PolarArea(pieData);
+			 
+        
     });
 }
 

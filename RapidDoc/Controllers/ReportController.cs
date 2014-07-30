@@ -39,7 +39,8 @@ namespace RapidDoc.Controllers
 
             int rowCount = 3;
 
-            var flatData = from wfTracker in context.WFTrackerTable
+            model.EndDate = model.EndDate.AddDays(1);
+            var flatData = (from wfTracker in context.WFTrackerTable
                        join user in context.Users on wfTracker.SignUserId equals user.Id
                        join empl in context.EmplTable on user.Id equals empl.ApplicationUserId
                        join title in context.TitleTable on empl.TitleTableId equals title.Id
@@ -59,9 +60,9 @@ namespace RapidDoc.Controllers
                            ActivityName = wfTracker.ActivityName,
                            SignDate = wfTracker.SignDate,
                            DocumentId = wfTracker.DocumentTableId,
-                           Date = wfTracker.ModifiedDate,
+                           Date = wfTracker.StartDateSLA,
                            SLAOffset = wfTracker.SLAOffset
-                       };
+                       }).ToList();
 
             foreach (var item in flatData.Where(x => x.SLAOffset > 0))
             {
@@ -137,9 +138,11 @@ namespace RapidDoc.Controllers
         public string ProcessName { get; set; }
         public string ActivityName { get; set; }
         public Guid DocumentId { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
         public int SLAOffset { get; set; }
         public DateTime? SignDate { get; set; }
         public DateTime? PerformDate { get; set; }
+        public string SignUserId { get; set; }
+        public TrackerType TrackerType { get; set; }
     }
 }
