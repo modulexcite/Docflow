@@ -34,8 +34,8 @@ namespace RapidDoc.Controllers
                 /*join user in context.Users 
                             on wfTracker.SignUserId equals user.Id*/
                             from user in context.Users.Where(x => x.Id == wfTracker.SignUserId).DefaultIfEmpty()
-                where wfTracker.ExecutionStep == true 
-                && (wfTracker.SignDate >= startDate && wfTracker.SignDate <= endDate)/*&&  wfTracker.TrackerType == TrackerType.Approved*/
+                where wfTracker.ExecutionStep == true
+                && (wfTracker.CreatedDate >= startDate && wfTracker.CreatedDate <= endDate)/*&&  wfTracker.TrackerType == TrackerType.Approved*/
                 select new ReportPerformanceDepartmentModel
                 {
                     UserName = user.UserName,
@@ -89,8 +89,8 @@ namespace RapidDoc.Controllers
 
             int pieCountList = pieData.Where(x => x.SignDate < x.PerformDate && x.PerformDate != null && x.SignUserId != null).Count();
             int pieCountErrorList = pieData.Where(x => x.SignDate > x.PerformDate && x.PerformDate != null && x.SignUserId != null).Count();
-            int pieOpenCountList = pieData.Where(x => DateTime.Now < x.PerformDate && x.PerformDate != null && x.SignUserId == null).Count();
-            int pieOpenCountErrorList = pieData.Where(x => DateTime.Now > x.PerformDate && x.PerformDate != null && x.SignUserId == null).Count();
+            int pieOpenCountList = pieData.Where(x => DateTime.UtcNow < x.PerformDate && x.PerformDate != null && x.SignUserId == null).Count();
+            int pieOpenCountErrorList = pieData.Where(x => DateTime.UtcNow > x.PerformDate && x.PerformDate != null && x.SignUserId == null).Count();
 
             return Json(new { barLabels = barEmplList, barDataCount = barCountList, barDataErrorCount = barCountErrorList,
                               pieCountListValue = pieCountList, pieCountErrorListValue = pieCountErrorList,

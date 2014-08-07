@@ -78,6 +78,9 @@ namespace RapidDoc
             bundles.Add(new ScriptBundle("~/bundles/chart").Include(
                         "~/Scripts/Chart.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/textareaResize").Include(
+                        "~/Scripts/jquery.autosize.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/main").Include(
                         "~/Scripts/main.js"));
         }

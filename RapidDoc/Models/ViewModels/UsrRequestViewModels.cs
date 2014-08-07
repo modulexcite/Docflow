@@ -539,18 +539,23 @@ namespace RapidDoc.Models.ViewModels
 
         public string SystemUnitModel { get; set; }
         public string SystemUnitSerial { get; set; }
+        public string SystemUnitItemId { get; set; }
 
         public string NotebookModel { get; set; }
         public string NotebookSerial { get; set; }
+        public string NotebookItemId { get; set; }
 
         public string MonitorModel { get; set; }
         public string MonitorSerial { get; set; }
+        public string MonitorItemId { get; set; }
 
         public string PrinterModel { get; set; }
         public string PrinterSerial { get; set; }
+        public string PrinterItemId { get; set; }
 
         public string OtherEquipmentModel { get; set; }
         public string OtherEquipmentSerial { get; set; }
+        public string OtherEquipmentItemId { get; set; }
     }
 
     public class USR_REQ_IT_CTP_IncidentIT_View : BasicDocumentRequestView
@@ -795,6 +800,15 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Users { get; set; }
 
+        [Display(Name = "БРД/Заявки")]
+        public bool Request { get; set; }
+
+        [Display(Name = "Обращение граждан")]
+        public bool TreatmentPeople { get; set; }
+
+        [Display(Name = "Материалы к совещаниям Техкомитета")]
+        public bool MaterialMeetingsTehkomitet { get; set; }
+
         [Display(Name = "Согласование")]
         public bool Agreement { get; set; }
 
@@ -847,6 +861,9 @@ namespace RapidDoc.Models.ViewModels
         public AccessRightBasic AccessRight11 { get; set; }
         public AccessRightBasic AccessRight12 { get; set; }
         public AccessRightBasic AccessRight13 { get; set; }
+        public AccessRightBasic AccessRight14 { get; set; }
+        public AccessRightBasic AccessRight15 { get; set; }
+        public AccessRightBasic AccessRight16 { get; set; }
 
         [Display(Name = "Описание")]
         public string Description { get; set; }

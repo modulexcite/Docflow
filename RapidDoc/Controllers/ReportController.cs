@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -31,6 +32,9 @@ namespace RapidDoc.Controllers
         [HttpPost]
         public FileContentResult GenerateReport(ReportParametersBasicView model)
         {
+            WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(ConfigurationManager.AppSettings["ReportAdminDomain"], ConfigurationManager.AppSettings["ReportAdminUser"], ConfigurationManager.AppSettings["ReportAdminPassword"]);
+            contextImpersonation.Enter();
+
             ApplicationDbContext context = new ApplicationDbContext();
 
             Excel.Application excelAppl;
@@ -92,7 +96,7 @@ namespace RapidDoc.Controllers
             excelAppl = new Excel.Application();
             excelAppl.Visible = false;
             excelAppl.DisplayAlerts = false;
-            excelWorkbook = excelAppl.Workbooks.Add(@"\\atk-s-051\Template\ReportDeparmentTemplate.xlsx");
+            excelWorkbook = excelAppl.Workbooks.Add(@"C:\Template\ReportDeparmentTemplate.xlsx");
             excelWorksheet = (Excel.Worksheet)excelWorkbook.ActiveSheet;
 
             Excel.Range range = excelWorksheet.get_Range("ReportDate");
@@ -111,7 +115,7 @@ namespace RapidDoc.Controllers
             }
 
             object misValue = System.Reflection.Missing.Value;
-            string path = @"\\atk-s-051\Template\Result\" + Guid.NewGuid().ToString() + ".xlsx";
+            string path = @"C:\Template\Result\" + Guid.NewGuid().ToString() + ".xlsx";
             excelWorkbook.SaveAs(path, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, misValue, 
                 misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue, 
                 misValue, misValue, misValue, misValue);
@@ -124,6 +128,8 @@ namespace RapidDoc.Controllers
             BinaryReader br = new BinaryReader(fs);
             long numBytes = new FileInfo(file.FullName).Length;
             buff = br.ReadBytes((int)numBytes);
+
+            contextImpersonation.Leave();
 
             return File(buff, "application/vnd.ms-excel", "ReportDepartment.xls");
         }

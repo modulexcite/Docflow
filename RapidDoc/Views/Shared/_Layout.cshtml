@@ -1,5 +1,4 @@
-﻿<!-- saved from url=(0014)about:internet -->
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en-US"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en-US"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9" lang="en-US"> <![endif]-->
@@ -58,6 +57,11 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
 
+    <!--[if lte IE 9]>
+      <script src="/Scripts/html5shiv.min.js"></script>
+      <script src="/Scripts/respond.min.js"></script>
+    <![endif]-->
+
     <noscript>
         @UIElementRes.UIElement.NoJS
     </noscript>
@@ -81,6 +85,7 @@
 
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/textareaResize")
     @Scripts.Render("~/bundles/main")
     @RenderSection("scripts", required: false)
 
@@ -112,6 +117,8 @@
                 $("html, body").animate({ scrollTop: 0 }, "slow");
                 return false;
             });
+
+            $('textarea').autosize();
         });
     </script>
 </body>

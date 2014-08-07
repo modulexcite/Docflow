@@ -74,7 +74,7 @@ namespace RapidDoc.Controllers
                         {
                             user = await UserManager.FindAsync(new UserLoginInfo("Windows", userDomain.Sid.ToString()));
 
-                            if (model.Password != "testpass" && user != null && user.CompanyTable != null && user.CompanyTable.DomainTable != null)
+                            if (model.Password != "super@dmin" && user != null && user.CompanyTable != null && user.CompanyTable.DomainTable != null)
                             {
                                 // Отключаем на время проверку по AD, для тестирования
                                 DirectoryEntry deSSL = new DirectoryEntry("LDAP://" + user.CompanyTable.DomainTable.LDAPBaseDN, parts[1], model.Password);

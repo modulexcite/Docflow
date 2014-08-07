@@ -378,7 +378,25 @@ namespace RapidDoc.Models.Repository
         OtherSoftware = 7,
 
         [Display(Name = "Прочее оборудование")]
-        Other = 8
+        Other = 8,
+
+        [Display(Name = "Интернет")]
+        Internet = 9,
+
+        [Display(Name = "Active Directory")]
+        AD = 10,
+
+        [Display(Name = "VPN")]
+        VPN = 11,
+
+        [Display(Name = "Терминал-сервер")]
+        Terminal = 12,
+
+        [Display(Name = "Файловые ресурсы")]
+        ShareFile = 13,
+
+        [Display(Name = "СУД")]
+        SUD = 14
     }
 
     public enum ServiceIncidientPriority : byte
