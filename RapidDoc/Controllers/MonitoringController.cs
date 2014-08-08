@@ -6,34 +6,83 @@ using System.Web.Mvc;
 using RapidDoc.Models.Infrastructure;
 using RapidDoc.Models.Repository;
 using RapidDoc.Models.Services;
+using RapidDoc.Models.DomainModels;
 
 namespace RapidDoc.Controllers
 {
     public class MonitoringController : BasicController
     {
-        private readonly IDocumentService _DocumentService;
+        private readonly IDocumentService   _DocumentService;
+        private readonly IDepartmentService _DepartmentService;
+        private readonly IEmplService       _EmplService;
+        private readonly IAccountService   _AccountService;
 
-        public MonitoringController(IDocumentService documentService)
+        public MonitoringController(IDocumentService documentService, IDepartmentService departmentService, IEmplService emplService, IAccountService accountService)
         {
             _DocumentService = documentService;
+            _DepartmentService = departmentService;
+            _EmplService = emplService;
+            _AccountService = accountService;
         }
 
         public ActionResult Index()
         {
+            ViewBag.DepartmentList = _DepartmentService.GetDropListDepartmentNull(null);
             return View();
         }
 
-        [AcceptVerbs(HttpVerbs.Get)]
-        public JsonResult PerformanceDepartment()
+        public List<string> GetParentListDepartment(List<DepartmentTable> departmentList)
         {
+            List<string> listdepartmentId = new List<string>();
+            List<string> listdepartmentBufId = new List<string>();
+
+            foreach (DepartmentTable depId in departmentList)
+            {
+                listdepartmentId.Add(depId.DepartmentName);
+                List<DepartmentTable> departmentTable = _DepartmentService.GetPartial(x => x.ParentDepartmentId == depId.Id).ToList();
+                listdepartmentBufId = this.GetParentListDepartment(departmentTable);
+                listdepartmentId = listdepartmentId.Concat(listdepartmentBufId).Distinct().OrderBy(x => x).ToList();
+            }
+
+            return listdepartmentId;
+        }
+        [AcceptVerbs(HttpVerbs.Get)]
+        public JsonResult PerformanceDepartment(String departmentString)
+        {
+            List<string> listdepartmentId = new List<string>();
+          
+            Guid? departmentId = new Guid();
+            if (departmentString == "")
+            {
+              /*  if (User.Identity.Name != "Admin")
+                {*/
+                    string userId = _AccountService.FirstOrDefault(y => y.UserName == User.Identity.Name).Id;
+                    var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userId);
+                    if (empl != null && empl.DepartmentTable != null)
+                    {
+                        departmentId = empl.DepartmentTable.Id;
+                    }
+                    else
+                    {
+                        departmentId = _DepartmentService.FirstOrDefault(x => x.Id != null).Id;
+                    }
+              //  }
+            }
+            else
+            {
+                departmentId = new Guid(departmentString);
+            }
+
+            List<DepartmentTable> departmentTableList = _DepartmentService.GetPartial(x => x.Id == departmentId).ToList();
+            listdepartmentId = this.GetParentListDepartment(departmentTableList);
+            
+
             ApplicationDbContext context = new ApplicationDbContext();
             DateTime startDate = DateTime.Now.AddDays(-30);
             DateTime endDate = DateTime.Now.AddDays(1);
 
             var flatData = (from wfTracker in context.WFTrackerTable
-                /*join user in context.Users 
-                            on wfTracker.SignUserId equals user.Id*/
-                            from user in context.Users.Where(x => x.Id == wfTracker.SignUserId).DefaultIfEmpty()
+                            from user in context.Users.Where(x => x.Id == wfTracker.SignUserId).DefaultIfEmpty()                         
                 where wfTracker.ExecutionStep == true
                 && (wfTracker.CreatedDate >= startDate && wfTracker.CreatedDate <= endDate)/*&&  wfTracker.TrackerType == TrackerType.Approved*/
                 select new ReportPerformanceDepartmentModel
@@ -45,7 +94,8 @@ namespace RapidDoc.Controllers
                     Date = wfTracker.StartDateSLA,
                     SLAOffset = wfTracker.SLAOffset,
                     TrackerType = wfTracker.TrackerType,
-                    SignUserId = wfTracker != null ? wfTracker.SignUserId : null
+                    SignUserId = wfTracker != null ? wfTracker.SignUserId : null,
+                    WftId = wfTracker.Id
                 }).ToList();
          
             foreach (var item in flatData.Where(x => x.SLAOffset > 0))
@@ -54,6 +104,12 @@ namespace RapidDoc.Controllers
             }
 
             var barData = (from data in flatData.ToList()
+                           join users in context.Users
+                                on data.SignUserId equals users.Id
+                           join epml in context.EmplTable
+                               on users.Id equals epml.ApplicationUserId
+                           join department in context.DepartmentTable.Where(x => listdepartmentId.Contains(x.DepartmentName))
+                               on epml.DepartmentTable.Id equals department.Id
                             where data.SignUserId != null &&
                             data.TrackerType == TrackerType.Approved
                             group data by new
@@ -67,7 +123,7 @@ namespace RapidDoc.Controllers
                                 CountError = gflat.Count(x => x.SignDate > x.PerformDate && x.PerformDate != null)
                             }).ToList();
 
-            var pieData = (from piedata in flatData.ToList()
+            var pieData = (from piedata in flatData.ToList()                        
                            group piedata by new
                            {
                                piedata.DocumentId,
@@ -97,4 +153,5 @@ namespace RapidDoc.Controllers
                               pieOpenCountListValue = pieOpenCountList, pieOpenCountErrorListValue = pieOpenCountErrorList}, JsonRequestBehavior.AllowGet);
         }
 	}
+
 }

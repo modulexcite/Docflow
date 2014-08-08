@@ -10,6 +10,7 @@ using RapidDoc.Models.Repository;
 using RapidDoc.Models.Services;
 using RapidDoc.Models.ViewModels;
 using Excel = Microsoft.Office.Interop.Excel;
+using RapidDoc.Models.DomainModels;
 
 namespace RapidDoc.Controllers
 {
@@ -17,24 +18,46 @@ namespace RapidDoc.Controllers
     {
         private readonly IWorkflowTrackerService _WorkflowTrackerService;
         private readonly IDocumentService _DocumentService;
+        private readonly IDepartmentService _DepartmentService;
 
-        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService)
+        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService)
         {
             _WorkflowTrackerService = workflowTrackerService;
             _DocumentService = documentService;
+            _DepartmentService = departmentService;
         }
 
         public ActionResult PerformanceDepartment()
         {
+            ViewBag.DepartmentList = _DepartmentService.GetDropListDepartmentNull(null);
             return View();
+        }
+
+        public List<string> GetParentListDepartment(List<DepartmentTable> departmentList)
+        {
+            List<string> listdepartmentId = new List<string>();
+            List<string> listdepartmentBufId = new List<string>();
+
+            foreach (DepartmentTable depId in departmentList)
+            {
+                listdepartmentId.Add(depId.DepartmentName);
+                List<DepartmentTable> departmentTable = _DepartmentService.GetPartial(x => x.ParentDepartmentId == depId.Id).ToList();
+                listdepartmentBufId = this.GetParentListDepartment(departmentTable);
+                listdepartmentId = listdepartmentId.Concat(listdepartmentBufId).Distinct().OrderBy(x => x).ToList();
+            }
+
+            return listdepartmentId;
         }
 
         [HttpPost]
         public FileContentResult GenerateReport(ReportParametersBasicView model)
         {
+            List<string> listdepartmentId = new List<string>();
             WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(ConfigurationManager.AppSettings["ReportAdminDomain"], ConfigurationManager.AppSettings["ReportAdminUser"], ConfigurationManager.AppSettings["ReportAdminPassword"]);
             contextImpersonation.Enter();
 
+            List<DepartmentTable> departmentTableList = _DepartmentService.GetPartial(x => x.Id == model.DepartmentTableId).ToList();
+            listdepartmentId = this.GetParentListDepartment(departmentTableList);
             ApplicationDbContext context = new ApplicationDbContext();
 
             Excel.Application excelAppl;
@@ -48,7 +71,7 @@ namespace RapidDoc.Controllers
                        join user in context.Users on wfTracker.SignUserId equals user.Id
                        join empl in context.EmplTable on user.Id equals empl.ApplicationUserId
                        join title in context.TitleTable on empl.TitleTableId equals title.Id
-                       join department in context.DepartmentTable on empl.DepartmentTableId equals department.Id
+                       join department in context.DepartmentTable.Where(x => listdepartmentId.Contains(x.DepartmentName)) on empl.DepartmentTableId equals department.Id
                        join document in context.DocumentTable on wfTracker.DocumentTableId equals document.Id
                        join process in context.ProcessTable on document.ProcessTableId equals process.Id
                        where wfTracker.ExecutionStep == true && wfTracker.SignUserId != null
@@ -150,5 +173,6 @@ namespace RapidDoc.Controllers
         public DateTime? PerformDate { get; set; }
         public string SignUserId { get; set; }
         public TrackerType TrackerType { get; set; }
+        public Guid? WftId { get; set; }
     }
 }
