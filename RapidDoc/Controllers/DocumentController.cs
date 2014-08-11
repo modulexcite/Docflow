@@ -410,7 +410,8 @@ namespace RapidDoc.Controllers
                 }
                 
             }
-            return RedirectToAction("ShowDocument", new { id = id });
+
+            return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id }) });
         }
 
         private IEnumerable<EmplView> InitializeReaderView(Guid id)
@@ -487,7 +488,8 @@ namespace RapidDoc.Controllers
                     _WorkflowTrackerService.SaveDomain(tracker);
                 }
             }
-            return RedirectToAction("ShowDocument", new { id = id });
+
+            return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id }) });
         }
 
         public JsonResult AjaxUpload(HttpPostedFileBase filelist, Guid documentFileId)

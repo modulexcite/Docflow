@@ -50,10 +50,16 @@ function duallist_init(placeholder) {
     $("#duallistform").submit(function (e) {
         var duallistdata = $('.duallist').val();
 
+        e.preventDefault();
         $.ajax({
             type: 'POST',
             data: JSON.stringify({ listdata: duallistdata, isAjax: true }),
-            contentType: 'application/json'
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.result == 'Redirect') {
+                    window.location = data.url;
+                }
+            }
         });
     });
 }
@@ -89,7 +95,7 @@ function qrcode_init() {
         colorLight: "#ffffff"
     });
 
-    qrcode.makeCode(document.location.href);
+    qrcode.makeCode(document.location.href+'?isAfterView=true');
 }
 
 function summernote_init(lang) {

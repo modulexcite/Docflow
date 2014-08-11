@@ -10,6 +10,7 @@ using RapidDoc.Models.Repository;
 using RapidDoc.Models.Services;
 using RapidDoc.Models.ViewModels;
 using Excel = Microsoft.Office.Interop.Excel;
+using RapidDoc.Models.DomainModels;
 
 namespace RapidDoc.Controllers
 {

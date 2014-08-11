@@ -4,17 +4,18 @@
     ViewBag.Title = Model.DocumentTable.DocumentNum + " - " + Model.ProcessView.ProcessName;
 }
 
-<h2>
+<h2 class="hidden-print">
     @if (Model.DocumentTable.isArchive == true)
-{
-    <span class="fa fa-archive"></span>
-}
-    
-    @ViewBag.Title <small class="">@Model.DocumentTable.DocumentState.GetDescription()</small></h2>
+    {
+        <span class="fa fa-archive"></span>
+    }
+
+    @ViewBag.Title <small class="">@Model.DocumentTable.DocumentState.GetDescription()</small>
+</h2>
     <div class="pull-right hidden-sm hidden-xs">
         <a href=@Url.Action("Index", "Home") class="btn btn-default" role="button">@UIElementRes.UIElement.Close</a>
     </div>
-    <legend></legend>
+    <legend class="hidden-print"></legend>
     <h5 class="text-right">(@ViewBag.CompanyName) @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName,  </small> @ViewBag.CreatedDate</h5>
 
     @using (Html.BeginForm("PostDocument", "Document", new { processId = Model.ProcessView.Id, type = 2, fileId = Model.fileId, documentId = Model.DocumentTable.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
@@ -27,12 +28,12 @@
             @Html.HiddenFor(model => model.DocumentTable.Id)
             @Html.HiddenFor(model => model.fileId, new { @id = "documentFileId" })
             @Html.Action("GetDocumentData", new { modelDoc = Model.docData, idProcess = Model.ProcessView.Id, viewType = "View" })
-            <br>
-            <h3>@UIElementRes.UIElement.AttachedFiles</h3>
-            <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+            <br class="hidden-print">
+            <h3 class="hidden-print">@UIElementRes.UIElement.AttachedFiles</h3>
+            <table role="presentation" class="table table-striped hidden-print"><tbody class="files"></tbody></table>
 
             <br>
-            <h3>@UIElementRes.UIElement.ProgressWork</h3>
+            <h3 class="hidden-print">@UIElementRes.UIElement.ProgressWork</h3>
 
             @if (Model.WFTrackerItems.Count() > 0)
             {
@@ -50,7 +51,7 @@
                                 <th>
                                     @Html.DisplayNameFor(model => Model.WFTrackerItems.FirstOrDefault().Executors)
                                 </th>
-                                <th>
+                                <th class="hidden-print">
                                     @Html.DisplayName(FieldNameRes.FieldNameResource.PerformToDate)
                                 </th>
                                 <th>
@@ -78,7 +79,7 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => trackerItem.Executors)
                                     </td>
-                                    <td>
+                                    <td class="hidden-print">
                                         @if (trackerItem.PerformToDate != null)
                                         {
                                             @Html.DateTimeLocalFor(modelItem => trackerItem.PerformToDate)
@@ -108,28 +109,30 @@
                             }
                         </tbody>
                     </table>
-                    @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0)
-                    {
-                        <ul>
-                        @foreach(var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)
+                    <div class="hidden-print">
+                        @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0)
                         {
-                            <li>@UIElementRes.UIElement.DocumentReject @history.CreatedBy в @Html.DateTimeLocal(history.CreatedDate)</li>
+                            <ul>
+                                @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)
+                                {
+                                    <li>@UIElementRes.UIElement.DocumentReject @history.CreatedBy в @Html.DateTimeLocal(history.CreatedDate)</li>
+                                }
+                            </ul>
                         }
-                        </ul>
-                    }
+                    </div>
                 </div>
             }
-            <br>
-            <h3>@FieldNameRes.FieldNameResource.Comments</h3>
+            <br class="hidden-print">
+            <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
             @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentTable.Id })
-            <br>
+            <br class="hidden-print">
             @if ((Model.DocumentTable.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentTable.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentTable.isSign)
-            {
-                <input class="btn btn-success" type="submit" name="approveDoc" value=@UIElementRes.UIElement.Approve />
-                <input class="btn btn-danger" type="submit" name="rejectDoc" value=@UIElementRes.UIElement.Reject />
-            }
+{
+    <input class="btn btn-success hidden-print" type="submit" name="approveDoc" value=@UIElementRes.UIElement.Approve />
+    <input class="btn btn-danger hidden-print" type="submit" name="rejectDoc" value=@UIElementRes.UIElement.Reject />
+}
 
-            <div class="btn-group">
+            <div class="btn-group hidden-print">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     @UIElementRes.UIElement.Create <span class="caret"></span>
                 </button>
@@ -146,21 +149,21 @@
                 </ul>
             </div>
 
-            <a href=@Url.Action("Index", "Home") class="btn btn-default" role="button">@UIElementRes.UIElement.Close</a>
+            <a href=@Url.Action("Index", "Home") class="btn btn-default hidden-print" role="button">@UIElementRes.UIElement.Close</a>
         </fieldset>
     }
 
-    <br>
+    <br class="hidden-print">
     <p>
-        <h4 class="text-right">@UIElementRes.UIElement.AddComment</h4>
+        <h4 class="text-right hidden-print">@UIElementRes.UIElement.AddComment</h4>
         @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentTable.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }))
-        {
-            <div class="">
-                @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
-                <input class="btn btn-default btn-sm pull-right" type="submit" value=@UIElementRes.UIElement.Save>
-            </div>
-            <br>
-        }
+{
+    <div class="hidden-print">
+        @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
+        <input class="btn btn-default btn-sm pull-right" type="submit" value=@UIElementRes.UIElement.Save>
+    </div>
+    <br class="hidden-print">
+}
 
         <script type="text/javascript">
             function clearTextAreaComment(result) {
@@ -173,8 +176,8 @@
             }
         </script>
     </p>
-    <br>
-    <br>
+    <br class="hidden-print">
+    <br class="hidden-print">
     <div class="row">
         <div id="qrcode" class="pull-right"></div>
     </div>

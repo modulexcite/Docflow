@@ -13,5 +13,9 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "EndDate", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public DateTime EndDate { get; set; }
+
+        [Display(Name = "DepartmentName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public String DepartmentName { get; set; }
+        public Guid? DepartmentTableId { get; set; }
     }
 }
