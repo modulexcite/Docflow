@@ -14,8 +14,8 @@ namespace RapidDoc.Controllers
     {
         private readonly IDocumentService _DocumentService;
         private readonly IDepartmentService _DepartmentService;
-        private readonly IEmplService _EmplService;
-        private readonly IAccountService _AccountService;
+        private readonly IEmplService       _EmplService;
+        private readonly IAccountService   _AccountService;
 
         public MonitoringController(IDocumentService documentService, IDepartmentService departmentService, IEmplService emplService, IAccountService accountService)
         {
@@ -43,6 +43,7 @@ namespace RapidDoc.Controllers
                 listdepartmentBufId = this.GetParentListDepartment(departmentTable);
                 listdepartmentId = listdepartmentId.Concat(listdepartmentBufId).Distinct().OrderBy(x => x).ToList();
             }
+
             return listdepartmentId;
         }
 
@@ -149,4 +150,5 @@ namespace RapidDoc.Controllers
                               pieOpenCountListValue = pieOpenCountList, pieOpenCountErrorListValue = pieOpenCountErrorList}, JsonRequestBehavior.AllowGet);
         }
 	}
+
 }

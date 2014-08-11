@@ -2,19 +2,19 @@
 @using RapidDoc.Extensions;
 
 <div id="comments" class="hidden-print">
-    @if (Model.Count() > 0)
+@if (Model.Count() > 0)
+{
+    foreach (var item in Model)
     {
-        foreach (var item in Model)
-        {
-            <div class="bs-callout bs-callout-info">
-                <h4>@item.EmplName <small>@item.TitleName</small></h4>
-                <p>@item.Comment</p>
-                <h5><small class="pull-right">@item.CreatedDate</small></h5>
-            </div>
-        }
+        <div class="bs-callout bs-callout-info">
+            <h4>@item.EmplName <small>@item.TitleName</small></h4>
+            <p>@item.Comment</p>
+            <h5><small class="pull-right">@item.CreatedDate</small></h5>
+        </div>
     }
-    else
-    {
-        <p class="text-center"><small class="text-center"><em>@UIElementRes.UIElement.NoItems</em></small></p>
-    }
+}
+else
+{
+    <p class="text-center hidden-print"><small class="text-center"><em>@UIElementRes.UIElement.NoItems</em></small></p>
+}
 </div>
