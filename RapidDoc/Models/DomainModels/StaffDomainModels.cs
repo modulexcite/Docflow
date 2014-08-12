@@ -81,6 +81,8 @@ namespace RapidDoc.Models.DomainModels
 
         public bool isIntegratedLDAP { get; set; }
 
+        public bool Enable { get; set; }
+
         public Guid? TitleTableId { get; set; }
         public virtual TitleTable TitleTable { get; set; }
 

@@ -401,6 +401,13 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.CreatedDate, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
 
+            Mapper.CreateMap<USR_REQ_IT_CAP_CreateUserADFreelance_Table, USR_REQ_IT_CAP_CreateUserADFreelance_View>();
+            Mapper.CreateMap<USR_REQ_IT_CAP_CreateUserADFreelance_View, USR_REQ_IT_CAP_CreateUserADFreelance_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
             Mapper.CreateMap<USR_REQ_IT_CAP_UnlockUserAD_Table, USR_REQ_IT_CAP_UnlockUserAD_View>();
             Mapper.CreateMap<USR_REQ_IT_CAP_UnlockUserAD_View, USR_REQ_IT_CAP_UnlockUserAD_Table>()
                 .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())

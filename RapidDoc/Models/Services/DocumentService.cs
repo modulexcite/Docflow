@@ -38,6 +38,7 @@ namespace RapidDoc.Models.Services
         SLAStatusList SLAStatus(Guid documentId, string currentUserName = "", ApplicationUser user = null);
         void SaveSignData(IEnumerable<WFTrackerTable> trackerTables, TrackerType trackerType);
         Guid SaveFile(FileTable file);
+        bool FileContains(Guid documentFileId);
         FileTable GetFile(Guid Id);
         IEnumerable<FileTable> GetAllFilesDocument(Guid documentFileId);
         string DeleteFile(Guid Id);
@@ -700,6 +701,11 @@ namespace RapidDoc.Models.Services
         public IEnumerable<FileTable> GetAllFilesDocument(Guid documentFileId)
         {
             return repoFile.FindAll(x => x.DocumentFileId == documentFileId);
+        }
+
+        public bool FileContains(Guid documentFileId)
+        {
+            return repoFile.Any(x => x.DocumentFileId == documentFileId);
         }
 
         public string DeleteFile(Guid Id)

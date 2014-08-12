@@ -24,7 +24,8 @@ namespace RapidDoc.Controllers
         public ActionResult Index()
         {
             ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
-            var model = _HistoryUserService.GetPartialView(x => x.ApplicationUserCreatedId == userTable.Id);
+            var model = _HistoryUserService.GetPartialView(x => x.ApplicationUserCreatedId == userTable.Id).OrderByDescending(x => x.CreatedDate);
+
             return View(model);
         }
 	}

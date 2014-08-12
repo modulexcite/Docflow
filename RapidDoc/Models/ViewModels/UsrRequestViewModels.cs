@@ -1015,6 +1015,45 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Сотовый и внутренний номер")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Contact { get; set; }
+
+        [Display(Name = "В штате, номер приказа")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Description { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_CreateUserADFreelance_View : BasicDocumentView
+    {
+        [Display(Name = "Active Directory")]
+        public bool ActiveDirectory { get; set; }
+
+        [Display(Name = "ФИО")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Name { get; set; }
+
+        [Display(Name = "Дата рождения")]
+        public DateTime? BirthDay { get; set; }
+
+        [Display(Name = "Должность")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Title { get; set; }
+
+        [Display(Name = "Непосредственный руководитель")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Users { get; set; }
+
+        [Display(Name = "Блок")]
+        public BlocksATK BlocksATK { get; set; }
+
+        [Display(Name = "Подразделение")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Department { get; set; }
+
+        [Display(Name = "Действует до")]
+        public DateTime? ToDate { get; set; }
+
+        [Display(Name = "Сотовый и внутренний номер")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Contact { get; set; }
     }
 
     public class USR_REQ_IT_CAP_RecoveryData_View : BasicDocumentView

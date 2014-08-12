@@ -725,6 +725,35 @@ namespace RapidDoc.Models.DomainModels
 
         [Required]
         public string Contact { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_CreateUserADFreelance_Table : BasicDocumentTable
+    {
+        public bool ActiveDirectory { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        public DateTime BirthDay { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string Users { get; set; }
+
+        public BlocksATK BlocksATK { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        public DateTime ToDate { get; set; }
+
+        [Required]
+        public string Contact { get; set; }
     }
 
     public class USR_REQ_IT_CAP_RecoveryData_Table : BasicDocumentTable

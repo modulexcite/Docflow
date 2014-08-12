@@ -89,6 +89,7 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_IT_CAP_AccessRightInternetZIF_Table> USR_REQ_IT_CAP_AccessRightInternetZIF_Table { get; set; }
         public DbSet<USR_REQ_IT_CAP_DelegationDocflow_Table> USR_REQ_IT_CAP_DelegationDocflow_Table { get; set; }
         public DbSet<USR_REQ_IT_CAP_CreateUserAD_Table> USR_REQ_IT_CAP_CreateUserAD_Table { get; set; }
+        public DbSet<USR_REQ_IT_CAP_CreateUserADFreelance_Table> USR_REQ_IT_CAP_CreateUserADFreelance_Table { get; set; }
         public DbSet<USR_REQ_IT_CAP_RecoveryData_Table> USR_REQ_IT_CAP_RecoveryData_Table { get; set; }
         public DbSet<USR_REQ_IT_CAP_ArchiveMail_Table> USR_REQ_IT_CAP_ArchiveMail_Table { get; set; }
         public DbSet<USR_REQ_IT_CAP_CreateUserLync_Table> USR_REQ_IT_CAP_CreateUserLync_Table { get; set; }

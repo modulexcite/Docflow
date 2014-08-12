@@ -160,80 +160,94 @@ function grid_init(url_json) {
         if (query.length == 0) return "?page=";
         return query + "&page=";
     };
+
+    $('table.grid-table > tbody > tr > td.empty:has(.text-warning)').css("background", "#f39c12");
+    $('table.grid-table > tbody > tr > td.empty:has(.text-danger)').css("background", "#e74c3c");
 }
 
 function custom_tagsinputEmpl_init(url_json) {
-    elt = $('input[data-role=tagsinputEmpl]');
-    elt.tagsinput({
-        itemValue: 'value',
-        itemText: 'text',
-        tagClass: function (item) {
-            return 'label label-primary bts-tags';
-        }
-    });
+    var element = document.getSelection('input[data-role=tagsinputEmpl]');
+    if (typeof (element) != 'undefined' && element != null) {
+        elt = $('input[data-role=tagsinputEmpl]');
+        elt.tagsinput({
+            itemValue: 'value',
+            itemText: 'text',
+            tagClass: function (item) {
+                return 'label label-primary bts-tags';
+            }
+        });
 
-    elt.tagsinput('input').typeahead({
-        valueKey: 'text',
-        prefetch: url_json,
-        template: '<p>{{text}}</p>',
-        engine: Hogan
+        elt.tagsinput('input').typeahead({
+            valueKey: 'text',
+            prefetch: url_json,
+            template: '<p>{{text}}</p>',
+            engine: Hogan
 
-    }).bind('typeahead:selected', $.proxy(function (obj, datum) {
-        this.tagsinput('add', datum);
-        this.tagsinput('input').typeahead('setQuery', '');
-    }, elt));
+        }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+            this.tagsinput('add', datum);
+            this.tagsinput('input').typeahead('setQuery', '');
+        }, elt));
 
-    currentValue = $('input[data-role=tagsinputEmpl]').val();
-    if (currentValue != null) {
-        currentArrData = currentValue.split(",");
-        $('input[data-role=tagsinputEmpl]').val('');
+        currentValue = $('input[data-role=tagsinputEmpl]').val();
+        if (currentValue != null) {
+            currentArrData = currentValue.split(",");
+            $('input[data-role=tagsinputEmpl]').val('');
 
-        if (currentArrData.length > 1) {
-            for (var i = 0; i < currentArrData.length; i += 2) {
-                var key = currentArrData[i];
-                var numValue = i;
-                numValue++;
-                var value = currentArrData[numValue];
-                $('input[data-role=tagsinputEmpl]').tagsinput('add', { "value": key, "text": value });
+            if (currentArrData.length > 1) {
+                for (var i = 0; i < currentArrData.length; i += 2) {
+                    var key = currentArrData[i];
+                    var numValue = i;
+                    numValue++;
+                    var value = currentArrData[numValue];
+                    $('input[data-role=tagsinputEmpl]').tagsinput('add', { "value": key, "text": value });
+                }
             }
         }
     }
 }
 
 function custom_tagsinputEmpl2_init(url_json) {
-    elt2 = $('input[data-role=tagsinputEmpl2]');
-    elt2.tagsinput({
-        itemValue: 'value',
-        itemText: 'text',
-        tagClass: function (item) {
-            return 'label label-primary bts-tags';
-        }
-    });
+    var element = document.getSelection('input[data-role=tagsinputEmpl2]');
+    if (typeof (element) != 'undefined' && element != null) {
+        try {
+            elt2 = $('input[data-role=tagsinputEmpl2]');
+            elt2.tagsinput({
+                itemValue: 'value',
+                itemText: 'text',
+                tagClass: function (item) {
+                    return 'label label-primary bts-tags';
+                }
+            });
 
-    elt2.tagsinput('input').typeahead({
-        valueKey: 'text',
-        prefetch: url_json,
-        template: '<p>{{text}}</p>',
-        engine: Hogan
+            elt2.tagsinput('input').typeahead({
+                valueKey: 'text',
+                prefetch: url_json,
+                template: '<p>{{text}}</p>',
+                engine: Hogan
 
-    }).bind('typeahead:selected', $.proxy(function (obj, datum) {
-        this.tagsinput('add', datum);
-        this.tagsinput('input').typeahead('setQuery', '');
-    }, elt2));
+            }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                this.tagsinput('add', datum);
+                this.tagsinput('input').typeahead('setQuery', '');
+            }, elt2));
 
-    currentValue = $('input[data-role=tagsinputEmpl2]').val();
-    if (currentValue != null) {
-        currentArrData = currentValue.split(",");
-        $('input[data-role=tagsinputEmpl2]').val('');
+            currentValue = $('input[data-role=tagsinputEmpl2]').val();
+            if (currentValue != null) {
+                currentArrData = currentValue.split(",");
+                $('input[data-role=tagsinputEmpl2]').val('');
 
-        if (currentArrData.length > 1) {
-            for (var i = 0; i < currentArrData.length; i += 2) {
-                var key = currentArrData[i];
-                var numValue = i;
-                numValue++;
-                var value = currentArrData[numValue];
-                $('input[data-role=tagsinputEmpl2]').tagsinput('add', { "value": key, "text": value });
+                if (currentArrData.length > 1) {
+                    for (var i = 0; i < currentArrData.length; i += 2) {
+                        var key = currentArrData[i];
+                        var numValue = i;
+                        numValue++;
+                        var value = currentArrData[numValue];
+                        $('input[data-role=tagsinputEmpl2]').tagsinput('add', { "value": key, "text": value });
+                    }
+                }
             }
+        }
+        catch (e) {
+
         }
     }
 }

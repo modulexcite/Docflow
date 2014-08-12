@@ -237,7 +237,8 @@ namespace RapidDoc.Controllers
                     TitleTableId = _titleId,
                     CompanyTableId = _company,
                     WorkScheduleTableId = _WorkScheduleService.FirstOrDefault(x => x.Id != null).Id,
-                    ManageId = manageId
+                    ManageId = manageId,
+                    Enable = true
                 }, "Admin");
             }
             else

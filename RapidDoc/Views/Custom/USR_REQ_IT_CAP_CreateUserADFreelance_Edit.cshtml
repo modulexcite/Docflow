@@ -1,4 +1,4 @@
-﻿@model RapidDoc.Models.ViewModels.USR_REQ_IT_CAP_CreateUserAD_View
+﻿@model RapidDoc.Models.ViewModels.USR_REQ_IT_CAP_CreateUserADFreelance_View
 @{
     Model.ActiveDirectory = true;          
 }
@@ -10,12 +10,6 @@
 </div>
 <div class="editor-field">
     @Html.CheckBoxFor(model => Model.ActiveDirectory, new { @disabled = true })
-</div>
-<div class="editor-label">
-    @Html.LabelFor(model => Model.Exchange)
-</div>
-<div class="editor-field">
-    @Html.CheckBoxFor(model => Model.Exchange)
 </div>
 <div class="editor-label">
     @Html.LabelForRequired(model => Model.Name)
@@ -60,12 +54,15 @@
     @Html.TextBoxFor(model => Model.Contact, new { @class = "form-control", @rows = "1", placeholder = "Сотовый и внутренний номер" })
 </div>
 <div class="editor-label">
-    @Html.LabelForRequired(model => Model.Description)
+    @Html.LabelForRequired(model => Model.ToDate)
 </div>
 <div class="editor-field">
-    @Html.TextBoxFor(model => Model.Description, new { @class = "form-control", @rows = "1", placeholder = "В штате, №5604" })
+    @Html.TextBoxFor(model => Model.ToDate, new { @class = "datepicker", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), placeholder = "Действует до", startDate = "" })
 </div>
 <br>
 <div class="alert alert-info" role="alert">
-    <p>Нужно обязательно прикрепить фотографию(формат 3x4) в заявке</p>
+    <p>
+        Примечание:
+        После окончания срока действия учетная запись будет автоматически заблокирована.
+    </p>
 </div>

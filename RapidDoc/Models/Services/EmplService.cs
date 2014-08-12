@@ -166,7 +166,7 @@ namespace RapidDoc.Models.Services
 
         public object GetJsonEmpl()
         {
-            var jsondata = from c in GetAll()
+            var jsondata = from c in GetPartial(x => x.Enable == true)
                            select new
                            {
                                value = string.Format("{0},({1}) {2} - {3}", c.Id, c.AliasCompanyName, c.FullName, c.TitleName),

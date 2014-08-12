@@ -756,13 +756,13 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            CheckCustomDocument(typeActionModel, actionModel);
+            CheckCustomDocument(typeActionModel, actionModel, fileId);
 
             ActionResult view = RoutePostMethod(processId, actionModel, type, documentId, fileId, actionModelName, files, documentData, approveDoc, rejectDoc, lastComment);
             return view;
         }
 
-        private void CheckCustomDocument(Type type, dynamic actionModel)
+        private void CheckCustomDocument(Type type, dynamic actionModel, Guid fileId)
         {
             if(type == (new USR_REQ_IT_CTS_SetPersonalButton_View()).GetType())
             {
@@ -837,6 +837,30 @@ namespace RapidDoc.Controllers
                 if (actionModel.DocumentDate == null)
                 {
                     ModelState.AddModelError(string.Empty, "Дата должна быть заполнена");
+                }
+            }
+
+            if (type == (new USR_REQ_IT_CAP_CreateUserAD_View()).GetType())
+            {
+                if (!_DocumentService.FileContains(fileId))
+                {
+                    ModelState.AddModelError(string.Empty, "Не прикреплена фотография(формат 3x4)");
+                }
+                if (actionModel.BirthDay == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Дата рождения должна быть заполнена");
+                }
+            }
+
+            if (type == (new USR_REQ_IT_CAP_CreateUserADFreelance_View()).GetType())
+            {
+                if (actionModel.BirthDay == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Дата рождения должна быть заполнена");
+                }
+                if (actionModel.ToDate == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Дата действует должна быть заполнена");
                 }
             }
 

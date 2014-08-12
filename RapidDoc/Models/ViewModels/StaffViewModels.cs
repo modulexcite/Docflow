@@ -54,6 +54,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "MiddleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string MiddleName { get; set; }
 
+        [Display(Name = "Enable", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public bool Enable { get; set; }
+
         public Guid? TitleTableId { get; set; }
         public Guid? ProfileTableId { get; set; }
         public Guid? DepartmentTableId { get; set; }

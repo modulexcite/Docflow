@@ -4,14 +4,13 @@
     var groups = Model.GroupBy(x => x.CreatedDate.ToShortDateString());
 }
 
-<h3>
-    <span class="fa fa fa-list"></span> @UIElementRes.UIElement.History
-
-    <small>
-        &nbsp;
-        @Html.ActionLink(UIElementRes.UIElement.MyProcesses, "Index", "Home")
-    </small>
-</h3>
+<br class="hidden-print">
+<ul class="nav nav-tabs" role="tablist">
+    <li><a href="@Url.Action("Index", "Home")"><span class="fa fa-tasks"></span> @UIElementRes.UIElement.MyProcesses</a></li>
+    <li><a href="@Url.Action("AgreedDocuments", "Document")"><span class="fa fa-check-circle"></span> @UIElementRes.UIElement.AgreedDocument</a></li>
+    <li class="active"><a href="@Url.Action("Index", "HistoryUser")"><strong><span class="fa fa-list"></span> @UIElementRes.UIElement.History</strong></a></li>
+    <li><a href="@Url.Action("ArchiveDocuments", "Document")"><span class="fa fa-archive"></span> @UIElementRes.UIElement.DocumentArchive</a></li>
+</ul>
 <br />
 <div>
 @foreach (var group in groups)
