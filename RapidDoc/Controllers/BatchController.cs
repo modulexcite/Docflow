@@ -84,13 +84,33 @@ namespace RapidDoc.Controllers
                             {
                                 foreach (var reviewTable in reviewDocuments)
                                 {
-                                    if (reviewTable.CreatedDate <= DateTime.UtcNow.AddMonths(-2))
+                                    if (reviewTable.CreatedDate <= DateTime.UtcNow.AddDays(-10))
                                     {
                                         reviewTable.isArchive = true;
                                         _ReviewDocLogService.SaveDomain(reviewTable);
                                     }
                                 }
                             }
+                        }
+                    }
+                    break;
+                case 4:
+                    if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
+                    {
+                        var users = _AccountService.GetPartial(x => x.Email != null);
+                        List<CheckSLAStatus> checkData = new List<CheckSLAStatus>();
+
+                        foreach (var document in allDocument)
+                        {
+                            var checkUser = _Documentservice.GetAllUserCurrentStep(document, false);
+                            checkData.Add(new CheckSLAStatus(document, checkUser));
+                        }
+
+                        foreach (var user in users)
+                        {
+                            var userDocuments = checkData.Where(x => x.TrackerUsers.Any(a => a.UserId == user.Id)).GroupBy(b => b.DocumentTable).Select(group => group.Key).ToList();
+                            if (userDocuments.Count() > 0)
+                                _Emailservice.SendReminderEmail(user.Id, userDocuments);
                         }
                     }
                     break;

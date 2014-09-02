@@ -19,6 +19,9 @@ using System.Text.RegularExpressions;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Infrastructure;
 using RapidDoc.Models.Repository;
+using RapidDoc.Models.Infrastructure;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Controllers
 {
@@ -271,6 +274,20 @@ namespace RapidDoc.Controllers
             if (emplTable == null) return HttpNotFound();
 
             ProcessView process = _ProcessService.FindView(id);
+
+            ApplicationDbContext context = new ApplicationDbContext();
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            if (!String.IsNullOrEmpty(process.RoleId))
+            {
+                string roleName = RoleManager.FindById(process.RoleId).Name;
+                if (!UserManager.IsInRole(userTable.Id, roleName))
+                {
+                    return HttpNotFound();
+                }
+            }
+            context.Dispose();
+
             var viewModel = new DocumentComposite();
             viewModel.ProcessView = process;
             viewModel.docData = _DocumentService.RouteCustomModelView(process.TableName);
@@ -411,7 +428,7 @@ namespace RapidDoc.Controllers
                 
             }
 
-            return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id }) });
+            return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id, isAfterView = true }) });
         }
 
         private IEnumerable<EmplView> InitializeReaderView(Guid id)
@@ -489,7 +506,7 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id }) });
+            return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id, isAfterView = true }) });
         }
 
         public JsonResult AjaxUpload(HttpPostedFileBase filelist, Guid documentFileId)
@@ -852,6 +869,14 @@ namespace RapidDoc.Controllers
                 }
             }
 
+            if (type == (new USR_REQ_IT_CAP_AddOrChangeTemplate_View()).GetType())
+            {
+                if (!_DocumentService.FileContains(fileId))
+                {
+                    ModelState.AddModelError(string.Empty, "Не прикреплено тех. задание в заявке");
+                }
+            }
+
             if (type == (new USR_REQ_IT_CAP_CreateUserADFreelance_View()).GetType())
             {
                 if (actionModel.BirthDay == null)
@@ -911,6 +936,22 @@ namespace RapidDoc.Controllers
                     {
                         ModelState.AddModelError(string.Empty, "Не правильно указан сервис ИТ");
                     }
+                }
+            }
+
+            if (type == (new USR_REQ_IT_CAP_ChangeOrder_View()).GetType())
+            {
+                if (actionModel.OrderDate == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Дата регистрации должна быть заполнена");
+                }
+            }
+
+            if (type == (new USR_REQ_IT_CAP_ChangeOrderWage_View()).GetType())
+            {
+                if (actionModel.OrderDate == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Дата регистрации должна быть заполнена");
                 }
             }
         }

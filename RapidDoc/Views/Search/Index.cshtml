@@ -3,7 +3,7 @@
 
 @{
     ViewBag.Title = UIElementRes.UIElement.Search;
-    int searchNumber = ViewBag.SearchResult != null ? ((IEnumerable<RapidDoc.Models.ViewModels.SearchView>)ViewBag.SearchResult).Count() : 0;
+    int searchNumber = ViewBag.SearchResult != null ? ViewBag.SearchCount : 0;
 }
 <br>
 @using (Html.BeginForm())
@@ -19,37 +19,70 @@
 <br>
 <br>
 @if (ViewBag.SearchResult != null)
-{ 
-    <div>@(searchNumber > 0 ? UIElementRes.UIElement.SearchResultText + searchNumber.ToString() : "" )</div>
+{
+    <div>@(searchNumber > 0 ? UIElementRes.UIElement.SearchResultText + searchNumber.ToString() : "")</div>
     foreach (var item in ViewBag.SearchResult)
     {
-        <div class="bs-callout bs-callout">
-            <h4>
-            @if(item.isShow == true)
-            {
-                @Html.ActionLink((string)item.DocumentNum, "ShowDocument", "Document", new { id = item.DocumentTableId, isAfterView = true }, null)
-            }
-            else
-            {
-                @item.DocumentNum
-            }
-            </h4>
-            @if (item.isShow == true)
-            {
+        if (item.isShow == true)
+        {
+            <div class="bs-callout bs-callout-info">
+                <h4>
+                    @Html.ActionLink((string)item.DocumentNum, "ShowDocument", "Document", new { id = item.DocumentTableId, isAfterView = true }, null)
+                </h4>
                 <p>@(((string)item.DocumentText).Length > 256 ? ((string)item.DocumentText).Substring(0, 252) + " ..." : item.DocumentText)</p>
-            }
-            else
-            {
+                <h6 class="pull-right">@item.CreatedUserName</h6>
+            </div>
+        }
+        else
+        {
+            <div class="bs-callout bs-callout-danger">
+                <h4>
+                    @item.DocumentNum
+                </h4>
                 <p>@UIElementRes.UIElement.NoAccess</p>
-            }
-        </div>
-    }     
+                <h6 class="pull-right">@item.CreatedUserName</h6>
+            </div>
+        }
+    }
 }
+<div id="searchAjaxResult"></div>
+
+<div id="loadingDiv"
+     style="text-align: center; display: none; margin-bottom: 20px;">
+    <img alt="Loading"
+         src="@Url.Content("~/Content/Custom/image-icon/autoload.gif")" />
+</div>
 
 @section jslaunch {
+    var blockNumber = 2;
+    var NoMoreData = false;
+    var inProgress = false;
+    var searchText = $("#SearchText").val();
+
     $('input').keydown(function(e) {
-        if (e.keyCode == 13) {
-            $(this).closest('form').submit();
-        }
+    if (e.keyCode == 13) {
+    $(this).closest('form').submit();
+    }
     });
+
+    $(window).scroll(function () {
+    if ($(window).scrollTop() == $(document).height() - $(window).height() && !NoMoreData)
+    {
+    inProgress = true;
+    $("#loadingDiv").show();
+    $.post("@Url.Action("InfinateScroll", "Search")", { BlockSize : blockNumber, SearchText : searchText},
+    function (data) {
+
+    blockNumber = blockNumber + 1;
+    NoMoreData = data.NoMoreData;
+    $("#searchAjaxResult").append(data.HTMLString);
+    $("#loadingDiv").hide();
+    inProgress = false;
+    });
+    }
+    });
+
+    function clearTextSearch(result) {
+    $('#SearchText').val(searchText);
+    }
 }

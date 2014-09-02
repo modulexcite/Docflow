@@ -374,7 +374,22 @@ namespace RapidDoc.Models.Services
 
                 documentTable.WWFInstanceId = application.Id;
                 documentTable.DocumentState = (DocumentState)outputParameters["outputStep"];
-                _DocumentService.UpdateDocument(documentTable);
+
+                int retries = 3;
+                while (retries > 0)
+                {
+                    try
+                    {
+                        _DocumentService.UpdateDocument(documentTable);
+                        break;
+                    }
+                    catch
+                    {
+                        retries = retries - 1;
+                        if (retries <= 0) throw;
+                            Thread.Sleep(1000);
+                    }
+                }
 
                 CustomParamUpdate(documentTable, documentData);
 

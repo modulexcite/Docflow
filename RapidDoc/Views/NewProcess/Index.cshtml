@@ -8,7 +8,7 @@
 @using (Ajax.BeginForm("SearchProcess", new AjaxOptions { UpdateTargetId = "searchResult", OnComplete = "clearTextSearch" }))
 {
 <div class="row">
-    <div class="col-md-2"><p class="featurette-heading">Найти</p></div>
+    <div class="col-md-2"><p class="featurette-heading">@UIElementRes.UIElement.Search</p></div>
     <div class="col-md-9">
         <div class="form-group">
             @Html.TextBox("SearchText", "", new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = UIElementRes.UIElement.SearchText, @x_webkit_speech = "" })
@@ -24,7 +24,7 @@
 <hr class="featurette-divider">
 
 <div class="row">
-    <div class="col-md-2"><p class="featurette-heading">Выбрать</p></div>
+    <div class="col-md-2"><p class="featurette-heading">@UIElementRes.UIElement.Choose</p></div>
     <div class="col-md-10">
         <ol class="breadcrumb">
             <li><a href=@Url.Action("Index", "Home")>@UIElementRes.UIElement.Dashboard</a></li>
@@ -46,14 +46,14 @@
 <hr class="featurette-divider">
 
 <div class="row">
-    <div class="col-md-2"><p class="featurette-heading">ТОП</p></div>
+    <div class="col-md-2"><p class="featurette-heading">@UIElementRes.UIElement.TOP</p></div>
     <div class="col-md-10">
         @foreach (var item in (List<RapidDoc.Models.ViewModels.ProcessView>)ViewBag.TopProcess)
         {
-            <div class="col-xs-6 col-md-4">
+            <div class="col-md-4">
                 <a href=@Url.Action("Create", "Document", new { id=item.Id }) class="thumbnail tile">
                     <h4>@item.ProcessName</h4>
-                    <p>@item.Description</p>
+                    <p class="tile-description"><em>@item.Description</em></p>
                 </a>
             </div>
         }

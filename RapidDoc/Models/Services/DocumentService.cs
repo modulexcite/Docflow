@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Web;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -45,6 +46,7 @@ namespace RapidDoc.Models.Services
         List<ApplicationUser> GetSignUsers(DocumentTable docuTable);
         List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status);
         DateTime? GetSLAPerformDate(Guid DocumentId, DateTime? CreatedDate, double SLAOffset);
+        List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable, bool executorStep);
     }
 
     public class DocumentService : IDocumentService
@@ -663,16 +665,23 @@ namespace RapidDoc.Models.Services
 
             foreach (var trackerTable in trackerTables)
             {
-                try
+                int retries = 3;
+                while (retries > 0)
                 {
-                    trackerTable.SignDate = DateTime.UtcNow;
-                    trackerTable.SignUserId = userTable.Id;
-                    trackerTable.TrackerType = trackerType;
-                    _WorkflowTrackerService.SaveDomain(trackerTable);
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
+                    try
+                    {
+                        trackerTable.SignDate = DateTime.UtcNow;
+                        trackerTable.SignUserId = userTable.Id;
+                        trackerTable.TrackerType = trackerType;
+                        _WorkflowTrackerService.SaveDomain(trackerTable);
+                        break;
+                    }
+                    catch
+                    {
+                        retries = retries - 1;
+                        if (retries <= 0) throw;
+                        Thread.Sleep(1000);
+                    }
                 }
             }
         }
@@ -740,6 +749,22 @@ namespace RapidDoc.Models.Services
                             users.AddRange(item.Users);
                         }
                     }
+                }
+            }
+
+            return users;
+        }
+
+        public List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable, bool executorStep)
+        {
+            List<WFTrackerUsersTable> users = new List<WFTrackerUsersTable>();
+            IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting && x.ExecutionStep == executorStep);
+
+            if (items != null)
+            {
+                foreach (var item in items)
+                {
+                    users.AddRange(item.Users);
                 }
             }
 

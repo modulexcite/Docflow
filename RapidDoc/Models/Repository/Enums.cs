@@ -431,4 +431,13 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "ЗИФ")]
         Element2 = 1
     }
+
+    public enum AddOrChange : byte
+    {
+        [Display(Name = "Разработать")]
+        Element1 = 0,
+
+        [Display(Name = "Модифицировать")]
+        Element2 = 1
+    }
 }

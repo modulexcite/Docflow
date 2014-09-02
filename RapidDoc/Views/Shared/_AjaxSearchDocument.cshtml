@@ -1,0 +1,29 @@
+﻿@model List<RapidDoc.Models.ViewModels.SearchView>
+@using RapidDoc.Extensions;
+
+@if (ViewBag.SearchResult != null)
+{
+    foreach (var item in ViewBag.SearchResult)
+    {
+        if (item.isShow == true)
+        {
+            <div class="bs-callout bs-callout-info">
+                <h4>
+                    @Html.ActionLink((string)item.DocumentNum, "ShowDocument", "Document", new { id = item.DocumentTableId, isAfterView = true }, null)
+                </h4>
+                <p>@(((string)item.DocumentText).Length > 256 ? ((string)item.DocumentText).Substring(0, 252) + " ..." : item.DocumentText)</p>
+                <h6 class="pull-right">@item.CreatedUserName</h6>
+            </div>
+        }
+        else
+        {
+            <div class="bs-callout bs-callout-danger">
+                <h4>
+                    @item.DocumentNum
+                </h4>
+                <p>@UIElementRes.UIElement.NoAccess</p>
+                <h6 class="pull-right">@item.CreatedUserName</h6>
+            </div>
+        }
+    }
+}

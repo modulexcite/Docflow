@@ -98,6 +98,11 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_IT_CAP_NoLinkInternet_Table> USR_REQ_IT_CAP_NoLinkInternet_Table { get; set; }
         public DbSet<USR_REQ_IT_CAP_CapacityMail_Table> USR_REQ_IT_CAP_CapacityMail_Table { get; set; }
         public DbSet<USR_REQ_IT_CAP_HardSoftwareMaintenance_Table> USR_REQ_IT_CAP_HardSoftwareMaintenance_Table { get; set; }
+        public DbSet<USR_REQ_IT_CAP_ChangeRoute_Table> USR_REQ_IT_CAP_ChangeRoute_Table { get; set; }
+        public DbSet<USR_REQ_IT_CAP_CreateUserLotus_Table> USR_REQ_IT_CAP_CreateUserLotus_Table { get; set; }
+        public DbSet<USR_REQ_IT_CAP_AddOrChangeTemplate_Table> USR_REQ_IT_CAP_AddOrChangeTemplate_Table { get; set; }
+        public DbSet<USR_REQ_IT_CAP_ChangeOrder_Table> USR_REQ_IT_CAP_ChangeOrder_Table { get; set; }
+        public DbSet<USR_REQ_IT_CAP_ChangeOrderWage_Table> USR_REQ_IT_CAP_ChangeOrderWage_Table { get; set; }
 
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {

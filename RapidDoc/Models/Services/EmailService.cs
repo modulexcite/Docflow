@@ -19,6 +19,7 @@ using System.Globalization;
 using System.Threading;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace RapidDoc.Models.Services
 {
@@ -41,6 +42,7 @@ namespace RapidDoc.Models.Services
         void SendNewExecutorEmail(Guid documentId, string userId);
         void SendSLAWarningEmail(string userId, IEnumerable<DocumentTable> documents);
         void SendSLADisturbanceEmail(string userId, IEnumerable<DocumentTable> documents);
+        void SendReminderEmail(string userId, IEnumerable<DocumentTable> documents);
     }
 
     public class EmailService : IEmailService
@@ -182,7 +184,7 @@ namespace RapidDoc.Models.Services
             }
         }
 
-        private void CreateMessange(EmailTemplateType type, DocumentTable docuTable, ApplicationUser userTable, string templateName, string documentUri, string bodyText, string subject, string[] parameters, string[] parameters2 = null)
+        private void CreateMessange(EmailTemplateType type, DocumentTable docuTable, ApplicationUser userTable, string templateName, string documentUri, string bodyText, string subject, string[] parameters, string[] parameters2 = null, string[] parameters3 = null)
         {
             var emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id);
 
@@ -223,7 +225,7 @@ namespace RapidDoc.Models.Services
                         break;
 
                     case EmailTemplateType.SLAStatus:
-                        body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = parameters, DocumentNums = parameters2, EmplName = emplTable.FullName, BodyText = bodyText });
+                        body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = parameters, DocumentNums = parameters2, documentText = parameters3, EmplName = emplTable.FullName, BodyText = bodyText });
                         break;
                 }
                 SendEmail(emailParameter, new string[] { userTable.Email }, new string[] { }, subject, body);
@@ -243,7 +245,6 @@ namespace RapidDoc.Models.Services
                 ApplicationUser userTable = _AccountService.Find(docuTable.ApplicationUserCreatedId);
                 if (userTable.Email != String.Empty)
                 {
-
                     string documentUri = HttpContext.Current.Request.UrlReferrer.AbsoluteUri.Replace("Create", "ShowDocument");
                     documentUri = documentUri.Substring(0, documentUri.Length - 36);
                     documentUri = documentUri + docuTable.Id.ToString();
@@ -265,7 +266,7 @@ namespace RapidDoc.Models.Services
                 {
                     if (user.Email != String.Empty)
                     {
-                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
+                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                         CreateMessange(EmailTemplateType.Default, docuTable, user, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendExecutorEmail, String.Format("Требуется ваша подпись, документ [{0}]", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                     }
                 }
@@ -278,11 +279,37 @@ namespace RapidDoc.Models.Services
 
             if (docuTable != null)
             {
-                ApplicationUser userTable = _AccountService.Find(docuTable.ApplicationUserCreatedId);
-                if (userTable.Email != String.Empty)
+                List<string> userList = new List<string>();
+                userList.Add(docuTable.ApplicationUserCreatedId);
+
+                if(docuTable.ProcessTable.TableName == "USR_REQ_IT_CTP_IncidentIT")
                 {
-                    string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
-                    CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorRejectEmail, String.Format("Ваш документ [{0}] был отменен", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
+                    var tableModel = _DocumentService.RouteCustomRepository(docuTable.ProcessTable.TableName).GetById(docuTable.RefDocumentId);
+                    if (tableModel != null)
+                    {
+                        string[] array = tableModel.Users.Split(',');
+                        Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
+                        string[] result = array.Where(a => isGuid.IsMatch(a) == true).ToArray();
+                        foreach (var item in result)
+                        {
+                            Guid emplId = Guid.Parse(item);
+                            EmplTable empl = _EmplService.Find(emplId);
+                            if (empl != null && empl.ApplicationUserId != null && empl.ApplicationUserId != docuTable.ApplicationUserCreatedId)
+                            {
+                                userList.Add(empl.ApplicationUserId);
+                            }
+                        }
+                    }
+                }
+
+                foreach (var userId in userList)
+                {
+                    ApplicationUser userTable = _AccountService.Find(userId);
+                    if (userTable.Email != String.Empty)
+                    {
+                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
+                        CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorRejectEmail, String.Format("Ваш документ [{0}] был отменен", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
+                    }
                 }
             }
         }
@@ -366,6 +393,7 @@ namespace RapidDoc.Models.Services
             ApplicationUser userTable = _AccountService.Find(userId);
             List<string> documentUrls = new List<string>();
             List<string> documentNums = new List<string>();
+            List<string> documentText = new List<string>();
 
             if (userTable.Email != String.Empty)
             {
@@ -373,11 +401,12 @@ namespace RapidDoc.Models.Services
                 foreach (var document in documents)
                 {
                     num++;
-                    documentUrls.Add("http://" + HttpContext.Current.Request.Url.Authority + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id);
+                    documentUrls.Add("http://" + HttpContext.Current.Request.Url.Authority + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id + "?isAfterView=true");
                     documentNums.Add(document.DocumentNum + " - " + document.ProcessName);
+                    documentText.Add(document.DocumentText);
                 }
 
-                CreateMessange(EmailTemplateType.SLAStatus, null, userTable, @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml", null, UIElementRes.UIElement.SendSLAWarningEmail, String.Format("Срок исполнения подходит к концу"), documentUrls.ToArray(), documentNums.ToArray());
+                CreateMessange(EmailTemplateType.SLAStatus, null, userTable, @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml", null, UIElementRes.UIElement.SendSLAWarningEmail, String.Format("Срок исполнения подходит к концу"), documentUrls.ToArray(), documentNums.ToArray(), documentText.ToArray());
             }
         }
 
@@ -386,6 +415,7 @@ namespace RapidDoc.Models.Services
             ApplicationUser userTable = _AccountService.Find(userId);
             List<string> documentUrls = new List<string>();
             List<string> documentNums = new List<string>();
+            List<string> documentText = new List<string>();
 
             if (userTable.Email != String.Empty)
             {
@@ -393,11 +423,34 @@ namespace RapidDoc.Models.Services
                 foreach (var document in documents)
                 {
                     num++;
-                    documentUrls.Add("http://" + HttpContext.Current.Request.Url.Authority + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id);
+                    documentUrls.Add("http://" + HttpContext.Current.Request.Url.Authority + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id + "?isAfterView=true");
                     documentNums.Add(document.DocumentNum + " - " + document.ProcessName);
+                    documentText.Add(document.DocumentText);
                 }
 
-                CreateMessange(EmailTemplateType.SLAStatus, null, userTable, @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml", null, UIElementRes.UIElement.SendSLADisturbanceEmail, String.Format("Исполнение по документам просрочено"), documentUrls.ToArray(), documentNums.ToArray());
+                CreateMessange(EmailTemplateType.SLAStatus, null, userTable, @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml", null, UIElementRes.UIElement.SendSLADisturbanceEmail, String.Format("Исполнение по документам просрочено"), documentUrls.ToArray(), documentNums.ToArray(), documentText.ToArray());
+            }
+        }
+
+        public void SendReminderEmail(string userId, IEnumerable<DocumentTable> documents)
+        {
+            ApplicationUser userTable = _AccountService.Find(userId);
+            List<string> documentUrls = new List<string>();
+            List<string> documentNums = new List<string>();
+            List<string> documentText = new List<string>();
+
+            if (userTable.Email != String.Empty)
+            {
+                int num = 0;
+                foreach (var document in documents)
+                {
+                    num++;
+                    documentUrls.Add("http://" + HttpContext.Current.Request.Url.Authority + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id + "?isAfterView=true");
+                    documentNums.Add(document.DocumentNum + " - " + document.ProcessName);
+                    documentText.Add(document.DocumentText);
+                }
+
+                CreateMessange(EmailTemplateType.SLAStatus, null, userTable, @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml", null, "У вас на подписи находятся следующие документы", String.Format("Документы на подписи"), documentUrls.ToArray(), documentNums.ToArray(), documentText.ToArray());
             }
         }
 

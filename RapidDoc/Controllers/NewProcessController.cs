@@ -8,6 +8,8 @@ using RapidDoc.Models.Infrastructure;
 using RapidDoc.Models.Interfaces;
 using RapidDoc.Models.ViewModels;
 using RapidDoc.Models.DomainModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Controllers
 {
@@ -43,18 +45,44 @@ namespace RapidDoc.Controllers
             }
 
             List<ProcessView> topProcess = new List<ProcessView>();
-            var processes = _DocumentService.GetAll().GroupBy(x => x.ProcessTableId).Select(g => new { ProcessTableId = g.Key, Count = g.Count() }).OrderByDescending(i => i.Count).Select(y => y.ProcessTableId).Take(6).ToList();
+            var processes = _DocumentService.GetAll().GroupBy(x => x.ProcessTableId).Select(g => new { ProcessTableId = g.Key, Count = g.Count() }).OrderByDescending(i => i.Count).Select(y => y.ProcessTableId).ToList();
 
+            int num = 0;
             if (processes != null)
             {
                 foreach (var processId in processes)
                 {
-                    topProcess.Add(_ProcessService.FindView(processId));
+                    if(num > 8)
+                    {
+                        break;
+                    }
+
+                    ApplicationDbContext context = new ApplicationDbContext();
+                    UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                    RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+                    List<ProcessView> result = new List<ProcessView>();
+                    string userId = User.Identity.GetUserId();
+                    ProcessView process = _ProcessService.FindView(processId);
+
+                    if (!String.IsNullOrEmpty(process.RoleId))
+                    {
+                        string roleName = RoleManager.FindById(process.RoleId).Name;
+                        if (UserManager.IsInRole(userId, roleName))
+                        {
+                            num++;
+                            topProcess.Add(process);
+                        }
+                    }
+                    else
+                    {
+                        num++;
+                        topProcess.Add(process);
+                    }
+                    context.Dispose();
                 }
             }
 
             ViewBag.TopProcess = topProcess;
-
             return View(_GroupProcessService.GetPartialView(x => x.GroupProcessParentId == null));
         }
 
@@ -67,8 +95,31 @@ namespace RapidDoc.Controllers
             var groupChildItems = _GroupProcessService.GetPartialView(x => x.GroupProcessParentId == groupProcessId);
             if(groupChildItems.Count() == 0)
             {
-                var model = _ProcessService.GetPartialView(x => x.GroupProcessTableId == groupProcessId && x.isApproved == true);
-                return View(model);
+                var model = _ProcessService.GetPartialView(x => x.GroupProcessTableId == groupProcessId && x.isApproved == true).OrderBy(x => x.ProcessName);
+
+                ApplicationDbContext context = new ApplicationDbContext();
+                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+                List<ProcessView> result = new List<ProcessView>();
+                string userId = User.Identity.GetUserId();
+                foreach (var item in model)
+                {
+                    if (!String.IsNullOrEmpty(item.RoleId))
+                    {
+                        string roleName = RoleManager.FindById(item.RoleId).Name;
+                        if (UserManager.IsInRole(userId, roleName))
+                        {
+                            result.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        result.Add(item);
+                    }
+                }
+                context.Dispose();
+
+                return View(result);
             }
             else
             {
@@ -96,7 +147,30 @@ namespace RapidDoc.Controllers
             if (searchString.Length > 2)
             {
                 var model = _ProcessService.GetPartialView(x => x.ProcessName.Contains(searchString));
-                return PartialView("_SearchResultProcess", model);
+                
+                ApplicationDbContext context = new ApplicationDbContext();
+                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+                List<ProcessView> result = new List<ProcessView>();
+                string userId = User.Identity.GetUserId();
+                foreach (var item in model)
+                {
+                    if (!String.IsNullOrEmpty(item.RoleId))
+                    {
+                        string roleName = RoleManager.FindById(item.RoleId).Name;
+                        if (UserManager.IsInRole(userId, roleName))
+                        {
+                            result.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        result.Add(item);
+                    }
+                }
+                context.Dispose();
+
+                return PartialView("_SearchResultProcess", result);
             }
 
             return null;

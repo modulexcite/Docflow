@@ -20,6 +20,11 @@
     
 }
 
+@helper CreatedByFull(RapidDoc.Models.DomainModels.DocumentTable item)
+{
+    <abbr title="@item.FullName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@item.DepartmentName - @item.TitleName">@item.CreatedBy</abbr>
+}
+
 @Html.Grid(Model).Named("ordersGrid").Columns(columns =>
 {
     columns.Add(o => o.Id).Css("hidden");
@@ -42,5 +47,5 @@
     columns.Add(o => o.ActivityName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).ActivityName).ToHtmlString()).Sortable(true).Filterable(true);
     columns.Add(o => o.DocumentState).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).DocumentState).ToHtmlString()).Sortable(true).Filterable(true).RenderValueAs(o => o.DocumentState.GetDescription());
     columns.Add(o => o.CreatedDate).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).CreatedDate).ToHtmlString()).Sortable(true).Filterable(false).RenderValueAs(o => Html.DateTimeLocalFor(modelItem => o.CreatedDate, (string)ViewBag.CurrentTimeId));
-    columns.Add(o => o.CreatedBy).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).CreatedBy).ToHtmlString()).Sortable(false).Filterable(false);
+    columns.Add(o => o.CreatedBy).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.DomainModels.DocumentTable)o.Columns).CreatedBy).ToHtmlString()).Encoded(false).Sortable(false).Sanitized(false).Filterable(false).RenderValueAs(o => CreatedByFull(o));
 }).Selectable(true).SetLanguage(UIElementRes.UIElement.LangName).WithPaging(30).SetColCssClasses(o => o.isNotReview ? "" : "info allocation text-center empty")

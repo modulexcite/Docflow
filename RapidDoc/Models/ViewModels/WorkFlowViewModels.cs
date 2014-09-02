@@ -40,6 +40,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "TableName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string TableName { get; set; }
 
+        public string RoleId { get; set; }
         public Guid? GroupProcessTableId { get; set; }
         public Guid? WorkScheduleTableId { get; set; }
 
@@ -51,6 +52,9 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "WorkScheduleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string WorkScheduleName { get; set; }
+
+        [Display(Name = "RoleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string RoleName { get; set; }
     }
 
     public class DocumentComposite
@@ -92,6 +96,19 @@ namespace RapidDoc.Models.ViewModels
         public bool isArchive { get; set; }
 
         public bool isShow { get; set; }
+
+        [Display(Name = "FirstName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string FullName { get; set; }
+
+        [StringLength(256, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "TitleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string TitleName { get; set; }
+
+        [StringLength(256, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "DepartmentName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string DepartmentName { get; set; }
     }
 
     public class WFTrackerListView : BasicCompanyNullView
@@ -149,11 +166,14 @@ namespace RapidDoc.Models.ViewModels
         public string DocumentNum { get; set; }
         public string ProcessName { get; set; }
         public bool isShow { get; set; }
+        public string CreatedUserName { get; set; }
     }
 
     public class SearchFormView
     {
         public string SearchText { get; set; }
+        public string HTMLString { get; set; }
+        public bool NoMoreData { get; set; }
     }
 
     public class ServiceIncidentView : BasicCompanyNullView

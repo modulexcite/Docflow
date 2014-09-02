@@ -21,6 +21,7 @@ namespace RapidDoc.Models.Services
         SearchTable FirstOrDefault(Expression<Func<SearchTable, bool>> predicate);
         SearchView FirstOrDefaultView(Expression<Func<SearchTable, bool>> predicate);
         void SaveDomain(SearchTable domainTable, string currentUserName = "");
+        List<SearchView> GetDocuments(int blockNumber, int blockSize, string searchText);
     }
 
     public class SearchService : ISearchService
@@ -29,13 +30,17 @@ namespace RapidDoc.Models.Services
         private IUnitOfWork _uow;
         private readonly IAccountService _AccountService;
         private readonly IDocumentService _DocumentService;
+        private readonly IEmplService _EmplService;
+        private readonly ISystemService _SystemService;
 
-        public SearchService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService)
+        public SearchService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, ISystemService systemService)
         {
             _uow = uow;
             repo = uow.GetRepository<SearchTable>();
             _AccountService = accountService;
             _DocumentService = documentService;
+            _EmplService = emplService;
+            _SystemService = systemService;
         }
 
         public IEnumerable<SearchTable> GetPartial(Expression<Func<SearchTable, bool>> predicate)
@@ -46,11 +51,19 @@ namespace RapidDoc.Models.Services
         public IEnumerable<SearchView> GetPartialView(Expression<Func<SearchTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<SearchTable>, IEnumerable<SearchView>>(GetPartial(predicate));
+            ApplicationUser currentUser = _AccountService.FirstOrDefault(x => x.UserName == HttpContext.Current.User.Identity.Name);
 
             foreach (var item in items)
             {
                 DocumentTable docuTable = _DocumentService.Find(item.DocumentTableId);
                 item.isShow = _DocumentService.isShowDocument(docuTable.Id, docuTable.ProcessTableId, "", true);
+
+                ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == item.CreatedBy);
+                EmplView empl = _EmplService.FirstOrDefaultView(x => x.ApplicationUserId == user.Id);
+                if (empl != null)
+                    item.CreatedUserName = "(" + empl.AliasCompanyName + ") " + empl.FullName + " " + empl.TitleName + " " + empl.DepartmentName + " "+ _SystemService.ConvertDateTimeToLocal(currentUser, item.CreatedDate);
+                else
+                    item.CreatedUserName = String.Empty;
             }
 
             return items;
@@ -91,6 +104,17 @@ namespace RapidDoc.Models.Services
                 repo.Update(domainTable);
             }
             _uow.Save();
+        }
+
+        public List<SearchView> GetDocuments(int blockNumber, int blockSize, string searchText)
+        {
+            int startIndex = (blockNumber - 1) * blockSize;
+            string searchString = searchText.Trim();
+
+            var resultText = this.GetPartialView(x => x.DocumentText.Contains(searchString)).Skip(startIndex).Take(blockSize).ToList();
+            var resultNum = this.GetPartialView(x => x.DocumentTable.DocumentNum.Contains(searchString)).Skip(startIndex).Take(blockSize).ToList();
+            var result = resultNum.Concat(resultText).ToList();
+            return result;
         }
 
         private string getCurrentUserName(string currentUserName = "")

@@ -87,8 +87,6 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.CreatedDate, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
 
-            Mapper.CreateMap<DocumentTable, DocumentListView>();
-
             Mapper.CreateMap<NumberSeriesTable, NumberSeriesView>();
             Mapper.CreateMap<NumberSeriesView, NumberSeriesTable>()
                 .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
@@ -529,6 +527,41 @@ namespace RapidDoc.Mappers
 
             Mapper.CreateMap<USR_REQ_IT_CAP_HardSoftwareMaintenance_Table, USR_REQ_IT_CAP_HardSoftwareMaintenance_View>();
             Mapper.CreateMap<USR_REQ_IT_CAP_HardSoftwareMaintenance_View, USR_REQ_IT_CAP_HardSoftwareMaintenance_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_IT_CAP_ChangeRoute_Table, USR_REQ_IT_CAP_ChangeRoute_View>();
+            Mapper.CreateMap<USR_REQ_IT_CAP_ChangeRoute_View, USR_REQ_IT_CAP_ChangeRoute_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_IT_CAP_CreateUserLotus_Table, USR_REQ_IT_CAP_CreateUserLotus_View>();
+            Mapper.CreateMap<USR_REQ_IT_CAP_CreateUserLotus_View, USR_REQ_IT_CAP_CreateUserLotus_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_IT_CAP_AddOrChangeTemplate_Table, USR_REQ_IT_CAP_AddOrChangeTemplate_View>();
+            Mapper.CreateMap<USR_REQ_IT_CAP_AddOrChangeTemplate_View, USR_REQ_IT_CAP_AddOrChangeTemplate_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_IT_CAP_ChangeOrder_Table, USR_REQ_IT_CAP_ChangeOrder_View>();
+            Mapper.CreateMap<USR_REQ_IT_CAP_ChangeOrder_View, USR_REQ_IT_CAP_ChangeOrder_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_IT_CAP_ChangeOrderWage_Table, USR_REQ_IT_CAP_ChangeOrderWage_View>();
+            Mapper.CreateMap<USR_REQ_IT_CAP_ChangeOrderWage_View, USR_REQ_IT_CAP_ChangeOrderWage_Table>()
                 .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
                 .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
                 .ForMember(x => x.CreatedDate, opt => opt.Ignore())

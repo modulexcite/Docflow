@@ -12,6 +12,7 @@ using System.Web;
 using System.Web.Mvc;
 using RapidDoc.Extensions;
 using RapidDoc.Models.Grids;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Controllers
 {
@@ -53,6 +54,12 @@ namespace RapidDoc.Controllers
 
         public ActionResult Create()
         {
+            ApplicationDbContext context = new ApplicationDbContext();
+            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles).ToList();
+            items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
+            ViewBag.RolesList = new SelectList(items, "Id", "Name", null);
+            context.Dispose();
+
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(null);
             ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(null);
             return View();
@@ -74,6 +81,13 @@ namespace RapidDoc.Controllers
                     ModelState.AddModelError(string.Empty, e.GetOriginalException().Message);
                 }
             }
+
+            ApplicationDbContext context = new ApplicationDbContext();
+            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles).ToList();
+            items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
+            ViewBag.RolesList = new SelectList(items, "Id", "Name", null);
+            context.Dispose();
+
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(null);
             ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(null);
             return View(model);
@@ -87,6 +101,13 @@ namespace RapidDoc.Controllers
             {
                 return HttpNotFound();
             }
+
+            ApplicationDbContext context = new ApplicationDbContext();
+            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles).ToList();
+            items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
+            ViewBag.RolesList = new SelectList(items, "Id", "Name", model.RoleId);
+            context.Dispose();
+
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(model.GroupProcessTableId);
             ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(model.WorkScheduleTableId);
             return View(model);
@@ -107,6 +128,13 @@ namespace RapidDoc.Controllers
                     ModelState.AddModelError(string.Empty, e.GetOriginalException().Message);
                 }
             }
+
+            ApplicationDbContext context = new ApplicationDbContext();
+            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles).ToList();
+            items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
+            ViewBag.RolesList = new SelectList(items, "Id", "Name", model.RoleId);
+            context.Dispose();
+
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(model.GroupProcessTableId);
             ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(model.WorkScheduleTableId);
             return View(model);

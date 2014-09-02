@@ -54,6 +54,9 @@ namespace RapidDoc.Models.DomainModels
 
         public bool isApproved { get; set; }
 
+        public string RoleId { get; set; }
+        public virtual IdentityRole IdentityRole { get; set; }
+
         public string GroupProcessName
         {
             get
@@ -152,6 +155,15 @@ namespace RapidDoc.Models.DomainModels
         public bool isNotReview { get; set; }
 
         public bool isShow { get; set; }
+
+        [Display(Name = "FirstName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string FullName { get; set; }
+
+        [Display(Name = "TitleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string TitleName { get; set; }
+
+        [Display(Name = "DepartmentName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string DepartmentName { get; set; }
     }
 
     public class CommentTable : BasicCompanyNullTable

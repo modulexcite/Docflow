@@ -105,7 +105,7 @@ namespace RapidDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var domainModel = await RoleManager.FindByIdAsync(viewModel.Id.ToString());
+                var domainModel = await RoleManager.FindByIdAsync(viewModel.Id);
                 if (domainModel == null)
                 {
                     return HttpNotFound();

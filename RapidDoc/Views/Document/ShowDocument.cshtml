@@ -16,120 +16,136 @@
         <a href=@Url.Action("Index", "Home") class="btn btn-default" role="button">@UIElementRes.UIElement.Close</a>
     </div>
     <legend class="hidden-print"></legend>
-    <h5 class="text-right">(@ViewBag.CompanyName) @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName,  </small> @ViewBag.CreatedDate</h5>
+    <h4 class="text-right"><small>(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h4>
 
     @using (Html.BeginForm("PostDocument", "Document", new { processId = Model.ProcessView.Id, type = 2, fileId = Model.fileId, documentId = Model.DocumentTable.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(false)
 
-        <fieldset>
-            @Html.HiddenFor(model => model.ProcessView.Id)
-            @Html.HiddenFor(model => model.DocumentTable.Id)
-            @Html.HiddenFor(model => model.fileId, new { @id = "documentFileId" })
-            @Html.Action("GetDocumentData", new { modelDoc = Model.docData, idProcess = Model.ProcessView.Id, viewType = "View" })
-            <br class="hidden-print">
-            <h3 class="hidden-print">@UIElementRes.UIElement.AttachedFiles</h3>
-            <table role="presentation" class="table table-striped hidden-print"><tbody class="files"></tbody></table>
+    <fieldset>
+        @Html.HiddenFor(model => model.ProcessView.Id)
+        @Html.HiddenFor(model => model.DocumentTable.Id)
+        @Html.HiddenFor(model => model.fileId, new { @id = "documentFileId" })
+        @Html.Action("GetDocumentData", new { modelDoc = Model.docData, idProcess = Model.ProcessView.Id, viewType = "View" })
+        <br class="hidden-print">
+        <h3 class="hidden-print">@UIElementRes.UIElement.AttachedFiles</h3>
+        <table role="presentation" class="table table-striped hidden-print"><tbody class="files"></tbody></table>
 
-            <br>
-            <h3 class="hidden-print">@UIElementRes.UIElement.ProgressWork</h3>
+        <br>
+        <h3 class="hidden-print">@UIElementRes.UIElement.ProgressWork</h3>
 
-            @if (Model.WFTrackerItems.Count() > 0)
-            {
-                <div class="table-responsive">
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th class="actionField">
-                                    #
-                                </th>
-                                <td class="actionField"></td>
-                                <th>
-                                    @Html.DisplayNameFor(model => Model.WFTrackerItems.FirstOrDefault().ActivityName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => Model.WFTrackerItems.FirstOrDefault().Executors)
-                                </th>
-                                <th class="hidden-print">
-                                    @Html.DisplayName(FieldNameRes.FieldNameResource.PerformToDate)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => Model.WFTrackerItems.FirstOrDefault().SignDate)
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var trackerItem in Model.WFTrackerItems)
-                            {
-                                <tr>
-                                    <td>
-                                        <span class="label label-primary rowNum cellAligmentMiddle">@Html.DisplayFor(modelItem => trackerItem.RowNum)</span>
-                                    </td>
-                                    <td class="hidden-print">
-                                        @if ((trackerItem.ManualExecutor == true && Model.DocumentTable.isSign) || (User.IsInRole("Administrator") && trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting))
-                                        {
-                                            <a href=@Url.Action("AddExecutor", new { id = Model.DocumentTable.Id, activityId = trackerItem.ActivityID })><span class="fa fa-users fa-lg"></span></a>
-                                        }
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => trackerItem.ActivityName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => trackerItem.Executors)
-                                    </td>
-                                    <td class="hidden-print">
-                                        @if (trackerItem.PerformToDate != null)
-                                        {
-                                            @Html.DateTimeLocalFor(modelItem => trackerItem.PerformToDate)
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (trackerItem.SignDate != null)
-                                        {
-                                            @Html.DateTimeLocalFor(modelItem => trackerItem.SignDate)
-                                        }
-                                    </td>
-                                    <th>
-                                        @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting)
-                                        {
-                                            <span class="fa fa-spinner fa-spin fa-2x text-primary"></span>
-                                        }
-                                        @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Approved)
-                                        {
-                                            <span class="fa fa-check fa-2x text-primary"></span>
-                                        }
-                                        @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Cancelled)
-                                        {
-                                            <span class="fa fa-times fa-2x text-primary"></span>
-                                        }
-                                    </th>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                    <div class="hidden-print">
-                        @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0)
+        @if (Model.WFTrackerItems.Count() > 0)
+        {
+            <div class="table-responsive">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="actionField">
+                                #
+                            </th>
+                            <td class="actionField"></td>
+                            <th>
+                                @Html.DisplayNameFor(model => Model.WFTrackerItems.FirstOrDefault().ActivityName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => Model.WFTrackerItems.FirstOrDefault().Executors)
+                            </th>
+                            <th class="hidden-print">
+                                @Html.DisplayName(FieldNameRes.FieldNameResource.PerformToDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => Model.WFTrackerItems.FirstOrDefault().SignDate)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var trackerItem in Model.WFTrackerItems)
                         {
-                            <ul>
-                                @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)
-                                {
-                                    <li>@UIElementRes.UIElement.DocumentReject @history.CreatedBy в @Html.DateTimeLocal(history.CreatedDate)</li>
-                                }
-                            </ul>
+                            <tr>
+                                <td>
+                                    <span class="label label-primary rowNum cellAligmentMiddle">@Html.DisplayFor(modelItem => trackerItem.RowNum)</span>
+                                </td>
+                                <td class="hidden-print">
+                                    @if ((trackerItem.ManualExecutor == true && Model.DocumentTable.isSign) || (User.IsInRole("Administrator") && trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting))
+                                    {
+                                        <a href=@Url.Action("AddExecutor", new { id = Model.DocumentTable.Id, activityId = trackerItem.ActivityID })><span class="fa fa-users fa-lg"></span></a>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => trackerItem.ActivityName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => trackerItem.Executors)
+                                </td>
+                                <td class="hidden-print">
+                                    @if (trackerItem.PerformToDate != null)
+                                    {
+                                        @Html.DateTimeLocalFor(modelItem => trackerItem.PerformToDate)
+                                    }
+                                </td>
+                                <td>
+                                    @if (trackerItem.SignDate != null)
+                                    {
+                                        @Html.DateTimeLocalFor(modelItem => trackerItem.SignDate)
+                                    }
+                                </td>
+                                <th>
+                                    @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting)
+                                    {
+                                        <span class="fa fa-spinner fa-spin fa-2x text-primary"></span>
+                                    }
+                                    @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Approved)
+                                    {
+                                        <span class="fa fa-check fa-2x text-primary"></span>
+                                    }
+                                    @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Cancelled)
+                                    {
+                                        <span class="fa fa-times fa-2x text-primary"></span>
+                                    }
+                                </th>
+                            </tr>
                         }
-                    </div>
+                    </tbody>
+                </table>
+                <div class="hidden-print">
+                    @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0)
+                    {
+                        <ul>
+                            @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)
+                            {
+                                <li>@UIElementRes.UIElement.DocumentReject @history.CreatedBy в @Html.DateTimeLocal(history.CreatedDate)</li>
+                            }
+                        </ul>
+                    }
                 </div>
-            }
+            </div>
+        }
+    </fieldset>
+    }
             <br class="hidden-print">
             <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
             @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentTable.Id })
-            <br class="hidden-print">
+            <p>
+                <h4 class="text-right hidden-print">@UIElementRes.UIElement.AddComment</h4>
+                @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentTable.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }))
+                {
+                    <div class="hidden-print">
+                        @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
+                            <div class="row">
+                                <div class="col-md-7"><kbd>Ctrl + Enter</kbd></div>
+                                <div class="col-md-5"><input class="btn btn-primary btn-xs btn-block pull-right" id="saveCommentBtn" type="submit" value=@UIElementRes.UIElement.Save></div>
+                            </div>
+                        </div>
+                    <br class="hidden-print">
+                }
+            </p>
+            
             @if ((Model.DocumentTable.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentTable.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentTable.isSign)
 {
-    <input class="btn btn-success hidden-print" type="submit" name="approveDoc" value=@UIElementRes.UIElement.Approve />
-    <input class="btn btn-danger hidden-print" type="submit" name="rejectDoc" value=@UIElementRes.UIElement.Reject />
+    <input class="btn btn-success hidden-print" type="submit" name="approveDoc" id="approveDocId" value=@UIElementRes.UIElement.Approve />
+    <input class="btn btn-danger hidden-print" type="submit" name="rejectDoc" id="rejectDocId" value=@UIElementRes.UIElement.Reject />
 }
 
             <div class="btn-group hidden-print">
@@ -150,32 +166,52 @@
             </div>
 
             <a href=@Url.Action("Index", "Home") class="btn btn-default hidden-print" role="button">@UIElementRes.UIElement.Close</a>
-        </fieldset>
+        
+<script type="text/javascript">
+    function clearTextAreaComment(result) {
+        $('#lastComment').val('');
+
+        var button = $(this).find('input[type="submit"]');
+        setTimeout(function () {
+            button.removeAttr("disabled");
+        }, 0);
     }
 
-    <br class="hidden-print">
-    <p>
-        <h4 class="text-right hidden-print">@UIElementRes.UIElement.AddComment</h4>
-        @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentTable.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }))
-{
-    <div class="hidden-print">
-        @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
-        <input class="btn btn-default btn-sm pull-right" type="submit" value=@UIElementRes.UIElement.Save>
-    </div>
-    <br class="hidden-print">
-}
+    $('#approveDocId').on("click", function () {
+        var approveDoc = document.createElement("input");
+        approveDoc.type = "hidden";
+        approveDoc.name = "approveDoc";
+        approveDoc.value = "approveDoc";
 
-        <script type="text/javascript">
-            function clearTextAreaComment(result) {
-                $('#lastComment').val('');
+        var lastComment = document.createElement("input");
+        lastComment.type = "hidden";
+        lastComment.name = "lastComment";
+        lastComment.value = $('#lastComment').val();
 
-                var button = $(this).find('input[type="submit"]');
-                setTimeout(function () {
-                    button.removeAttr("disabled");
-                }, 0);
-            }
-        </script>
-    </p>
+        var f = document.getElementById("ajaxUploadForm");
+        f.appendChild(approveDoc);
+        f.appendChild(lastComment);
+        f.submit();
+    });
+
+    $('#rejectDocId').on("click", function () {
+        var commentText = $('#lastComment').val();
+        var rejectDoc = document.createElement("input");
+        rejectDoc.type = "hidden";
+        rejectDoc.name = "rejectDoc";
+        rejectDoc.value = "rejectDoc";
+
+        var lastComment = document.createElement("input");
+        lastComment.type = "hidden";
+        lastComment.name = "lastComment";
+        lastComment.value = commentText;
+
+        var f = document.getElementById("ajaxUploadForm");
+        f.appendChild(rejectDoc);
+        f.appendChild(lastComment);
+        f.submit();
+    });
+</script>
     <br class="hidden-print">
     <br class="hidden-print">
     <div class="row">
@@ -242,4 +278,12 @@
     @section jslaunch {
         selectpicker_init();
         qrcode_init();
+
+        $('#lastComment').keydown( function(e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if(event.ctrlKey && key == 13) {
+                e.preventDefault();
+                document.getElementById('saveCommentBtn').click();
+            }
+        });
     }

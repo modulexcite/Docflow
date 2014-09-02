@@ -595,7 +595,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Дата/время документа")]
         public DateTime? DocumentDate { get; set; }
 
-         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "ФИО согласовавшего")]  
         public string SignName { get; set; }
 
@@ -1168,6 +1168,122 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Описание")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Description { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_ChangeRoute_View : BasicDocumentView
+    {
+        [Display(Name = "Наименование запроса/маршрута согласования")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Name { get; set; }
+
+        [Display(Name = "Старый маршрут")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string OldRoute { get; set; }
+
+        [Display(Name = "Новый маршрут")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string NewRoute { get; set; }
+
+        [Display(Name = "Обоснование")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Reason { get; set; }
+
+        [Display(Name = "Контактный телефон")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Contact { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_CreateUserLotus_View : BasicDocumentView
+    {
+        [Display(Name = "ФИО")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Name { get; set; }
+
+        [Display(Name = "Подразделение")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Department { get; set; }
+
+        [Display(Name = "Должность")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Title { get; set; }
+
+        [Display(Name = "Описание")]
+        public string Description { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_AddOrChangeTemplate_View : BasicDocumentView
+    {
+        [Display(Name = "Действие")]
+        public AddOrChange ActionType { get; set; }
+
+        [Display(Name = "Подразделение\\Путь")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Path { get; set; }
+
+        [Display(Name = "Наименование запроса")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Name { get; set; }
+
+        [Display(Name = "Контактный телефон")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Contact { get; set; }
+
+        [Display(Name = "Описание")]
+        public string Description { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_ChangeOrder_View : BasicDocumentView
+    {
+        [Display(Name = "№ Приказа")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string OrderNum { get; set; }
+
+        [Display(Name = "Дата регистрации")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public DateTime? OrderDate { get; set; }
+
+        [Display(Name = "Тема")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Subject { get; set; }
+
+        [Display(Name = "Необходимые изменения")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Description { get; set; }
+
+        [Display(Name = "Причина")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Reason { get; set; }
+
+        [Display(Name = "Контактный телефон")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Contact { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_ChangeOrderWage_View : BasicDocumentView 
+    {
+        [Display(Name = "№ Приказа")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string OrderNum { get; set; }
+
+        [Display(Name = "Дата регистрации")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public DateTime? OrderDate { get; set; }
+
+        [Display(Name = "Тема")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Subject { get; set; }
+
+        [Display(Name = "Необходимые изменения")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Description { get; set; }
+
+        [Display(Name = "Причина")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Reason { get; set; }
+
+        [Display(Name = "Контактный телефон")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Contact { get; set; }
     }
     #endregion
 }

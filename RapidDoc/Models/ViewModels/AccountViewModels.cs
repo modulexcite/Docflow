@@ -78,7 +78,7 @@ namespace RapidDoc.Models.ViewModels
 
     public class RoleViewModel
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "RoleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]

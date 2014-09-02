@@ -846,5 +846,95 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Description { get; set; }
     }
+
+    public class USR_REQ_IT_CAP_ChangeRoute_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string OldRoute { get; set; }
+
+        [Required]
+        public string NewRoute { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string Contact { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_CreateUserLotus_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_AddOrChangeTemplate_Table : BasicDocumentTable
+    {
+        public AddOrChange ActionType { get; set; }
+
+        [Required]
+        public string Path { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Contact { get; set; }
+
+        public string Description { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_ChangeOrder_Table : BasicDocumentTable
+    {
+        [Required]
+        public string OrderNum { get; set; }
+
+        [Required]
+        public DateTime OrderDate { get; set; }
+
+        [Required]
+        public string Subject { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string Contact { get; set; }
+    }
+
+    public class USR_REQ_IT_CAP_ChangeOrderWage_Table : BasicDocumentTable
+    {
+        [Required]
+        public string OrderNum { get; set; }
+
+        [Required]
+        public DateTime OrderDate { get; set; }
+
+        [Required]
+        public string Subject { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string Contact { get; set; }
+    }
     #endregion
 }

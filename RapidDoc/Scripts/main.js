@@ -150,9 +150,12 @@ function grid_init(url_json) {
                     pageLink.hide();
 
                 $('div#loading').empty();
+
+                $('.popover-link').popover({
+                    trigger: 'hover'
+                });
             })
             .fail(function () {
-                alert("cannot load items");
             });
     };
 
@@ -199,7 +202,8 @@ function custom_tagsinputEmpl_init(url_json) {
                     var numValue = i;
                     numValue++;
                     var value = currentArrData[numValue];
-                    $('input[data-role=tagsinputEmpl]').tagsinput('add', { "value": key, "text": value });
+                    if(value.length > 0)
+                        $('input[data-role=tagsinputEmpl]').tagsinput('add', { "value": key +"," + value, "text": value });
                 }
             }
         }
@@ -230,18 +234,19 @@ function custom_tagsinputEmpl2_init(url_json) {
                 this.tagsinput('input').typeahead('setQuery', '');
             }, elt2));
 
-            currentValue = $('input[data-role=tagsinputEmpl2]').val();
-            if (currentValue != null) {
-                currentArrData = currentValue.split(",");
+            currentValue2 = $('input[data-role=tagsinputEmpl2]').val();
+            if (currentValue2 != null) {
+                currentArrData2 = currentValue2.split(",");
                 $('input[data-role=tagsinputEmpl2]').val('');
 
-                if (currentArrData.length > 1) {
-                    for (var i = 0; i < currentArrData.length; i += 2) {
-                        var key = currentArrData[i];
+                if (currentArrData2.length > 1) {
+                    for (var i = 0; i < currentArrData2.length; i += 2) {
+                        var key = currentArrData2[i];
                         var numValue = i;
                         numValue++;
-                        var value = currentArrData[numValue];
-                        $('input[data-role=tagsinputEmpl2]').tagsinput('add', { "value": key, "text": value });
+                        var value = currentArrData2[numValue];
+                        if (value.length > 0)
+                            $('input[data-role=tagsinputEmpl2]').tagsinput('add', { "value": key + "," + value, "text": value });
                     }
                 }
             }

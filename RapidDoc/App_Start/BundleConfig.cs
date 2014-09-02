@@ -8,6 +8,8 @@ namespace RapidDoc
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            BundleTable.EnableOptimizations = true;
+
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/jquery.unobtrusive-ajax.js",
@@ -83,6 +85,10 @@ namespace RapidDoc
 
             bundles.Add(new ScriptBundle("~/bundles/labelauty").Include(
                         "~/Scripts/jquery-labelauty.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/oldBrowsers").Include(
+                        "~/Scripts/html5shiv.js",
+                        "~/Scripts/respond.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/main").Include(
                         "~/Scripts/main.js"));

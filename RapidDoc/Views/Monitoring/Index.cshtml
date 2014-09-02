@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = UIElementRes.UIElement.Monitoring;
 }
-<h1>@UIElementRes.UIElement.Monitoring: ИТ служба за 30 дней</h1>
+<h1>@UIElementRes.UIElement.Monitoring: Исполнение по подразделениям</h1>
 <hr />
 
 <div class="editor-label">
@@ -16,16 +16,8 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">       
-        <canvas id="canvasBar" height="450" width="600"></canvas>
-    </div>
-    <div class="row">
-        <div class="col-md-6 text-center">
-            <canvas id="canvasPie" width="300" height="300"></canvas>
-        </div>
-        <div class="col-md-6">
-            <div id="legend"></div>
-        </div>
+    <div class="col-md-8">       
+        <canvas id="canvasBar" height="400" width="600"></canvas>
     </div>
 </div>
 <style type="text/css">
@@ -49,7 +41,7 @@
 
 $(function () {
     
-    var myPie, myBar;
+    var myBar;
     LoadChart();
     $("[id*=DepartmentTableId]").bind("change", function () {
         LoadChart();
@@ -65,8 +57,6 @@ function LoadChart() {
             if (myBar != null)
             {
                 myBar.destroy();
-                myPie.destroy();
-                $("#legend").html("");
             }
             var barChartData = {
             labels : data.barLabels,
@@ -88,31 +78,10 @@ function LoadChart() {
             ]
             }
 
-            var pieData = [
-            {
-            value: data.pieOpenCountListValue,
-            color: "#4D5360",
-            highlight: "#A8B3C5",
-            label: "Открытые не просроченные"
-            },
-            {
-            value: data.pieOpenCountErrorListValue,
-            color: "#F7464A",
-            highlight: "#F7464A",
-            label: "Открытые просроченные"
-            }
-            ];
             var ctxBar = document.getElementById("canvasBar").getContext("2d");
             myBar = new Chart(ctxBar).Bar(barChartData, {
             responsive : true
             });
-
-            var ctxPie = document.getElementById("canvasPie").getContext("2d");
-            myPie = new Chart(ctxPie).Pie(pieData);
-
-            document.getElementById('legend').innerHTML = myPie.generateLegend();
-            legend = myPie.generateLegend();
-            $("#legend").html(legend);
 
             });
     }
