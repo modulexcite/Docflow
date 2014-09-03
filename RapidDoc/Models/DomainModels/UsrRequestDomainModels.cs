@@ -937,14 +937,4 @@ namespace RapidDoc.Models.DomainModels
         public string Contact { get; set; }
     }
     #endregion
-    
-    #region Зиф
-
-    public class USR_REQ_ZIF_RequestForFuel_Table : BasicDocumentTable
-    {
-        [Required]
-        public string Department { get; set; }
-    }
-
-    #endregion
 }
