@@ -261,6 +261,8 @@ namespace RapidDoc.Controllers
             }
 
             ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuTable.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
+            ViewBag.AddReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuTable.Id && x.HistoryType == Models.Repository.HistoryType.AddReader);
+            ViewBag.RemoveReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuTable.Id && x.HistoryType == Models.Repository.HistoryType.RemoveReader);
 
             return viewModel;
         }

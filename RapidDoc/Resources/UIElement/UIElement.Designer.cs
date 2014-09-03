@@ -448,6 +448,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Добавили читателей:.
+        /// </summary>
+        public static string DocumentAddReaders {
+            get {
+                return ResourceManager.GetString("DocumentAddReaders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Архив.
         /// </summary>
         public static string DocumentArchive {
@@ -462,6 +471,15 @@ namespace UIElementRes {
         public static string DocumentReject {
             get {
                 return ResourceManager.GetString("DocumentReject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалили читателей: .
+        /// </summary>
+        public static string DocumentRemoveReaders {
+            get {
+                return ResourceManager.GetString("DocumentRemoveReaders", resourceCulture);
             }
         }
         

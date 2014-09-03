@@ -157,6 +157,7 @@ namespace RapidDoc.Models.ViewModels
         public string ProcessName { get; set; }
         public Guid DocumentTableId { get; set; }
         public string ApplicationCreatedUser { get; set; }
+        public string Description { get; set; }
     }
 
     public class SearchView : BasicView

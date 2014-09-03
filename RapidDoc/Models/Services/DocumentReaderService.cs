@@ -66,7 +66,8 @@ namespace RapidDoc.Models.Services
         public List<string> SaveReader(Guid documentId, string[] listdata, string currentUserName = "")
         {
             List<string> newReader = new List<string>();
-            string historyDescription = String.Empty;
+            string addReadersDescription = String.Empty;
+            string removeReadersDescription = String.Empty;
 
             if (listdata != null)
             {
@@ -76,12 +77,37 @@ namespace RapidDoc.Models.Services
                     {
                         newReader.Add(emplId);
                         var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == emplId);
-                        historyDescription += empl.FullName;
+                        addReadersDescription += empl.FullName + "; ";
                     }
                 }
             }
 
-            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.AddReader, Description = historyDescription });
+            var currentReaders = GetPartial(x => x.DocumentTableId == documentId);
+            foreach (var item in currentReaders)
+            {
+                if(listdata != null)
+                {
+                    if (listdata.Contains(item.UserId) == false)
+                    {
+                        var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId);
+                        removeReadersDescription += empl.FullName + "; ";
+                    }
+                }
+                else
+                {
+                    var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId);
+                    removeReadersDescription += empl.FullName + "; ";
+                }
+            }
+
+            if (addReadersDescription.Length > 0)
+            {
+                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.AddReader, Description = UIElementRes.UIElement.DocumentAddReaders + " " + addReadersDescription });
+            }
+            if (removeReadersDescription.Length > 0)
+            {
+                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.RemoveReader, Description = UIElementRes.UIElement.DocumentRemoveReaders + " " + removeReadersDescription });
+            }
 
             Delete(documentId);
 

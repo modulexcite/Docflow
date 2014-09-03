@@ -115,7 +115,25 @@
                         <ul>
                             @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)
                             {
-                                <li>@UIElementRes.UIElement.DocumentReject @history.CreatedBy в @Html.DateTimeLocal(history.CreatedDate)</li>
+                                <li>@UIElementRes.UIElement.DocumentReject @history.CreatedBy @Html.DateTimeLocal(history.CreatedDate)</li>
+                            }
+                        </ul>
+                    }
+                    @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders).Count() > 0)
+                    {
+                        <ul>
+                            @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders)
+                            {
+                                <li>@history.Description @Html.DateTimeLocal(history.CreatedDate)</li>
+                            }
+                        </ul>
+                    }
+                    @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders).Count() > 0)
+                    {
+                        <ul>
+                            @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders)
+                            {
+                                <li>@history.Description @Html.DateTimeLocal(history.CreatedDate)</li>
                             }
                         </ul>
                     }
