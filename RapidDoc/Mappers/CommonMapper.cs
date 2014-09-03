@@ -566,6 +566,13 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
                 .ForMember(x => x.CreatedDate, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_ZIF_RequestForFuel_Table, USR_REQ_ZIF_RequestForFuel_View>();
+            Mapper.CreateMap<USR_REQ_ZIF_RequestForFuel_View, USR_REQ_ZIF_RequestForFuel_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
         }
 
         public object Map(object source, Type sourceType, Type destinationType)

@@ -1286,4 +1286,13 @@ namespace RapidDoc.Models.ViewModels
         public string Contact { get; set; }
     }
     #endregion
+
+    #region Зиф
+    public class USR_REQ_ZIF_RequestForFuel_View : BasicDocumentRequestView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+    }
+    #endregion
 }
