@@ -32,13 +32,15 @@ namespace RapidDoc.Models.Services
         private IUnitOfWork _uow;
         private readonly IAccountService _AccountService;
         private readonly IEmplService _EmplService;
+        private readonly IHistoryUserService _HistoryUserService;
 
-        public DocumentReaderService(IUnitOfWork uow, IAccountService accountService, IEmplService emplService)
+        public DocumentReaderService(IUnitOfWork uow, IAccountService accountService, IEmplService emplService, IHistoryUserService historyUserService)
         {
             _uow = uow;
             repo = uow.GetRepository<DocumentReaderTable>();
             _AccountService = accountService;
             _EmplService = emplService;
+            _HistoryUserService = historyUserService;
         }
 
         public IEnumerable<DocumentReaderTable> GetAll()
@@ -64,6 +66,7 @@ namespace RapidDoc.Models.Services
         public List<string> SaveReader(Guid documentId, string[] listdata, string currentUserName = "")
         {
             List<string> newReader = new List<string>();
+            string historyDescription = String.Empty;
 
             if (listdata != null)
             {
@@ -72,9 +75,13 @@ namespace RapidDoc.Models.Services
                     if (Contains(x => x.DocumentTableId == documentId && x.UserId == emplId) == false)
                     {
                         newReader.Add(emplId);
+                        var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == emplId);
+                        historyDescription += empl.FullName;
                     }
                 }
             }
+
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.AddReader, Description = historyDescription });
 
             Delete(documentId);
 

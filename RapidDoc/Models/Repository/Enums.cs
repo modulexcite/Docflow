@@ -65,7 +65,9 @@ namespace RapidDoc.Models.Repository
         NewDocument = 0,
         ApproveDocument = 1,
         CancelledDocument = 2,
-        NewComment = 3
+        NewComment = 3,
+        AddReader = 4,
+        RemoveReader = 5
     }
 
     //Custom

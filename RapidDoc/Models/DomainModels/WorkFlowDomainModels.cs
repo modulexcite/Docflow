@@ -255,6 +255,8 @@ namespace RapidDoc.Models.DomainModels
 
         public Guid DocumentTableId { get; set; }
         public virtual DocumentTable DocumentTable { get; set; }
+
+        public string Description { get; set; }
     }
 
     public class SearchTable : BasicTable
