@@ -66,7 +66,7 @@ namespace RapidDoc.Controllers
                         {
                             var userDocuments = checkData.Where(x => x.TrackerUsers.Any(a => a.UserId == user.Id)).GroupBy(b => b.DocumentTable).Select(group => group.Key).ToList();
                             if (userDocuments.Count() > 0)
-                                _Emailservice.SendSLAWarningEmail(user.Id, userDocuments);
+                                _Emailservice.SendSLADisturbanceEmail(user.Id, userDocuments);
                         }
                     }
                     break;
@@ -78,7 +78,7 @@ namespace RapidDoc.Controllers
                             || document.DocumentState == Models.Repository.DocumentState.Completed
                             || document.DocumentState == Models.Repository.DocumentState.Created)
                         {
-                            IEnumerable<ReviewDocLogTable> reviewDocuments = _ReviewDocLogService.GetPartial(x => x.DocumentTableId == document.Id);
+                            IEnumerable<ReviewDocLogTable> reviewDocuments = _ReviewDocLogService.GetPartial(x => x.DocumentTableId == document.Id).ToList();
 
                             if (reviewDocuments != null)
                             {
@@ -102,8 +102,11 @@ namespace RapidDoc.Controllers
 
                         foreach (var document in allDocument)
                         {
-                            var checkUser = _Documentservice.GetAllUserCurrentStep(document, false);
-                            checkData.Add(new CheckSLAStatus(document, checkUser));
+                            if (document.DocumentState == Models.Repository.DocumentState.Agreement || document.DocumentState == Models.Repository.DocumentState.Execution)
+                            {
+                                var checkUser = _Documentservice.GetAllUserCurrentStep(document, false);
+                                checkData.Add(new CheckSLAStatus(document, checkUser));
+                            }
                         }
 
                         foreach (var user in users)

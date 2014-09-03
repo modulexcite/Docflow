@@ -62,7 +62,6 @@ namespace RapidDoc.Models.Services
 
             if (repo.Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == domainTable.DocumentTableId) == false)
             {
-                domainTable.Id = Guid.NewGuid();
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
                 domainTable.ApplicationUserCreatedId = user.Id;
