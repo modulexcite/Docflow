@@ -102,11 +102,11 @@ namespace RapidDoc.Models.Services
 
             if (addReadersDescription.Length > 0)
             {
-                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.AddReader, Description = UIElementRes.UIElement.DocumentAddReaders + " " + addReadersDescription });
+                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.AddReader, Description = addReadersDescription });
             }
             if (removeReadersDescription.Length > 0)
             {
-                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.RemoveReader, Description = UIElementRes.UIElement.DocumentRemoveReaders + " " + removeReadersDescription });
+                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.RemoveReader, Description = removeReadersDescription });
             }
 
             Delete(documentId);
