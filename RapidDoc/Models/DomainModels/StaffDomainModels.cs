@@ -96,7 +96,6 @@ namespace RapidDoc.Models.DomainModels
         public Guid? ManageId { get; set; }
         public virtual EmplTable EmplTableParent { get; set; }
 
-        [Required]
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 

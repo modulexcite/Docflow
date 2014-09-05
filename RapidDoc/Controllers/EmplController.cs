@@ -67,7 +67,7 @@ namespace RapidDoc.Controllers
             ViewBag.ManageList = _Service.GetDropListEmplNull(null);
             ViewBag.CompanyList = _CompanyService.GetDropListCompanyNull(null);
             ViewBag.DepartmentList = _DepartmentService.GetDropListDepartmentNull(null);
-            ViewBag.UserList = _AccountService.GetDropListUser(null);
+            ViewBag.UserList = _AccountService.GetDropListUserNull(null);
             ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(null);
             return View();
         }
@@ -93,7 +93,7 @@ namespace RapidDoc.Controllers
             ViewBag.ManageList = _Service.GetDropListEmplNull(null);
             ViewBag.CompanyList = _CompanyService.GetDropListCompanyNull(null);
             ViewBag.DepartmentList = _DepartmentService.GetDropListDepartmentNull(null);
-            ViewBag.UserList = _AccountService.GetDropListUser(null);
+            ViewBag.UserList = _AccountService.GetDropListUserNull(null);
             ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(null);
 
             return View(model);
@@ -113,7 +113,7 @@ namespace RapidDoc.Controllers
             ViewBag.ManageList = _Service.GetDropListEmplNull(model.ManageId);
             ViewBag.CompanyList = _CompanyService.GetDropListCompanyNull(model.CompanyTableId);
             ViewBag.DepartmentList = _DepartmentService.GetDropListDepartmentNull(model.DepartmentTableId);
-            ViewBag.UserList = _AccountService.GetDropListUser(model.ApplicationUserId);
+            ViewBag.UserList = _AccountService.GetDropListUserNull(model.ApplicationUserId);
             ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(model.WorkScheduleTableId);
             return View(model);
         }
@@ -138,7 +138,7 @@ namespace RapidDoc.Controllers
             ViewBag.ManageList = _Service.GetDropListEmplNull(model.ManageId);
             ViewBag.CompanyList = _CompanyService.GetDropListCompanyNull(model.CompanyTableId);
             ViewBag.DepartmentList = _DepartmentService.GetDropListDepartmentNull(model.DepartmentTableId);
-            ViewBag.UserList = _AccountService.GetDropListUser(model.ApplicationUserId);
+            ViewBag.UserList = _AccountService.GetDropListUserNull(model.ApplicationUserId);
             ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(model.WorkScheduleTableId);
 
             return View(model);

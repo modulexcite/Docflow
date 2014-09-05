@@ -63,7 +63,6 @@ namespace RapidDoc.Models.ViewModels
         public Guid? ManageId { get; set; }
         public Guid WorkScheduleTableId { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string ApplicationUserId { get; set; }
 
         [Display(Name = "TitleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
