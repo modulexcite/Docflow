@@ -1286,4 +1286,117 @@ namespace RapidDoc.Models.ViewModels
         public string Contact { get; set; }
     }
     #endregion
+
+    #region Зиф
+    public class USR_REQ_ZIF_RequestForFuel_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+    }
+
+    public class USR_REQ_ZIF_RequestForSIZ_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+    }
+    #endregion
+
+    #region ОКС
+
+    public class USR_REQ_OKS_RequestForTranslate_View : BasicDocumentRequestView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+        
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Контакты (имя, телефон, электронная почта)")]
+        public string Contact { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель перевода")]
+        public string Purpose { get; set; }
+
+        [Display(Name = "Направление перевода")]
+        public TranslateDirection Direction { get; set; }
+
+        [Display(Name = "Количество страниц в исходном документе")]
+        public int CountPage { get; set; }
+
+        [Display(Name = "Приоритет")]
+        public ServiceIncidientPriority Priority { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Обоснование приоритетности")]
+        public string ExplanationPriority { get; set; }
+    }
+
+    public class USR_REQ_OKS_RequestForTranslateKAZ_View : BasicDocumentRequestView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Контакты (имя, телефон, электронная почта)")]
+        public string Contact { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель перевода")]
+        public string Purpose { get; set; }
+
+        [Display(Name = "Направление перевода")]
+        public TranslateDirectionKAZ Direction { get; set; }
+
+        [Display(Name = "Количество страниц в исходном документе")]
+        public int CountPage { get; set; }
+
+        [Display(Name = "Приоритет")]
+        public ServiceIncidientPriority Priority { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Обоснование приоритетности")]
+        public string ExplanationPriority { get; set; }
+    }
+
+    public class USR_REQ_OKS_RequestForPrintBlank_View : BasicDocumentView
+    {
+        [Display(Name = "Номер и дата приказа")]
+        public string DateAndNumber { get; set; }
+
+        [Display(Name = "Причина запроса")]
+        public string Purpose { get; set; }
+    }
+
+    public class USR_REQ_OKS_RequestForArchive_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Данные по запрашиваемому документу")]
+        public string DataDoument { get; set; }
+
+        [Display(Name = "Период")]
+        public DateTime? Period { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Причина запроса")]
+        public string Reason { get; set; }
+    }
+
+    public class USR_REQ_OKS_RequestForVisa_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Страна следования")]
+        public string Country { get; set; }
+
+        [Display(Name = "С даты")]
+        public DateTime? FromDate { get; set; }
+
+        [Display(Name = "До даты")]
+        public DateTime? ToDate { get; set; }
+
+    }
+
+    #endregion
 }

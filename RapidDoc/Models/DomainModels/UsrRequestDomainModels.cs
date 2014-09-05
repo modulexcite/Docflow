@@ -937,4 +937,87 @@ namespace RapidDoc.Models.DomainModels
         public string Contact { get; set; }
     }
     #endregion
+
+    #region Зиф
+
+    public class USR_REQ_ZIF_RequestForFuel_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+    }
+
+    public class USR_REQ_ZIF_RequestForSIZ_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+    }
+    #endregion
+
+    #region ОКС
+
+    public class USR_REQ_OKS_RequestForTranslate_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+        [Required]
+        public string  Contact{ get; set; }
+        [Required]
+        public string Purpose { get; set; }
+        [Required]
+        public TranslateDirection Direction { get; set; }
+        [Required]
+        public int CountPage { get; set; }
+        [Required]
+        public ServiceIncidientPriority Priority { get; set; }
+        [Required]
+        public string ExplanationPriority { get; set; }
+    }
+
+    public class USR_REQ_OKS_RequestForTranslateKAZ_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+        [Required]
+        public string Contact { get; set; }
+        [Required]
+        public string Purpose { get; set; }
+        [Required]
+        public TranslateDirectionKAZ Direction { get; set; }
+        [Required]
+        public int CountPage { get; set; }
+        [Required]
+        public ServiceIncidientPriority Priority { get; set; }
+        [Required]
+        public string ExplanationPriority { get; set; }
+    }
+
+    public class USR_REQ_OKS_RequestForPrintBlank_Table : BasicDocumentTable
+    {
+        [Required]
+        public string DateAndNumber { get; set; }
+        [Required]
+        public string Purpose { get; set; }
+    }
+
+    public class USR_REQ_OKS_RequestForArchive_Table : BasicDocumentTable
+    {
+        [Required]
+        public string DataDoument { get; set; }
+        [Required]
+        public DateTime Period { get; set; }
+        [Required]
+        public string Reason { get; set; }
+    }
+    public class USR_REQ_OKS_RequestForVisa_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Country { get; set; }
+        [Required]
+        public DateTime FromDate { get; set; }
+        [Required]
+        public DateTime ToDate { get; set; }
+    }
+
+    #endregion
+    
 }
