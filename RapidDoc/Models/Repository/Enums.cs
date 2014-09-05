@@ -442,4 +442,23 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Модифицировать")]
         Element2 = 1
     }
+
+    public enum TranslateDirection : byte
+    {
+        [Display(Name = "С русского на английский")]
+        Element1 = 0,
+
+        [Display(Name = "С английского на русский")]
+        Element2 = 1
+    }
+
+    public enum TranslateDirectionKAZ : byte
+    {
+        [Display(Name = "С русского на казахский")]
+        Element1 = 0,
+
+        [Display(Name = "С казахского на русский")]
+        Element2 = 1
+    }
+
 }

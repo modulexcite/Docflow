@@ -573,6 +573,48 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
                 .ForMember(x => x.CreatedDate, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_ZIF_RequestForSIZ_Table, USR_REQ_ZIF_RequestForSIZ_View>();
+            Mapper.CreateMap<USR_REQ_ZIF_RequestForSIZ_View, USR_REQ_ZIF_RequestForSIZ_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_OKS_RequestForTranslate_Table, USR_REQ_OKS_RequestForTranslate_View>();
+            Mapper.CreateMap<USR_REQ_OKS_RequestForTranslate_View, USR_REQ_OKS_RequestForTranslate_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_OKS_RequestForTranslateKAZ_Table, USR_REQ_OKS_RequestForTranslateKAZ_View>();
+            Mapper.CreateMap<USR_REQ_OKS_RequestForTranslateKAZ_View, USR_REQ_OKS_RequestForTranslateKAZ_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_OKS_RequestForPrintBlank_Table, USR_REQ_OKS_RequestForPrintBlank_View>();
+            Mapper.CreateMap<USR_REQ_OKS_RequestForPrintBlank_View, USR_REQ_OKS_RequestForPrintBlank_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_OKS_RequestForArchive_Table, USR_REQ_OKS_RequestForArchive_View>();
+            Mapper.CreateMap<USR_REQ_OKS_RequestForArchive_View, USR_REQ_OKS_RequestForArchive_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_OKS_RequestForVisa_Table, USR_REQ_OKS_RequestForVisa_View>();
+            Mapper.CreateMap<USR_REQ_OKS_RequestForVisa_View, USR_REQ_OKS_RequestForVisa_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
         }
 
         public object Map(object source, Type sourceType, Type destinationType)

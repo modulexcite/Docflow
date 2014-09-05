@@ -1,0 +1,73 @@
+﻿@model RapidDoc.Models.ViewModels.USR_REQ_OKS_RequestForTranslateKAZ_View
+@using RapidDoc.Extensions;
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Department)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.Department, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Подразделение" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Contact)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.Contact, new { @class = "form-control", @rows = "1", placeholder = "Контакты (имя, телефон, электронная почта)", @autofocus = "required" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Purpose)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.Purpose, new { @class = "form-control", @rows = "5", placeholder = "Цель перевода", @autofocus = "required" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Direction)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => model.Direction, new { @class = "selectpicker" })
+</div>
+<div class="editor-label">
+    @Html.LabelFor(model => model.CountPage)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => model.CountPage, new { @class = "form-control bfh-number" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Priority)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => model.Priority, new { @class = "selectpicker" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.ExplanationPriority)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.ExplanationPriority, new { @class = "form-control", @rows = "5", placeholder = "Обоснование приоритетности", @autofocus = "required" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.RequestText)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.RequestText, new { @class = "form-control", @rows = "10", placeholder = "Текст запроса", @autofocus = "required" })
+</div>
+<hr />
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Users)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.Users, new { @class = "form-control", @data_role = "tagsinputEmpl", @size = 256, @maxlength = 256, placeholder = "Имя Фамилия" })
+</div>
+
+<div>
+    <p>
+        <em>При выборе высокой приоритетности необходимо указать точное и достоверное обоснование(причину) срочности</em>
+    </p>
+    <ul>
+        <li>
+            <em>Срок выполнения заявки(без учета высокой приоритетности) - не менее 1 (одного) рабочего дня с момента подписания руководителем сектора переводов</em>
+        </li>
+        <li>
+            <em>Если ранее осуществлялся перевод одной из версий запрашиваемого документа, то необходимо вложить предыдущие версии, как на русском, так и на английском языке</em>
+        </li>
+    </ul>
+</div>
