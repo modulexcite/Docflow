@@ -1004,7 +1004,7 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string DataDoument { get; set; }
         [Required]
-        public DateTime Period { get; set; }
+        public string Period { get; set; }
         [Required]
         public string Reason { get; set; }
     }

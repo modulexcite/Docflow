@@ -1377,7 +1377,7 @@ namespace RapidDoc.Models.ViewModels
         public string DataDoument { get; set; }
 
         [Display(Name = "Период")]
-        public DateTime? Period { get; set; }
+        public string Period { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина запроса")]

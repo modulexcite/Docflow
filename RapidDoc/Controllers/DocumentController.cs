@@ -956,6 +956,14 @@ namespace RapidDoc.Controllers
                     ModelState.AddModelError(string.Empty, "Дата регистрации должна быть заполнена");
                 }
             }
+
+            if (type == (new USR_REQ_OKS_RequestForVisa_View()).GetType())
+            {
+                if ((actionModel.FromDate == null || actionModel.ToDate == null) || (actionModel.FromDate > actionModel.ToDate))
+                {
+                    ModelState.AddModelError(string.Empty, "Неверно указан диапазон дат");
+                }
+            }
         }
 
         private void SaveSearchData(dynamic docModel, string actionModelName, Guid documentId)
