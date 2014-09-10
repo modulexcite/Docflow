@@ -23,7 +23,7 @@ namespace RapidDoc.Controllers
             IReviewDocLogService _ReviewDocLogService = DependencyResolver.Current.GetService<IReviewDocLogService>();
             IWorkScheduleService _WorkScheduleService = DependencyResolver.Current.GetService<IWorkScheduleService>();
             IAccountService _AccountService = DependencyResolver.Current.GetService<IAccountService>();
-            var allDocument = _Documentservice.GetPartial(x => x.CompanyTable.AliasCompanyName == companyId);
+            var allDocument = _Documentservice.GetPartial(x => x.CompanyTable.AliasCompanyName == companyId && x.DocumentNum == "RD0000965");
 
             if (allDocument == null)
                 return;
@@ -104,7 +104,7 @@ namespace RapidDoc.Controllers
                         {
                             if (document.DocumentState == Models.Repository.DocumentState.Agreement || document.DocumentState == Models.Repository.DocumentState.Execution)
                             {
-                                var checkUser = _Documentservice.GetAllUserCurrentStep(document, false);
+                                var checkUser = _Documentservice.GetAllUserCurrentStep(document);
                                 checkData.Add(new CheckSLAStatus(document, checkUser));
                             }
                         }

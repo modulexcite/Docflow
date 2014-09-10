@@ -46,7 +46,7 @@ namespace RapidDoc.Models.Services
         List<ApplicationUser> GetSignUsers(DocumentTable docuTable);
         List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status);
         DateTime? GetSLAPerformDate(Guid DocumentId, DateTime? CreatedDate, double SLAOffset);
-        List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable, bool executorStep);
+        List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable);
     }
 
     public class DocumentService : IDocumentService
@@ -755,10 +755,10 @@ namespace RapidDoc.Models.Services
             return users;
         }
 
-        public List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable, bool executorStep)
+        public List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable)
         {
             List<WFTrackerUsersTable> users = new List<WFTrackerUsersTable>();
-            IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting && x.ExecutionStep == executorStep);
+            IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting);
 
             if (items != null)
             {
