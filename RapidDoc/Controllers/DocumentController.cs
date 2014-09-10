@@ -964,6 +964,47 @@ namespace RapidDoc.Controllers
                     ModelState.AddModelError(string.Empty, "Неверно указан диапазон дат");
                 }
             }
+
+            if (type == (new USR_REQ_ZIF_RequestForSIZ_View()).GetType())
+            {
+                if (!_DocumentService.FileContains(fileId))
+                {
+                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
+                }
+            }
+
+            if (type == (new USR_REQ_ZIF_RequestForFuel_View()).GetType())
+            {
+                if (!_DocumentService.FileContains(fileId))
+                {
+                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
+                }
+            }
+
+            if (type == (new USR_REQ_OKS_RequestForTranslate_View()).GetType())
+            {
+                if (!_DocumentService.FileContains(fileId))
+                {
+                    ModelState.AddModelError(string.Empty, "Не прикреплено приложение");
+                }
+            }
+
+            if (type == (new USR_REQ_OKS_RequestForTranslateKAZ_View()).GetType())
+            {
+                if (!_DocumentService.FileContains(fileId))
+                {
+                    ModelState.AddModelError(string.Empty, "Не прикреплено приложение");
+                }
+            }
+
+            if (type == (new USR_REQ_OKS_RequestForVisa_View()).GetType())
+            {
+                if (!_DocumentService.FileContains(fileId))
+                {
+                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
+                }
+            }
+            
         }
 
         private void SaveSearchData(dynamic docModel, string actionModelName, Guid documentId)

@@ -110,6 +110,9 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_OKS_RequestForPrintBlank_Table> USR_REQ_OKS_RequestForPrintBlank_Table { get; set; }
         public DbSet<USR_REQ_OKS_RequestForArchive_Table> USR_REQ_OKS_RequestForArchive_Table { get; set; }
         public DbSet<USR_REQ_OKS_RequestForVisa_Table> USR_REQ_OKS_RequestForVisa_Table { get; set; }
+        public DbSet<USR_REQ_ROGR_RequestForMiningVehicle_Table> USR_REQ_ROGR_RequestForMiningVehicle_Table { get; set; }
+        public DbSet<USR_REQ_SGMZIF_RequestForRepair_Table> USR_REQ_SGMZIF_RequestForRepair_Table { get; set; }
+        public DbSet<USR_REQ_JU_RequestForAssurance_Table> USR_REQ_JU_RequestForAssurance_Table { get; set; }
 
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
