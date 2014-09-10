@@ -44,7 +44,7 @@ namespace RapidDoc.Models.Grids
                 displayedItem.TitleName = empl.TitleName;
                 displayedItem.DepartmentName = empl.DepartmentName;
 
-                if (displayedItem.DocumentText.Length > 80)
+                if (displayedItem.DocumentText != null && displayedItem.DocumentText.Length > 80)
                 {
                     displayedItem.DocumentText = displayedItem.DocumentText.Substring(0, 80) + "...";
                 }

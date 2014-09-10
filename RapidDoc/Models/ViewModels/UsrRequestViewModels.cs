@@ -1305,7 +1305,7 @@ namespace RapidDoc.Models.ViewModels
 
     #region ОКС
 
-    public class USR_REQ_OKS_RequestForTranslate_View : BasicDocumentRequestView
+    public class USR_REQ_OKS_RequestForTranslate_View : BasicDocumentView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Подразделение")]
@@ -1331,9 +1331,13 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Обоснование приоритетности")]
         public string ExplanationPriority { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Инициатор")]
+        public string Users { get; set; }
     }
 
-    public class USR_REQ_OKS_RequestForTranslateKAZ_View : BasicDocumentRequestView
+    public class USR_REQ_OKS_RequestForTranslateKAZ_View : BasicDocumentView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Подразделение")]
@@ -1359,14 +1363,20 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Обоснование приоритетности")]
         public string ExplanationPriority { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Инициатор")]
+        public string Users { get; set; }
     }
 
     public class USR_REQ_OKS_RequestForPrintBlank_View : BasicDocumentView
     {
         [Display(Name = "Номер и дата приказа")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string DateAndNumber { get; set; }
 
         [Display(Name = "Причина запроса")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Purpose { get; set; }
     }
 
@@ -1376,6 +1386,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Данные по запрашиваемому документу")]
         public string DataDoument { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Период")]
         public string Period { get; set; }
 
@@ -1426,7 +1437,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Вид горной техники")]
-        public string Type { get; set; }
+        public string VehicleType { get; set; }
     }
 
     #endregion
@@ -1507,7 +1518,7 @@ namespace RapidDoc.Models.ViewModels
     public class USR_REQ_JU_RequestForAssurance_View : BasicDocumentView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "ФИО Заказчика", ResourceType = typeof(CustomRes.Custom))]
+        [Display(Name = "ФИО Заказчика")]
         public string Users { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]

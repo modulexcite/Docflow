@@ -955,7 +955,7 @@ namespace RapidDoc.Models.DomainModels
 
     #region ОКС
 
-    public class USR_REQ_OKS_RequestForTranslate_Table : BasicDocumentRequestTable
+    public class USR_REQ_OKS_RequestForTranslate_Table : BasicDocumentTable
     {
         [Required]
         public string Department { get; set; }
@@ -971,9 +971,11 @@ namespace RapidDoc.Models.DomainModels
         public ServiceIncidientPriority Priority { get; set; }
         [Required]
         public string ExplanationPriority { get; set; }
+        [Required]
+        public string Users { get; set; }
     }
 
-    public class USR_REQ_OKS_RequestForTranslateKAZ_Table : BasicDocumentRequestTable
+    public class USR_REQ_OKS_RequestForTranslateKAZ_Table : BasicDocumentTable
     {
         [Required]
         public string Department { get; set; }
@@ -989,6 +991,8 @@ namespace RapidDoc.Models.DomainModels
         public ServiceIncidientPriority Priority { get; set; }
         [Required]
         public string ExplanationPriority { get; set; }
+        [Required]
+        public string Users { get; set; }
     }
 
     public class USR_REQ_OKS_RequestForPrintBlank_Table : BasicDocumentTable
@@ -1020,7 +1024,7 @@ namespace RapidDoc.Models.DomainModels
 
     #endregion
 
-     #region РОГР
+    #region РОГР
 
     public class USR_REQ_ROGR_RequestForMiningVehicle_Table : BasicDocumentTable
     {
@@ -1028,7 +1032,7 @@ namespace RapidDoc.Models.DomainModels
         public string Users { get; set; }
 
         [Required]
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
 
         [Required]
         public string Reason { get; set; }
@@ -1040,7 +1044,7 @@ namespace RapidDoc.Models.DomainModels
         public string Person { get; set; }
 
         [Required]
-        public string Type { get; set; }
+        public string VehicleType { get; set; }
     }
 
     #endregion

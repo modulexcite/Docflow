@@ -8,7 +8,6 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using RapidDoc.Models.Infrastructure;
 
 namespace RapidDoc
 {
@@ -26,13 +25,6 @@ namespace RapidDoc
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            /*
-            #if DEBUG
-                Database.SetInitializer<ApplicationDbContext>(new CompositeDBInitializer<ApplicationDbContext>(new DropCreateDatabaseAlways<ApplicationDbContext>(),
-                    new DataDBInitializer()));
-            #endif
-            */
         }
 
         protected void Application_AcquireRequestState(object sender, EventArgs e)
