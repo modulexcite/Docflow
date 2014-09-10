@@ -955,7 +955,7 @@ namespace RapidDoc.Models.DomainModels
 
     #region ОКС
 
-    public class USR_REQ_OKS_RequestForTranslate_Table : BasicDocumentTable
+    public class USR_REQ_OKS_RequestForTranslate_Table : BasicDocumentRequestTable
     {
         [Required]
         public string Department { get; set; }
@@ -973,7 +973,7 @@ namespace RapidDoc.Models.DomainModels
         public string ExplanationPriority { get; set; }
     }
 
-    public class USR_REQ_OKS_RequestForTranslateKAZ_Table : BasicDocumentTable
+    public class USR_REQ_OKS_RequestForTranslateKAZ_Table : BasicDocumentRequestTable
     {
         [Required]
         public string Department { get; set; }
@@ -1019,5 +1019,113 @@ namespace RapidDoc.Models.DomainModels
     }
 
     #endregion
-    
+
+     #region РОГР
+
+    public class USR_REQ_ROGR_RequestForMiningVehicle_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public DateTime? Date { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string Volume { get; set; }
+
+        [Required]
+        public string Person { get; set; }
+
+        [Required]
+        public string Type { get; set; }
+    }
+
+    #endregion
+
+    #region СГЭ ЗИФ
+
+    public class USR_REQ_SGMZIF_RequestForRepair_Table : BasicDocumentTable
+    {
+        [Required]
+        public DateTime? Date { get; set; }
+
+        [Required]
+        public string Information { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Contact { get; set; }
+
+        [Required]
+        public string Telephone { get; set; }
+
+        [Required]
+        public string Equipment { get; set; }
+
+        [Required]
+        public string DescriptionFail { get; set; }
+
+        [Required]
+        public string TypeEngine { get; set; }
+
+        [Required]
+        public string PowerEngine { get; set; }
+
+        [Required]
+        public string Speed { get; set; }
+
+        [Required]
+        public string Current { get; set; }
+
+        [Required]
+        public string Voltage { get; set; }
+
+        [Required]
+        public string SchemeConnection { get; set; }
+
+        [Required]
+        public string RateDefense { get; set; }
+
+        [Required]
+        public string InstallPerformance { get; set; }
+
+        [Required]
+        public string SerialNumber { get; set; }
+    }
+
+    #endregion
+
+    #region ЮУ
+
+    public class USR_REQ_JU_RequestForAssurance_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string FullName { get; set; }
+
+        [Required]
+        public string DateAssurance { get; set; }
+
+        [Required]
+        public string AimAssurance { get; set; }
+
+        [Required]
+        public string WhereAndWhom { get; set; }
+
+        [Required]
+        public int CountExamples { get; set; }
+    }
+
+    #endregion
 }
+    

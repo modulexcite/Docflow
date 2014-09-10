@@ -615,6 +615,27 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
                 .ForMember(x => x.CreatedDate, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_ROGR_RequestForMiningVehicle_Table, USR_REQ_ROGR_RequestForMiningVehicle_View>();
+            Mapper.CreateMap<USR_REQ_ROGR_RequestForMiningVehicle_View, USR_REQ_ROGR_RequestForMiningVehicle_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_SGMZIF_RequestForRepair_Table, USR_REQ_SGMZIF_RequestForRepair_View>();
+            Mapper.CreateMap<USR_REQ_SGMZIF_RequestForRepair_View, USR_REQ_SGMZIF_RequestForRepair_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<USR_REQ_JU_RequestForAssurance_Table, USR_REQ_JU_RequestForAssurance_View>();
+            Mapper.CreateMap<USR_REQ_JU_RequestForAssurance_View, USR_REQ_JU_RequestForAssurance_Table>()
+                .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
+                .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
+                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
+                .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
         }
 
         public object Map(object source, Type sourceType, Type destinationType)
