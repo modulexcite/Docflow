@@ -16,7 +16,8 @@ namespace RapidDoc.Controllers
         private readonly IDocumentService _DocumentService;
         private readonly IServiceIncidentService _ServiceIncidentService;
 
-        public CustomController(IEmplService emplService, ISystemService systemService, IDocumentService documentService, IServiceIncidentService serviceIncidentService)
+        public CustomController(IEmplService emplService, ISystemService systemService, IDocumentService documentService, IServiceIncidentService serviceIncidentService, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _EmplService = emplService;
             _SystemService = systemService;

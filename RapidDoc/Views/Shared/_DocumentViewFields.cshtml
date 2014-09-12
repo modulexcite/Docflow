@@ -1,0 +1,63 @@
+﻿@model object
+@using RapidDoc.Extensions
+
+@foreach (var property in Model.VisibleProperties())
+{
+    object dataTypeAttr = property.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DataTypeAttribute), false).FirstOrDefault();
+    <div class="editor-label">
+        @Html.Label((string)property.Name)
+    </div>
+    
+    if (property.PropertyType == typeof(string))
+    {
+        if ((string)property.Name == "Users")
+        {
+            <div class="editor-field">
+                @Html.HtmlDisplayTags(property.GetValue(Model, null).ToString())
+            </div>
+        }
+        else
+        { 
+            <div class="editor-field">
+                @Html.DisplayText((string)property.Name)
+            </div>
+        }
+    }
+    else if (property.PropertyType == typeof(DateTime?))
+    {
+        @Html.Hidden((string)property.Name)
+        if (dataTypeAttr == null)
+        {
+            <div class="editor-field">
+                @Html.Display((string)property.Name, "MM/dd/yyyy")
+            </div>
+        }
+        else 
+        {
+            if(((System.ComponentModel.DataAnnotations.DataTypeAttribute)dataTypeAttr).DataType == System.ComponentModel.DataAnnotations.DataType.Date)
+            {
+                <div class="editor-field">
+                    @Html.Display((string)property.Name, "MM/dd/yyyy")
+                </div>
+            }
+            else if (((System.ComponentModel.DataAnnotations.DataTypeAttribute)dataTypeAttr).DataType == System.ComponentModel.DataAnnotations.DataType.DateTime)
+            {
+                <div class="editor-field">
+                    @Html.DisplayText((string)property.Name)
+                </div>
+            }
+        }
+    }
+    else if (property.PropertyType == typeof(int))
+    {
+        <div class="editor-field">
+            @Html.DisplayText((string)property.Name)
+        </div>
+    }
+    else if (property.PropertyType.IsEnum)
+    {
+        <div class="editor-field">
+            @Html.EnumDropDownList((string)property.PropertyType.FullName, (string)property.Name, new { @disabled = true })
+        </div>
+    }
+}

@@ -20,7 +20,8 @@ namespace RapidDoc.Controllers
         private readonly IDocumentService _DocumentService;
         private readonly IDepartmentService _DepartmentService;
 
-        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService)
+        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _WorkflowTrackerService = workflowTrackerService;
             _DocumentService = documentService;

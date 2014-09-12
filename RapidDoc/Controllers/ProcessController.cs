@@ -23,7 +23,8 @@ namespace RapidDoc.Controllers
         private readonly IGroupProcessService _GroupProcessService;
         private readonly IWorkScheduleService _WorkScheduleService;
 
-        public ProcessController(IProcessService service, IGroupProcessService groupProcessService, IWorkScheduleService workScheduleService)
+        public ProcessController(IProcessService service, IGroupProcessService groupProcessService, IWorkScheduleService workScheduleService, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _Service = service;
             _GroupProcessService = groupProcessService;

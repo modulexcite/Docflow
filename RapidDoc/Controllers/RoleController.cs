@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Grids;
+using RapidDoc.Models.Services;
 
 namespace RapidDoc.Controllers
 {
@@ -22,14 +23,16 @@ namespace RapidDoc.Controllers
         public RoleManager<IdentityRole> RoleManager { get; private set; }
         public ApplicationDbContext context { get; private set; }
 
-        public RoleController()
+        public RoleController(ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             context = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
         }
 
-        public RoleController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public RoleController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             UserManager = userManager;
             RoleManager = roleManager;

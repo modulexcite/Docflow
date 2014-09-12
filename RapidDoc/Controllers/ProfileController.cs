@@ -19,7 +19,8 @@ namespace RapidDoc.Controllers
     {
         private readonly IProfileService _Service;
 
-        public ProfileController(IProfileService Service)
+        public ProfileController(IProfileService Service, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _Service = Service;
         }

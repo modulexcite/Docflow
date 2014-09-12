@@ -31,7 +31,6 @@ namespace RapidDoc.Controllers
         private readonly IProcessService _ProcessService;
         private readonly IWorkflowService _WorkflowService;
         private readonly IEmplService _EmplService;
-        private readonly IAccountService _AccountService;
         private readonly ISystemService _SystemService;
         private readonly IWorkflowTrackerService _WorkflowTrackerService;
         private readonly IReviewDocLogService _ReviewDocLogService;
@@ -46,13 +45,13 @@ namespace RapidDoc.Controllers
             IWorkflowService workflowService, IEmplService emplService, IAccountService accountService, ISystemService systemService,
             IWorkflowTrackerService workflowTrackerService, IReviewDocLogService reviewDocLogService,
             IDocumentReaderService documentReaderService, ICommentService commentService, IEmailService emailService,
-            IHistoryUserService historyUserService, ISearchService searchService, IServiceIncidentService serviceIncidentService)
+            IHistoryUserService historyUserService, ISearchService searchService, IServiceIncidentService serviceIncidentService, ICompanyService companyService)
+            : base(companyService, accountService)
         {
             _DocumentService = documentService;
             _ProcessService = processService;
             _WorkflowService = workflowService;
             _EmplService = emplService;
-            _AccountService = accountService;
             _SystemService = systemService;
             _WorkflowTrackerService = workflowTrackerService;
             _ReviewDocLogService = reviewDocLogService;
@@ -74,7 +73,7 @@ namespace RapidDoc.Controllers
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
             ViewBag.CurrentTimeId = user.TimeZoneId;
 
-            var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), 1, false);
+            var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
             return PartialView("~/Views/Document/DocumentList.cshtml", grid);
         }
 
@@ -83,13 +82,13 @@ namespace RapidDoc.Controllers
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
             ViewBag.CurrentTimeId = user.TimeZoneId;
 
-            var grid = new DocumentAjaxPagingGrid(_DocumentService.GetArchiveView(), 1, false);
+            var grid = new DocumentAjaxPagingGrid(_DocumentService.GetArchiveView(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
             return PartialView("~/Views/Document/DocumentList.cshtml", grid);
         }
 
         public JsonResult GetDocumentList(int page)
         {
-            var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), page, true);
+            var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
 
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
             ViewBag.CurrentTimeId = user.TimeZoneId;
@@ -103,7 +102,7 @@ namespace RapidDoc.Controllers
 
         public JsonResult GetArchiveDocumentList(int page)
         {
-            var grid = new DocumentAjaxPagingGrid(_DocumentService.GetArchiveView(), page, true);
+            var grid = new DocumentAjaxPagingGrid(_DocumentService.GetArchiveView(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
 
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
             ViewBag.CurrentTimeId = user.TimeZoneId;
@@ -120,13 +119,13 @@ namespace RapidDoc.Controllers
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
             ViewBag.CurrentTimeId = user.TimeZoneId;
 
-            var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), 1, false);
+            var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
             return PartialView("~/Views/Document/DocumentList.cshtml", grid);
         }
 
         public JsonResult GetAgreedDocumentList(int page)
         {
-            var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), page, true);
+            var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
 
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
             ViewBag.CurrentTimeId = user.TimeZoneId;

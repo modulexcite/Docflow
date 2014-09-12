@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using RapidDoc.Models.Services;
 
 namespace RapidDoc.Controllers
 {
     public class ErrorController : BasicController
     {
+        public ErrorController(ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
+        {
+        }
+
         public ActionResult PageNotFound()
         {
             return View();

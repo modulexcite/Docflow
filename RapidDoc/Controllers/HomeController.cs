@@ -10,13 +10,9 @@ namespace RapidDoc.Controllers
 {
     public class HomeController : BasicController
     {
-        private readonly ICompanyService _CompanyService;
-        private readonly IAccountService _AccountService;
-
-        public HomeController(ICompanyService CompanyService, IAccountService AccountService)
+        public HomeController(ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
-            _CompanyService = CompanyService;
-            _AccountService = AccountService;
         }
 
         public ActionResult Index()

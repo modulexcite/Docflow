@@ -1,0 +1,105 @@
+﻿@model object
+@using RapidDoc.Extensions
+
+@{ int index = 0; bool isDate = false; bool isDateTime = false; }
+@foreach (var property in Model.VisibleProperties())
+{
+    object dataTypeAttr = property.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DataTypeAttribute), false).FirstOrDefault();
+    <div class="editor-label">
+        @Html.LabelRequired((string)property.Name)
+    </div>
+    
+    if(property.PropertyType == typeof(string))
+    {
+        if ((string)property.Name == "Users")
+        {
+            <div class="editor-field">
+                @Html.TextBox((string)property.Name, null, new { @class = "form-control", @data_role = "tagsinputEmpl", placeholder = "Имя Фамилия" })
+            </div>
+        }
+        else
+        {
+            if (dataTypeAttr != null && ((System.ComponentModel.DataAnnotations.DataTypeAttribute)dataTypeAttr).DataType == System.ComponentModel.DataAnnotations.DataType.MultilineText)
+            {
+                <div class="editor-field">
+                    @if(index == 0)
+                    { 
+                        @Html.TextArea((string)property.Name, null, new { @class = "form-control", @row = 5, placeholder = Html.DisplayName((string)property.Name), @autofocus = "required" })
+                    }
+                    else
+                    {
+                        @Html.TextArea((string)property.Name, null, new { @class = "form-control", @row = 5, placeholder = Html.DisplayName((string)property.Name) })
+                    }
+                </div>
+            }
+            else
+            { 
+                <div class="editor-field">
+                    @if(index == 0)
+                    { 
+                        @Html.TextBox((string)property.Name, null, new { @class = "form-control", placeholder = Html.DisplayName((string)property.Name), @autofocus = "required" })
+                    }
+                    else
+                    {
+                        @Html.TextBox((string)property.Name, null, new { @class = "form-control", placeholder = Html.DisplayName((string)property.Name) })
+                    }
+                </div>
+            }
+        }
+    }
+    else if (property.PropertyType == typeof(DateTime?))
+    {
+        if (dataTypeAttr == null)
+        {
+            isDate = true;
+            <div class="editor-field">
+                @Html.TextBox((string)property.Name, null, new { @class = "datepicker", placeholder = "Дата", startDate = "" })
+            </div>
+        }
+        else 
+        {
+            if(((System.ComponentModel.DataAnnotations.DataTypeAttribute)dataTypeAttr).DataType == System.ComponentModel.DataAnnotations.DataType.Date)
+            {
+                isDate = true;
+                <div class="editor-field">
+                    @Html.TextBox((string)property.Name, null, new { @class = "datepicker", placeholder = "Дата", startDate = "" })
+                </div>
+            }
+            else if (((System.ComponentModel.DataAnnotations.DataTypeAttribute)dataTypeAttr).DataType == System.ComponentModel.DataAnnotations.DataType.DateTime)
+            {
+                isDateTime = true;
+                <div class="editor-field">
+                    @Html.TextBox((string)property.Name, null, new { @class = "datetimepicker", placeholder = "Дата/время", startDate = "" })
+                </div>
+            }
+            
+        }    
+    }
+    else if (property.PropertyType == typeof(int))
+    {
+        <div class="editor-field">
+            @Html.TextBox((string)property.Name, null, new { @class = "form-control bfh-number" })
+        </div>
+    }
+    else if (property.PropertyType.IsEnum)
+    {
+        <div class="editor-field">
+            @Html.EnumDropDownList((string)property.PropertyType.FullName, (string)property.Name, new { @class = "selectpicker" })
+        </div>
+    }
+
+    index++;
+}
+
+@if (isDate)
+{
+    @section jslaunch {
+        datepicker_init("@UIElementRes.UIElement.LangName");
+    }
+}
+@if (isDateTime)
+{
+    @section jslaunch {
+        datetimepicker_init("@UIElementRes.UIElement.LangName");
+    }
+}

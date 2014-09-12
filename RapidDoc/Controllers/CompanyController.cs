@@ -20,12 +20,11 @@ namespace RapidDoc.Controllers
     [Authorize(Roles = "Administrator")]
     public class CompanyController : BasicController
     {
-        private readonly ICompanyService _Service;
         private readonly IDomainService _DomainService;
 
-        public CompanyController(ICompanyService Service, IDomainService DomainService)
+        public CompanyController(ICompanyService companyService, IDomainService DomainService, IAccountService accountService)
+            : base(companyService, accountService)
         {
-            _Service = Service;
             _DomainService = DomainService;
         }
 
@@ -36,13 +35,13 @@ namespace RapidDoc.Controllers
 
         public ActionResult Grid()
         {
-            var grid = new CompanyAjaxPagingGrid(_Service.GetAllView(), 1, false);
+            var grid = new CompanyAjaxPagingGrid(_CompanyService.GetAllView(), 1, false);
             return PartialView("_CompanyGrid", grid);
         }
 
         public JsonResult GetCompanyList(int page)
         {
-            var grid = new CompanyAjaxPagingGrid(_Service.GetAllView(), page, true);
+            var grid = new CompanyAjaxPagingGrid(_CompanyService.GetAllView(), page, true);
 
             return Json(new
             {
@@ -66,7 +65,7 @@ namespace RapidDoc.Controllers
             {
                 try
                 {
-                    _Service.Save(model);
+                    _CompanyService.Save(model);
                     return RedirectToAction("Index");
                 }
                 catch (Exception e)
@@ -80,7 +79,7 @@ namespace RapidDoc.Controllers
 
         public ActionResult Edit(Guid id)
         {
-            var model = _Service.FindView(id);
+            var model = _CompanyService.FindView(id);
 
             if (model == null)
             {
@@ -99,7 +98,7 @@ namespace RapidDoc.Controllers
             {
                 try
                 {
-                    _Service.Save(model);
+                    _CompanyService.Save(model);
                     return RedirectToAction("Index");
                 }
                 catch (Exception e)
@@ -113,7 +112,7 @@ namespace RapidDoc.Controllers
 
         public ActionResult Delete(Guid id)
         {
-            var model = _Service.FindView(id);
+            var model = _CompanyService.FindView(id);
 
             if (model == null)
             {
@@ -128,7 +127,7 @@ namespace RapidDoc.Controllers
         {
             try
             {
-                _Service.Delete(id);
+                _CompanyService.Delete(id);
                 return RedirectToAction("Index");
             }
             catch (Exception e)
@@ -136,7 +135,7 @@ namespace RapidDoc.Controllers
                 ModelState.AddModelError(string.Empty, e.GetOriginalException().Message);
             }
 
-            var model = _Service.FindView(id);
+            var model = _CompanyService.FindView(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -147,7 +146,7 @@ namespace RapidDoc.Controllers
 
         public ActionResult Detail(Guid id)
         {
-            var model = _Service.FindView(id);
+            var model = _CompanyService.FindView(id);
 
             if (model == null)
             {

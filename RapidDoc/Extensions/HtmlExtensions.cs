@@ -21,6 +21,35 @@ namespace RapidDoc.Extensions
 {
     public static class HtmlExtensions
     {
+        public static MvcHtmlString EnumDropDownList(this HtmlHelper helper, string enumName, string fieldName, object htmlAttribute = null)
+        {
+            Type type = Type.GetType(enumName);
+            if (type != null)
+            {
+                var enumsList = System.Web.Mvc.Html.EnumHelper.GetSelectList(type);
+
+                IEnumerable<SelectListItem> items =
+                    from value in enumsList
+                    select new SelectListItem
+                    {
+                        Text = value.Text,
+                        Value = value.Value,
+                        Selected = value.Selected
+                    };
+
+                return helper.DropDownList(fieldName, items, htmlAttribute);
+            }
+
+            return new MvcHtmlString(String.Empty);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "This is an appropriate nesting of generic types")]
+        public static MvcHtmlString LabelRequired(this HtmlHelper html, string htmlFieldName, string labelText = "")
+        {
+            return LabelHelper(html,
+                ModelMetadata.FromStringExpression(htmlFieldName, html.ViewData), htmlFieldName, labelText);
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "This is an appropriate nesting of generic types")]
         public static MvcHtmlString LabelForRequired<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText = "")
         {
@@ -152,6 +181,20 @@ namespace RapidDoc.Extensions
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
 
             string[] tags = html.Encode(metadata.Model).Split(',');
+
+            Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
+            string[] tagsResult = tags.Where(a => isGuid.IsMatch(a) == false).ToArray();
+            var model = string.Join(",", tagsResult).Replace(",", ",<br />\n");
+
+            if (String.IsNullOrEmpty(model))
+                return MvcHtmlString.Empty;
+
+            return MvcHtmlString.Create(model);
+        }
+
+        public static MvcHtmlString HtmlDisplayTags(this HtmlHelper html, string value)
+        {
+            string[] tags = html.Encode(value).Split(',');
 
             Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
             string[] tagsResult = tags.Where(a => isGuid.IsMatch(a) == false).ToArray();

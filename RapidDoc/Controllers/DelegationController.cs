@@ -17,17 +17,16 @@ namespace RapidDoc.Controllers
     public class DelegationController : BasicController
     {
         private readonly IDelegationService _Service;
-        private readonly ICompanyService _CompanyService;
         private readonly IGroupProcessService _GroupProcessService;
         private readonly IProcessService _ProcessService;
         private readonly IEmplService _EmplService;
         private readonly IEmailService _EmailService;
 
         public DelegationController(IDelegationService service, ICompanyService companyService,
-            IGroupProcessService groupProcessService, IProcessService processService, IEmplService emplService, IEmailService emailService)
+            IGroupProcessService groupProcessService, IProcessService processService, IEmplService emplService, IEmailService emailService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _Service = service;
-            _CompanyService = companyService;
             _GroupProcessService = groupProcessService;
             _ProcessService = processService;
             _EmplService = emplService;

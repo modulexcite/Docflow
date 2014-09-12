@@ -1347,6 +1347,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Контакты (имя, телефон, электронная почта)")]
         public string Contact { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Цель перевода")]
         public string Purpose { get; set; }
@@ -1360,6 +1361,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Приоритет")]
         public ServiceIncidientPriority Priority { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Обоснование приоритетности")]
         public string ExplanationPriority { get; set; }
@@ -1375,6 +1377,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string DateAndNumber { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Причина запроса")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Purpose { get; set; }
@@ -1419,6 +1422,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Users", ResourceType = typeof(CustomRes.Custom))]
         public string Users { get; set; }
 
+        [DataType(DataType.DateTime)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата/время")]
         public DateTime? Date { get; set; }
@@ -1446,6 +1450,7 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_SGMZIF_RequestForRepair_View : BasicDocumentView
     {
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
         public DateTime? Date { get; set; }

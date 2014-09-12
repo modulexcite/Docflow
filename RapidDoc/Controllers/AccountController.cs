@@ -13,18 +13,20 @@ using Microsoft.Owin.Security;
 using RapidDoc.Models;
 using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Infrastructure;
+using RapidDoc.Models.Services;
 using RapidDoc.Models.ViewModels;
 
 namespace RapidDoc.Controllers
 {
     public partial class AccountController : BasicController
     {
-        public AccountController()
-            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
+        public AccountController(ICompanyService companyService, IAccountService accountService)
+            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())), companyService, accountService)
         {
         }
 
-        public AccountController(UserManager<ApplicationUser> userManager)
+        public AccountController(UserManager<ApplicationUser> userManager, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             UserManager = userManager;
         }

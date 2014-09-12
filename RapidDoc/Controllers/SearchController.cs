@@ -18,7 +18,8 @@ namespace RapidDoc.Controllers
     {
         private readonly ISearchService _Service;
 
-        public SearchController(ISearchService Service)
+        public SearchController(ISearchService Service, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _Service = Service;
         }

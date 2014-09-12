@@ -15,14 +15,13 @@ namespace RapidDoc.Controllers
         private readonly IDocumentService _DocumentService;
         private readonly IDepartmentService _DepartmentService;
         private readonly IEmplService       _EmplService;
-        private readonly IAccountService   _AccountService;
 
-        public MonitoringController(IDocumentService documentService, IDepartmentService departmentService, IEmplService emplService, IAccountService accountService)
+        public MonitoringController(IDocumentService documentService, IDepartmentService departmentService, IEmplService emplService, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _DocumentService = documentService;
             _DepartmentService = departmentService;
             _EmplService = emplService;
-            _AccountService = accountService;
         }
 
         public ActionResult Index()

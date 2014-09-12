@@ -16,8 +16,47 @@ namespace RapidDoc.Controllers
     [Culture]
     public class BasicController : Controller
     {
+        protected readonly ICompanyService _CompanyService;
+        protected readonly IAccountService _AccountService;
+
+        public BasicController(ICompanyService companyService, IAccountService accountService)
+        {
+            _CompanyService = companyService;
+            _AccountService = accountService;
+        }
+
         [Inject]
         public IMapper ModelMapper { get; set; }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
+            if (filterContext.RouteData.Values.Any(x => x.Key == "company"))
+            {
+                var companyId = filterContext.RouteData.Values["company"].ToString();
+                if (!String.IsNullOrEmpty(companyId))
+                {
+                    var user = _AccountService.FirstOrDefault(x => x.UserName == filterContext.HttpContext.User.Identity.Name);
+                    if (user != null)
+                    {
+                        if (user.AliasCompanyName != companyId)
+                        {
+                            var companyList = _CompanyService.GetAll().ToList();
+                            if (companyList != null)
+                            {
+                                var company = companyList.FirstOrDefault(x => x.AliasCompanyName == companyId);
+                                if (company != null)
+                                {
+                                    user.CompanyTableId = company.Id;
+                                    _AccountService.SaveDomain(user);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         public ActionResult ChangeCulture(string id)
         {
@@ -46,23 +85,23 @@ namespace RapidDoc.Controllers
 
         public ActionResult ChangeCompany(string companyId, string returnUrl)
         {
-            IAccountService serviceAccount = DependencyResolver.Current.GetService<IAccountService>();
-            ICompanyService serviceCompany = DependencyResolver.Current.GetService<ICompanyService>();
+            //IAccountService serviceAccount = DependencyResolver.Current.GetService<IAccountService>();
+            //ICompanyService serviceCompany = DependencyResolver.Current.GetService<ICompanyService>();
 
-            var company = serviceCompany.FirstOrDefault(x => x.AliasCompanyName == companyId);
+            var company = _CompanyService.FirstOrDefault(x => x.AliasCompanyName == companyId);
             if (company == null)
             {
                 return HttpNotFound();
             }
 
-            var user = serviceAccount.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            var user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
             if (user == null)
             {
                 return HttpNotFound();
             }
 
             user.CompanyTableId = company.Id;
-            serviceAccount.SaveDomain(user);
+            _AccountService.SaveDomain(user);
 
             if (returnUrl.Length >= 4)
             {

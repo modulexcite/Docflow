@@ -21,20 +21,17 @@ namespace RapidDoc.Controllers
         private readonly IEmplService _Service;
         private readonly ITitleService _TitleService;
         private readonly IProfileService _ProfileService;
-        private readonly ICompanyService _CompanyService;
         private readonly IDepartmentService _DepartmentService;
-        private readonly IAccountService _AccountService;
         private readonly IWorkScheduleService _WorkScheduleService;
 
         public EmplController(IEmplService service, ITitleService titleService, IProfileService profileService, ICompanyService companyService,
             IDepartmentService departmentService, IAccountService accountService, IWorkScheduleService workScheduleService)
+            : base(companyService, accountService)            
         {
             _Service = service;
             _TitleService = titleService;
             _ProfileService = profileService;
-            _CompanyService = companyService;
             _DepartmentService = departmentService;
-            _AccountService = accountService;
             _WorkScheduleService = workScheduleService;
         }
 

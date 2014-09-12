@@ -18,15 +18,14 @@ namespace RapidDoc.Controllers
         private readonly IProcessService _ProcessService;
         private readonly IGroupProcessService _GroupProcessService;
         private readonly IEmplService _EmplService;
-        private readonly IAccountService _AccountService;
         private readonly IDocumentService _DocumentService;
 
-        public NewProcessController(IProcessService processService, IGroupProcessService groupProcessService, IEmplService emplService, IAccountService accountService, IDocumentService documentService)
+        public NewProcessController(IProcessService processService, IGroupProcessService groupProcessService, IEmplService emplService, IDocumentService documentService, IAccountService accountService, ICompanyService companyService)
+            : base(companyService, accountService)
         {
             _ProcessService = processService;
             _GroupProcessService = groupProcessService;
             _EmplService = emplService;
-            _AccountService = accountService;
             _DocumentService = documentService;
         }
 

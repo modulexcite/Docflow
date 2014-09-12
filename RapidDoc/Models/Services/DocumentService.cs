@@ -116,7 +116,15 @@ namespace RapidDoc.Models.Services
             _uow.Save();
 
             var domainTable = RouteCustomModelDomain(tableName);
-            Mapper.Map(viewTable, domainTable);
+
+            Type typeDomain = Type.GetType("RapidDoc.Models.DomainModels." + tableName + "_Table");
+            Type typeDomainView = Type.GetType("RapidDoc.Models.ViewModels." + tableName + "_View");
+            Mapper.CreateMap(typeDomainView, typeDomain)
+                            .ForMember("ApplicationUserCreatedId", opt => opt.Ignore())
+                            .ForMember("ApplicationUserModifiedId", opt => opt.Ignore())
+                            .ForMember("CreatedDate", opt => opt.Ignore())
+                            .ForMember("ModifiedDate", opt => opt.Ignore());
+            Mapper.Map(viewTable, domainTable, typeDomainView, typeDomain);
             domainTable.DocumentTableId = docuTable.Id;
             domainTable.CreatedDate = DateTime.UtcNow;
             domainTable.ModifiedDate = domainTable.CreatedDate;
@@ -144,6 +152,11 @@ namespace RapidDoc.Models.Services
                     {
                         Type typeDomain = Type.GetType("RapidDoc.Models.DomainModels." + process.TableName + "_Table");
                         Type typeDomainView = Type.GetType("RapidDoc.Models.ViewModels." + process.TableName + "_View");
+                        Mapper.CreateMap(typeDomainView, typeDomain)
+                            .ForMember("ApplicationUserCreatedId", opt => opt.Ignore())
+                            .ForMember("ApplicationUserModifiedId", opt => opt.Ignore())
+                            .ForMember("CreatedDate", opt => opt.Ignore())
+                            .ForMember("ModifiedDate", opt => opt.Ignore());
                         Mapper.Map(viewTable, domainTable, typeDomainView, typeDomain);
 
                         domainTable.ModifiedDate = DateTime.UtcNow;
@@ -304,7 +317,10 @@ namespace RapidDoc.Models.Services
 
             var viewTable = RouteCustomModelView(processTable.TableName);
             var domainTable = GetDocument(documentId, processTable.TableName);
-            Mapper.Map(domainTable, viewTable);
+            Type typeDomain = Type.GetType("RapidDoc.Models.DomainModels." + processTable.TableName + "_Table");
+            Type typeDomainView = Type.GetType("RapidDoc.Models.ViewModels." + processTable.TableName + "_View");
+            Mapper.CreateMap(typeDomain, typeDomainView);
+            Mapper.Map(domainTable, viewTable, typeDomain, typeDomainView);
             return viewTable;
         }
 

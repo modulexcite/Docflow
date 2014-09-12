@@ -8,15 +8,14 @@ using RapidDoc.Models.Services;
 
 namespace RapidDoc.Controllers
 {
-    public class HistoryUserController : Controller
+    public class HistoryUserController : BasicController
     {
         private readonly IHistoryUserService _HistoryUserService;
-        private readonly IAccountService _AccountService;
 
-        public HistoryUserController(IHistoryUserService historyUserService, IAccountService accountService)
+        public HistoryUserController(IHistoryUserService historyUserService, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _HistoryUserService = historyUserService;
-            _AccountService = accountService;
         }
 
         //

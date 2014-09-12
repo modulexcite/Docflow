@@ -59,8 +59,6 @@ namespace RapidDoc
                         r.Defaults = new RouteValueDictionary();
                     }
 
-                    //ICompanyService serviceCompany = DependencyResolver.Current.GetService<ICompanyService>();
-                    //r.Defaults.Add("company", serviceCompany.FirstOrDefault(x => x.AliasCompanyName != "").AliasCompanyName);
                     r.Defaults.Add("company", "ATK");
 
                     //Adding constraint for culture param

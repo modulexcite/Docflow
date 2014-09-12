@@ -23,21 +23,19 @@ namespace RapidDoc.Controllers
         public UserManager<ApplicationUser> UserManager { get; private set; }
         public RoleManager<IdentityRole> RoleManager { get; private set; }
         public ApplicationDbContext context { get; private set; }
-        private readonly ICompanyService _CompanyService;
-        private readonly IAccountService _AccountService;
         private readonly IDomainService _DomainService;
 
         public UserController(ICompanyService companyService, IAccountService accountService, IDomainService domainService)
+            : base(companyService, accountService)
         {
-            _CompanyService = companyService;
-            _AccountService = accountService;
             _DomainService = domainService;
             context = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
         }
 
-        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             UserManager = userManager;
             RoleManager = roleManager;

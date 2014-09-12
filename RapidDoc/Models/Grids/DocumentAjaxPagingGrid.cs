@@ -14,9 +14,20 @@ namespace RapidDoc.Models.Grids
     {
         private IEnumerable<DocumentTable> _displayingItems;
 
-        public DocumentGrid(IQueryable<DocumentTable> items)
+        private readonly IReviewDocLogService _ReviewDocLogService;
+        private readonly IDocumentService _DocumentService;
+        private readonly IAccountService _AccountService;
+        private readonly ISearchService _SearchService;
+        private readonly IEmplService _EmplService;
+
+        public DocumentGrid(IQueryable<DocumentTable> items, IReviewDocLogService reviewDocLogService, IDocumentService documentService, IAccountService accountService, ISearchService searchService, IEmplService emplService)
             : base(items)
         {
+            _ReviewDocLogService = reviewDocLogService;
+            _DocumentService = documentService;
+            _AccountService = accountService;
+            _SearchService = searchService;
+            _EmplService = emplService;
         }
 
         protected override IEnumerable<DocumentTable> GetItemsToDisplay()
@@ -25,12 +36,13 @@ namespace RapidDoc.Models.Grids
                 return _displayingItems;
 
             _displayingItems = base.GetItemsToDisplay().ToList();
-
+            /*
             IReviewDocLogService _ReviewDocLogService = DependencyResolver.Current.GetService<IReviewDocLogService>();
             IDocumentService _DocumentService = DependencyResolver.Current.GetService<IDocumentService>();
             IAccountService _AccountService = DependencyResolver.Current.GetService<IAccountService>();
             ISearchService _SearchService = DependencyResolver.Current.GetService<ISearchService>();
             IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
+            */
 
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == HttpContext.Current.User.Identity.Name);
 
@@ -56,8 +68,8 @@ namespace RapidDoc.Models.Grids
 
     public class DocumentAjaxPagingGrid : DocumentGrid
     {
-        public DocumentAjaxPagingGrid(IQueryable<DocumentTable> items, int page, bool renderOnlyRows)
-            : base(items)
+        public DocumentAjaxPagingGrid(IQueryable<DocumentTable> items, int page, bool renderOnlyRows, IReviewDocLogService reviewDocLogService, IDocumentService documentService, IAccountService accountService, ISearchService searchService, IEmplService emplService)
+            : base(items, reviewDocLogService, documentService, accountService, searchService, emplService)
         {
             Pager = new AjaxGridPager(this) { CurrentPage = page }; //override  default pager
             RenderOptions.RenderRowsOnly = renderOnlyRows;

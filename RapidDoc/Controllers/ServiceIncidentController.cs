@@ -25,7 +25,8 @@ namespace RapidDoc.Controllers
         private readonly IServiceIncidentService _Service;
         public ApplicationDbContext context { get; private set; }
 
-        public ServiceIncidentController(IServiceIncidentService Service)
+        public ServiceIncidentController(IServiceIncidentService Service, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             context = new ApplicationDbContext();
             _Service = Service;
