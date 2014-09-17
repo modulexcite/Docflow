@@ -113,7 +113,19 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_ROGR_RequestForMiningVehicle_Table> USR_REQ_ROGR_RequestForMiningVehicle_Table { get; set; }
         public DbSet<USR_REQ_SGMZIF_RequestForRepair_Table> USR_REQ_SGMZIF_RequestForRepair_Table { get; set; }
         public DbSet<USR_REQ_JU_RequestForAssurance_Table> USR_REQ_JU_RequestForAssurance_Table { get; set; }
-
+        public DbSet<USR_REQ_JU_RequestForProxyDoc_Table> USR_REQ_JU_RequestForProxyDoc_Table { get; set; }
+        public DbSet<USR_REQ_JU_RequestForArchiveContract_Table> USR_REQ_JU_RequestForArchiveContract_Table { get; set; }
+        public DbSet<USR_REQ_JU_RequestForApproveDoc_Table> USR_REQ_JU_RequestForApproveDoc_Table { get; set; }
+        public DbSet<USR_REQ_JU_RequestForNPA_Table> USR_REQ_JU_RequestForNPA_Table { get; set; }
+        public DbSet<USR_REQ_JU_RequestForExplanationNormalAct_Table> USR_REQ_JU_RequestForExplanationNormalAct_Table { get; set; }
+        public DbSet<USR_REQ_JU_RequestForExpertise_Table> USR_REQ_JU_RequestForExpertise_Table { get; set; }
+        public DbSet<USR_REQ_FEU_RequestForFinExpertise_Table> USR_REQ_FEU_RequestForFinExpertise_Table { get; set; }
+        public DbSet<USR_REQ_FEU_RequestForCorrectCalendar_Table> USR_REQ_FEU_RequestForCorrectCalendar_Table { get; set; }
+        public DbSet<USR_REQ_UE_RequestForOutputElectricalEqu_Table> USR_REQ_UE_RequestForOutputElectricalEqu_Table { get; set; }
+        public DbSet<USR_REQ_UE_RequestForDismantling_Table> USR_REQ_UE_RequestForDismantling_Table { get; set; }
+        public DbSet<USR_REQ_UE_RequestForForecastWater_Table> USR_REQ_UE_RequestForForecastWater_Table { get; set; }
+        public DbSet<USR_REQ_UE_RequestForElectricRepairs_Table> USR_REQ_UE_RequestForElectricRepairs_Table { get; set; }
+        
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();

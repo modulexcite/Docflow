@@ -1130,6 +1130,258 @@ namespace RapidDoc.Models.DomainModels
         public int CountExamples { get; set; }
     }
 
+    public class USR_REQ_JU_RequestForProxyDoc_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Telephone { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string JuName { get; set; }
+
+        [Required]
+        public string PhyName { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        [Required]
+        public string Term { get; set; }
+    }
+
+    public class USR_REQ_JU_RequestForArchiveContract_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string NumberContract { get; set; }
+
+        [Required]
+        public DateTime DateContract { get; set; }
+
+        [Required]
+        public string NameClient { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public TypeJUDocument TypeDocument { get; set; }
+    }
+
+    public class USR_REQ_JU_RequestForApproveDoc_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string FullName { get; set; }
+
+        [Required]
+        public DateTime DateApprove { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public string Destination { get; set; }
+
+        [Required]
+        public int CountExamples { get; set; }
+    }
+
+    public class USR_REQ_JU_RequestForNPA_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string NormalAct { get; set; }
+
+        [Required]
+        public DateTime NPADate { get; set; }
+
+        [Required]
+        public string FullName { get; set; }
+    }
+
+    public class USR_REQ_JU_RequestForExplanationNormalAct_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string NumberDoc { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        [Required]
+        public string FullName { get; set; }
+
+        public string OwnMind { get; set; }
+    }
+
+    public class USR_REQ_JU_RequestForExpertise_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+    }
+    #endregion
+
+    #region ФЭУ
+
+    public class USR_REQ_FEU_RequestForFinExpertise_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+    }
+
+    public class USR_REQ_FEU_RequestForCorrectCalendar_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Provider { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Foundation { get; set; }
+
+        [Required]
+        public string NumberDate { get; set; }
+
+        [Required]
+        public string Appointment { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+
+        [Required]
+        public string Currency { get; set; }
+
+        [Required]
+        public string Article { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+    }
+
+    #endregion
+
+    #region УЭ
+
+    public class USR_REQ_UE_RequestForOutputElectricalEqu_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Equipment { get; set; }
+
+        [Required]
+        public string Consumers { get; set; }
+
+        [Required]
+        public string ConsumersOff { get; set; }
+
+        [Required]
+        public string Value { get; set; }
+
+        [Required]
+        public DateTime BeginDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string AccidentTime { get; set; }
+
+        [Required]
+        public string Responsible { get; set; }
+    }
+
+    public class USR_REQ_UE_RequestForDismantling_Table : BasicDocumentTable
+    {
+        [Required]
+        public DateTime Date { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        [Required]
+        public string AvailableEqu { get; set; }
+
+        [Required]
+        public string Telephone { get; set; }
+
+        [Required]
+        public string Person { get; set; }
+    }
+
+    public class USR_REQ_UE_RequestForForecastWater_Table : BasicDocumentTable
+    { 
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public PipeName Pipe { get; set; }
+
+        [Required]
+        public string Value { get; set; }
+
+        [Required]
+        public DateTime BeginDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string Explanation { get; set; }
+        
+    }
+
+    public class USR_REQ_UE_RequestForElectricRepairs_Table : BasicDocumentTable
+    {
+        [Required]
+        public DateTime Date { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string ContactPerson { get; set; }
+
+        [Required]
+        public string Telephone { get; set; }
+
+        [Required]
+        public string NameEqu { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        [Required]
+        public string Availability { get; set; }
+
+        [Required]
+        public string Person { get; set; }
+    }
     #endregion
 }
     
