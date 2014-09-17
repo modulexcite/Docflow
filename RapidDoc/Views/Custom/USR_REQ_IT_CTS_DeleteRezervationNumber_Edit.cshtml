@@ -1,53 +1,25 @@
 ﻿@model RapidDoc.Models.ViewModels.USR_REQ_IT_CTS_DeleteRezervationNumber_View
 @using RapidDoc.Extensions;
 
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.Phone)
-</div>
-<div class="editor-field">
-    @Html.TextAreaFor(model => Model.Phone, new { @class = "form-control", @rows = "1", placeholder = "Номер телефона", @autofocus = "required" })
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.ActionsPhone)
-</div>
-<div class="editor-field">
-    @Html.EnumDropDownListFor(model => model.ActionsPhone, new { @class = "selectpicker" })
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.PeriodTime)
-</div>
-<div class="editor-field">
-    @Html.TextAreaFor(model => Model.PeriodTime, new { @class = "form-control", @rows = "1", placeholder = "Временный интервал с учетом резервирования", @autofocus = "required" })
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.Reason)
-</div>
-<div class="editor-field">
-    @Html.TextAreaFor(model => Model.Reason, new { @class = "form-control", @rows = "5", placeholder = "Причина демонтажа", @autofocus = "required" })
-</div>
+@Html.Partial("_DocumentEditFields", Model)
 
 <script type="text/javascript">
     $(function () {
         $('#ActionsPhone').change(function () {
 
             if ($('#ActionsPhone').val() == 0) {
-                if ($('#PeriodTime').val() == "")
                     $('#PeriodTime').val("-");
 
-                $('#PeriodTime').prop('disabled', true);
+                $('#PeriodTime').prop('readonly', 'readonly');
             }
             else {
-                if ($('#PeriodTime').val() == "-") {
-                    $('#PeriodTime').val("");
-                }
-
-                $('#PeriodTime').prop('disabled', false);
+                $('#PeriodTime').val("");
+                $('#PeriodTime').prop('readonly', '');
             }
         });
 
         if ($('#ActionsPhone').val() == 0) {
-            if ($('#PeriodTime').val() == "")
-                $('#PeriodTime').val("-").prop('disabled', true);
+            $('#PeriodTime').val("-").prop('readonly', '');
         }
     });
 </script>

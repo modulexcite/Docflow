@@ -9,6 +9,9 @@ using System.Web.Mvc;
 using RapidDoc.Models.Services;
 using System.IO;
 using RapidDoc.Models.Repository;
+using System.Reflection;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace RapidDoc.Controllers
 {
@@ -125,6 +128,15 @@ namespace RapidDoc.Controllers
 
                 return sw.GetStringBuilder().ToString();
             }
+        }
+
+        protected string GetAttributeDisplayName(PropertyInfo property)
+        {
+            var atts = property.GetCustomAttributes(
+                typeof(DisplayAttribute), true);
+            if (atts.Length == 0)
+                return null;
+            return (atts[0] as DisplayAttribute).Name;
         }
     }
 }

@@ -22,9 +22,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.ProfileTable != null)
-                {
                     return this.ProfileTable.ProfileName;
-                }
 
                 return string.Empty;
             }
@@ -57,9 +55,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.DepartmentTableParent != null)
-                {
                     return this.DepartmentTableParent.DepartmentName;
-                }
 
                 return string.Empty;
             }
@@ -107,9 +103,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.ProfileTable != null)
-                {
                     return this.ProfileTable.ProfileName;
-                }
 
                 return string.Empty;
             }
@@ -120,9 +114,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.TitleTable != null)
-                {
                     return this.TitleTable.TitleName;
-                }
 
                 return string.Empty;
             }
@@ -133,9 +125,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.CompanyTable != null)
-                {
                     return this.CompanyTable.AliasCompanyName;
-                }
 
                 return string.Empty;
             }
@@ -146,9 +136,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.DepartmentTable != null)
-                {
                     return this.DepartmentTable.DepartmentName;
-                }
 
                 return string.Empty;
             }
@@ -159,9 +147,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.EmplTableParent != null)
-                {
                     return this.EmplTableParent.FullName;
-                }
 
                 return string.Empty;
             }
@@ -172,9 +158,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.WorkScheduleTable != null)
-                {
                     return this.WorkScheduleTable.WorkScheduleName;
-                }
 
                 return string.Empty;
             }
@@ -185,9 +169,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.ApplicationUser != null)
-                {
                     return this.ApplicationUser.UserName;
-                }
 
                 return string.Empty;
             }

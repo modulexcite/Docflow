@@ -10,7 +10,7 @@
     
     if (property.PropertyType == typeof(string))
     {
-        if ((string)property.Name == "Users")
+        if ((string)property.Name == "Users" || (string)property.Name == "ToUsers" || (string)property.Name == "FromUsers")
         {
             <div class="editor-field">
                 @Html.HtmlDisplayTags(property.GetValue(Model, null).ToString())
@@ -58,6 +58,12 @@
     {
         <div class="editor-field">
             @Html.EnumDropDownList((string)property.PropertyType.FullName, (string)property.Name, new { @disabled = true })
+        </div>
+    }
+    else if (property.PropertyType == typeof(bool))
+    {
+        <div class="editor-field">
+            @Html.CheckBox((string)property.Name, new { @disabled = true })
         </div>
     }
 }

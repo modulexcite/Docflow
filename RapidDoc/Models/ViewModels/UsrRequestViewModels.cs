@@ -7,7 +7,7 @@ using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Models.ViewModels
 {
-    #region Заявки Связи
+    #region Заявки ИТ Связь
     public class USR_REQ_IT_CTS_DeliveryOfPinCode_View : BasicDocumentRequestView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -20,6 +20,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Тип радиостанции")]
         public AllWSType WSType { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Место установки")]
         public string RequestText { get; set; }
@@ -34,6 +35,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Тип комплектующих")]
         public WSComponents WSComponents { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Место установки")]
         public string RequestText { get; set; }
@@ -48,10 +50,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Тип радиостанции")]
         public WSType WSType { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина")]
         public string Reason { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Место демонтажа")]
         public string RequestText { get; set; }
@@ -69,6 +73,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "На тип")]
         public PhoneType ToPhoneType { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Место установки")]
         public string RequestText { get; set; }
@@ -81,6 +86,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Номер телефона")]
         public string Phone { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина")]
         public string Reason { get; set; }
@@ -91,10 +97,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Что необходимо сделать?")]
         public WorkPlaceMovement WorkPlaceMovementType { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "С рабочего места")]
         public string FromPlace { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "На рабочее место")]
         public string ToPlace { get; set; }
@@ -132,6 +140,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Период времени")]
         public string PeriodTime { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина")]
         public string Reason { get; set; }
@@ -146,6 +155,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Users", ResourceType = typeof(CustomRes.Custom))]
         public string Users { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Место установки")]
         public string RequestText { get; set; }
@@ -159,6 +169,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Тип проблемы")]
         public ProblemTypeCTS ProblemType { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Описание проблемы")]
         public string Problem { get; set; }
@@ -197,6 +208,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Объект обслуживания")]
         public CTS_ServiceList ServiceList { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Описание")]
         public string RequestText { get; set; }
@@ -238,6 +250,7 @@ namespace RapidDoc.Models.ViewModels
         public string TextButtonNo15 { get; set; }
         public string TextButtonNo16 { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание")]
         public string RequestText { get; set; }
 
@@ -251,7 +264,7 @@ namespace RapidDoc.Models.ViewModels
     }
     #endregion
 
-    #region Заявки ERP
+    #region Заявки ИТ ERP
     public class USR_REQ_IT_ERP_RequestPermission1C8Salary_View : BasicDocumentRequestView
     {
 
@@ -328,6 +341,7 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_IT_ERP_ModificationDAX_View : BasicDocumentView
     {
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string RequestText { get; set; }
@@ -356,14 +370,16 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Подразделение")]
         public string Department { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Другое")]
         public string Other { get; set; }
     }
     #endregion
 
-    #region Заявки СТП
+    #region Заявки ИТ СТП
     public class USR_REQ_IT_CTP_EquipmentInstallation_View : BasicDocumentView
     {
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Наименование оборудования")]
         public string NameEquipment { get; set; }
@@ -375,12 +391,14 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Местоположение")]
         public string Location { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание")]
         public string Description { get; set; }
     }
 
     public class USR_REQ_IT_CTP_InstallNewComputer_View : BasicDocumentView
     {
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Местоположение")]
         public string Location { get; set; }
@@ -392,6 +410,7 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_IT_CTP_InstallSoftware_View : BasicDocumentView
     {
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Программное обеспечение")]
         public string Software { get; set; }
@@ -411,6 +430,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Номер телефона")]
         public string Pnone { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина")]
         public string Reason { get; set; }
@@ -443,6 +463,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Количество")]
         public int Qty { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Обоснование")]
         public string Reason { get; set; }
@@ -463,6 +484,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Количество")]
         public int Qty { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Обоснование")]
         public string Reason { get; set; }
@@ -481,6 +503,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Количество")]
         public int Qty { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Местоположение")]
         public string Location { get; set; }
@@ -492,6 +515,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Пользователи")]
         public string Users { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Обоснование")]
         public string Reason { get; set; }
@@ -578,7 +602,7 @@ namespace RapidDoc.Models.ViewModels
     }
     #endregion
 
-    #region Заявки САиИБ
+    #region Заявки ИТ САиИБ
     public class USR_REQ_IT_CAP_RemoveSignLotus_View : BasicDocumentView
     {
         [Display(Name = "Что необходимо удалить")]
@@ -589,9 +613,14 @@ namespace RapidDoc.Models.ViewModels
         public string AuthorDocument { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Наименование документа и база")]       
+        [Display(Name = "Наименование документа")]       
         public string DocumentName { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "База")]
+        public string DocumentBase { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата/время документа")]
         public DateTime? DocumentDate { get; set; }
 
@@ -599,6 +628,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "ФИО согласовавшего")]  
         public string SignName { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Обоснование")]     
         public string Reason { get; set; }
@@ -614,10 +644,12 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string GroupName { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Состав группы рассылки")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string GroupUsers { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Обоснование")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
@@ -651,14 +683,17 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string ToUsers { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Причина")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
 
         [Display(Name = "Действует с")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public DateTime? FromDate { get; set; }
 
         [Display(Name = "Действует по")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public DateTime? ToDate { get; set; }
     }
 
@@ -746,6 +781,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "ChiefAccountantATK")]
         public bool ChiefAccountantATK { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание")]
         public string Description { get; set; }
     }
@@ -756,6 +792,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Users { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Причина")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
@@ -767,6 +804,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Users { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Причина")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
@@ -778,6 +816,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Users { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Причина")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
@@ -865,6 +904,7 @@ namespace RapidDoc.Models.ViewModels
         public AccessRightBasic AccessRight15 { get; set; }
         public AccessRightBasic AccessRight16 { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание")]
         public string Description { get; set; }
     }
@@ -899,6 +939,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Группа Начальников управлений и Начальников служб")]
         public bool ATKManagementGroup { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание")]
         public string Description { get; set; }
     }
@@ -927,6 +968,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Уровень доступа")]
         public AccessRightBasic AccessRight { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Обоснование")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
@@ -938,6 +980,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Users { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Обоснование")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
@@ -949,6 +992,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Users { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Обоснование")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
@@ -965,15 +1009,19 @@ namespace RapidDoc.Models.ViewModels
         public string ToUsers { get; set; }
 
         [Display(Name = "С даты")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public DateTime? FromDate { get; set; }
 
         [Display(Name = "До даты")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public DateTime? ToDate { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Обоснование")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Наименование документа")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string DocumentName { get; set; }
@@ -991,6 +1039,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Name { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата рождения")]
         public DateTime? BirthDay { get; set; }
 
@@ -1031,6 +1080,7 @@ namespace RapidDoc.Models.ViewModels
         public string Name { get; set; }
 
         [Display(Name = "Дата рождения")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public DateTime? BirthDay { get; set; }
 
         [Display(Name = "Должность")]
@@ -1049,6 +1099,7 @@ namespace RapidDoc.Models.ViewModels
         public string Department { get; set; }
 
         [Display(Name = "Действует до")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public DateTime? ToDate { get; set; }
 
         [Display(Name = "Сотовый и внутренний номер")]
@@ -1080,6 +1131,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Users { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Description { get; set; }
@@ -1129,6 +1181,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Contact { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Обоснование")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
@@ -1140,6 +1193,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Users { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание проблемы")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Problem { get; set; }
@@ -1155,6 +1209,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Users { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Обоснование")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
@@ -1165,6 +1220,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Объект обслуживания")]
         public HardSoftwareMaintenance HardSoftwareMaintenance { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Description { get; set; }
@@ -1172,6 +1228,7 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_IT_CAP_ChangeRoute_View : BasicDocumentView
     {
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Наименование запроса/маршрута согласования")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Name { get; set; }
@@ -1184,6 +1241,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string NewRoute { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Обоснование")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
@@ -1207,6 +1265,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Title { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание")]
         public string Description { get; set; }
     }
@@ -1228,6 +1287,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Contact { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Описание")]
         public string Description { get; set; }
     }
@@ -1404,9 +1464,11 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Страна следования")]
         public string Country { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "С даты")]
         public DateTime? FromDate { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "До даты")]
         public DateTime? ToDate { get; set; }
 

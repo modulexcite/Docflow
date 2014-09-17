@@ -34,9 +34,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.ApplicationUserCreated != null)
-                {
                     return this.ApplicationUserCreated.UserName;
-                }
 
                 return string.Empty;
             }
@@ -48,9 +46,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.ApplicationUserModified != null)
-                {
                     return this.ApplicationUserModified.UserName;
-                }
 
                 return string.Empty;
             }
@@ -67,20 +63,5 @@ namespace RapidDoc.Models.DomainModels
     {
         public Guid CompanyTableId { get; set; }
         public virtual CompanyTable CompanyTable { get; set; }
-    }
-
-    public abstract class BasicDocumentTable : BasicTable, IDocument
-    {
-        public Guid DocumentTableId { get; set; }
-        public virtual DocumentTable DocumentTable { get; set; }
-    }
-
-    public abstract class BasicDocumentRequestTable : BasicDocumentTable
-    {
-        [Required]
-        public string RequestText { get; set; }
-
-        [Required]
-        public string Users { get; set; }
     }
 }

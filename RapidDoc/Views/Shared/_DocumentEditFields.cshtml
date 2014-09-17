@@ -11,10 +11,16 @@
     
     if(property.PropertyType == typeof(string))
     {
-        if ((string)property.Name == "Users")
+        if ((string)property.Name == "Users" || (string)property.Name == "FromUsers")
         {
             <div class="editor-field">
                 @Html.TextBox((string)property.Name, null, new { @class = "form-control", @data_role = "tagsinputEmpl", placeholder = "Имя Фамилия" })
+            </div>
+        }
+        else if ((string)property.Name == "ToUsers")
+        {
+            <div class="editor-field">
+                @Html.TextBox((string)property.Name, null, new { @class = "form-control", @data_role = "tagsinputEmpl2", placeholder = "Имя Фамилия" })
             </div>
         }
         else
@@ -53,7 +59,7 @@
         {
             isDate = true;
             <div class="editor-field">
-                @Html.TextBox((string)property.Name, null, new { @class = "datepicker", placeholder = "Дата", startDate = "" })
+                @Html.TextBox((string)property.Name, null, new { @class = "datepicker form-control form-control-date", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), format = "mm/dd/yyyy", placeholder = "Дата", startDate = "" })
             </div>
         }
         else 
@@ -62,14 +68,14 @@
             {
                 isDate = true;
                 <div class="editor-field">
-                    @Html.TextBox((string)property.Name, null, new { @class = "datepicker", placeholder = "Дата", startDate = "" })
+                    @Html.TextBox((string)property.Name, null, new { @class = "datepicker form-control form-control-date", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), format = "mm/dd/yyyy", placeholder = "Дата", startDate = "" })
                 </div>
             }
             else if (((System.ComponentModel.DataAnnotations.DataTypeAttribute)dataTypeAttr).DataType == System.ComponentModel.DataAnnotations.DataType.DateTime)
             {
                 isDateTime = true;
                 <div class="editor-field">
-                    @Html.TextBox((string)property.Name, null, new { @class = "datetimepicker", placeholder = "Дата/время", startDate = "" })
+                    @Html.TextBox((string)property.Name, null, new { @class = "datetimepicker form-control form-control-date", placeholder = "Дата/время", startDate = "" })
                 </div>
             }
             
@@ -85,6 +91,12 @@
     {
         <div class="editor-field">
             @Html.EnumDropDownList((string)property.PropertyType.FullName, (string)property.Name, new { @class = "selectpicker" })
+        </div>
+    }
+    else if (property.PropertyType == typeof(bool))
+    {
+        <div class="editor-field">
+            @Html.CheckBox((string)property.Name)
         </div>
     }
 

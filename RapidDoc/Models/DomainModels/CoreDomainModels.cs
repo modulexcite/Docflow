@@ -25,9 +25,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.DomainTable != null)
-                {
                     return this.DomainTable.DomainName;
-                }
 
                 return string.Empty;
             }

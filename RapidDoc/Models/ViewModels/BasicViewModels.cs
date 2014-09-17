@@ -39,20 +39,4 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "CompanyName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string AliasCompanyName { get; set; }
     }
-
-    public abstract class BasicDocumentView : BasicCompanyNullView, IDocument
-    {
-        public Guid DocumentTableId { get; set; }
-    }
-
-    public abstract class BasicDocumentRequestView : BasicDocumentView
-    {
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "RequestText", ResourceType = typeof(CustomRes.Custom))]
-        public string RequestText { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Users", ResourceType = typeof(CustomRes.Custom))]
-        public string Users { get; set; }
-    }
 }

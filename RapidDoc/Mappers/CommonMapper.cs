@@ -113,7 +113,7 @@ namespace RapidDoc.Mappers
 
             Mapper.CreateMap<HistoryUserTable, HistoryUserView>()
                 .ForMember(x => x.DocumentNum, o => o.MapFrom(m => m.DocumentTable.DocumentNum))
-                .ForMember(x => x.ApplicationCreatedUser, o => o.MapFrom(m => m.DocumentTable.ApplicationUserCreated.UserName))
+                .ForMember(x => x.ApplicationCreatedUser, o => o.MapFrom(m => m.DocumentTable.CreatedBy))
                 .ForMember(x => x.ProcessName, o => o.MapFrom(m => m.DocumentTable.ProcessTable.ProcessName));
 
             Mapper.CreateMap<SearchTable, SearchView>()

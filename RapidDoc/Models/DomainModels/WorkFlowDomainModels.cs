@@ -28,9 +28,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.NumberSeriesTable != null)
-                {
                     return this.NumberSeriesTable.NumberSeriesName;
-                }
 
                 return string.Empty;
             }
@@ -62,9 +60,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.GroupProcessTable != null)
-                {
                     return this.GroupProcessTable.GroupProcessName;
-                }
 
                 return string.Empty;
             }
@@ -75,9 +71,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.WorkScheduleTable != null)
-                {
                     return this.WorkScheduleTable.WorkScheduleName;
-                }
 
                 return string.Empty;
             }
@@ -121,9 +115,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.ProcessTable != null && this.ProcessTable.GroupProcessTable != null)
-                {
                     return this.ProcessTable.GroupProcessTable.GroupProcessName;
-                }
 
                 return string.Empty;
             }
@@ -135,9 +127,7 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.ProcessTable != null)
-                {
                     return this.ProcessTable.ProcessName;
-                }
 
                 return string.Empty;
             }
@@ -236,7 +226,6 @@ namespace RapidDoc.Models.DomainModels
     {
         public Guid DocumentTableId { get; set; }
         public virtual DocumentTable DocumentTable { get; set; }
-
         public bool isArchive { get; set; }
     }
 
@@ -252,17 +241,14 @@ namespace RapidDoc.Models.DomainModels
     public class HistoryUserTable : BasicTable
     {
         public HistoryType HistoryType { get; set; }
-
         public Guid DocumentTableId { get; set; }
         public virtual DocumentTable DocumentTable { get; set; }
-
         public string Description { get; set; }
     }
 
     public class SearchTable : BasicTable
     {
         public string DocumentText { get; set; }
-
         public Guid DocumentTableId { get; set; }
         public virtual DocumentTable DocumentTable { get; set; }
     }
@@ -276,11 +262,9 @@ namespace RapidDoc.Models.DomainModels
         [StringLength(256)]
         [Required]
         public string Description { get; set; }
-
         public ServiceIncidientPriority ServiceIncidientPriority { get; set; }
         public ServiceIncidientLevel ServiceIncidientLevel { get; set; }
         public ServiceIncidientLocation ServiceIncidientLocation { get; set; }
-
         public int SLAIncident { get; set; }
 
         [Required]

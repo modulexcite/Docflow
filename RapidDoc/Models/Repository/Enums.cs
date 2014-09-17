@@ -307,10 +307,10 @@ namespace RapidDoc.Models.Repository
 
     public enum DeleteSignLotus : byte
     {
-        [Display(Name = "Документ")]
+        [Display(Name = "Подпись")]
         Document = 0,
 
-        [Display(Name = "Подпись")]
+        [Display(Name = "Документ")]
         Signature = 1
     }
 
@@ -345,9 +345,6 @@ namespace RapidDoc.Models.Repository
 
         [Display(Name = "БЛОК ОБОГАЩЕНИЯ")]
         ConcetrationBlock = 6,
-
-        [Display(Name = "БЛОК ОБОГАЩЕНИЯ")]
-        DeputyDirectorProduction = 7,
 
         [Display(Name = "ТОО Altyntau Kokshetau")]
         ATK = 8

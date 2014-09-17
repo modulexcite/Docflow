@@ -36,14 +36,6 @@ namespace RapidDoc.Models.Grids
                 return _displayingItems;
 
             _displayingItems = base.GetItemsToDisplay().ToList();
-            /*
-            IReviewDocLogService _ReviewDocLogService = DependencyResolver.Current.GetService<IReviewDocLogService>();
-            IDocumentService _DocumentService = DependencyResolver.Current.GetService<IDocumentService>();
-            IAccountService _AccountService = DependencyResolver.Current.GetService<IAccountService>();
-            ISearchService _SearchService = DependencyResolver.Current.GetService<ISearchService>();
-            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
-            */
-
             ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == HttpContext.Current.User.Identity.Name);
 
             foreach (var displayedItem in _displayingItems)

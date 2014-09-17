@@ -10,11 +10,6 @@ namespace RapidDoc.Models.DomainModels
 {
     public class ApplicationUser : IdentityUser
     {
-        [StringLength(254)]
-        [Required]
-        [Email]
-        public string Email { get; set; }
-
         public Guid? CompanyTableId { get; set; }
         public virtual CompanyTable CompanyTable { get; set; }
 
@@ -31,14 +26,10 @@ namespace RapidDoc.Models.DomainModels
             get
             {
                 if (this.CompanyTable != null)
-                {
                     return this.CompanyTable.AliasCompanyName;
-                }
 
                 return string.Empty;
             }
         }
-
-        public virtual IEnumerable<EmplTable> EmplTables { get; set; }
     }
 }

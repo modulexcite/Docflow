@@ -697,7 +697,7 @@
                 cursor: "pointer"
             },
             suggestionChild: {
-                whiteSpace: "normal"
+                whiteSpace: "nowrap"
             }
         };
         function DropdownView(o) {

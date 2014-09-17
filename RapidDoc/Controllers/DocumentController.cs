@@ -768,7 +768,7 @@ namespace RapidDoc.Controllers
                         }
                         else
                         {
-                            ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorFieldisNull, key));
+                            ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorFieldisNull, GetAttributeDisplayName(propertyInfo)));
                         }
                     }
                 }
@@ -850,23 +850,11 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            if (type == (new USR_REQ_IT_CAP_RemoveSignLotus_View()).GetType())
-            {
-                if (actionModel.DocumentDate == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата должна быть заполнена");
-                }
-            }
-
             if (type == (new USR_REQ_IT_CAP_CreateUserAD_View()).GetType())
             {
                 if (!_DocumentService.FileContains(fileId))
                 {
                     ModelState.AddModelError(string.Empty, "Не прикреплена фотография(формат 3x4)");
-                }
-                if (actionModel.BirthDay == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата рождения должна быть заполнена");
                 }
             }
 
@@ -875,50 +863,6 @@ namespace RapidDoc.Controllers
                 if (!_DocumentService.FileContains(fileId))
                 {
                     ModelState.AddModelError(string.Empty, "Не прикреплено тех. задание в заявке");
-                }
-            }
-
-            if (type == (new USR_REQ_IT_CAP_CreateUserADFreelance_View()).GetType())
-            {
-                if (actionModel.BirthDay == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата рождения должна быть заполнена");
-                }
-                if (actionModel.ToDate == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата действует должна быть заполнена");
-                }
-            }
-
-            if (type == (new USR_REQ_IT_CAP_DelegationExchServ_View()).GetType())
-            {
-                if (actionModel.FromDate == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата с должна быть заполнена");
-                }
-                if (actionModel.ToDate == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата по должна быть заполнена");
-                }
-            }
-
-            if (type == (new USR_REQ_IT_CAP_DelegationDocflow_View()).GetType())
-            {
-                if (actionModel.FromDate == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата с должна быть заполнена");
-                }
-                if (actionModel.ToDate == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата по должна быть заполнена");
-                }
-            }
-
-            if (type == (new USR_REQ_IT_CAP_CreateUserAD_View()).GetType())
-            {
-                if (actionModel.BirthDay == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата с должна быть заполнена");
                 }
             }
 
@@ -940,25 +884,9 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            if (type == (new USR_REQ_IT_CAP_ChangeOrder_View()).GetType())
-            {
-                if (actionModel.OrderDate == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата регистрации должна быть заполнена");
-                }
-            }
-
-            if (type == (new USR_REQ_IT_CAP_ChangeOrderWage_View()).GetType())
-            {
-                if (actionModel.OrderDate == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата регистрации должна быть заполнена");
-                }
-            }
-
             if (type == (new USR_REQ_OKS_RequestForVisa_View()).GetType())
             {
-                if ((actionModel.FromDate == null || actionModel.ToDate == null) || (actionModel.FromDate > actionModel.ToDate))
+                if (actionModel.FromDate > actionModel.ToDate)
                 {
                     ModelState.AddModelError(string.Empty, "Неверно указан диапазон дат");
                 }

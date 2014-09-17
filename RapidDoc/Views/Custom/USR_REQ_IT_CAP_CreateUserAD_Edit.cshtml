@@ -4,67 +4,7 @@
 }
 @using RapidDoc.Extensions;
 
-@Html.HiddenFor(model => Model.DocumentTableId)
-<div class="editor-label">
-    @Html.LabelFor(model => Model.ActiveDirectory)
-</div>
-<div class="editor-field">
-    @Html.CheckBoxFor(model => Model.ActiveDirectory, new { @disabled = true })
-</div>
-<div class="editor-label">
-    @Html.LabelFor(model => Model.Exchange)
-</div>
-<div class="editor-field">
-    @Html.CheckBoxFor(model => Model.Exchange)
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.Name)
-</div>
-<div class="editor-field">
-    @Html.TextBoxFor(model => Model.Name, new { @class = "form-control", @rows = "1", placeholder = "ФИО", @autofocus = "required" })
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.BirthDay)
-</div>
-<div class="editor-field">
-    @Html.TextBoxFor(model => Model.BirthDay, new { @class = "datepicker", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), placeholder = "Дата рождения", startDate = "" })
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.Title)
-</div>
-<div class="editor-field">
-    @Html.TextBoxFor(model => Model.Title, new { @class = "form-control", @rows = "1", placeholder = "Должность" })
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.Users)
-</div>
-<div class="editor-field">
-    @Html.TextBoxFor(model => Model.Users, new { @class = "form-control", @data_role = "tagsinputEmpl", @size = 256, @maxlength = 256, placeholder = "Имя Фамилия" })
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.BlocksATK)
-</div>
-<div class="editor-field">
-    @Html.EnumDropDownListFor(model => model.BlocksATK, new { @class = "selectpicker" })
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.Department)
-</div>
-<div class="editor-field">
-    @Html.TextBoxFor(model => Model.Department, new { @class = "form-control", @rows = "1", placeholder = "Подразделение" })
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.Contact)
-</div>
-<div class="editor-field">
-    @Html.TextBoxFor(model => Model.Contact, new { @class = "form-control", @rows = "1", placeholder = "Сотовый и внутренний номер" })
-</div>
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.Description)
-</div>
-<div class="editor-field">
-    @Html.TextBoxFor(model => Model.Description, new { @class = "form-control", @rows = "1", placeholder = "В штате, №5604" })
-</div>
+@Html.Partial("_DocumentEditFields", Model)
 <br>
 <div class="alert alert-info" role="alert">
     <p>Нужно обязательно прикрепить фотографию(формат 3x4) в заявке</p>

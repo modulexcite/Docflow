@@ -86,7 +86,7 @@ namespace RapidDoc.Models.DomainModels
     public class USR_REQ_IT_CTS_SetUpPhone_Table : BasicDocumentRequestTable
     {
         public PhoneType PhoneType { get; set; }
-        bool AccessPublic { get; set; }
+        public bool AccessPublic { get; set; }
     }
 
     public class USR_REQ_IT_CTS_ProblemWithPhone_Table : BasicDocumentTable
@@ -448,6 +448,9 @@ namespace RapidDoc.Models.DomainModels
 
         [Required]
         public string DocumentName { get; set; }
+
+        [Required]
+        public string DocumentBase { get; set; }
 
         public DateTime DocumentDate { get; set; }
 
