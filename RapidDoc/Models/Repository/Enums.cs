@@ -458,4 +458,26 @@ namespace RapidDoc.Models.Repository
         Element2 = 1
     }
 
+    public enum TypeJUDocument : byte
+    {
+        [Display(Name = "Копия")]
+        Element1 = 0,
+
+        [Display(Name = "Оригинал")]
+        Element2 = 1
+    }
+
+
+    public enum PipeName : byte
+    {
+        [Display(Name = "Хоз. Пит.")]
+        Element1 = 0,
+
+        [Display(Name = "Чаглинский пром. -хоз.водозабор")]
+        Element2 = 1,
+
+        [Display(Name = "Мырзакольсорский пром.водозабор")]
+        Element3 = 2
+    }
+
 }

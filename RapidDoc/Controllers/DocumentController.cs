@@ -931,6 +931,36 @@ namespace RapidDoc.Controllers
                     ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
                 }
             }
+
+            if (type == (new USR_REQ_JU_RequestForProxyDoc_View()).GetType())
+            {
+                if (!_DocumentService.FileContains(fileId))
+                {
+                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
+                }
+
+                if (actionModel.Date == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Дата оформления доверености должна быть заполнена");
+                }
+
+            }
+
+            if (type == (new USR_REQ_JU_RequestForExpertise_View()).GetType())
+            {
+                if (!_DocumentService.FileContains(fileId))
+                {
+                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
+                }
+            }
+
+            if (type == (new USR_REQ_FEU_RequestForFinExpertise_View()).GetType())
+            {
+                if (!_DocumentService.FileContains(fileId))
+                {
+                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
+                }
+            }
             
         }
 
