@@ -1957,4 +1957,13 @@ namespace RapidDoc.Models.ViewModels
     }
 
     #endregion
+
+    #region УСХ
+
+    public class USR_REQ_UE_RequestForReclassification_View : BasicDocumentView
+    {
+
+    }
+
+    #endregion
 }

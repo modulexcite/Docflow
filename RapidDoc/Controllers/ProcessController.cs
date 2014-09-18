@@ -13,6 +13,8 @@ using System.Web.Mvc;
 using RapidDoc.Extensions;
 using RapidDoc.Models.Grids;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.IO;
+using Simple.ImageResizer;
 
 namespace RapidDoc.Controllers
 {
@@ -22,13 +24,15 @@ namespace RapidDoc.Controllers
         private readonly IProcessService _Service;
         private readonly IGroupProcessService _GroupProcessService;
         private readonly IWorkScheduleService _WorkScheduleService;
+        private readonly IDocumentService _DocumentService;
 
-        public ProcessController(IProcessService service, IGroupProcessService groupProcessService, IWorkScheduleService workScheduleService, ICompanyService companyService, IAccountService accountService)
+        public ProcessController(IProcessService service, IGroupProcessService groupProcessService, IWorkScheduleService workScheduleService, ICompanyService companyService, IAccountService accountService, IDocumentService documentService)
             : base(companyService, accountService)
         {
             _Service = service;
             _GroupProcessService = groupProcessService;
             _WorkScheduleService = workScheduleService;
+            _DocumentService = documentService;
         }
 
         public ActionResult Index()
@@ -115,8 +119,15 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ProcessView model)
+        public ActionResult Edit(ProcessView model, HttpPostedFileBase files, Guid documentFileId)
         {
+            ActionResult view;
+
+            if (files != null)
+            {
+                return view = AjaxUpload(files, documentFileId);
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -142,7 +153,7 @@ namespace RapidDoc.Controllers
         }
 
         public ActionResult Delete(Guid id)
-        {
+        {      
             var model = _Service.FindView(id);
 
             if (model == null)
@@ -157,7 +168,8 @@ namespace RapidDoc.Controllers
         {
             try
             {
-                _Service.Delete(id);
+                _Service.DeleteFiles(id);                      
+                _Service.Delete(id);            
                 return RedirectToAction("Index");
             }
             catch (Exception e)
@@ -184,5 +196,144 @@ namespace RapidDoc.Controllers
             }
             return View(model);
         }
+        [HttpGet]
+        public JsonResult GetAllFileDocument(Guid id)
+        {
+            var statuses = new List<RapidDoc.Controllers.DocumentController.ViewDataUploadFilesResult>();
+            var files = _DocumentService.GetAllFilesDocument(id);
+
+            foreach (var file in files)
+            {
+                var thumbnail = new byte[] { };
+                System.IO.FileStream inFile;
+                byte[] binaryData;
+
+                if (file.Thumbnail.Length == 0)
+                {
+                    inFile = new System.IO.FileStream(Server.MapPath("~/Content/FileUpload/content-types/64/Text.png"),
+                                System.IO.FileMode.Open,
+                                System.IO.FileAccess.Read);
+                    binaryData = new Byte[inFile.Length];
+                    long bytesRead = inFile.Read(binaryData, 0,
+                                         (int)inFile.Length);
+                    inFile.Close();
+                    thumbnail = binaryData;
+                }
+                else
+                {
+                    thumbnail = file.Thumbnail;
+                }
+
+
+                statuses.Add(new RapidDoc.Controllers.DocumentController.ViewDataUploadFilesResult()
+                {
+                    name = file.FileName,
+                    size = file.ContentLength,
+                    url = @"/Document/DownloadFile/" + file.Id.ToString(),
+                    deleteUrl = @"/Document/DeleteFile/" + file.Id.ToString(),
+                    thumbnailUrl = @"data:image/png;base64," + Convert.ToBase64String(thumbnail),
+                    deleteType = "DELETE"
+                });
+            }
+
+            var uploadedFiles = new
+            {
+                files = statuses.ToArray()
+            };
+
+            JsonResult result = Json(uploadedFiles, JsonRequestBehavior.AllowGet);
+            result.ContentType = "text/plain";
+            return result;
+        }
+
+        public JsonResult AjaxUpload(HttpPostedFileBase files, Guid documentFileId)
+        {
+            var statuses = new List<RapidDoc.Controllers.DocumentController.ViewDataUploadFilesResult>();
+            System.IO.FileStream inFile;
+            byte[] binaryData;
+            string contentType;
+
+            if (files != null && !string.IsNullOrEmpty(files.FileName) && documentFileId != Guid.Empty)
+            {
+                BinaryReader binaryReader = new BinaryReader(files.InputStream);
+                byte[] data = binaryReader.ReadBytes(files.ContentLength);
+
+                var thumbnail = new byte[] { };
+                contentType = files.ContentType.ToString().ToUpper();
+                thumbnail = GetThumbnail(data, contentType);
+
+                // here you can save your file to the database...
+                FileTable doc = new FileTable();
+                doc.DocumentFileId = documentFileId;
+                doc.FileName = files.FileName;
+                doc.ContentType = contentType;
+                doc.ContentLength = files.ContentLength;
+                doc.Data = data;
+                doc.Thumbnail = thumbnail;
+
+                Guid Id = _DocumentService.SaveFile(doc);
+
+                if (thumbnail.Length == 0)
+                {
+                    inFile = new System.IO.FileStream(Server.MapPath("~/Content/FileUpload/content-types/64/Text.png"),
+                                System.IO.FileMode.Open,
+                                System.IO.FileAccess.Read);
+                    binaryData = new Byte[inFile.Length];
+                    long bytesRead = inFile.Read(binaryData, 0,
+                                         (int)inFile.Length);
+                    inFile.Close();
+                    thumbnail = binaryData;
+                }
+
+                statuses.Add(new RapidDoc.Controllers.DocumentController.ViewDataUploadFilesResult()
+                {
+                    name = doc.FileName,
+                    size = doc.ContentLength,
+                    url = @"/Document/DownloadFile/" + Id.ToString(),
+                    deleteUrl = @"/Document/DeleteFile/" + Id.ToString(),
+                    thumbnailUrl = @"data:image/png;base64," + Convert.ToBase64String(thumbnail),
+                    deleteType = "DELETE"
+                });
+            }
+
+            var uploadedFiles = new
+            {
+                files = statuses.ToArray()
+            };
+
+            JsonResult result = Json(uploadedFiles);
+            result.ContentType = "text/plain";
+         
+            return result;
+        }
+
+        private byte[] GetThumbnail(byte[] fileData, string contentType)
+        {
+            var thumbnail = new byte[] { };
+
+            if (contentType == "IMAGE/PNG"
+                || contentType == "IMAGE/GIF"
+                || contentType == "IMAGE/JPEG"
+                || contentType == "IMAGE/BMP")
+            {
+                thumbnail = ImageResizer(fileData);
+            }
+
+            return thumbnail;
+        }
+
+        private byte[] ImageResizer(byte[] entireImage)
+        {
+            try
+            {
+                ImageResizer resizer = new ImageResizer(entireImage);
+                return resizer.Resize(64, 64, false, ImageEncoding.Png);
+            }
+            catch (Exception e)
+            {
+                return new byte[] { };
+            }
+        }
     }
+
 }

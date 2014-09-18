@@ -5,6 +5,7 @@ using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Repository;
 using Microsoft.AspNet.Identity.EntityFramework;
 
+
 namespace RapidDoc.Models.ViewModels
 {
     public class GroupProcessView : BasicView
@@ -64,6 +65,7 @@ namespace RapidDoc.Models.ViewModels
         public IEnumerable<WFTrackerListView> WFTrackerItems { get; set; }
         public dynamic docData { get; set; }
         public Guid fileId { get; set; }
+        public IEnumerable<FileTable> ProcessTemplates { get; set; }
     }
 
     public class DocumentListView : BasicCompanyNullView

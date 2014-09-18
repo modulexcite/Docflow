@@ -47,6 +47,7 @@ namespace RapidDoc.Models.Services
         List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status);
         DateTime? GetSLAPerformDate(Guid DocumentId, DateTime? CreatedDate, double SLAOffset);
         List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable);
+        IEnumerable<FileTable> GetAllTemplatesDocument(Guid processId);
     }
 
     public class DocumentService : IDocumentService
@@ -726,6 +727,12 @@ namespace RapidDoc.Models.Services
         public IEnumerable<FileTable> GetAllFilesDocument(Guid documentFileId)
         {
             return repoFile.FindAll(x => x.DocumentFileId == documentFileId);
+        }
+
+        public IEnumerable<FileTable> GetAllTemplatesDocument(Guid processId)
+        {
+            ProcessTable process = _ProcessService.FirstOrDefault(x => x.Id == processId);
+            return repoFile.FindAll(x => x.DocumentFileId == process.Id);
         }
 
         public bool FileContains(Guid documentFileId)

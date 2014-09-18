@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using RapidDoc.Models.Services;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.EntityFramework;
+using RapidDoc.Models.Interfaces;
 
 namespace RapidDoc.Models.DomainModels
 {

@@ -1385,6 +1385,16 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Person { get; set; }
     }
+
+    #endregion
+
+    #region УСХ
+
+    public class USR_REQ_UE_RequestForReclassification_Table : BasicDocumentTable
+    { 
+        
+    }
+
     #endregion
 }
     
