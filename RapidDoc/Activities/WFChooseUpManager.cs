@@ -41,7 +41,7 @@ namespace RapidDoc.Activities
             int level = context.GetValue(this.inputLevel);
             Guid documentId = context.GetValue(this.inputDocumentId);
             DocumentState documentStep = context.GetValue(this.inputStep);
-            string currentUser = context.GetValue(this.inputCurrentUser); 
+            string currentUserId = context.GetValue(this.inputCurrentUser); 
             bool useManual = context.GetValue(this.useManual);
             int slaOffset = context.GetValue(this.slaOffset);
             string profileName = context.GetValue(this.profileName);
@@ -49,12 +49,12 @@ namespace RapidDoc.Activities
             bool noneSkipStep = context.GetValue(this.noneSkip);
 
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
-            WFUserFunctionResult userFunctionResult = _service.WFMatchingUpManager(documentId, currentUser, level, profileName);
+            WFUserFunctionResult userFunctionResult = _service.WFMatchingUpManager(documentId, currentUserId, level, profileName);
 
             if (userFunctionResult.Skip == false)
-                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
+                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUserId, this.Id, useManual, slaOffset, executionStep);
             else if (executionStep == true || noneSkipStep == true)
-                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
+                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUserId, this.Id, useManual, slaOffset, executionStep);
 
             outputBookmark.Set(context, this.DisplayName.Replace("<step>", ""));
             outputSkipStep.Set(context, executionStep ? false : userFunctionResult.Skip);

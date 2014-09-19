@@ -7,12 +7,13 @@ using RapidDoc.Models.ViewModels;
 using GridMvc;
 using System.Web.Mvc;
 using RapidDoc.Models.Services;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Grids
 {
-    public class DocumentGrid : Grid<DocumentTable>
+    public class DocumentGrid : Grid<DocumentView>
     {
-        private IEnumerable<DocumentTable> _displayingItems;
+        private IEnumerable<DocumentView> _displayingItems;
 
         private readonly IReviewDocLogService _ReviewDocLogService;
         private readonly IDocumentService _DocumentService;
@@ -20,7 +21,7 @@ namespace RapidDoc.Models.Grids
         private readonly ISearchService _SearchService;
         private readonly IEmplService _EmplService;
 
-        public DocumentGrid(IQueryable<DocumentTable> items, IReviewDocLogService reviewDocLogService, IDocumentService documentService, IAccountService accountService, ISearchService searchService, IEmplService emplService)
+        public DocumentGrid(IQueryable<DocumentView> items, IReviewDocLogService reviewDocLogService, IDocumentService documentService, IAccountService accountService, ISearchService searchService, IEmplService emplService)
             : base(items)
         {
             _ReviewDocLogService = reviewDocLogService;
@@ -30,18 +31,18 @@ namespace RapidDoc.Models.Grids
             _EmplService = emplService;
         }
 
-        protected override IEnumerable<DocumentTable> GetItemsToDisplay()
+        protected override IEnumerable<DocumentView> GetItemsToDisplay()
         {
             if (_displayingItems != null)
                 return _displayingItems;
 
             _displayingItems = base.GetItemsToDisplay().ToList();
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == HttpContext.Current.User.Identity.Name);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
 
             foreach (var displayedItem in _displayingItems)
             {
-                displayedItem.isNotReview = _ReviewDocLogService.isNotReviewDocCurrentUser(displayedItem.Id, "", user);
-                displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id, "", user);
+                displayedItem.isNotReview = _ReviewDocLogService.isNotReviewDocCurrentUser(displayedItem.Id ?? Guid.Empty, "", user);
+                displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id ?? Guid.Empty, "", user);
 
                 EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == displayedItem.ApplicationUserCreatedId && x.CompanyTableId == displayedItem.CompanyTableId);
                 displayedItem.FullName = empl.FullName;
@@ -60,7 +61,7 @@ namespace RapidDoc.Models.Grids
 
     public class DocumentAjaxPagingGrid : DocumentGrid
     {
-        public DocumentAjaxPagingGrid(IQueryable<DocumentTable> items, int page, bool renderOnlyRows, IReviewDocLogService reviewDocLogService, IDocumentService documentService, IAccountService accountService, ISearchService searchService, IEmplService emplService)
+        public DocumentAjaxPagingGrid(IQueryable<DocumentView> items, int page, bool renderOnlyRows, IReviewDocLogService reviewDocLogService, IDocumentService documentService, IAccountService accountService, ISearchService searchService, IEmplService emplService)
             : base(items, reviewDocLogService, documentService, accountService, searchService, emplService)
         {
             Pager = new AjaxGridPager(this) { CurrentPage = page }; //override  default pager

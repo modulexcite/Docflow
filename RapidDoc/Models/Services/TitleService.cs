@@ -12,6 +12,7 @@ using System.Data;
 using System.Web.Mvc;
 using RapidDoc.Models.Repository;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Services
 {
@@ -29,7 +30,7 @@ namespace RapidDoc.Models.Services
         void Save(TitleView viewTable);
         void SaveDomain(TitleTable domainTable, string currentUserName = "");
         void Delete(Guid id);
-        TitleTable Find(Guid? id);
+        TitleTable Find(Guid id);
         TitleView FindView(Guid id);
         SelectList GetDropListTitleNull(Guid? id);
         SelectList GetDropListTitle(Guid? id);
@@ -47,55 +48,45 @@ namespace RapidDoc.Models.Services
             repo = uow.GetRepository<TitleTable>();
             _AccountService = accountService;
         }
-
         public IEnumerable<TitleTable> GetAll()
         {
             return repo.All();
         }
-
         public IEnumerable<TitleView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<TitleTable>, IEnumerable<TitleView>>(GetAll());
             return items;
         }
-
         public IEnumerable<TitleTable> GetPartial(Expression<Func<TitleTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<TitleView> GetPartialView(Expression<Func<TitleTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<TitleTable>, IEnumerable<TitleView>>(GetPartial(predicate));
             return items;
         }
-
         public IEnumerable<TitleTable> GetPartialIntercompany(Expression<Func<TitleTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<TitleView> GetPartialIntercompanyView(Expression<Func<TitleTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<TitleTable>, IEnumerable<TitleView>>(GetPartialIntercompany(predicate));
             return items;
         }
-
         public TitleTable FirstOrDefault(Expression<Func<TitleTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public TitleView FirstOrDefaultView(Expression<Func<TitleTable, bool>> predicate)
         {
             return Mapper.Map<TitleTable, TitleView>(FirstOrDefault(predicate));
         }
-
         public bool Contains(Expression<Func<TitleTable, bool>> predicate)
         {
             return repo.Contains(predicate);
         }
-
         public void Save(TitleView viewTable)
         {
             if (viewTable.Id == null)
@@ -106,20 +97,16 @@ namespace RapidDoc.Models.Services
             }
             else
             {
-                var domainTable = Find(viewTable.Id);
+                var domainTable = Find(viewTable.Id ?? Guid.Empty);
                 Mapper.Map(viewTable, domainTable);
                 SaveDomain(domainTable);
             }
         }
-
         public void SaveDomain(TitleTable domainTable, string currentUserName = "")
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            ApplicationUser user = getCurrentUserName(currentUserName);
             if (domainTable.Id == Guid.Empty)
             {
-                domainTable.Id = Guid.NewGuid();
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
                 domainTable.ApplicationUserCreatedId = user.Id;
@@ -134,45 +121,39 @@ namespace RapidDoc.Models.Services
             }
             _uow.Save();
         }
-
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
             _uow.Save();
         }
-
-        public TitleTable Find(Guid? id)
+        public TitleTable Find(Guid id)
         {
-            return repo.Find(a => a.Id == id);
+            return repo.GetById(id);
         }
-
         public TitleView FindView(Guid id)
         {
             return Mapper.Map<TitleTable, TitleView>(Find(id));
         }
-
         public SelectList GetDropListTitleNull(Guid? id)
         {
             var items = GetAllView().ToList();
             items.Insert(0, new TitleView { TitleName = UIElementRes.UIElement.NoValue, Id = null });
             return new SelectList(items, "Id", "TitleName", id);
         }
-
         public SelectList GetDropListTitle(Guid? id)
         {
             var items = GetAllView().ToList();
             return new SelectList(items, "Id", "TitleName", id);
         }
-
-        private string getCurrentUserName(string currentUserName = "")
+        private ApplicationUser getCurrentUserName(string currentUserName = "")
         {
             if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
             {
-                return currentUserName;
+                return _AccountService.FirstOrDefault(x => x.UserName == currentUserName);
             }
             else
             {
-                return HttpContext.Current.User.Identity.Name;
+                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             }
         }
     }

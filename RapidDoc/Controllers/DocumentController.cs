@@ -70,7 +70,7 @@ namespace RapidDoc.Controllers
 
         public ActionResult GetAllDocument()
         {
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             ViewBag.CurrentTimeId = user.TimeZoneId;
 
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
@@ -79,7 +79,7 @@ namespace RapidDoc.Controllers
 
         public ActionResult GetArchiveDocument()
         {
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             ViewBag.CurrentTimeId = user.TimeZoneId;
 
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetArchiveView(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
@@ -90,7 +90,7 @@ namespace RapidDoc.Controllers
         {
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
 
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             ViewBag.CurrentTimeId = user.TimeZoneId;
 
             return Json(new
@@ -104,7 +104,7 @@ namespace RapidDoc.Controllers
         {
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetArchiveView(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
 
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             ViewBag.CurrentTimeId = user.TimeZoneId;
 
             return Json(new
@@ -116,7 +116,7 @@ namespace RapidDoc.Controllers
 
         public ActionResult GetAllAgreedDocument()
         {
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             ViewBag.CurrentTimeId = user.TimeZoneId;
 
             var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
@@ -127,7 +127,7 @@ namespace RapidDoc.Controllers
         {
             var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
 
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             ViewBag.CurrentTimeId = user.TimeZoneId;
 
             return Json(new
@@ -152,23 +152,23 @@ namespace RapidDoc.Controllers
                         ModelState.Add(kvp.Key, kvp.Value);
             }
 
-            DocumentTable docuTable = _DocumentService.Find(id);
-            ProcessView process = _ProcessService.FindView(docuTable.ProcessTableId);
-            if (docuTable == null || process == null || _DocumentService.isShowDocument(docuTable.Id, process.Id ?? Guid.Empty, "", isAfterView) == false)
+            DocumentView docuView = _DocumentService.FindView(id);
+            ProcessView process = _ProcessService.FindView(GuidNull2Guid(docuView.ProcessTableId));
+            if (docuView == null || process == null || _DocumentService.isShowDocument(GuidNull2Guid(docuView.Id), GuidNull2Guid(process.Id), "", isAfterView) == false)
             {
                 return RedirectToAction("PageNotFound", "Error");
             }
 
             _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = id });
 
-            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuTable.ApplicationUserCreatedId);
-            ApplicationUser userTable = _AccountService.Find(docuTable.ApplicationUserCreatedId);
+            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuView.ApplicationUserCreatedId && x.CompanyTableId == docuView.CompanyTableId);
+            ApplicationUser userTable = _AccountService.Find(docuView.ApplicationUserCreatedId);
             if (emplTable == null || userTable == null)
             {
                 return HttpNotFound();
             }
 
-            object viewModel = InitialViewShowDocument(id, process, docuTable, userTable, emplTable);
+            object viewModel = InitialViewShowDocument(id, process, docuView, userTable, emplTable);
             return View(viewModel);
         }
         
@@ -183,9 +183,10 @@ namespace RapidDoc.Controllers
                 _CommentService.SaveDomain(new CommentTable { Comment = lastComment, DocumentTableId = id });
             }
 
+            DocumentView docuView = _DocumentService.FindView(id);
             if(rejectDoc != String.Empty)
             {
-                ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+                ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
                 if (userTable == null) return HttpNotFound();
 
                 DateTime checkRejectDate = DateTime.UtcNow.AddMinutes(-5);
@@ -199,7 +200,7 @@ namespace RapidDoc.Controllers
                 {
                     EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuTable.ApplicationUserCreatedId);
                     ProcessView process = _ProcessService.FindView(docuTable.ProcessTableId);
-                    object viewModel = InitialViewShowDocument(id, process, docuTable, userTable, emplTable);
+                    object viewModel = InitialViewShowDocument(id, process, docuView, userTable, emplTable);
                     ModelState.AddModelError(string.Empty, UIElementRes.UIElement.RejectReason);
 
                     return View("~/Views/Document/ShowDocument.cshtml", viewModel);
@@ -223,30 +224,30 @@ namespace RapidDoc.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ApplicationUser userResult = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
-            EmplTable emplResult = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuTable.ApplicationUserCreatedId);
-            ProcessView processResult = _ProcessService.FindView(docuTable.ProcessTableId);
-            object viewModelResult = InitialViewShowDocument(id, processResult, docuTable, userResult, emplResult);
+            ApplicationUser userResult = _AccountService.Find(User.Identity.GetUserId());
+            EmplTable emplResult = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuView.ApplicationUserCreatedId && x.CompanyTableId == userResult.CompanyTableId);
+            ProcessView processResult = _ProcessService.FindView(GuidNull2Guid(docuView.ProcessTableId));
+            object viewModelResult = InitialViewShowDocument(id, processResult, docuView, userResult, emplResult);
 
             return View("~/Views/Document/ShowDocument.cshtml", viewModelResult);
         }
 
-        private object InitialViewShowDocument(Guid id, ProcessView process, DocumentTable docuTable, ApplicationUser userTable, EmplTable emplTable)
+        private object InitialViewShowDocument(Guid id, ProcessView process, DocumentView docuView, ApplicationUser userTable, EmplTable emplTable)
         {
             var viewModel = new DocumentComposite();
             viewModel.ProcessView = process;
 
-            docuTable.isSign = _DocumentService.isSignDocument(docuTable.Id, docuTable.ProcessTableId);
-            docuTable.isArchive = _ReviewDocLogService.isArchive(docuTable.Id, "", userTable);
-            viewModel.DocumentTable = docuTable;
+            docuView.isSign = _DocumentService.isSignDocument(GuidNull2Guid(docuView.Id), GuidNull2Guid(docuView.ProcessTableId));
+            docuView.isArchive = _ReviewDocLogService.isArchive(GuidNull2Guid(docuView.Id), "", userTable);
+            viewModel.DocumentView = docuView;
             viewModel.docData = _DocumentService.GetDocumentView(id);
-            viewModel.fileId = docuTable.FileId;
+            viewModel.fileId = docuView.FileId;
             viewModel.WFTrackerItems = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id);
 
-            ViewBag.CreatedDate = _SystemService.ConvertDateTimeToLocal(userTable, docuTable.CreatedDate);
+            ViewBag.CreatedDate = _SystemService.ConvertDateTimeToLocal(userTable, docuView.CreatedDate);
             if (emplTable != null)
             {
-                ViewBag.Initiator = emplTable.ApplicationUserId != null ? emplTable.FullName : docuTable.ApplicationUserCreatedId;
+                ViewBag.Initiator = emplTable.ApplicationUserId != null ? emplTable.FullName : docuView.ApplicationUserCreatedId;
                 ViewBag.TitleName = emplTable.TitleTableId != null ? emplTable.TitleTable.TitleName : String.Empty;
                 ViewBag.DepartmentName = emplTable.DepartmentTableId != null ? emplTable.DepartmentTable.DepartmentName : String.Empty;
                 ViewBag.CompanyName = emplTable.CompanyTableId != null ? emplTable.CompanyTable.AliasCompanyName : String.Empty;
@@ -259,19 +260,19 @@ namespace RapidDoc.Controllers
                 ViewBag.CompanyName = String.Empty;
             }
 
-            ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuTable.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
-            ViewBag.AddReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuTable.Id && x.HistoryType == Models.Repository.HistoryType.AddReader);
-            ViewBag.RemoveReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuTable.Id && x.HistoryType == Models.Repository.HistoryType.RemoveReader);
+            ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuView.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
+            ViewBag.AddReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuView.Id && x.HistoryType == Models.Repository.HistoryType.AddReader);
+            ViewBag.RemoveReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuView.Id && x.HistoryType == Models.Repository.HistoryType.RemoveReader);
 
             return viewModel;
         }
 
         public ActionResult Create(Guid id)
         {
-            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
             if (userTable == null) return HttpNotFound();
 
-            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id);
+            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id && x.CompanyTableId == userTable.CompanyTableId);
             if (emplTable == null) return HttpNotFound();
 
             ProcessView process = _ProcessService.FindView(id);
@@ -297,10 +298,9 @@ namespace RapidDoc.Controllers
             return View(viewModel);
         }
 
-        public ActionResult GetDocumentData(dynamic modelDoc, Guid idProcess, string viewType)
+        public ActionResult GetDocumentData(dynamic modelDoc, string tableName, string viewType)
         {
-            ProcessView process = _ProcessService.FindView(idProcess);
-            return PartialView("~/Views/Custom/" + process.TableName + "_" + viewType + ".cshtml", modelDoc);
+            return PartialView("~/Views/Custom/" + tableName + "_" + viewType + ".cshtml", modelDoc);
         }
 
         public ActionResult GetAllComment(Guid documentId, string lastComment = "")
@@ -333,7 +333,6 @@ namespace RapidDoc.Controllers
             if (ModelState.IsValid)
             {
                 //Save Document
-
                 var documentId = _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
                 _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId });
                 _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
@@ -363,7 +362,7 @@ namespace RapidDoc.Controllers
                     || docuTable.DocumentState == Models.Repository.DocumentState.Completed
                     || docuTable.DocumentState == Models.Repository.DocumentState.Created)
                 {
-                    ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+                    ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
                     if (userTable == null) return HttpNotFound();
 
                     ReviewDocLogTable reviewTable = _ReviewDocLogService.FirstOrDefault(x => x.DocumentTableId == id && x.ApplicationUserCreatedId == userTable.Id);
@@ -385,7 +384,7 @@ namespace RapidDoc.Controllers
 
         public ActionResult DocumentFromArchive(Guid id)
         {
-            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
             if (userTable == null) return HttpNotFound();
 
             IEnumerable<ReviewDocLogTable> reviewTables = _ReviewDocLogService.GetPartial(x => x.DocumentTableId == id && x.ApplicationUserCreatedId == userTable.Id && x.isArchive == true);
@@ -479,7 +478,7 @@ namespace RapidDoc.Controllers
                 WFTrackerTable tracker = _WorkflowTrackerService.FirstOrDefault(x => x.DocumentTableId == id && x.ActivityID == activityId);
                 if(tracker != null)
                 {
-                    ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+                    ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
                     if (userTable == null) return HttpNotFound();
 
                     foreach (string data in listdata)

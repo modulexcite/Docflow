@@ -43,8 +43,8 @@ function selectpicker_init() {
 
 function duallist_init(placeholder) {
     $('.duallist').bootstrapDualListbox({
-        infotext: false,
-        filterplaceholder: placeholder
+        infoText: false,
+        filterPlaceHolder: placeholder
     });
 
     $("#duallistform").submit(function (e) {

@@ -39,7 +39,7 @@ namespace RapidDoc.Activities
             Dictionary<string, Object> currentService = context.GetValue(this.inputServiceName);
             Guid documentId = context.GetValue(this.inputDocumentId);
             DocumentState documentStep = context.GetValue(this.inputStep);
-            string currentUser = context.GetValue(this.inputCurrentUser);
+            string currentUserId = context.GetValue(this.inputCurrentUser);
             bool useManual = context.GetValue(this.useManual);
             int slaOffset = context.GetValue(this.slaOffset);
             bool executionStep = context.GetValue(this.executionStep);
@@ -56,9 +56,9 @@ namespace RapidDoc.Activities
             WFUserFunctionResult userFunctionResult = _service.WFRoleUser(documentId, roleName);
             
             if (userFunctionResult.Skip == false)
-                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
+                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUserId, this.Id, useManual, slaOffset, executionStep);
             else if(executionStep == true || noneSkipStep == true)
-                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUser, this.Id, useManual, slaOffset, executionStep);
+                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUserId, this.Id, useManual, slaOffset, executionStep);
 
             outputBookmark.Set(context, this.DisplayName.Replace("<step>", ""));
             outputSkipStep.Set(context, executionStep ? false : userFunctionResult.Skip);

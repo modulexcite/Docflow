@@ -60,13 +60,13 @@ namespace RapidDoc.Models.ViewModels
     public class DocumentComposite
     {
         public ProcessView ProcessView { get; set; }
-        public DocumentTable DocumentTable { get; set; }
+        public DocumentView DocumentView { get; set; }
         public IEnumerable<WFTrackerListView> WFTrackerItems { get; set; }
         public dynamic docData { get; set; }
         public Guid fileId { get; set; }
     }
 
-    public class DocumentListView : BasicCompanyNullView
+    public class DocumentView : BasicCompanyNullView
     {
         [StringLength(256, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -89,11 +89,15 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "DocumentText", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string DocumentText { get; set; }
 
+        public Guid FileId { get; set; }
+
         public SLAStatusList SLAStatus { get; set; }
 
         public bool isNotReview { get; set; }
 
         public bool isArchive { get; set; }
+
+        public bool isSign { get; set; }
 
         public bool isShow { get; set; }
 

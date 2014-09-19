@@ -1,16 +1,16 @@
 ﻿@model RapidDoc.Models.ViewModels.DocumentComposite
 @using RapidDoc.Extensions;
 @{
-    ViewBag.Title = Model.DocumentTable.DocumentNum + " - " + Model.ProcessView.ProcessName;
+    ViewBag.Title = Model.DocumentView.DocumentNum + " - " + Model.ProcessView.ProcessName;
 }
 
 <h2 class="hidden-print">
-    @if (Model.DocumentTable.isArchive == true)
+    @if (Model.DocumentView.isArchive == true)
     {
         <span class="fa fa-archive"></span>
     }
 
-    @ViewBag.Title <small class="">@Model.DocumentTable.DocumentState.GetDescription()</small>
+    @ViewBag.Title <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
 </h2>
 <h5 class="visible-print-block">@ViewBag.Title</h5>
     <div class="pull-right hidden-sm hidden-xs">
@@ -19,16 +19,16 @@
     <legend class="hidden-print"></legend>
     <h4 class="text-right"><small>(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h4>
 
-    @using (Html.BeginForm("PostDocument", "Document", new { processId = Model.ProcessView.Id, type = 2, fileId = Model.fileId, documentId = Model.DocumentTable.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("PostDocument", "Document", new { processId = Model.ProcessView.Id, type = 2, fileId = Model.fileId, documentId = Model.DocumentView.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(false)
 
     <fieldset>
         @Html.HiddenFor(model => model.ProcessView.Id)
-        @Html.HiddenFor(model => model.DocumentTable.Id)
+        @Html.HiddenFor(model => model.DocumentView.Id)
         @Html.HiddenFor(model => model.fileId, new { @id = "documentFileId" })
-        @Html.Action("GetDocumentData", new { modelDoc = Model.docData, idProcess = Model.ProcessView.Id, viewType = "View" })
+        @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "View" })
         <br class="hidden-print">
         <h3 class="hidden-print">@UIElementRes.UIElement.AttachedFiles</h3>
         <table role="presentation" class="table table-striped hidden-print"><tbody class="files"></tbody></table>
@@ -47,16 +47,16 @@
                             </th>
                             <td class="actionField"></td>
                             <th>
-                                @Html.DisplayNameFor(model => Model.WFTrackerItems.FirstOrDefault().ActivityName)
+                                @Html.DisplayNameFor(model => Model.WFTrackerItems.First().ActivityName)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => Model.WFTrackerItems.FirstOrDefault().Executors)
+                                @Html.DisplayNameFor(model => Model.WFTrackerItems.First().Executors)
                             </th>
                             <th class="hidden-print">
                                 @Html.DisplayName(FieldNameRes.FieldNameResource.PerformToDate)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => Model.WFTrackerItems.FirstOrDefault().SignDate)
+                                @Html.DisplayNameFor(model => Model.WFTrackerItems.First().SignDate)
                             </th>
                             <th></th>
                         </tr>
@@ -69,9 +69,9 @@
                                     <span class="label label-primary rowNum cellAligmentMiddle">@Html.DisplayFor(modelItem => trackerItem.RowNum)</span>
                                 </td>
                                 <td class="hidden-print">
-                                    @if ((trackerItem.ManualExecutor == true && Model.DocumentTable.isSign) || (User.IsInRole("Administrator") && trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting))
+                                    @if ((trackerItem.ManualExecutor == true && Model.DocumentView.isSign) || (User.IsInRole("Administrator") && trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting))
                                     {
-                                        <a href=@Url.Action("AddExecutor", new { id = Model.DocumentTable.Id, activityId = trackerItem.ActivityID })><span class="fa fa-users fa-lg"></span></a>
+                                        <a href=@Url.Action("AddExecutor", new { id = Model.DocumentView.Id, activityId = trackerItem.ActivityID })><span class="fa fa-users fa-lg"></span></a>
                                     }
                                 </td>
                                 <td>
@@ -120,24 +120,30 @@
                             }
                         </ul>
                     }
-                    @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders).Count() > 0)
-                    {
-                        <ul>
-                            @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders)
+                    <div class="row">
+                        <div class="col-md-6">
+                            @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders).Count() > 0)
                             {
-                                <li>@UIElementRes.UIElement.DocumentAddReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), @history.CreatedBy</li>
+                                <ul>
+                                    @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders)
+                                    {
+                                        <li>@UIElementRes.UIElement.DocumentAddReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), @history.CreatedBy</li>
+                                    }
+                                </ul>
                             }
-                        </ul>
-                    }
-                    @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders).Count() > 0)
-                    {
-                        <ul>
-                            @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders)
+                        </div>
+                        <div class="col-md-6">
+                            @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders).Count() > 0)
                             {
-                                <li>@UIElementRes.UIElement.DocumentRemoveReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), @history.CreatedBy</li>
+                                <ul>
+                                    @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders)
+                                    {
+                                        <li>@UIElementRes.UIElement.DocumentRemoveReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), @history.CreatedBy</li>
+                                    }
+                                </ul>
                             }
-                        </ul>
-                    }
+                        </div>
+                    </div>
                 </div>
             </div>
         }
@@ -145,10 +151,10 @@
     }
             <br class="hidden-print">
             <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
-            @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentTable.Id })
+            @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentView.Id })
             <p>
                 <h4 class="text-right hidden-print">@UIElementRes.UIElement.AddComment</h4>
-                @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentTable.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }))
+                @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentView.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }))
                 {
                     <div class="hidden-print">
                         @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
@@ -161,7 +167,7 @@
                 }
             </p>
             
-            @if ((Model.DocumentTable.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentTable.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentTable.isSign)
+@if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.isSign)
 {
     <input class="btn btn-success hidden-print" type="submit" name="approveDoc" id="approveDocId" value=@UIElementRes.UIElement.Approve />
     <input class="btn btn-danger hidden-print" type="submit" name="rejectDoc" id="rejectDocId" value=@UIElementRes.UIElement.Reject />
@@ -172,14 +178,14 @@
                     @UIElementRes.UIElement.Create <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href=@Url.Action("AddReader", new { id = Model.DocumentTable.Id })>@UIElementRes.UIElement.Reader</a></li>
-                    @if (Model.DocumentTable.isArchive == false)
+                    <li><a href=@Url.Action("AddReader", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.Reader</a></li>
+                    @if (Model.DocumentView.isArchive == false)
                     {
-                        <li><a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentTable.Id })>@UIElementRes.UIElement.ToArchive</a></li>
+                        <li><a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.ToArchive</a></li>
                     }
                     else
                     {
-                        <li><a href=@Url.Action("DocumentFromArchive", new { id = Model.DocumentTable.Id })>@UIElementRes.UIElement.FromArchive</a></li>
+                        <li><a href=@Url.Action("DocumentFromArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.FromArchive</a></li>
                     }
                 </ul>
             </div>

@@ -25,30 +25,25 @@ namespace RapidDoc.Models.Services
             _uow = uow;
             _AccountService = accountService;
         }
-
         public DateTime ConvertDateTimeToLocal(string UserId, DateTime value)
         {
             ApplicationUser userTable = _AccountService.Find(UserId);
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(userTable.TimeZoneId);
             return TimeZoneInfo.ConvertTimeFromUtc(value, timeZoneInfo);
         }
-
         public DateTime ConvertDateTimeToLocal(ApplicationUser userTable, DateTime value)
         {
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(userTable.TimeZoneId);
             return TimeZoneInfo.ConvertTimeFromUtc(value, timeZoneInfo);
         }
-
         public bool IsGUID(string expression)
         {
             if (expression != null)
             {
                 Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
-
                 return isGuid.IsMatch(expression);
             }
             return false;
         }
-
     }
 }

@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Linq.Expressions;
 using System.Transactions;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Services
 {
@@ -20,10 +21,11 @@ namespace RapidDoc.Models.Services
         IEnumerable<DocumentReaderTable> GetPartial(Expression<Func<DocumentReaderTable, bool>> predicate);
         DocumentReaderTable FirstOrDefault(Expression<Func<DocumentReaderTable, bool>> predicate);
         bool Contains(Expression<Func<DocumentReaderTable, bool>> predicate);
-        List<string> SaveReader(Guid documentId, string[] listdata, string currentUserName = "");
-        void SaveDomain(DocumentReaderTable domainTable, string currentUserName = "");
+        List<string> SaveReader(Guid documentId, string[] listdata);
+        void SaveDomain(DocumentReaderTable domainTable);
         void Delete(Guid documentId);
-        DocumentReaderTable Find(Guid? id);
+        void Delete(Expression<Func<DocumentReaderTable, bool>> predicate);
+        DocumentReaderTable Find(Guid id);
     }
 
     public class DocumentReaderService : IDocumentReaderService
@@ -42,60 +44,65 @@ namespace RapidDoc.Models.Services
             _EmplService = emplService;
             _HistoryUserService = historyUserService;
         }
-
         public IEnumerable<DocumentReaderTable> GetAll()
         {
             return repo.All();
         }
-
         public IEnumerable<DocumentReaderTable> GetPartial(Expression<Func<DocumentReaderTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public DocumentReaderTable FirstOrDefault(Expression<Func<DocumentReaderTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public bool Contains(Expression<Func<DocumentReaderTable, bool>> predicate)
         {
             return repo.Contains(predicate);
         }
-
-        public List<string> SaveReader(Guid documentId, string[] listdata, string currentUserName = "")
+        public List<string> SaveReader(Guid documentId, string[] listdata)
         {
             List<string> newReader = new List<string>();
             string addReadersDescription = String.Empty;
             string removeReadersDescription = String.Empty;
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
 
             if (listdata != null)
             {
-                foreach (string emplId in listdata)
+                foreach (string userId in listdata)
                 {
-                    if (Contains(x => x.DocumentTableId == documentId && x.UserId == emplId) == false)
+                    if (Contains(x => x.DocumentTableId == documentId && x.UserId == userId) == false)
                     {
-                        newReader.Add(emplId);
-                        var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == emplId);
+                        newReader.Add(userId);
+                        var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userId && x.CompanyTableId == user.CompanyTableId);
                         addReadersDescription += empl.FullName + "; ";
+
+                        DocumentReaderTable reader = new DocumentReaderTable();
+                        reader.DocumentTableId = documentId;
+                        reader.UserId = userId;
+                        SaveDomain(reader);
                     }
                 }
             }
 
-            var currentReaders = GetPartial(x => x.DocumentTableId == documentId);
+            var currentReaders = GetPartial(x => x.DocumentTableId == documentId).ToList();
+            if(listdata == null)
+                Delete(documentId);
+
             foreach (var item in currentReaders)
             {
                 if(listdata != null)
                 {
                     if (listdata.Contains(item.UserId) == false)
                     {
-                        var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId);
+                        var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId && x.CompanyTableId == user.CompanyTableId);
                         removeReadersDescription += empl.FullName + "; ";
+                        Delete(x => x.DocumentTableId == documentId && x.UserId == item.UserId);
                     }
                 }
                 else
                 {
-                    var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId);
+                    var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId && x.CompanyTableId == user.CompanyTableId);
                     removeReadersDescription += empl.FullName + "; ";
                 }
             }
@@ -109,58 +116,31 @@ namespace RapidDoc.Models.Services
                 _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.RemoveReader, Description = removeReadersDescription });
             }
 
-            Delete(documentId);
-
-            if (listdata != null)
-            {
-                foreach (string emplId in listdata)
-                {
-                    DocumentReaderTable reader = new DocumentReaderTable();
-                    reader.DocumentTableId = documentId;
-                    reader.UserId = emplId;
-                    SaveDomain(reader, currentUserName);
-                }
-            }
-
             return newReader;
         }
-
-        public void SaveDomain(DocumentReaderTable domainTable, string currentUserName = "")
+        public void SaveDomain(DocumentReaderTable domainTable)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
-            domainTable.Id = Guid.NewGuid();
+            string userId = HttpContext.Current.User.Identity.GetUserId();
             domainTable.CreatedDate = DateTime.UtcNow;
             domainTable.ModifiedDate = domainTable.CreatedDate;
-            domainTable.ApplicationUserCreatedId = user.Id;
-            domainTable.ApplicationUserModifiedId = user.Id;
+            domainTable.ApplicationUserCreatedId = userId;
+            domainTable.ApplicationUserModifiedId = userId;
             repo.Add(domainTable);
-
             _uow.Save();
         }
-
         public void Delete(Guid documentId)
         {
             repo.Delete(x => x.DocumentTableId == documentId);
             _uow.Save();
         }
-
-        public DocumentReaderTable Find(Guid? id)
+        public void Delete(Expression<Func<DocumentReaderTable, bool>> predicate)
         {
-            return repo.Find(a => a.Id == id);
+            repo.Delete(predicate);
+            _uow.Save();
         }
-
-        private string getCurrentUserName(string currentUserName = "")
+        public DocumentReaderTable Find(Guid id)
         {
-            if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
-            {
-                return currentUserName;
-            }
-            else
-            {
-                return HttpContext.Current.User.Identity.Name;
-            }
+            return repo.GetById(id);
         }
     }
 }

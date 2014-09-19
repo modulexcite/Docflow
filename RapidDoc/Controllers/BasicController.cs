@@ -12,6 +12,8 @@ using RapidDoc.Models.Repository;
 using System.Reflection;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using RapidDoc.Models.DomainModels;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Controllers
 {
@@ -40,7 +42,7 @@ namespace RapidDoc.Controllers
                 var companyId = filterContext.RouteData.Values["company"].ToString();
                 if (!String.IsNullOrEmpty(companyId))
                 {
-                    var user = _AccountService.FirstOrDefault(x => x.UserName == filterContext.HttpContext.User.Identity.Name);
+                    ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
                     if (user != null)
                     {
                         if (user.AliasCompanyName != companyId)
@@ -80,7 +82,7 @@ namespace RapidDoc.Controllers
                 cookie = new HttpCookie("lang");
                 cookie.HttpOnly = false;
                 cookie.Value = id;
-                cookie.Expires = DateTime.Now.AddYears(1);
+                cookie.Expires = DateTime.UtcNow.AddYears(1);
             }
             Response.Cookies.Add(cookie);
             return Redirect(returnUrl);
@@ -88,16 +90,13 @@ namespace RapidDoc.Controllers
 
         public ActionResult ChangeCompany(string companyId, string returnUrl)
         {
-            //IAccountService serviceAccount = DependencyResolver.Current.GetService<IAccountService>();
-            //ICompanyService serviceCompany = DependencyResolver.Current.GetService<ICompanyService>();
-
             var company = _CompanyService.FirstOrDefault(x => x.AliasCompanyName == companyId);
             if (company == null)
             {
                 return HttpNotFound();
             }
 
-            var user = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             if (user == null)
             {
                 return HttpNotFound();
@@ -137,6 +136,11 @@ namespace RapidDoc.Controllers
             if (atts.Length == 0)
                 return null;
             return (atts[0] as DisplayAttribute).Name;
+        }
+
+        public Guid GuidNull2Guid(Guid? value)
+        {
+            return value ?? Guid.Empty;
         }
     }
 }

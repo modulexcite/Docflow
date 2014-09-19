@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Services;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Controllers
 {
@@ -22,8 +23,8 @@ namespace RapidDoc.Controllers
         // GET: /HistoryUser/
         public ActionResult Index()
         {
-            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
-            var model = _HistoryUserService.GetPartialView(x => x.ApplicationUserCreatedId == userTable.Id).OrderByDescending(x => x.CreatedDate);
+            string userId = User.Identity.GetUserId();
+            var model = _HistoryUserService.GetPartialView(x => x.ApplicationUserCreatedId == userId).OrderByDescending(x => x.CreatedDate);
 
             return View(model);
         }

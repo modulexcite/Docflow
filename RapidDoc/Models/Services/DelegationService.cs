@@ -17,18 +17,18 @@ namespace RapidDoc.Models.Services
 {
     public interface IDelegationService
     {
-        IEnumerable<DelegationTable> GetAll(string currentUserName = "");
+        IEnumerable<DelegationTable> GetAll();
         IEnumerable<DelegationView> GetAllView();
-        IEnumerable<DelegationTable> GetPartial(Expression<Func<DelegationTable, bool>> predicate, string currentUserName = "");
+        IEnumerable<DelegationTable> GetPartial(Expression<Func<DelegationTable, bool>> predicate);
         IEnumerable<DelegationView> GetPartialView(Expression<Func<DelegationTable, bool>> predicate);
         IEnumerable<DelegationTable> GetPartialIntercompany(Expression<Func<DelegationTable, bool>> predicate);
         IEnumerable<DelegationView> GetPartialIntercompanyView(Expression<Func<DelegationTable, bool>> predicate);
         DelegationTable FirstOrDefault(Expression<Func<DelegationTable, bool>> predicate);
         DelegationView FirstOrDefaultView(Expression<Func<DelegationTable, bool>> predicate);
         void Save(DelegationView viewTable);
-        void SaveDomain(DelegationTable domainTable, string currentUserName = "");
+        void SaveDomain(DelegationTable domainTable);
         void Delete(Guid id);
-        DelegationTable Find(Guid? id, string currentUserName = "");
+        DelegationTable Find(Guid id);
         DelegationView FindView(Guid id);
     }
 
@@ -44,54 +44,43 @@ namespace RapidDoc.Models.Services
             repo = uow.GetRepository<DelegationTable>();
             _AccountService = accountService;
         }
-
-        public IEnumerable<DelegationTable> GetAll(string currentUserName = "")
+        public IEnumerable<DelegationTable> GetAll()
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId);
         }
-
         public IEnumerable<DelegationView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<DelegationTable>, IEnumerable<DelegationView>>(GetAll());
             return items;
         }
-
-        public IEnumerable<DelegationTable> GetPartial(Expression<Func<DelegationTable, bool>> predicate, string currentUserName = "")
+        public IEnumerable<DelegationTable> GetPartial(Expression<Func<DelegationTable, bool>> predicate)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(predicate).Where(x => x.CompanyTableId == user.CompanyTableId);
         }
-
         public IEnumerable<DelegationView> GetPartialView(Expression<Func<DelegationTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<DelegationTable>, IEnumerable<DelegationView>>(GetPartial(predicate));
             return items;
         }
-
         public IEnumerable<DelegationTable> GetPartialIntercompany(Expression<Func<DelegationTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<DelegationView> GetPartialIntercompanyView(Expression<Func<DelegationTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<DelegationTable>, IEnumerable<DelegationView>>(GetPartialIntercompany(predicate));
             return items;
         }
-
         public DelegationTable FirstOrDefault(Expression<Func<DelegationTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public DelegationView FirstOrDefaultView(Expression<Func<DelegationTable, bool>> predicate)
         {
             return Mapper.Map<DelegationTable, DelegationView>(FirstOrDefault(predicate));
         }
-
         public void Save(DelegationView viewTable)
         {
             if (viewTable.Id == null)
@@ -102,20 +91,16 @@ namespace RapidDoc.Models.Services
             }
             else
             {
-                var domainTable = Find(viewTable.Id);
+                var domainTable = Find(viewTable.Id ?? Guid.Empty);
                 Mapper.Map(viewTable, domainTable);
                 SaveDomain(domainTable);
             }
         }
-
-        public void SaveDomain(DelegationTable domainTable, string currentUserName = "")
+        public void SaveDomain(DelegationTable domainTable)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             if (domainTable.Id == Guid.Empty)
             {
-                domainTable.Id = Guid.NewGuid();
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
                 domainTable.CompanyTableId = user.CompanyTableId;
@@ -131,35 +116,19 @@ namespace RapidDoc.Models.Services
             }
             _uow.Save();
         }
-
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
             _uow.Save();
         }
-
-        public DelegationTable Find(Guid? id, string currentUserName = "")
+        public DelegationTable Find(Guid id)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             return repo.Find(a => a.Id == id && a.CompanyTableId == user.CompanyTableId);
         }
-
         public DelegationView FindView(Guid id)
         {
             return Mapper.Map<DelegationTable, DelegationView>(Find(id));
-        }
-
-        private string getCurrentUserName(string currentUserName = "")
-        {
-            if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
-            {
-                return currentUserName;
-            }
-            else
-            {
-                return HttpContext.Current.User.Identity.Name;
-            }
         }
     }
 }

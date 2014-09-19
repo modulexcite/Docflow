@@ -86,30 +86,18 @@ namespace RapidDoc.Models.DomainModels
 
     public class DocumentTable : BasicCompanyNullTable
     {
-        [StringLength(256, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "DocumentNum", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        [StringLength(256)]
+        [Required]
         public string DocumentNum { get; set; }
-
         public Guid ProcessTableId { get; set; }
         public virtual ProcessTable ProcessTable { get; set; }
-
-        public Guid EmplTableId { get; set; }
-        public virtual EmplTable EmplTable { get; set; }
-
-        [Display(Name = "DocumentText", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string DocumentText { get; set; }
-
         public Guid RefDocumentId { get; set; }
-
         public Guid WWFInstanceId { get; set; }
-
         public Guid FileId { get; set; }
-
-        [Display(Name = "DocumentState", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public DocumentState DocumentState { get; set; }
+        public string ActivityName { get; set; }
 
-        [Display(Name = "GroupProcesses", ResourceType = typeof(UIElementRes.UIElement))]
         public string GroupProcessName 
         {
             get
@@ -121,7 +109,6 @@ namespace RapidDoc.Models.DomainModels
             }
         }
 
-        [Display(Name = "Processes", ResourceType = typeof(UIElementRes.UIElement))]
         public string ProcessName
         {
             get
@@ -132,28 +119,6 @@ namespace RapidDoc.Models.DomainModels
                 return string.Empty;
             }
         }
-
-        [Display(Name = "CurrentActivityName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
-        public string ActivityName { get; set; }
-
-        public bool isSign { get; set; }
-
-        public bool isArchive { get; set; }
-
-        public SLAStatusList SLAStatus { get; set; }
-
-        public bool isNotReview { get; set; }
-
-        public bool isShow { get; set; }
-
-        [Display(Name = "FirstName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
-        public string FullName { get; set; }
-
-        [Display(Name = "TitleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
-        public string TitleName { get; set; }
-
-        [Display(Name = "DepartmentName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
-        public string DepartmentName { get; set; }
     }
 
     public class CommentTable : BasicCompanyNullTable

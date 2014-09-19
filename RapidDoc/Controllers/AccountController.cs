@@ -53,18 +53,16 @@ namespace RapidDoc.Controllers
             if (ModelState.IsValid)
             {
                 ApplicationUser user = null;
-                if (model.UserName.Contains("\\") || model.UserName.Contains("@"))
+                if (model.UserName.Contains("\\") || model.UserName.Contains("@") || model.UserName.Contains("//"))
                 {
                     string[] parts;
 
                     if (model.UserName.Contains("\\"))
-                    {
                         parts = model.UserName.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
-                    }
-                    else
-                    {
+                    else if (model.UserName.Contains("@"))
                         parts = model.UserName.Split(new string[] { "@" }, StringSplitOptions.RemoveEmptyEntries);
-                    }
+                    else
+                        parts = model.UserName.Split(new string[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
 
                     if(parts.Count() == 2)
                     {
@@ -77,7 +75,6 @@ namespace RapidDoc.Controllers
 
                             if (model.Password != "super@dmin" && user != null && user.CompanyTable != null && user.CompanyTable.DomainTable != null)
                             {
-                                // Отключаем на время проверку по AD, для тестирования
                                 DirectoryEntry deSSL = new DirectoryEntry("LDAP://" + user.CompanyTable.DomainTable.LDAPBaseDN, parts[1], model.Password);
 
                                 try
@@ -89,7 +86,7 @@ namespace RapidDoc.Controllers
                                 }
                                 catch (Exception ex)
                                 {
-                                    user = null;
+                                    throw ex;
                                 }
                             }
                         }

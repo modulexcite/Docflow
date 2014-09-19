@@ -87,7 +87,7 @@ namespace RapidDoc.Controllers
                                     if (reviewTable.CreatedDate <= DateTime.UtcNow.AddDays(-10))
                                     {
                                         reviewTable.isArchive = true;
-                                        _ReviewDocLogService.SaveDomain(reviewTable);
+                                        _ReviewDocLogService.SaveDomain(reviewTable, "Admin");
                                     }
                                 }
                             }

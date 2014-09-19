@@ -20,6 +20,7 @@ using System.Threading;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Services
 {
@@ -28,8 +29,8 @@ namespace RapidDoc.Models.Services
         EmailParameterTable FirstOrDefault(Expression<Func<EmailParameterTable, bool>> predicate);
         EmailParameterView FirstOrDefaultView(Expression<Func<EmailParameterTable, bool>> predicate);
         void Save(EmailParameterView viewTable);
-        void SaveDomain(EmailParameterTable domainTable, string currentUserName = "");
-        EmailParameterTable Find(Guid? id);
+        void SaveDomain(EmailParameterTable domainTable);
+        EmailParameterTable Find(Guid id);
         void InitializeMailParameter();
         string SendEmail(EmailParameterView model, string[] emailTo, string[] ccTo, string subject, string body);
         void SendInitiatorEmail(Guid documentId);
@@ -82,37 +83,35 @@ namespace RapidDoc.Models.Services
             }
             else
             {
-                var domainTable = Find(viewTable.Id);
+                var domainTable = Find(viewTable.Id ?? Guid.Empty);
                 Mapper.Map(viewTable, domainTable);
                 SaveDomain(domainTable);
             }
         }
 
-        public void SaveDomain(EmailParameterTable domainTable, string currentUserName = "")
+        public void SaveDomain(EmailParameterTable domainTable)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            string userId = HttpContext.Current.User.Identity.GetUserId();
             if (domainTable.Id == Guid.Empty)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
-                domainTable.ApplicationUserCreatedId = user.Id;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserCreatedId = userId;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Add(domainTable);
             }
             else
             {
                 domainTable.ModifiedDate = DateTime.UtcNow;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
             _uow.Save();
         }
 
-        public EmailParameterTable Find(Guid? id)
+        public EmailParameterTable Find(Guid id)
         {
-            return repo.Find(a => a.Id == id);
+            return repo.GetById(id);
         }
 
         public void InitializeMailParameter()
@@ -451,18 +450,6 @@ namespace RapidDoc.Models.Services
                 }
 
                 CreateMessange(EmailTemplateType.SLAStatus, null, userTable, @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml", null, "У вас на подписи находятся следующие документы", String.Format("Документы на подписи"), documentUrls.ToArray(), documentNums.ToArray(), documentText.ToArray());
-            }
-        }
-
-        private string getCurrentUserName(string currentUserName = "")
-        {
-            if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
-            {
-                return currentUserName;
-            }
-            else
-            {
-                return HttpContext.Current.User.Identity.Name;
             }
         }
     }

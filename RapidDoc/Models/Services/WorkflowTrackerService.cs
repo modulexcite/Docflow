@@ -8,6 +8,7 @@ using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Infrastructure;
 using RapidDoc.Models.Repository;
 using RapidDoc.Models.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Services
 {
@@ -18,9 +19,9 @@ namespace RapidDoc.Models.Services
         IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate);
         bool Contains(Expression<Func<WFTrackerTable, bool>> predicate);
         WFTrackerTable FirstOrDefault(Expression<Func<WFTrackerTable, bool>> predicate);
-        void SaveDomain(WFTrackerTable domainTable, string currentUserName = "");
+        void SaveDomain(WFTrackerTable domainTable, string currentUserId = "");
         void SaveTrackList(Guid documentId, List<Array> allSteps);
-        WFTrackerTable Find(Guid? id);
+        WFTrackerTable Find(Guid id);
         IEnumerable<WFTrackerTable> GetCurrentStep(Expression<Func<WFTrackerTable, bool>> predicate);
     }
 
@@ -40,17 +41,14 @@ namespace RapidDoc.Models.Services
             _EmplService = emplService;
             _DelegationService = delegationService;
         }
-
         public IEnumerable<WFTrackerTable> GetAll()
         {
             return repo.All();
         }
-
         public IEnumerable<WFTrackerTable> GetPartial(Expression<Func<WFTrackerTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate)
         {
             IEnumerable<WFTrackerTable> trackerDomainItems = GetPartial(predicate).OrderBy(x => x.LineNum);
@@ -85,7 +83,6 @@ namespace RapidDoc.Models.Services
                         addUser = false;
                         if (delegationItem.GroupProcessTableId != null || delegationItem.ProcessTableId != null)
                         {
-
                             if (delegationItem.ProcessTableId == item.DocumentTable.ProcessTableId)
                             {
                                 addUser = true;
@@ -138,17 +135,14 @@ namespace RapidDoc.Models.Services
 
             return trackerViewItems;
         }
-
         public WFTrackerTable FirstOrDefault(Expression<Func<WFTrackerTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public bool Contains(Expression<Func<WFTrackerTable, bool>> predicate)
         {
             return repo.Contains(predicate);
         }
-
         public IEnumerable<WFTrackerTable> GetCurrentStep(Expression<Func<WFTrackerTable, bool>> predicate)
         {
             WFTrackerTable endStep = repo.FindAll(predicate).OrderByDescending(x => x.LineNum).FirstOrDefault();
@@ -176,7 +170,6 @@ namespace RapidDoc.Models.Services
                 return null;
             }
         }
-
         public void SaveTrackList(Guid documentId, List<Array> allSteps)
         {
             foreach(string[] step in allSteps)
@@ -190,12 +183,9 @@ namespace RapidDoc.Models.Services
                 SaveDomain(trackerTable);
             }
         }
-
-        public void SaveDomain(WFTrackerTable domainTable, string currentUserName = "")
+        public void SaveDomain(WFTrackerTable domainTable, string currentUserId = "")
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            ApplicationUser user = getCurrentUserId(currentUserId);
             if (domainTable.Id == Guid.Empty)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;
@@ -212,23 +202,20 @@ namespace RapidDoc.Models.Services
             }
             _uow.Save();
         }
-
-        public WFTrackerTable Find(Guid? id)
+        public WFTrackerTable Find(Guid id)
         {
-            return repo.Find(a => a.Id == id);
+            return repo.GetById(id);
         }
-
-        private string getCurrentUserName(string currentUserName = "")
+        private ApplicationUser getCurrentUserId(string currentUserId = "")
         {
-            if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
+            if (currentUserId != string.Empty)
             {
-                return currentUserName;
+                return _AccountService.Find(currentUserId);
             }
             else
             {
-                return HttpContext.Current.User.Identity.Name;
+                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             }
         }
-
     }
 }

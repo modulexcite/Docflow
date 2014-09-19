@@ -12,6 +12,7 @@ using System.Data;
 using System.Web.Mvc;
 using RapidDoc.Models.Repository;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Services
 {
@@ -21,7 +22,7 @@ namespace RapidDoc.Models.Services
         IEnumerable<ReviewDocLogTable> GetPartial(Expression<Func<ReviewDocLogTable, bool>> predicate);
         ReviewDocLogTable FirstOrDefault(Expression<Func<ReviewDocLogTable, bool>> predicate);
         void SaveDomain(ReviewDocLogTable domainTable, string currentUserName = "");
-        ReviewDocLogTable Find(Guid? id);
+        ReviewDocLogTable Find(Guid id);
         bool isNotReviewDocCurrentUser(Guid documentId, string currentUserName = "", ApplicationUser user = null);
         bool isArchive(Guid documentId, string currentUserName = "", ApplicationUser user = null);
         void Delete(Guid documentId, string userId);
@@ -39,27 +40,21 @@ namespace RapidDoc.Models.Services
             repo = uow.GetRepository<ReviewDocLogTable>();
             _AccountService = accountService;
         }
-
         public IEnumerable<ReviewDocLogTable> GetAll()
         {
             return repo.All();
         }
-
         public IEnumerable<ReviewDocLogTable> GetPartial(Expression<Func<ReviewDocLogTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public ReviewDocLogTable FirstOrDefault(Expression<Func<ReviewDocLogTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public void SaveDomain(ReviewDocLogTable domainTable, string currentUserName = "")
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            ApplicationUser user = getCurrentUserName(currentUserName);
             if (repo.Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == domainTable.DocumentTableId) == false)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;
@@ -77,49 +72,42 @@ namespace RapidDoc.Models.Services
                 _uow.Save();
             }
         }
-
-        public ReviewDocLogTable Find(Guid? id)
+        public ReviewDocLogTable Find(Guid id)
         {
-            return repo.Find(a => a.Id == id);
+            return repo.GetById(id);
         }
-
         public bool isNotReviewDocCurrentUser(Guid documentId, string currentUserName = "", ApplicationUser user = null)
         {
             if (user == null)
             {
-                string localUserName = getCurrentUserName(currentUserName);
-                user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+                user = getCurrentUserName(currentUserName);
             }
 
             return repo.Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == documentId);
         }
-
         public bool isArchive(Guid documentId, string currentUserName = "", ApplicationUser user = null)
         {
             if (user == null)
             {
-                string localUserName = getCurrentUserName(currentUserName);
-                user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+                user = getCurrentUserName(currentUserName);
             }
 
             return repo.Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == documentId && x.isArchive == true);
         }
-
         public void Delete(Guid documentId, string userId)
         {
             repo.Delete(x => x.DocumentTableId == documentId && x.ApplicationUserCreatedId == userId);
             _uow.Save();
         }
-
-        private string getCurrentUserName(string currentUserName = "")
+        private ApplicationUser getCurrentUserName(string currentUserName = "")
         {
             if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
             {
-                return currentUserName;
+                return _AccountService.FirstOrDefault(x => x.UserName == currentUserName);
             }
             else
             {
-                return HttpContext.Current.User.Identity.Name;
+                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             }
         }
     }

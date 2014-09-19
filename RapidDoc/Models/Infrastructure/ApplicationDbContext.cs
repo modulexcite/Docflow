@@ -132,12 +132,5 @@ namespace RapidDoc.Models.Infrastructure
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             base.OnModelCreating(modelBuilder);
         }
-
-        public new IDbSet<T> Set<T>() where T : class
-        {
-            return base.Set<T>();
-        }
-
-        public System.Data.Entity.DbSet<RapidDoc.Models.ViewModels.USR_REQ_IT_CTS_DeliveryOfComponentsWS_View> USR_REQ_IT_CTS_DeliveryOfComponentsWS_View { get; set; }
     }
 }

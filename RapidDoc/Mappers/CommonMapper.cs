@@ -128,6 +128,8 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
                 .ForMember(x => x.CreatedDate, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
+
+            Mapper.CreateMap<DocumentTable, DocumentView>();
         }
 
         public object Map(object source, Type sourceType, Type destinationType)

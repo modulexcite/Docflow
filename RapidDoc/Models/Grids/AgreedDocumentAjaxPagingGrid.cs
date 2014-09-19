@@ -10,9 +10,9 @@ using RapidDoc.Models.Services;
 
 namespace RapidDoc.Models.Grids
 {
-    public class AgreedDocumentGrid : Grid<DocumentTable>
+    public class AgreedDocumentGrid : Grid<DocumentView>
     {
-        private IEnumerable<DocumentTable> _displayingItems;
+        private IEnumerable<DocumentView> _displayingItems;
 
         private readonly IReviewDocLogService _ReviewDocLogService;
         private readonly IDocumentService _DocumentService;
@@ -20,7 +20,7 @@ namespace RapidDoc.Models.Grids
         private readonly ISearchService _SearchService;
         private readonly IEmplService _EmplService;
 
-        public AgreedDocumentGrid(IQueryable<DocumentTable> items, IReviewDocLogService reviewDocLogService, IDocumentService documentService, IAccountService accountService, ISearchService searchService, IEmplService emplService)
+        public AgreedDocumentGrid(IQueryable<DocumentView> items, IReviewDocLogService reviewDocLogService, IDocumentService documentService, IAccountService accountService, ISearchService searchService, IEmplService emplService)
             : base(items)
         {
             _ReviewDocLogService = reviewDocLogService;
@@ -30,19 +30,12 @@ namespace RapidDoc.Models.Grids
             _EmplService = emplService;
         }
 
-        protected override IEnumerable<DocumentTable> GetItemsToDisplay()
+        protected override IEnumerable<DocumentView> GetItemsToDisplay()
         {
             if (_displayingItems != null)
                 return _displayingItems;
 
             _displayingItems = base.GetItemsToDisplay().ToList();
-
-            /*
-            IReviewDocLogService _ReviewDocLogService = DependencyResolver.Current.GetService<IReviewDocLogService>();
-            IDocumentService _DocumentService = DependencyResolver.Current.GetService<IDocumentService>();
-            IAccountService _AccountService = DependencyResolver.Current.GetService<IAccountService>();
-            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
-            */
  
             foreach (var displayedItem in _displayingItems)
             {
@@ -52,7 +45,7 @@ namespace RapidDoc.Models.Grids
                 displayedItem.DepartmentName = empl.DepartmentName;
 
                 displayedItem.isNotReview = false;
-                displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id);
+                displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id ?? Guid.Empty);
             }
 
             return _displayingItems;
@@ -61,7 +54,7 @@ namespace RapidDoc.Models.Grids
 
     public class AgreedDocumentAjaxPagingGrid : DocumentGrid
     {
-        public AgreedDocumentAjaxPagingGrid(IQueryable<DocumentTable> items, int page, bool renderOnlyRows, IReviewDocLogService reviewDocLogService, IDocumentService documentService, IAccountService accountService, ISearchService searchService, IEmplService emplService)
+        public AgreedDocumentAjaxPagingGrid(IQueryable<DocumentView> items, int page, bool renderOnlyRows, IReviewDocLogService reviewDocLogService, IDocumentService documentService, IAccountService accountService, ISearchService searchService, IEmplService emplService)
             : base(items, reviewDocLogService, documentService, accountService, searchService, emplService)
         {
             Pager = new AjaxGridPager(this) { CurrentPage = page }; //override  default pager

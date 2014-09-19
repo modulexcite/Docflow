@@ -7,6 +7,7 @@ using RapidDoc.Models.Infrastructure;
 using RapidDoc.Models.Repository;
 using RapidDoc.Models.Services;
 using RapidDoc.Models.DomainModels;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Controllers
 {
@@ -54,8 +55,8 @@ namespace RapidDoc.Controllers
             Guid? departmentId = new Guid();
             if (departmentString == "")
             {
-                string userId = _AccountService.FirstOrDefault(y => y.UserName == User.Identity.Name).Id;
-                var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userId);
+                ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+                var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == user.Id && x.CompanyTableId == user.CompanyTableId);
                 if (empl != null && empl.DepartmentTable != null)
                 {
                     departmentId = empl.DepartmentTable.Id;

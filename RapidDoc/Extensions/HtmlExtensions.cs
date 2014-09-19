@@ -115,7 +115,7 @@ namespace RapidDoc.Extensions
             {
                 ApplicationDbContext context = new ApplicationDbContext();
                 UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                ApplicationUser user = UserManager.FindByName(HttpContext.Current.User.Identity.Name);
+                ApplicationUser user = UserManager.FindById(HttpContext.Current.User.Identity.GetUserId());
                 context.Dispose();
                 timeZone = user.TimeZoneId;
             }
@@ -132,7 +132,7 @@ namespace RapidDoc.Extensions
             {
                 ApplicationDbContext context = new ApplicationDbContext();
                 UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                ApplicationUser user = UserManager.FindByName(HttpContext.Current.User.Identity.Name);
+                ApplicationUser user = UserManager.FindById(HttpContext.Current.User.Identity.GetUserId());
                 context.Dispose();
                 timeZone = user.TimeZoneId;
             }

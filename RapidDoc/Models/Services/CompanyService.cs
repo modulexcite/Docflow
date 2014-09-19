@@ -10,6 +10,7 @@ using System.Web;
 using RapidDoc.Models.Repository;
 using System.Web.Mvc;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Services
 {
@@ -22,9 +23,9 @@ namespace RapidDoc.Models.Services
         CompanyTable FirstOrDefault(Expression<Func<CompanyTable, bool>> predicate);
         CompanyView FirstOrDefaultView(Expression<Func<CompanyTable, bool>> predicate);
         void Save(CompanyView viewTable);
-        void SaveDomain(CompanyTable domainTable, string currentUserName = "");
+        void SaveDomain(CompanyTable domainTable);
         void Delete(Guid id);
-        CompanyTable Find(Guid? id);
+        CompanyTable Find(Guid id);
         CompanyView FindView(Guid id);
         SelectList GetDropListCompanyNull(Guid? id);
         SelectList GetDropListCompany(Guid? id);
@@ -42,39 +43,32 @@ namespace RapidDoc.Models.Services
             repo = uow.GetRepository<CompanyTable>();
             _AccountService = accountService;
         }
-
         public IEnumerable<CompanyTable> GetAll()
         {
             return repo.All();
         }
-
         public IEnumerable<CompanyView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<CompanyTable>, IEnumerable<CompanyView>>(GetAll());
             return items;
         }
-
         public IEnumerable<CompanyTable> GetPartial(Expression<Func<CompanyTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<CompanyView> GetPartialView(Expression<Func<CompanyTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<CompanyTable>, IEnumerable<CompanyView>>(GetPartial(predicate));
             return items;
         }
-
         public CompanyTable FirstOrDefault(Expression<Func<CompanyTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public CompanyView FirstOrDefaultView(Expression<Func<CompanyTable, bool>> predicate)
         {
             return Mapper.Map<CompanyTable, CompanyView>(FirstOrDefault(predicate));
         }
-
         public void Save(CompanyView viewTable)
         {
             if (viewTable.Id == null)
@@ -85,74 +79,53 @@ namespace RapidDoc.Models.Services
             }
             else
             {
-                var domainTable = Find(viewTable.Id);
+                var domainTable = Find(viewTable.Id ?? Guid.Empty);
                 Mapper.Map(viewTable, domainTable);
                 SaveDomain(domainTable);
             }
         }
-
-        public void SaveDomain(CompanyTable domainTable, string currentUserName = "")
+        public void SaveDomain(CompanyTable domainTable)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            string userId = HttpContext.Current.User.Identity.GetUserId();
             if (domainTable.Id == Guid.Empty)
             {
-                domainTable.Id = Guid.NewGuid();
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
-                domainTable.ApplicationUserCreatedId = user.Id;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserCreatedId = userId;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Add(domainTable);
             }
             else
             {
                 domainTable.ModifiedDate = DateTime.UtcNow;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
             _uow.Save();
         }
-
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
             _uow.Save();
         }
-
-        public CompanyTable Find(Guid? id)
+        public CompanyTable Find(Guid id)
         {
-            return repo.Find(a => a.Id == id);
+            return repo.GetById(id);
         }
-
         public CompanyView FindView(Guid id)
         {
             return Mapper.Map<CompanyTable, CompanyView>(Find(id));
         }
-
         public SelectList GetDropListCompanyNull(Guid? id)
         {
             var items = GetAllView().ToList();
             items.Insert(0, new CompanyView { CompanyName = UIElementRes.UIElement.NoValue, Id = null });
             return new SelectList(items, "Id", "CompanyName", id);
         }
-
         public SelectList GetDropListCompany(Guid? id)
         {
             var items = GetAllView().ToList();
             return new SelectList(items, "Id", "CompanyName", id);
-        }
-
-        private string getCurrentUserName(string currentUserName = "")
-        {
-            if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
-            {
-                return currentUserName;
-            }
-            else
-            {
-                return HttpContext.Current.User.Identity.Name;
-            }
         }
     }
 }

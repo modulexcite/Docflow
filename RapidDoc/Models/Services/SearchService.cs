@@ -11,6 +11,7 @@ using System.Web;
 using RapidDoc.Models.Repository;
 using System.Web.Mvc;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Services
 {
@@ -20,7 +21,7 @@ namespace RapidDoc.Models.Services
         IEnumerable<SearchView> GetPartialView(Expression<Func<SearchTable, bool>> predicate);
         SearchTable FirstOrDefault(Expression<Func<SearchTable, bool>> predicate);
         SearchView FirstOrDefaultView(Expression<Func<SearchTable, bool>> predicate);
-        void SaveDomain(SearchTable domainTable, string currentUserName = "");
+        void SaveDomain(SearchTable domainTable);
         List<SearchView> GetDocuments(int blockNumber, int blockSize, string searchText);
     }
 
@@ -42,24 +43,22 @@ namespace RapidDoc.Models.Services
             _EmplService = emplService;
             _SystemService = systemService;
         }
-
         public IEnumerable<SearchTable> GetPartial(Expression<Func<SearchTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<SearchView> GetPartialView(Expression<Func<SearchTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<SearchTable>, IEnumerable<SearchView>>(GetPartial(predicate));
-            ApplicationUser currentUser = _AccountService.FirstOrDefault(x => x.UserName == HttpContext.Current.User.Identity.Name);
+            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
 
             foreach (var item in items)
             {
                 DocumentTable docuTable = _DocumentService.Find(item.DocumentTableId);
-                item.isShow = _DocumentService.isShowDocument(docuTable.Id, docuTable.ProcessTableId, "", true);
+                item.isShow = _DocumentService.isShowDocument(docuTable.Id, docuTable.ProcessTableId, "", true, currentUser);
 
-                ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == item.CreatedBy);
-                EmplView empl = _EmplService.FirstOrDefaultView(x => x.ApplicationUserId == user.Id);
+                ApplicationUser user = _AccountService.Find(item.ApplicationUserCreatedId);
+                EmplView empl = _EmplService.FirstOrDefaultView(x => x.ApplicationUserId == user.Id && x.CompanyTableId == user.CompanyTableId);
                 if (empl != null)
                     item.CreatedUserName = "(" + empl.AliasCompanyName + ") " + empl.FullName + " " + empl.TitleName + " " + empl.DepartmentName + " "+ _SystemService.ConvertDateTimeToLocal(currentUser, item.CreatedDate);
                 else
@@ -68,12 +67,10 @@ namespace RapidDoc.Models.Services
 
             return items;
         }
-
         public SearchTable FirstOrDefault(Expression<Func<SearchTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public SearchView FirstOrDefaultView(Expression<Func<SearchTable, bool>> predicate)
         {
             var item = Mapper.Map<SearchTable, SearchView>(FirstOrDefault(predicate));
@@ -82,30 +79,25 @@ namespace RapidDoc.Models.Services
 
             return item;
         }
-
-        public void SaveDomain(SearchTable domainTable, string currentUserName = "")
+        public void SaveDomain(SearchTable domainTable)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            string userId = HttpContext.Current.User.Identity.GetUserId();
             if (domainTable.Id == Guid.Empty)
             {
-                domainTable.Id = Guid.NewGuid();
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
-                domainTable.ApplicationUserCreatedId = user.Id;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserCreatedId = userId;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Add(domainTable);
             }
             else
             {
                 domainTable.ModifiedDate = DateTime.UtcNow;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
             _uow.Save();
         }
-
         public List<SearchView> GetDocuments(int blockNumber, int blockSize, string searchText)
         {
             int startIndex = (blockNumber - 1) * blockSize;
@@ -115,18 +107,6 @@ namespace RapidDoc.Models.Services
             var resultNum = this.GetPartialView(x => x.DocumentTable.DocumentNum.Contains(searchString)).Skip(startIndex).Take(blockSize).ToList();
             var result = resultNum.Concat(resultText).ToList();
             return result;
-        }
-
-        private string getCurrentUserName(string currentUserName = "")
-        {
-            if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
-            {
-                return currentUserName;
-            }
-            else
-            {
-                return HttpContext.Current.User.Identity.Name;
-            }
         }
     }
 }

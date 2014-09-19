@@ -25,17 +25,17 @@ namespace RapidDoc.Models.Services
 {
     public interface IWorkflowService
     {
-        WFUserFunctionResult WFMatchingUpManager(Guid documentId, string currentUserName, int level = 1, string profileName = "");
+        WFUserFunctionResult WFMatchingUpManager(Guid documentId, string currentUserId, int level = 1, string profileName = "");
         WFUserFunctionResult WFSpecificUser(Guid documentId, String userName);
         WFUserFunctionResult WFRoleUser(Guid documentId, String roleName);
-        WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate, string currentUserName);
+        WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate);
         WFUserFunctionResult WFCreatedUser(Guid documentId);
-        WFUserFunctionResult WFUsersDocument(Guid documentId, string currentUserName);
+        WFUserFunctionResult WFUsersDocument(Guid documentId, string currentUserId);
         string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location);
         void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData);
-        void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUser, string workflowId, bool useManual, int slaOffset, bool executionStep);
+        void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUserId, string workflowId, bool useManual, int slaOffset, bool executionStep);
         List<Array> printActivityTree(Activity activity, string _parallel = "");
     }
 
@@ -52,10 +52,8 @@ namespace RapidDoc.Models.Services
         private readonly IServiceIncidentService _ServiceIncidentService;
         
         IDictionary<string, object> outputParameters;
-
         private List<Array> allSteps = new List<Array>();
         private const string keyForStep = "<step>";
-
 
         public WorkflowService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, 
             IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService,
@@ -72,13 +70,13 @@ namespace RapidDoc.Models.Services
             _ServiceIncidentService = serviceIncidentService;
         }
 
-        public WFUserFunctionResult WFMatchingUpManager(Guid documentId, string currentUserName, int level = 1, string profileName = "")
+        public WFUserFunctionResult WFMatchingUpManager(Guid documentId, string currentUserId, int level = 1, string profileName = "")
         {
             bool skip = false;
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
             EmplTable currentEmplUser = _EmplService.FirstOrDefault(x => x.ApplicationUserId == documentTable.ApplicationUserCreatedId);
-            EmplTable manager = WFMatchingUpManagerFinder(currentEmplUser, level, currentUserName, profileName);
+            EmplTable manager = WFMatchingUpManagerFinder(currentEmplUser, level, currentUserId, profileName);
 
             if (manager != null)
                 userList.Add(new WFTrackerUsersTable { UserId = manager.ApplicationUserId });
@@ -97,7 +95,6 @@ namespace RapidDoc.Models.Services
 
             return new WFUserFunctionResult { Users = userList, Skip = skip };
         }
-
         private bool checkSkipStep(List<WFTrackerUsersTable> userlist, string createdBy)
         {
             foreach (var user in userlist)
@@ -110,20 +107,17 @@ namespace RapidDoc.Models.Services
 
             return false;
         }
-
-        private EmplTable WFMatchingUpManagerFinder(EmplTable emplTable, int level, string currentUserName, string profileName = "")
+        private EmplTable WFMatchingUpManagerFinder(EmplTable emplTable, int level, string currentUserId, string profileName = "")
         {
             if ((level == 0 && profileName == null) || (emplTable.ProfileName == profileName || emplTable.TitleTable.ProfileName == profileName)) return emplTable;
-            EmplTable manager = _EmplService.Find(emplTable.ManageId, currentUserName);
+            EmplTable manager = _EmplService.Find(emplTable.ManageId ?? Guid.Empty, currentUserId);
 
             if(manager == null)
                 return null;
 
             level--;
-            return WFMatchingUpManagerFinder(manager, level, currentUserName, profileName);
+            return WFMatchingUpManagerFinder(manager, level, currentUserId, profileName);
         }
-
-
         public WFUserFunctionResult WFSpecificUser(Guid documentId, String userName)
         {
             var documentTable = _DocumentService.Find(documentId);
@@ -133,7 +127,6 @@ namespace RapidDoc.Models.Services
 
             return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(userList, documentTable.ApplicationUserCreatedId) };
         }
-
         public WFUserFunctionResult WFRoleUser(Guid documentId, String roleName)
         {
             var documentTable = _DocumentService.Find(documentId);
@@ -142,15 +135,14 @@ namespace RapidDoc.Models.Services
             ApplicationDbContext context = new ApplicationDbContext();
             RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var users = RoleManager.FindByName(roleName).Users;
-
             foreach (IdentityUserRole user in users)
             {
                 userList.Add(new WFTrackerUsersTable { UserId = user.UserId });
-            }          
+            }
+            RoleManager.Dispose();
             return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(userList, documentTable.ApplicationUserCreatedId) };
         }
-
-        public WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate, string currentUserName)
+        public WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate)
         {
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
@@ -163,7 +155,6 @@ namespace RapidDoc.Models.Services
 
             return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(userList, documentTable.ApplicationUserCreatedId) };
         }
-
         public WFUserFunctionResult WFCreatedUser(Guid documentId)
         {
             var documentTable = _DocumentService.Find(documentId);
@@ -172,8 +163,7 @@ namespace RapidDoc.Models.Services
 
             return new WFUserFunctionResult { Users = userList, Skip = false };
         }
-
-        public WFUserFunctionResult WFUsersDocument(Guid documentId, string currentUserName)
+        public WFUserFunctionResult WFUsersDocument(Guid documentId, string currentUserId)
         {
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
@@ -191,7 +181,7 @@ namespace RapidDoc.Models.Services
                     foreach(var item in result)
                     {
                         Guid emplId = Guid.Parse(item);
-                        EmplTable empl = _EmplService.Find(emplId, currentUserName);
+                        EmplTable empl = _EmplService.Find(emplId, currentUserId);
 
                         if (empl != null && empl.ApplicationUserId != null && empl.ApplicationUserId != documentTable.ApplicationUserCreatedId)
                         {
@@ -204,7 +194,6 @@ namespace RapidDoc.Models.Services
             userList.Add(new WFTrackerUsersTable { UserId = documentTable.ApplicationUserCreatedId });
             return new WFUserFunctionResult { Users = userList, Skip = false };
         }
-
         public string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location)
         {
             ApplicationDbContext context = new ApplicationDbContext();
@@ -219,7 +208,6 @@ namespace RapidDoc.Models.Services
 
             return String.Empty;
         }
-
         public void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
             Activity activity = ChooseRightWorkflow(TableName);
@@ -229,7 +217,6 @@ namespace RapidDoc.Models.Services
             DeleteInstanceStoreOwner(instanceStore);
             _EmailService.SendExecutorEmail(documentId);
         }
-
         public void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
             Activity activity = ChooseRightWorkflow(TableName);
@@ -240,7 +227,6 @@ namespace RapidDoc.Models.Services
             _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.ApproveDocument });
             _EmailService.SendExecutorEmail(documentId);
         }
-
         public void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
             Activity activity = ChooseRightWorkflow(TableName);
@@ -251,7 +237,6 @@ namespace RapidDoc.Models.Services
             _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.CancelledDocument });
             _EmailService.SendInitiatorRejectEmail(documentId);
         }
-
         private SqlWorkflowInstanceStore SetupInstanceStore()
         {
             SqlWorkflowInstanceStore instanceStore =
@@ -261,20 +246,20 @@ namespace RapidDoc.Models.Services
 
             return instanceStore;
         }
-
         private void DeleteInstanceStoreOwner(SqlWorkflowInstanceStore instanceStore)
         {
             InstanceView view = instanceStore.Execute(instanceStore.CreateInstanceHandle(instanceStore.DefaultInstanceOwner), new DeleteWorkflowOwnerCommand(), TimeSpan.FromSeconds(30));
         }
-
         public void StartAndPersistInstance(Guid _documentId, DocumentState _state, IDictionary<string, object> documentData, SqlWorkflowInstanceStore instanceStore, Activity activity)
         {
             AutoResetEvent instanceUnloaded = new AutoResetEvent(false);
             var documentTable = _DocumentService.Find(_documentId);
             IDictionary<string, object> inputArguments = new Dictionary<string, object>();
+            string currentUserId = HttpContext.Current.User.Identity.GetUserId();
+
             inputArguments.Add("inputStep" ,  _state);
             inputArguments.Add("inputDocumentId" ,  _documentId);
-            inputArguments.Add("inputCurrentUser", HttpContext.Current.User.Identity.Name);
+            inputArguments.Add("inputCurrentUser", currentUserId);
             inputArguments.Add("documentData", documentData);
 
             WorkflowApplication application = new WorkflowApplication(activity, inputArguments);
@@ -308,9 +293,8 @@ namespace RapidDoc.Models.Services
 
             documentTable.WWFInstanceId = application.Id;
             documentTable.DocumentState = (DocumentState)outputParameters["outputStep"];
-            _DocumentService.UpdateDocument(documentTable);
+            _DocumentService.UpdateDocument(documentTable, currentUserId);
         }
-
         public void LoadAOrCompleteInstance(Guid _documentId, DocumentState _state, TrackerType _trackerType, IDictionary<string, object> documentData, SqlWorkflowInstanceStore instanceStore, Activity activity)
         {
             try
@@ -318,10 +302,11 @@ namespace RapidDoc.Models.Services
                 AutoResetEvent instanceUnloaded = new AutoResetEvent(false);
                 var documentTable = _DocumentService.Find(_documentId);
                 IEnumerable<WFTrackerTable> bookmarks;
+                string currentUserId = HttpContext.Current.User.Identity.GetUserId();
 
                 IDictionary<string, object> inputArguments = new Dictionary<string, object>();
                 inputArguments.Add("inputStep", _state);
-                inputArguments.Add("inputCurrentUser", HttpContext.Current.User.Identity.Name);
+                inputArguments.Add("inputCurrentUser", currentUserId);
                 inputArguments.Add("documentData", documentData);
 
                 WorkflowApplication application = new WorkflowApplication(activity);
@@ -357,7 +342,7 @@ namespace RapidDoc.Models.Services
 
                 application.Load(documentTable.WWFInstanceId);
 
-                bookmarks = _DocumentService.GetCurrentSignStep(_documentId, HttpContext.Current.User.Identity.Name).ToList();
+                bookmarks = _DocumentService.GetCurrentSignStep(_documentId, currentUserId).ToList();
 
                 if (bookmarks != null)
                 {
@@ -380,7 +365,7 @@ namespace RapidDoc.Models.Services
                 {
                     try
                     {
-                        _DocumentService.UpdateDocument(documentTable);
+                        _DocumentService.UpdateDocument(documentTable, currentUserId);
                         break;
                     }
                     catch
@@ -403,7 +388,6 @@ namespace RapidDoc.Models.Services
                 throw ex;
             }
         }
-
         public void CustomParamUpdate(DocumentTable document, IDictionary<string, object> documentData)
         {
             if(document.ProcessTable.TableName == "USR_REQ_IT_CTP_IncidentIT")
@@ -428,7 +412,6 @@ namespace RapidDoc.Models.Services
                 }
             }
         }
-
         public Activity ChooseRightWorkflow(string _tableName)
         {
             Type type = Type.GetType("RapidDoc.Activities." + _tableName);
@@ -437,8 +420,7 @@ namespace RapidDoc.Models.Services
 
             return null;
         }
-
-        public void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUser, string activityId, bool useManual, int slaOffset, bool executionStep)
+        public void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUserId, string activityId, bool useManual, int slaOffset, bool executionStep)
         {
             if ((step != DocumentState.Cancelled) &&
                 (step != DocumentState.Closed))
@@ -454,7 +436,7 @@ namespace RapidDoc.Models.Services
                 trackerTable.ExecutionStep = executionStep;
                 trackerTable.SignDate = null;
                 trackerTable.SignUserId = null;
-                _WorkflowTrackerService.SaveDomain(trackerTable, currentUser);
+                _WorkflowTrackerService.SaveDomain(trackerTable, currentUserId);
 
                 foreach(var user in listUser)
                 {
@@ -477,11 +459,10 @@ namespace RapidDoc.Models.Services
                     item.SLAOffset = 0;
                     item.StartDateSLA = null;
                     item.ManualExecutor = false;
-                    _WorkflowTrackerService.SaveDomain(item, currentUser);
+                    _WorkflowTrackerService.SaveDomain(item, currentUserId);
                 }
             }
         }
-
         public List<Array> printActivityTree(Activity activity, string _parallel = "")
         {
             string[] myIntArray = new string[3];

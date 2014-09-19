@@ -24,7 +24,7 @@ namespace RapidDoc.Controllers
         {
             _Service = Service;
         }
-
+       
         public ActionResult Index()
         {
             return View();
@@ -75,7 +75,7 @@ namespace RapidDoc.Controllers
         public ActionResult Edit(Guid id)
         {
             var model = _Service.FindView(id);
-
+            
             if (model == null)
             {
                 return HttpNotFound();

@@ -10,11 +10,9 @@ using RapidDoc.Models.DomainModels;
 
 namespace RapidDoc.Activities
 {
-
     public sealed class WFWaitingPersonBookmark : NativeActivity
     {
         public WFWaitingPersonBookmark() : base() { }
-
         public InArgument<DocumentState> inputStep { get; set; }
         public InArgument<string> inputBookmarkName { get; set; }
         public OutArgument<DocumentState> outputStep { get; set; }
@@ -34,22 +32,18 @@ namespace RapidDoc.Activities
             var customRecord = new CustomTrackingRecord("RespondActivityRecord");
             customRecord.Data.Add("outputStep", context.GetValue<DocumentState>(inputStep));
             context.Track(customRecord);
-
             return context;
         }
 
         protected override void Execute(NativeActivityContext context)
         {
             context = CreateTrackingRecord(context.GetValue<DocumentState>(inputStep), context);
-
             context.CreateBookmark(context.GetValue<string>(inputBookmarkName), 
                 new BookmarkCallback(this.resumeBookmark));
-                 
         }
 
         void resumeBookmark(NativeActivityContext context, Bookmark bookmark, object obj)
         {
-
             context = CreateTrackingRecord(context.GetValue<DocumentState>(inputStep), context);
             IDictionary<string, object> inputArguments = (IDictionary<string, object>)obj;
             context.SetValue(outputStep, (DocumentState)inputArguments["inputStep"]);

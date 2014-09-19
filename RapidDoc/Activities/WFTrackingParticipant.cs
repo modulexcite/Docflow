@@ -7,7 +7,6 @@ using System.Activities.Tracking;
 
 namespace RapidDoc.Activities
 {
-
     public class WFTrackingParticipant : TrackingParticipant
     {
         public IDictionary<string, object> Outputs { get; set; }

@@ -14,6 +14,7 @@ using RapidDoc.Extensions;
 using RapidDoc.Models.Grids;
 using System.Reflection;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Controllers
 {

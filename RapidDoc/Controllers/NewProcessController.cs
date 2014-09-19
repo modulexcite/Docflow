@@ -31,13 +31,8 @@ namespace RapidDoc.Controllers
 
         public ActionResult Index()
         {
-            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == User.Identity.Name);
-            if (userTable == null)
-            {
-                ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorUserNotFound, User.Identity.Name));
-            }
-
-            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id);
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == user.Id && x.CompanyTableId == user.CompanyTableId );
             if (emplTable == null)
             {
                 ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorEmplNotFound, User.Identity.Name));
@@ -60,13 +55,12 @@ namespace RapidDoc.Controllers
                     UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                     RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
                     List<ProcessView> result = new List<ProcessView>();
-                    string userId = User.Identity.GetUserId();
                     ProcessView process = _ProcessService.FindView(processId);
 
                     if (!String.IsNullOrEmpty(process.RoleId))
                     {
                         string roleName = RoleManager.FindById(process.RoleId).Name;
-                        if (UserManager.IsInRole(userId, roleName))
+                        if (UserManager.IsInRole(user.Id, roleName))
                         {
                             num++;
                             topProcess.Add(process);

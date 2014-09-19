@@ -37,7 +37,7 @@ namespace RapidDoc.Controllers
             foreach (var item in empls)
             {
                 item.ManageId = null;
-                _EmplService.SaveDomain(item);
+                _EmplService.SaveDomain(item, "Admin");
             }
             //---
 

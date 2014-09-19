@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Services
 {
@@ -21,8 +22,8 @@ namespace RapidDoc.Models.Services
         IEnumerable<HistoryUserView> GetPartialView(Expression<Func<HistoryUserTable, bool>> predicate);
         HistoryUserTable FirstOrDefault(Expression<Func<HistoryUserTable, bool>> predicate);
         HistoryUserView FirstOrDefaultView(Expression<Func<HistoryUserTable, bool>> predicate);
-        void SaveDomain(HistoryUserTable domainTable, string currentUserName = "");
-        HistoryUserTable Find(Guid? id);
+        void SaveDomain(HistoryUserTable domainTable);
+        HistoryUserTable Find(Guid id);
         HistoryUserView FindView(Guid id);
     }
 
@@ -38,18 +39,15 @@ namespace RapidDoc.Models.Services
             repo = uow.GetRepository<HistoryUserTable>();
             _AccountService = accountService;
         }
-
         public IEnumerable<HistoryUserTable> GetAll()
         {
             return repo.All();
         }
-
         public IEnumerable<HistoryUserView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<HistoryUserTable>, IEnumerable<HistoryUserView>>(GetAll());
             return items;
         }
-
         public IEnumerable<HistoryUserTable> GetPartial(Expression<Func<HistoryUserTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
@@ -63,61 +61,41 @@ namespace RapidDoc.Models.Services
         {
             return repo.Find(predicate);
         }
-
         public HistoryUserView FirstOrDefaultView(Expression<Func<HistoryUserTable, bool>> predicate)
         {
             return Mapper.Map<HistoryUserTable, HistoryUserView>(FirstOrDefault(predicate));
         }
-
-        public void SaveDomain(HistoryUserTable domainTable, string currentUserName = "")
+        public void SaveDomain(HistoryUserTable domainTable)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            string userId = HttpContext.Current.User.Identity.GetUserId();
             if (domainTable.Id == Guid.Empty)
             {
-                domainTable.Id = Guid.NewGuid();
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
-                domainTable.ApplicationUserCreatedId = user.Id;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserCreatedId = userId;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Add(domainTable);
             }
             else
             {
                 domainTable.ModifiedDate = DateTime.UtcNow;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
             _uow.Save();
         }
-
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
             _uow.Save();
         }
-
-        public HistoryUserTable Find(Guid? id)
+        public HistoryUserTable Find(Guid id)
         {
-            return repo.Find(a => a.Id == id);
+            return repo.GetById(id);
         }
-
         public HistoryUserView FindView(Guid id)
         {
             return Mapper.Map<HistoryUserTable, HistoryUserView>(Find(id));
-        }
-
-        private string getCurrentUserName(string currentUserName = "")
-        {
-            if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
-            {
-                return currentUserName;
-            }
-            else
-            {
-                return HttpContext.Current.User.Identity.Name;
-            }
         }
     }
 }

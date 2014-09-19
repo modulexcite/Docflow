@@ -24,9 +24,9 @@ namespace RapidDoc.Models.Services
         ServiceIncidentTable FirstOrDefault(Expression<Func<ServiceIncidentTable, bool>> predicate);
         ServiceIncidentView FirstOrDefaultView(Expression<Func<ServiceIncidentTable, bool>> predicate);
         void Save(ServiceIncidentView viewTable);
-        void SaveDomain(ServiceIncidentTable domainTable, string currentUserName = "");
+        void SaveDomain(ServiceIncidentTable domainTable);
         void Delete(Guid id);
-        ServiceIncidentTable Find(Guid? id);
+        ServiceIncidentTable Find(Guid id);
         ServiceIncidentView FindView(Guid id);
         SelectList GetDropListServiceIncident(string id);
         SelectList GetDropListRole(string id);
@@ -45,39 +45,32 @@ namespace RapidDoc.Models.Services
             repo = uow.GetRepository<ServiceIncidentTable>();
             _AccountService = accountService;
         }
-        
         public IEnumerable<ServiceIncidentTable> GetAll()
         {
             return repo.All();
         }
-
         public IEnumerable<ServiceIncidentView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<ServiceIncidentTable>, IEnumerable<ServiceIncidentView>>(GetAll());
             return items;
         }
-
         public IEnumerable<ServiceIncidentTable> GetPartial(Expression<Func<ServiceIncidentTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<ServiceIncidentView> GetPartialView(Expression<Func<ServiceIncidentTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<ServiceIncidentTable>, IEnumerable<ServiceIncidentView>>(GetPartial(predicate));
             return items;
         }
-
         public ServiceIncidentTable FirstOrDefault(Expression<Func<ServiceIncidentTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public ServiceIncidentView FirstOrDefaultView(Expression<Func<ServiceIncidentTable, bool>> predicate)
         {
             return Mapper.Map<ServiceIncidentTable, ServiceIncidentView>(FirstOrDefault(predicate));
         }
-
         public void Save(ServiceIncidentView viewTable)
         {
             if (viewTable.Id == null)
@@ -88,45 +81,39 @@ namespace RapidDoc.Models.Services
             }
             else
             {
-                var domainTable = Find(viewTable.Id);
+                var domainTable = Find(viewTable.Id ?? Guid.Empty);
                 Mapper.Map(viewTable, domainTable);
                 SaveDomain(domainTable);
             }
         }
-
-        public void SaveDomain(ServiceIncidentTable domainTable, string currentUserName = "")
+        public void SaveDomain(ServiceIncidentTable domainTable)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            string userId = HttpContext.Current.User.Identity.GetUserId();
             if (domainTable.Id == Guid.Empty)
             {
                 domainTable.Id = Guid.NewGuid();
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
-                domainTable.ApplicationUserCreatedId = user.Id;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserCreatedId = userId;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Add(domainTable);
             }
             else
             {
                 domainTable.ModifiedDate = DateTime.UtcNow;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
             _uow.Save();
         }
-
-        public ServiceIncidentTable Find(Guid? id)
+        public ServiceIncidentTable Find(Guid id)
         {
-            return repo.Find(a => a.Id == id);
+            return repo.GetById(id);
         }
-
         public ServiceIncidentView FindView(Guid id)
         {
             return Mapper.Map<ServiceIncidentTable, ServiceIncidentView>(Find(id));
         }
-
         public SelectList GetDropListRole(string id)
         {
             ApplicationDbContext context = new ApplicationDbContext();
@@ -144,31 +131,16 @@ namespace RapidDoc.Models.Services
             roles.Insert(0, new IdentityRole { Name = UIElementRes.UIElement.NoValue, Id = null });
             return new SelectList(roles, "Id", "Name", id);
         }
-
         public SelectList GetDropListServiceIncident(string id)
         {
             var items = GetAllView().GroupBy(x => new { x.ServiceName, x.Description }).Select(x => new ServiceIncidentList { Id = x.Key.ServiceName, Description = x.Key.Description }).ToList();
             return new SelectList(items, "Id", "Description", id);
         }
-
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
             _uow.Save();
         }
-
-        private string getCurrentUserName(string currentUserName = "")
-        {
-            if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
-            {
-                return currentUserName;
-            }
-            else
-            {
-                return HttpContext.Current.User.Identity.Name;
-            }
-        }
-
     }
 
     public class ServiceIncidentList

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Services
 {
@@ -22,14 +23,13 @@ namespace RapidDoc.Models.Services
         WorkScheduleTable FirstOrDefault(Expression<Func<WorkScheduleTable, bool>> predicate);
         WorkScheduleView FirstOrDefaultView(Expression<Func<WorkScheduleTable, bool>> predicate);
         void Save(WorkScheduleView viewTable);
-        void SaveDomain(WorkScheduleTable domainTable, string currentUserName = "");
+        void SaveDomain(WorkScheduleTable domainTable);
         void Delete(Guid id);
-        WorkScheduleTable Find(Guid? id);
+        WorkScheduleTable Find(Guid id);
         WorkScheduleView FindView(Guid id);
         SelectList GetDropListWorkScheduleNull(Guid? id);
         SelectList GetDropListWorkSchedule(Guid? id);
-
-        void SaveDayToCalendar(Guid workScheduleId, DateTime date, string currentUserName = "");
+        void SaveDayToCalendar(Guid workScheduleId, DateTime date);
         bool CheckDayType(Guid workScheduleId, DateTime date);
         DateTime[] GetDaysOff(Guid workScheduleId);
         bool CheckWorkTime(Guid? workScheduleId, DateTime date);
@@ -49,39 +49,32 @@ namespace RapidDoc.Models.Services
             repoCalendar = uow.GetRepository<СalendarTable>();
             _AccountService = accountService;
         }
-
         public IEnumerable<WorkScheduleTable> GetAll()
         {
             return repo.All();
         }
-
         public IEnumerable<WorkScheduleView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<WorkScheduleTable>, IEnumerable<WorkScheduleView>>(GetAll());
             return items;
         }
-
         public IEnumerable<WorkScheduleTable> GetPartial(Expression<Func<WorkScheduleTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<WorkScheduleView> GetPartialView(Expression<Func<WorkScheduleTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<WorkScheduleTable>, IEnumerable<WorkScheduleView>>(GetPartial(predicate));
             return items;
         }
-
         public WorkScheduleTable FirstOrDefault(Expression<Func<WorkScheduleTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public WorkScheduleView FirstOrDefaultView(Expression<Func<WorkScheduleTable, bool>> predicate)
         {
             return Mapper.Map<WorkScheduleTable, WorkScheduleView>(FirstOrDefault(predicate));
         }
-
         public void Save(WorkScheduleView viewTable)
         {
             if (viewTable.Id == null)
@@ -92,57 +85,49 @@ namespace RapidDoc.Models.Services
             }
             else
             {
-                var domainTable = Find(viewTable.Id);
+                var domainTable = Find(viewTable.Id ?? Guid.Empty);
                 Mapper.Map(viewTable, domainTable);
                 SaveDomain(domainTable);
             }
         }
-
-        public void SaveDomain(WorkScheduleTable domainTable, string currentUserName = "")
+        public void SaveDomain(WorkScheduleTable domainTable)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            string userId = HttpContext.Current.User.Identity.GetUserId();
             if (domainTable.Id == Guid.Empty)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
-                domainTable.ApplicationUserCreatedId = user.Id;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserCreatedId = userId;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Add(domainTable);
             }
             else
             {
                 domainTable.ModifiedDate = DateTime.UtcNow;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
             _uow.Save();
         }
-
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
             _uow.Save();
         }
-
-        public WorkScheduleTable Find(Guid? id)
+        public WorkScheduleTable Find(Guid id)
         {
-            return repo.Find(a => a.Id == id);
+            return repo.GetById(id);
         }
-
         public WorkScheduleView FindView(Guid id)
         {
             return Mapper.Map<WorkScheduleTable, WorkScheduleView>(Find(id));
         }
-
         public SelectList GetDropListWorkScheduleNull(Guid? id)
         {
             var items = GetAllView().ToList();
             items.Insert(0, new WorkScheduleView { WorkScheduleName = UIElementRes.UIElement.NoValue, Id = null });
             return new SelectList(items, "Id", "WorkScheduleName", id);
         }
-
         public SelectList GetDropListWorkSchedule(Guid? id)
         {
             var items = GetAllView().ToList();
@@ -150,17 +135,16 @@ namespace RapidDoc.Models.Services
         }
 
         // Calandar
-        public void SaveDayToCalendar(Guid workScheduleId, DateTime date, string currentUserName = "")
+        public void SaveDayToCalendar(Guid workScheduleId, DateTime date)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            string userId = HttpContext.Current.User.Identity.GetUserId();
             СalendarTable calendar;
 
             if(repoCalendar.Contains(x => x.WorkScheduleTableId == workScheduleId && x.Date == date))
             {
                 calendar = repoCalendar.Find(x => x.WorkScheduleTableId == workScheduleId && x.Date == date);
                 calendar.ModifiedDate = DateTime.UtcNow;
-                calendar.ApplicationUserModifiedId = user.Id;
+                calendar.ApplicationUserModifiedId = userId;
                 if (calendar.DateType == DateType.DayOff)
                 {
                     calendar.DateType = DateType.WorkingDay;
@@ -180,14 +164,13 @@ namespace RapidDoc.Models.Services
                 calendar.WorkScheduleTableId = workScheduleId;
                 calendar.CreatedDate = DateTime.UtcNow;
                 calendar.ModifiedDate = calendar.CreatedDate;
-                calendar.ApplicationUserCreatedId = user.Id;
-                calendar.ApplicationUserModifiedId = user.Id;
+                calendar.ApplicationUserCreatedId = userId;
+                calendar.ApplicationUserModifiedId = userId;
                 _uow.GetRepository<СalendarTable>().Add(calendar);
             }
 
             _uow.Save();
         }
-
         public bool CheckDayType(Guid workScheduleId, DateTime date)
         {
             if(repoCalendar.Contains(x => x.WorkScheduleTableId == workScheduleId && x.Date == date))
@@ -201,7 +184,6 @@ namespace RapidDoc.Models.Services
 
             return false;
         }
-
         public bool CheckWorkTime(Guid? workScheduleId, DateTime date)
         {
             WorkScheduleTable schedule = null;
@@ -235,23 +217,10 @@ namespace RapidDoc.Models.Services
 
             return true;
         }
-
         public DateTime[] GetDaysOff(Guid workScheduleId)
         {
             var items = repoCalendar.FindAll(x => x.WorkScheduleTableId == workScheduleId).Select(x => x.Date);
             return items.ToArray();
-        }
-
-        private string getCurrentUserName(string currentUserName = "")
-        {
-            if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
-            {
-                return currentUserName;
-            }
-            else
-            {
-                return HttpContext.Current.User.Identity.Name;
-            }
         }
     }
 }

@@ -17,9 +17,9 @@ namespace RapidDoc.Models.Services
 {
     public interface IEmplService
     {
-        IEnumerable<EmplTable> GetAll(string currentUserName = "");
+        IEnumerable<EmplTable> GetAll();
         IEnumerable<EmplView> GetAllView();
-        IEnumerable<EmplTable> GetPartial(Expression<Func<EmplTable, bool>> predicate, string currentUserName = "");
+        IEnumerable<EmplTable> GetPartial(Expression<Func<EmplTable, bool>> predicate);
         IEnumerable<EmplView> GetPartialView(Expression<Func<EmplTable, bool>> predicate);
         IEnumerable<EmplTable> GetPartialIntercompany(Expression<Func<EmplTable, bool>> predicate);
         IEnumerable<EmplView> GetPartialIntercompanyView(Expression<Func<EmplTable, bool>> predicate);
@@ -29,7 +29,7 @@ namespace RapidDoc.Models.Services
         void Save(EmplView viewTable);
         void SaveDomain(EmplTable domainTable, string currentUserName = "");
         void Delete(Guid id);
-        EmplTable Find(Guid? id, string currentUserName = "");
+        EmplTable Find(Guid id, string currentUserId = "");
         EmplView FindView(Guid id);
         SelectList GetDropListEmplNull(Guid? id);
         object GetJsonEmpl();
@@ -46,59 +46,47 @@ namespace RapidDoc.Models.Services
             repo = uow.GetRepository<EmplTable>();
             _AccountService = accountService;
         }
-
-        public IEnumerable<EmplTable> GetAll(string currentUserName = "")
+        public IEnumerable<EmplTable> GetAll()
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId);
         }
-
         public IEnumerable<EmplView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<EmplTable>, IEnumerable<EmplView>>(GetAll());
             return items;
         }
-
-        public IEnumerable<EmplTable> GetPartial(Expression<Func<EmplTable, bool>> predicate, string currentUserName = "")
+        public IEnumerable<EmplTable> GetPartial(Expression<Func<EmplTable, bool>> predicate)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(predicate).Where(x => x.CompanyTableId == user.CompanyTableId);
         }
-
         public IEnumerable<EmplView> GetPartialView(Expression<Func<EmplTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<EmplTable>, IEnumerable<EmplView>>(GetPartial(predicate));
             return items;
         }
-
         public IEnumerable<EmplTable> GetPartialIntercompany(Expression<Func<EmplTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<EmplView> GetPartialIntercompanyView(Expression<Func<EmplTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<EmplTable>, IEnumerable<EmplView>>(GetPartialIntercompany(predicate));
             return items;
         }
-
         public EmplTable FirstOrDefault(Expression<Func<EmplTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public EmplView FirstOrDefaultView(Expression<Func<EmplTable, bool>> predicate)
         {
             return Mapper.Map<EmplTable, EmplView>(FirstOrDefault(predicate));
         }
-
         public bool Contains(Expression<Func<EmplTable, bool>> predicate)
         {
             return repo.Contains(predicate);
         }
-
         public void Save(EmplView viewTable)
         {
             if (viewTable.Id == null)
@@ -109,20 +97,17 @@ namespace RapidDoc.Models.Services
             }
             else
             {
-                var domainTable = Find(viewTable.Id);
+                var domainTable = Find(viewTable.Id ?? Guid.Empty);
                 Mapper.Map(viewTable, domainTable);
                 SaveDomain(domainTable);
             }
         }
-
         public void SaveDomain(EmplTable domainTable, string currentUserName = "")
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            ApplicationUser user = getCurrentUserName(currentUserName);
 
             if (domainTable.Id == Guid.Empty)
             {
-                domainTable.Id = Guid.NewGuid();
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
                 domainTable.CompanyTableId = user.CompanyTableId;
@@ -138,32 +123,26 @@ namespace RapidDoc.Models.Services
             }
             _uow.Save();
         }
-
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
             _uow.Save();
         }
-
-        public EmplTable Find(Guid? id, string currentUserName = "")
+        public EmplTable Find(Guid id, string currentUserId = "")
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            ApplicationUser user = getCurrentUserId(currentUserId);
             return repo.Find(a => a.Id == id && a.CompanyTableId == user.CompanyTableId);
         }
-
         public EmplView FindView(Guid id)
         {
             return Mapper.Map<EmplTable, EmplView>(Find(id));
         }
-
         public SelectList GetDropListEmplNull(Guid? id)
         {
             var items = GetAllView().ToList();
             items.Insert(0, new EmplView { FirstName = UIElementRes.UIElement.NoValue, Id = null });
             return new SelectList(items, "Id", "FullName", id);
         }
-
         public object GetJsonEmpl()
         {
             var jsondata = from c in GetPartial(x => x.Enable == true)
@@ -175,16 +154,26 @@ namespace RapidDoc.Models.Services
 
             return jsondata;
         }
-
-        private string getCurrentUserName(string currentUserName = "")
+        private ApplicationUser getCurrentUserName(string currentUserName = "")
         {
             if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
             {
-                return currentUserName;
+                return _AccountService.FirstOrDefault(x => x.UserName == currentUserName);
             }
             else
             {
-                return HttpContext.Current.User.Identity.Name;
+                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            }
+        }
+        private ApplicationUser getCurrentUserId(string currentUserId = "")
+        {
+            if (currentUserId != string.Empty)
+            {
+                return _AccountService.Find(currentUserId);
+            }
+            else
+            {
+                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             }
         }
     }

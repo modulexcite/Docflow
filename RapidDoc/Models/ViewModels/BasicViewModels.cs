@@ -21,6 +21,9 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "ModifiedDate", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public DateTime ModifiedDate { get; set; }
+
+        public string ApplicationUserCreatedId { get; set; }
+        public string ApplicationUserModifiedId { get; set; }
     }
 
     public abstract class BasicCompanyNullView : BasicView

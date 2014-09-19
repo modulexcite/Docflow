@@ -17,18 +17,18 @@ namespace RapidDoc.Models.Services
 {
     public interface IProcessService
     {
-        IEnumerable<ProcessTable> GetAll(string currentUserName = "");
+        IEnumerable<ProcessTable> GetAll();
         IEnumerable<ProcessView> GetAllView();
-        IEnumerable<ProcessTable> GetPartial(Expression<Func<ProcessTable, bool>> predicate, string currentUserName = "");
+        IEnumerable<ProcessTable> GetPartial(Expression<Func<ProcessTable, bool>> predicate);
         IEnumerable<ProcessView> GetPartialView(Expression<Func<ProcessTable, bool>> predicate);
         IEnumerable<ProcessTable> GetPartialIntercompany(Expression<Func<ProcessTable, bool>> predicate);
         IEnumerable<ProcessView> GetPartialIntercompanyView(Expression<Func<ProcessTable, bool>> predicate);
         ProcessTable FirstOrDefault(Expression<Func<ProcessTable, bool>> predicate);
         ProcessView FirstOrDefaultView(Expression<Func<ProcessTable, bool>> predicate);
         void Save(ProcessView viewTable);
-        void SaveDomain(ProcessTable domainTable, string currentUserName = "");
+        void SaveDomain(ProcessTable domainTable);
         void Delete(Guid id);
-        ProcessTable Find(Guid? id, string currentUserName = "");
+        ProcessTable Find(Guid id);
         ProcessView FindView(Guid id);
         SelectList GetDropListProcessNull(Guid? id);
         SelectList GetDropListProcess(Guid? id);
@@ -46,54 +46,43 @@ namespace RapidDoc.Models.Services
             repo = uow.GetRepository<ProcessTable>();
             _AccountService = accountService;
         }
-
-        public IEnumerable<ProcessTable> GetAll(string currentUserName = "")
+        public IEnumerable<ProcessTable> GetAll()
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId);
         }
-
-        public IEnumerable<ProcessTable> GetPartial(Expression<Func<ProcessTable, bool>> predicate, string currentUserName = "")
+        public IEnumerable<ProcessTable> GetPartial(Expression<Func<ProcessTable, bool>> predicate)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(predicate).Where(x => x.CompanyTableId == user.CompanyTableId);
         }
-
         public IEnumerable<ProcessView> GetPartialView(Expression<Func<ProcessTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<ProcessTable>, IEnumerable<ProcessView>>(GetPartial(predicate));
             return items;
         }
-
         public IEnumerable<ProcessTable> GetPartialIntercompany(Expression<Func<ProcessTable, bool>> predicate)
         {
             return repo.FindAll(predicate);
         }
-
         public IEnumerable<ProcessView> GetPartialIntercompanyView(Expression<Func<ProcessTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<ProcessTable>, IEnumerable<ProcessView>>(GetPartialIntercompany(predicate));
             return items;
         }
-
         public IEnumerable<ProcessView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<ProcessTable>, IEnumerable<ProcessView>>(GetAll());
             return items;
         }
-
         public ProcessTable FirstOrDefault(Expression<Func<ProcessTable, bool>> predicate)
         {
             return repo.Find(predicate);
         }
-
         public ProcessView FirstOrDefaultView(Expression<Func<ProcessTable, bool>> predicate)
         {
             return Mapper.Map<ProcessTable, ProcessView>(FirstOrDefault(predicate));
         }
-
         public void Save(ProcessView viewTable)
         {
             if (viewTable.Id == null)
@@ -104,20 +93,16 @@ namespace RapidDoc.Models.Services
             }
             else
             {
-                var domainTable = Find(viewTable.Id);
+                var domainTable = Find(viewTable.Id ?? Guid.Empty);
                 Mapper.Map(viewTable, domainTable);
                 SaveDomain(domainTable);
             }
         }
-
-        public void SaveDomain(ProcessTable domainTable, string currentUserName = "")
+        public void SaveDomain(ProcessTable domainTable)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
-
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             if (domainTable.Id == Guid.Empty)
             {
-                domainTable.Id = Guid.NewGuid();
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
                 domainTable.CompanyTableId = user.CompanyTableId;
@@ -133,48 +118,30 @@ namespace RapidDoc.Models.Services
             }
             _uow.Save();
         }
-
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
             _uow.Save();
         }
-
-        public ProcessTable Find(Guid? id, string currentUserName = "")
+        public ProcessTable Find(Guid id)
         {
-            string localUserName = getCurrentUserName(currentUserName);
-            ApplicationUser user = _AccountService.FirstOrDefault(x => x.UserName == localUserName);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             return repo.Find(a => a.Id == id && a.CompanyTableId == user.CompanyTableId);
         }
-
         public ProcessView FindView(Guid id)
         {
             return Mapper.Map<ProcessTable, ProcessView>(Find(id));
         }
-
         public SelectList GetDropListProcessNull(Guid? id)
         {
             var items = GetAllView().ToList();
             items.Insert(0, new ProcessView { ProcessName = UIElementRes.UIElement.NoValue, Id = null });
             return new SelectList(items, "Id", "ProcessName", id);
         }
-
         public SelectList GetDropListProcess(Guid? id)
         {
             var items = GetAllView().ToList();
             return new SelectList(items, "Id", "ProcessName", id);
-        }
-
-        private string getCurrentUserName(string currentUserName = "")
-        {
-            if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
-            {
-                return currentUserName;
-            }
-            else
-            {
-                return HttpContext.Current.User.Identity.Name;
-            }
         }
     }
 }
