@@ -1963,10 +1963,124 @@ namespace RapidDoc.Models.ViewModels
 
     #region УСХ
 
-    public class USR_REQ_UE_RequestForReclassification_View : BasicDocumentView
+    public class USR_REQ_USH_RequestForReclassification_View : BasicDocumentView
     {
-
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Обоснование")]
+        public string Explanation { get; set; }
     }
 
     #endregion
+
+    #region УПБ
+
+    public class USR_REQ_UBP_RequestForExportWastes_View : BasicDocumentView
+    {
+        public bool Number1 { get; set; }
+        public bool Number2 { get; set; }
+        public bool Number3 { get; set; }
+        public bool Number4 { get; set; }
+        public bool Number5 { get; set; }
+        public bool Number6 { get; set; }
+        public bool Number7 { get; set; }
+        public bool Number8 { get; set; }
+        public bool Number9 { get; set; }
+        public bool Number10 { get; set; }
+        public bool Number11 { get; set; }
+        public bool Number12 { get; set; }
+        public bool Number13 { get; set; }
+        public bool Number14 { get; set; }
+        public bool Number15 { get; set; }
+        public bool Number16 { get; set; }
+        public bool Number17 { get; set; }
+        public bool Number18 { get; set; }
+        public bool Number19 { get; set; }
+        public bool Number20 { get; set; }
+        public bool Number21 { get; set; }
+        public bool Number22 { get; set; }
+        public bool Number23 { get; set; }
+        public bool Number24 { get; set; }
+        public bool Number25 { get; set; }
+        public bool Number26 { get; set; }
+        public bool Number27 { get; set; }
+        public bool Number28 { get; set; }
+        public bool Number29 { get; set; }
+        public bool Number30 { get; set; }
+        public bool Number31 { get; set; }
+
+        public string Number32 { get; set; }
+        public string Number33 { get; set; }
+        public string Number34 { get; set; }
+        public string Number35 { get; set; }
+        public string Number36 { get; set; }
+        public string Number37 { get; set; }
+        public string Number38 { get; set; }
+        public string Number39 { get; set; }
+        public string Number40 { get; set; }
+        public string Number41 { get; set; }
+        public string Number42 { get; set; }
+        public string Number43 { get; set; }
+        public string Number44 { get; set; }
+        public string Number45 { get; set; }
+        public string Number46 { get; set; }
+        public string Number47 { get; set; }
+        public string Number48 { get; set; }
+        public string Number49 { get; set; }
+        public string Number50 { get; set; }
+        public string Number51 { get; set; }
+        public string Number52 { get; set; }
+        public string Number53 { get; set; }
+        public string Number54 { get; set; }
+        public string Number55 { get; set; }
+        public string Number56 { get; set; }
+        public string Number57 { get; set; }
+        public string Number58 { get; set; }
+        public string Number59 { get; set; }
+        public string Number60 { get; set; }
+        public string Number61 { get; set; }
+        public string Number62 { get; set; }
+
+        public string Number63 { get; set; }
+        public string Number64 { get; set; }
+        public string Number65 { get; set; }
+        public string Number66 { get; set; }
+        public string Number67 { get; set; }
+        public string Number68 { get; set; }
+        public string Number69 { get; set; }
+        public string Number70 { get; set; }
+        public string Number71 { get; set; }
+        public string Number72 { get; set; }
+        public string Number73 { get; set; }
+        public string Number74 { get; set; }
+        public string Number75 { get; set; }
+        public string Number76 { get; set; }
+        public string Number77 { get; set; }
+        public string Number78 { get; set; }
+        public string Number79 { get; set; }
+        public string Number80 { get; set; }
+        public string Number81 { get; set; }
+        public string Number82 { get; set; }
+        public string Number83 { get; set; }
+        public string Number84 { get; set; }
+        public string Number85 { get; set; }
+        public string Number86 { get; set; }
+        public string Number87 { get; set; }
+        public string Number88 { get; set; }
+        public string Number89 { get; set; }
+        public string Number90 { get; set; }
+        public string Number91 { get; set; }
+        public string Number92 { get; set; }
+        public string Number93 { get; set; }
+    }
+
+    public class USR_REQ_UBP_RequestForGetConclusion_View : BasicDocumentView
+    {
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Обоснование")]
+        public string Explanation { get; set; }
+    }
+    #endregion
+ 
 }
