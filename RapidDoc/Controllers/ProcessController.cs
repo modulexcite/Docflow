@@ -168,7 +168,7 @@ namespace RapidDoc.Controllers
         {
             try
             {
-                _Service.DeleteFiles(id);                      
+                _DocumentService.DeleteFiles(id);                      
                 _Service.Delete(id);            
                 return RedirectToAction("Index");
             }

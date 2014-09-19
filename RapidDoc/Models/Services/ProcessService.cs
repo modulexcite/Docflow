@@ -31,8 +31,7 @@ namespace RapidDoc.Models.Services
         ProcessTable Find(Guid? id, string currentUserName = "");
         ProcessView FindView(Guid id);
         SelectList GetDropListProcessNull(Guid? id);
-        SelectList GetDropListProcess(Guid? id);
-        void DeleteFiles(Guid id);
+        SelectList GetDropListProcess(Guid? id);       
     }
 
     public class ProcessService : IProcessService
@@ -142,12 +141,7 @@ namespace RapidDoc.Models.Services
             repo.Delete(a => a.Id == id);
             _uow.Save();
         }
-        public void DeleteFiles(Guid id)
-        {
-
-            repoFile.Delete(a => a.DocumentFileId == id);
-            _uow.Save();
-        }
+        
         public ProcessTable Find(Guid? id, string currentUserName = "")
         {
             string localUserName = getCurrentUserName(currentUserName);
