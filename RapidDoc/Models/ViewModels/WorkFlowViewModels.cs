@@ -56,6 +56,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "RoleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string RoleName { get; set; }
+
+        [Display(Name = "MandatoryNumberFiles", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public int MandatoryNumberFiles { get; set; }
+
+        [Display(Name = "MandatoryFileTypes", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string MandatoryFileTypes { get; set; }
     }
 
     public class DocumentComposite

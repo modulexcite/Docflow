@@ -56,6 +56,9 @@ namespace RapidDoc.Models.DomainModels
         public string RoleId { get; set; }
         public virtual IdentityRole IdentityRole { get; set; }
 
+        public int MandatoryNumberFiles { get; set; }
+        public string MandatoryFileTypes { get; set; }
+
         public string GroupProcessName
         {
             get

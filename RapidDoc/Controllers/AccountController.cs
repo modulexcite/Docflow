@@ -84,9 +84,10 @@ namespace RapidDoc.Controllers
                                     desearch.Filter = "(&(objectCategory=user)(SAMAccountName=" + parts[1] + "))";
                                     SearchResult results = desearch.FindOne();
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
-                                    throw ex;
+                                    ModelState.AddModelError("", ValidationRes.ValidationResource.ErrorUserOrPassword);
+                                    return View(model);
                                 }
                             }
                         }

@@ -12,6 +12,8 @@ namespace RapidDoc.Models.DomainModels
     {
         [Required]
         public string Phone { get; set; }
+
+        public bool International { get; set; }
     }
 
     public class USR_REQ_IT_CTS_DeliveryOfWS_Table : BasicDocumentRequestTable

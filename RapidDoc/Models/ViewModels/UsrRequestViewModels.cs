@@ -13,6 +13,9 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Номер телефона")]
         public string Phone { get; set; }
+
+        [Display(Name = "Выход на международную связь")]
+        public bool International { get; set; }
     }
 
     public class USR_REQ_IT_CTS_DeliveryOfWS_View : BasicDocumentView

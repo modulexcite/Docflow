@@ -15,14 +15,17 @@
         @Html.HiddenFor(model => model.ProcessView.Id)
         @Html.HiddenFor(model => model.fileId, new { @id = "documentFileId" })
         @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "Edit" })
-        <br>
-        <h3>@UIElementRes.UIElement.Templates</h3>
-        <div>
-            @foreach (var item in Model.ProcessTemplates)
-            {
-                <a href=@Url.Action(@"DownloadFile/" + item.Id.ToString(), "Document") class=""><span class="fa fa-paperclip fa-5x"></span> @item.FileName</a>
-            }
-        </div>       
+        @if (Model.ProcessTemplates.Count() > 0)
+        { 
+            <br>
+            <h3>@UIElementRes.UIElement.Templates</h3>
+            <div>
+                @foreach (var item in Model.ProcessTemplates)
+                {
+                    <a href=@Url.Action(@"DownloadFile/" + item.Id.ToString(), "Document") class=""><span class="fa fa-paperclip fa-5x"></span> @item.FileName</a>
+                }
+            </div>   
+        }      
         <br>
         <h3>@UIElementRes.UIElement.AttachedFiles</h3>
 

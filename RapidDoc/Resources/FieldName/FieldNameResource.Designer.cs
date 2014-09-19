@@ -421,6 +421,24 @@ namespace FieldNameRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Типы файлов во вложении.
+        /// </summary>
+        public static string MandatoryFileTypes {
+            get {
+                return ResourceManager.GetString("MandatoryFileTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Количество файлов во вложении.
+        /// </summary>
+        public static string MandatoryNumberFiles {
+            get {
+                return ResourceManager.GetString("MandatoryNumberFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Отчество.
         /// </summary>
         public static string MiddleName {
