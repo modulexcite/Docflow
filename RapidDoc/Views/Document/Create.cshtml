@@ -16,6 +16,14 @@
         @Html.HiddenFor(model => model.fileId, new { @id = "documentFileId" })
         @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "Edit" })
         <br>
+        <h3>@UIElementRes.UIElement.Templates</h3>
+        <div>
+            @foreach (var item in Model.ProcessTemplates)
+            {
+                <a href=@Url.Action(@"DownloadFile/" + item.Id.ToString(), "Document") class=""><span class="fa fa-paperclip fa-5x"></span> @item.FileName</a>
+            }
+        </div>       
+        <br>
         <h3>@UIElementRes.UIElement.AttachedFiles</h3>
 
         <div class="row fileupload-buttonbar">
@@ -51,7 +59,7 @@
             <input class="btn btn-primary" type="submit" value=@UIElementRes.UIElement.Save />
             <a href="@Url.Action("Index", "Home")" class="btn btn-default" role="button">@UIElementRes.UIElement.Cancel</a>
         </p>
-    </fieldset>
+</fieldset>
 }
 
 <!-- The template to display files available for upload -->

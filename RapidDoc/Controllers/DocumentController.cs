@@ -294,6 +294,7 @@ namespace RapidDoc.Controllers
             viewModel.ProcessView = process;
             viewModel.docData = _DocumentService.RouteCustomModelView(process.TableName);
             viewModel.fileId = Guid.NewGuid();
+            viewModel.ProcessTemplates = _DocumentService.GetAllTemplatesDocument(process.Id.Value);
 
             return View(viewModel);
         }
@@ -347,6 +348,7 @@ namespace RapidDoc.Controllers
             viewModel.ProcessView = process;
             viewModel.docData = docModel;
             viewModel.fileId = fileId;
+            viewModel.ProcessTemplates = _DocumentService.GetAllTemplatesDocument(processId);
 
             return View("Create", viewModel);
         }
@@ -512,6 +514,7 @@ namespace RapidDoc.Controllers
         public JsonResult AjaxUpload(HttpPostedFileBase filelist, Guid documentFileId)
         {
             var statuses = new List<ViewDataUploadFilesResult>();
+           
             System.IO.FileStream inFile;
             byte[] binaryData;
             string contentType;
@@ -558,7 +561,7 @@ namespace RapidDoc.Controllers
                     deleteType = "DELETE"
                 });
             }
-
+            
             var uploadedFiles = new
             {
                 files = statuses.ToArray()
@@ -572,9 +575,9 @@ namespace RapidDoc.Controllers
         [HttpGet]
         public JsonResult GetAllFileDocument(Guid id)
         {
+ 
             var statuses = new List<ViewDataUploadFilesResult>();
-
-            var files = _DocumentService.GetAllFilesDocument(id);
+            var files = _DocumentService.GetAllFilesDocument(id);          
 
             foreach (var file in files)
             {
@@ -610,6 +613,7 @@ namespace RapidDoc.Controllers
                 });
             }
 
+            
             var uploadedFiles = new
             {
                 files = statuses.ToArray()

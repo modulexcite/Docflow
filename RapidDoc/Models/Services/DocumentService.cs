@@ -48,6 +48,8 @@ namespace RapidDoc.Models.Services
         List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status);
         DateTime? GetSLAPerformDate(Guid DocumentId, DateTime? CreatedDate, double SLAOffset);
         List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable);
+        IEnumerable<FileTable> GetAllTemplatesDocument(Guid processId);
+        void DeleteFiles(Guid documentId);
     }
 
     public class DocumentService : IDocumentService
@@ -712,6 +714,12 @@ namespace RapidDoc.Models.Services
             return repoFile.FindAll(x => x.DocumentFileId == documentFileId);
         }
 
+        public IEnumerable<FileTable> GetAllTemplatesDocument(Guid processId)
+        {
+            ProcessTable process = _ProcessService.FirstOrDefault(x => x.Id == processId);
+            return repoFile.FindAll(x => x.DocumentFileId == process.Id);
+        }
+
         public bool FileContains(Guid documentFileId)
         {
             return repoFile.Any(x => x.DocumentFileId == documentFileId);
@@ -724,6 +732,12 @@ namespace RapidDoc.Models.Services
             _uow.Save();
 
             return fileName;
+        }
+        public void DeleteFiles(Guid documentId)
+        {
+
+            repoFile.Delete(a => a.DocumentFileId == documentId);
+            _uow.Save();
         }
 
         public List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status)
