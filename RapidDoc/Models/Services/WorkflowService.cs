@@ -123,6 +123,10 @@ namespace RapidDoc.Models.Services
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
             ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == userName);
+            if (userTable == null)
+            {
+                userTable = _AccountService.Find(userName);
+            }
             userList.Add(new WFTrackerUsersTable { UserId = userTable.Id });
 
             return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(userList, documentTable.ApplicationUserCreatedId) };

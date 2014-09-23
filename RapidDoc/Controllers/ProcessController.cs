@@ -78,6 +78,8 @@ namespace RapidDoc.Controllers
             {
                 try
                 {
+                    if (model.MandatoryFileTypes != null)
+                        model.MandatoryFileTypes = model.MandatoryFileTypes.ToUpper();
                     _Service.Save(model);
                     return RedirectToAction("Index");
                 }
@@ -132,6 +134,8 @@ namespace RapidDoc.Controllers
             {
                 try
                 {
+                    if (model.MandatoryFileTypes != null)
+                        model.MandatoryFileTypes = model.MandatoryFileTypes.ToUpper();
                     _Service.Save(model);
                     return RedirectToAction("Index");
                 }
@@ -329,7 +333,7 @@ namespace RapidDoc.Controllers
                 ImageResizer resizer = new ImageResizer(entireImage);
                 return resizer.Resize(64, 64, false, ImageEncoding.Png);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new byte[] { };
             }

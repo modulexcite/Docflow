@@ -221,7 +221,7 @@ namespace RapidDoc.Controllers
             }
 
             if (isAjax == true)
-            { 
+            {
                 var allRoles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles);
 
                 foreach (var role in allRoles)

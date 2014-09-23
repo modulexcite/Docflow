@@ -64,7 +64,7 @@ namespace RapidDoc.Models.Repository
                 WindowsIdentity identity = new WindowsIdentity(m_Token);
                 m_Context = identity.Impersonate();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 // Catch exceptions here
             }

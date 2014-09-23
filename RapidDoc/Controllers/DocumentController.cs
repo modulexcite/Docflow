@@ -339,7 +339,6 @@ namespace RapidDoc.Controllers
                 _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
                 SaveSearchData(docModel, actionModelName, documentId);
                 _WorkflowService.RunWorkflow(documentId, process.TableName, documentData);
-                //_EmailService.SendInitiatorEmail(documentId);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -646,7 +645,7 @@ namespace RapidDoc.Controllers
                 ImageResizer resizer = new ImageResizer(entireImage);
                 return resizer.Resize(64, 64, false, ImageEncoding.Png);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new byte[] { };
             }
@@ -777,10 +776,40 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            CheckCustomDocument(typeActionModel, actionModel, fileId);
+            if (files == null)
+            {
+                CheckCustomDocument(typeActionModel, actionModel, fileId);
+                CheckAttachedFiles(processId, fileId, documentId);
+            }
 
             ActionResult view = RoutePostMethod(processId, actionModel, type, documentId, fileId, actionModelName, files, documentData, approveDoc, rejectDoc, lastComment);
             return view;
+        }
+
+        private void CheckAttachedFiles(Guid processId, Guid fileId, Guid? documentId)
+        {
+            ProcessTable process = _ProcessService.Find(processId);
+            var files = _DocumentService.GetAllFilesDocument(fileId).ToList();
+            if(process.MandatoryNumberFiles > 0)
+            {
+                if(files.Count < process.MandatoryNumberFiles)
+                {
+                    ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorMandatoryNumberFiles, process.MandatoryNumberFiles, files.Count));
+                }
+
+                if (process.MandatoryFileTypes != null && process.MandatoryFileTypes != String.Empty)
+                {
+                    string[] fileTypes = process.MandatoryFileTypes.Split('|');
+
+                    foreach(var file in files)
+                    {
+                        if(!fileTypes.Contains(Path.GetExtension(file.FileName.ToUpper())))
+                        {
+                            ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorMandatoryFileTypes, process.MandatoryFileTypes, file.FileName));
+                        }
+                    }
+                }
+            }
         }
 
         private void CheckCustomDocument(Type type, dynamic actionModel, Guid fileId)
@@ -853,22 +882,6 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            if (type == (new USR_REQ_IT_CAP_CreateUserAD_View()).GetType())
-            {
-                if (!_DocumentService.FileContains(fileId))
-                {
-                    ModelState.AddModelError(string.Empty, "Не прикреплена фотография(формат 3x4)");
-                }
-            }
-
-            if (type == (new USR_REQ_IT_CAP_AddOrChangeTemplate_View()).GetType())
-            {
-                if (!_DocumentService.FileContains(fileId))
-                {
-                    ModelState.AddModelError(string.Empty, "Не прикреплено тех. задание в заявке");
-                }
-            }
-
             if (type == (new USR_REQ_IT_CTP_IncidentIT_View()).GetType())
             {
                 if (actionModel.ServiceName == null && actionModel.Id != null)
@@ -893,78 +906,7 @@ namespace RapidDoc.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "Неверно указан диапазон дат");
                 }
-            }
-
-            if (type == (new USR_REQ_ZIF_RequestForSIZ_View()).GetType())
-            {
-                if (!_DocumentService.FileContains(fileId))
-                {
-                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
-                }
-            }
-
-            if (type == (new USR_REQ_ZIF_RequestForFuel_View()).GetType())
-            {
-                if (!_DocumentService.FileContains(fileId))
-                {
-                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
-                }
-            }
-
-            if (type == (new USR_REQ_OKS_RequestForTranslate_View()).GetType())
-            {
-                if (!_DocumentService.FileContains(fileId))
-                {
-                    ModelState.AddModelError(string.Empty, "Не прикреплено приложение");
-                }
-            }
-
-            if (type == (new USR_REQ_OKS_RequestForTranslateKAZ_View()).GetType())
-            {
-                if (!_DocumentService.FileContains(fileId))
-                {
-                    ModelState.AddModelError(string.Empty, "Не прикреплено приложение");
-                }
-            }
-
-            if (type == (new USR_REQ_OKS_RequestForVisa_View()).GetType())
-            {
-                if (!_DocumentService.FileContains(fileId))
-                {
-                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
-                }
-            }
-
-            if (type == (new USR_REQ_JU_RequestForProxyDoc_View()).GetType())
-            {
-                if (!_DocumentService.FileContains(fileId))
-                {
-                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
-                }
-
-                if (actionModel.Date == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Дата оформления доверености должна быть заполнена");
-                }
-
-            }
-
-            if (type == (new USR_REQ_JU_RequestForExpertise_View()).GetType())
-            {
-                if (!_DocumentService.FileContains(fileId))
-                {
-                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
-                }
-            }
-
-            if (type == (new USR_REQ_FEU_RequestForFinExpertise_View()).GetType())
-            {
-                if (!_DocumentService.FileContains(fileId))
-                {
-                    ModelState.AddModelError(string.Empty, "Не прикреплено вложение");
-                }
-            }
-            
+            }   
         }
 
         private void SaveSearchData(dynamic docModel, string actionModelName, Guid documentId)

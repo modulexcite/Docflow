@@ -59,7 +59,10 @@ namespace RapidDoc.Models.Services
             foreach (var comment in comments)
             {
                 EmplView empl = _EmplService.FirstOrDefaultView(x => x.ApplicationUserId == comment.ApplicationUserCreatedId && x.CompanyTableId == comment.CompanyTableId);
-                commentsView.Add(new CommentView { Id = comment.Id, Comment = comment.Comment, CreatedDate = _SystemService.ConvertDateTimeToLocal(user, comment.CreatedDate), EmplName = empl.FullName, TitleName = empl.TitleName });
+                if(empl != null)
+                    commentsView.Add(new CommentView { Id = comment.Id, Comment = comment.Comment, CreatedDate = _SystemService.ConvertDateTimeToLocal(user, comment.CreatedDate), EmplName = empl.FullName, TitleName = empl.TitleName });
+                else
+                    commentsView.Add(new CommentView { Id = comment.Id, Comment = comment.Comment, CreatedDate = _SystemService.ConvertDateTimeToLocal(user, comment.CreatedDate), EmplName = user.UserName, TitleName = "" });
             }
 
             return commentsView;
