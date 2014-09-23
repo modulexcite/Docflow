@@ -128,6 +128,7 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_USH_RequestForReclassification_Table> USR_REQ_USH_RequestForReclassification_Table { get; set; }
         public DbSet<USR_REQ_UBP_RequestForExportWastes_Table> USR_REQ_UBP_RequestForExportWastes_Table { get; set; }
         public DbSet<USR_REQ_UBP_RequestForGetConclusion_Table> USR_REQ_UBP_RequestForGetConclusion_Table { get; set; }
+        public DbSet<USR_REQ_UBP_RequestForCompetitonProc_Table> USR_REQ_UBP_RequestForCompetitonProc_Table { get; set; }
 
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {

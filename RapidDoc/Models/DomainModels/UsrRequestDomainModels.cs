@@ -1508,5 +1508,29 @@ namespace RapidDoc.Models.DomainModels
     }
     #endregion
 
+    #region КД
+    public class USR_REQ_UBP_RequestForCompetitonProc_Table : BasicDocumentTable
+    {
+        [Required]
+        public string NamePurchase { get; set; }
+
+        [Required]
+        public string BudgetArticle { get; set; }
+
+        public string Project { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+
+        [Required]
+        public string Circumstance { get; set; }
+
+        [Required]
+        public string Destination { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+    }
+    #endregion
+
 }
     

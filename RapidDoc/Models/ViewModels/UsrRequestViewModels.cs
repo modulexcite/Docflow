@@ -2082,5 +2082,45 @@ namespace RapidDoc.Models.ViewModels
         public string Explanation { get; set; }
     }
     #endregion
+
+    #region КД
+
+    public class USR_REQ_UBP_RequestForCompetitonProc_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование закупа")]
+        public string NamePurchase { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Статья бюджета")]
+        public string BudgetArticle { get; set; }
+
+        [Display(Name = "Проект")]
+        public string Project { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Общая сумма, выделенная для закупки (в тенге, без учета НДС)")]
+        public string Amount { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Условия оплаты")]
+        public string Circumstance { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Место поставки товара")]
+        public string Destination { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Исполнитель")]
+        public string UserChooseManual1 { get; set; }
+    }
+
+    #endregion
+
+    #region СК
+    
+
+
+    #endregion
  
 }
