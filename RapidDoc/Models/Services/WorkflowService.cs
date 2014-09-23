@@ -31,6 +31,7 @@ namespace RapidDoc.Models.Services
         WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate);
         WFUserFunctionResult WFCreatedUser(Guid documentId);
         WFUserFunctionResult WFUsersDocument(Guid documentId, string currentUserId);
+        WFUserFunctionResult WFChooseManual(Guid documentId, Dictionary<string, Object> documentData, string manualKey);
         string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location);
         void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData);
@@ -130,6 +131,15 @@ namespace RapidDoc.Models.Services
             userList.Add(new WFTrackerUsersTable { UserId = userTable.Id });
 
             return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(userList, documentTable.ApplicationUserCreatedId) };
+        }
+        public WFUserFunctionResult WFChooseManual(Guid documentId, Dictionary<string, Object> documentData, string manualKey)
+        {
+
+            var documentTable = _DocumentService.Find(documentId); 
+            List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
+            string  userLis = (string)documentData[manualKey];
+            
+            return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(userList, documentTable.ApplicationUserCreatedId) }; 
         }
         public WFUserFunctionResult WFRoleUser(Guid documentId, String roleName)
         {
