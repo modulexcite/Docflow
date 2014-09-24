@@ -31,7 +31,7 @@ namespace RapidDoc.Models.Services
         WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate);
         WFUserFunctionResult WFCreatedUser(Guid documentId);
         WFUserFunctionResult WFUsersDocument(Guid documentId, string currentUserId);
-        WFUserFunctionResult WFChooseManual(Guid documentId, Dictionary<string, Object> documentData, string manualKey);
+        WFUserFunctionResult WFChooseManual(Guid documentId, Dictionary<string, Object> documentData, string manualKey, string currentUserId);
         string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location);
         void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData);
@@ -132,13 +132,26 @@ namespace RapidDoc.Models.Services
 
             return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(userList, documentTable.ApplicationUserCreatedId) };
         }
-        public WFUserFunctionResult WFChooseManual(Guid documentId, Dictionary<string, Object> documentData, string manualKey)
+        public WFUserFunctionResult WFChooseManual(Guid documentId, Dictionary<string, Object> documentData, string manualKey, string currentUserId)
         {
-
-            var documentTable = _DocumentService.Find(documentId); 
+            var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
-            string  userLis = (string)documentData[manualKey];
-            
+
+            if ((string)documentData[manualKey] != "" )
+            {              
+                string users = (string)documentData[manualKey];
+                string[] array = users.Split(',');
+                Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
+                string[] result = array.Where(a => isGuid.IsMatch(a) == true).ToArray();
+
+                foreach (var item in result)
+                {
+                    Guid emplId = Guid.Parse(item);
+                    EmplTable empl = _EmplService.Find(emplId, currentUserId);
+                   
+                    userList.Add(new WFTrackerUsersTable { UserId = empl.ApplicationUserId });
+                }
+            }           
             return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(userList, documentTable.ApplicationUserCreatedId) }; 
         }
         public WFUserFunctionResult WFRoleUser(Guid documentId, String roleName)
@@ -399,6 +412,7 @@ namespace RapidDoc.Models.Services
             }
             catch (Exception ex)
             {
+                
                 throw ex;
             }
         }
@@ -482,7 +496,7 @@ namespace RapidDoc.Models.Services
             string[] myIntArray = new string[3];
             List<Array> allSteps = new List<Array>();
 
-            if ((activity is CodeActivity) && (activity.DisplayName.IndexOf(keyForStep) > 0))
+            if ((activity is NativeActivity) && (activity.DisplayName.IndexOf(keyForStep) > 0))
             {
                 myIntArray.SetValue(activity.DisplayName.Replace(keyForStep, ""), 0);
                 myIntArray.SetValue(activity.Id, 1);
