@@ -46,7 +46,7 @@ namespace RapidDoc.Activities
 
             
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
-            WFUserFunctionResult userFunctionResult = _service.WFChooseManual(documentId, documentData, manualKey);
+            WFUserFunctionResult userFunctionResult = _service.WFChooseManual(documentId, documentData, manualKey, currentUserId);
 
             if (userFunctionResult.Skip == false)
                 _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUserId, this.Id, useManual, slaOffset, executionStep);

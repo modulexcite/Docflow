@@ -136,478 +136,241 @@
       <Variable x:TypeArguments="x:String" Name="bookmarkName" />
     </Flowchart.Variables>
     <Flowchart.StartNode>
-      <FlowStep x:Name="__ReferenceID8" sap2010:WorkflowViewState.IdRef="FlowStep_10">
-        <local1:WFChooseUpManager _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Руководитель&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseUpManager_1" inputLevel="1" profileName="НУ" useManual="False">
-          <local1:WFChooseUpManager.inputCurrentUser>
+      <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_1">
+        <local1:WFChooseUpManagerBookmark _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Руководитель&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseUpManagerBookmark_1" inputLevel="1" profileName="НУ" useManual="False">
+          <local1:WFChooseUpManagerBookmark.inputCurrentUser>
             <InArgument x:TypeArguments="x:String">
               <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
             </InArgument>
-          </local1:WFChooseUpManager.inputCurrentUser>
-          <local1:WFChooseUpManager.inputDocumentId>
+          </local1:WFChooseUpManagerBookmark.inputCurrentUser>
+          <local1:WFChooseUpManagerBookmark.inputDocumentData>
+            <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+              <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpValue>
+            </InArgument>
+          </local1:WFChooseUpManagerBookmark.inputDocumentData>
+          <local1:WFChooseUpManagerBookmark.inputDocumentId>
             <InArgument x:TypeArguments="s:Guid">
               <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
             </InArgument>
-          </local1:WFChooseUpManager.inputDocumentId>
-          <local1:WFChooseUpManager.inputStep>
+          </local1:WFChooseUpManagerBookmark.inputDocumentId>
+          <local1:WFChooseUpManagerBookmark.inputStep>
             <InArgument x:TypeArguments="local:DocumentState">
               <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
             </InArgument>
-          </local1:WFChooseUpManager.inputStep>
-          <local1:WFChooseUpManager.outputBookmark>
+          </local1:WFChooseUpManagerBookmark.inputStep>
+          <local1:WFChooseUpManagerBookmark.outputCurrentUser>
             <OutArgument x:TypeArguments="x:String">
-              <mca:CSharpReference x:TypeArguments="x:String">bookmarkName</mca:CSharpReference>
+              <mca:CSharpReference x:TypeArguments="x:String">inputCurrentUser</mca:CSharpReference>
             </OutArgument>
-          </local1:WFChooseUpManager.outputBookmark>
-          <local1:WFChooseUpManager.outputSkipStep>
-            <OutArgument x:TypeArguments="x:Boolean">
-              <mca:CSharpReference x:TypeArguments="x:Boolean">outputSkipStep</mca:CSharpReference>
+          </local1:WFChooseUpManagerBookmark.outputCurrentUser>
+          <local1:WFChooseUpManagerBookmark.outputDocumentData>
+            <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+              <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpReference>
             </OutArgument>
-          </local1:WFChooseUpManager.outputSkipStep>
-          <local1:WFChooseUpManager.outputStep>
+          </local1:WFChooseUpManagerBookmark.outputDocumentData>
+          <local1:WFChooseUpManagerBookmark.outputStep>
             <OutArgument x:TypeArguments="local:DocumentState">
               <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
             </OutArgument>
-          </local1:WFChooseUpManager.outputStep>
-        </local1:WFChooseUpManager>
+          </local1:WFChooseUpManagerBookmark.outputStep>
+        </local1:WFChooseUpManagerBookmark>
         <FlowStep.Next>
-          <FlowDecision x:Name="__ReferenceID7" DisplayName="Статус текущего шага" sap2010:WorkflowViewState.IdRef="FlowDecision_5">
+          <FlowDecision x:Name="__ReferenceID8" DisplayName="Условие" sap2010:WorkflowViewState.IdRef="FlowDecision_4">
             <FlowDecision.Condition>
-              <mca:CSharpValue x:TypeArguments="x:Boolean">outputSkipStep == true</mca:CSharpValue>
+              <mca:CSharpValue x:TypeArguments="x:Boolean">outputStep == DocumentState.Agreement</mca:CSharpValue>
             </FlowDecision.Condition>
             <FlowDecision.True>
-              <FlowDecision x:Name="__ReferenceID2" DisplayName="Статус документа" sap2010:WorkflowViewState.IdRef="FlowDecision_3">
-                <FlowDecision.Condition>
-                  <mca:CSharpValue x:TypeArguments="x:Boolean">outputStep == DocumentState.Agreement</mca:CSharpValue>
-                </FlowDecision.Condition>
-                <FlowDecision.True>
-                  <FlowStep x:Name="__ReferenceID12" sap2010:WorkflowViewState.IdRef="FlowStep_5">
-                    <local1:WFChooseStaffStructure _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник СМТС&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseStaffStructure_1" useManual="False">
-                      <local1:WFChooseStaffStructure.inputCurrentUser>
-                        <InArgument x:TypeArguments="x:String">
-                          <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
-                        </InArgument>
-                      </local1:WFChooseStaffStructure.inputCurrentUser>
-                      <local1:WFChooseStaffStructure.inputDocumentId>
-                        <InArgument x:TypeArguments="s:Guid">
-                          <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
-                        </InArgument>
-                      </local1:WFChooseStaffStructure.inputDocumentId>
-                      <local1:WFChooseStaffStructure.inputPredicate>
-                        <InArgument x:TypeArguments="sle:Expression(s:Func(local2:EmplTable, x:Boolean))">
-                          <mca:CSharpValue x:TypeArguments="sle:Expression(s:Func(local2:EmplTable, x:Boolean))">x =&gt; x.DepartmentTable.DepartmentName == "Служба материально-технического снабжения" &amp;&amp; x.TitleTable.TitleName == "Начальник службы" &amp;&amp; x.CompanyTable.AliasCompanyName == "ATK"</mca:CSharpValue>
-                        </InArgument>
-                      </local1:WFChooseStaffStructure.inputPredicate>
-                      <local1:WFChooseStaffStructure.inputStep>
-                        <InArgument x:TypeArguments="local:DocumentState">
-                          <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
-                        </InArgument>
-                      </local1:WFChooseStaffStructure.inputStep>
-                      <local1:WFChooseStaffStructure.outputBookmark>
-                        <OutArgument x:TypeArguments="x:String">
-                          <mca:CSharpReference x:TypeArguments="x:String">bookmarkName</mca:CSharpReference>
-                        </OutArgument>
-                      </local1:WFChooseStaffStructure.outputBookmark>
-                      <local1:WFChooseStaffStructure.outputSkipStep>
-                        <OutArgument x:TypeArguments="x:Boolean">
-                          <mca:CSharpReference x:TypeArguments="x:Boolean">outputSkipStep</mca:CSharpReference>
-                        </OutArgument>
-                      </local1:WFChooseStaffStructure.outputSkipStep>
-                      <local1:WFChooseStaffStructure.outputStep>
-                        <OutArgument x:TypeArguments="local:DocumentState">
-                          <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                        </OutArgument>
-                      </local1:WFChooseStaffStructure.outputStep>
-                    </local1:WFChooseStaffStructure>
-                    <FlowStep.Next>
-                      <FlowDecision x:Name="__ReferenceID10" DisplayName="Статус текущего шага" sap2010:WorkflowViewState.IdRef="FlowDecision_2">
-                        <FlowDecision.Condition>
-                          <mca:CSharpValue x:TypeArguments="x:Boolean">outputSkipStep == true</mca:CSharpValue>
-                        </FlowDecision.Condition>
-                        <FlowDecision.True>
-                          <FlowDecision x:Name="__ReferenceID1" DisplayName="Статус документа" sap2010:WorkflowViewState.IdRef="FlowDecision_9">
+              <FlowStep x:Name="__ReferenceID3" sap2010:WorkflowViewState.IdRef="FlowStep_2">
+                <local1:WFChooseStaffStructureBookmark _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник СМТС&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseStaffStructureBookmark_1" useManual="False">
+                  <local1:WFChooseStaffStructureBookmark.inputCurrentUser>
+                    <InArgument x:TypeArguments="x:String">
+                      <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
+                    </InArgument>
+                  </local1:WFChooseStaffStructureBookmark.inputCurrentUser>
+                  <local1:WFChooseStaffStructureBookmark.inputDocumentData>
+                    <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+                      <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpValue>
+                    </InArgument>
+                  </local1:WFChooseStaffStructureBookmark.inputDocumentData>
+                  <local1:WFChooseStaffStructureBookmark.inputDocumentId>
+                    <InArgument x:TypeArguments="s:Guid">
+                      <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
+                    </InArgument>
+                  </local1:WFChooseStaffStructureBookmark.inputDocumentId>
+                  <local1:WFChooseStaffStructureBookmark.inputPredicate>
+                    <InArgument x:TypeArguments="sle:Expression(s:Func(local2:EmplTable, x:Boolean))">
+                      <mca:CSharpValue x:TypeArguments="sle:Expression(s:Func(local2:EmplTable, x:Boolean))">x =&gt; x.DepartmentTable.DepartmentName == "Служба материально-технического снабжения" &amp;&amp; x.TitleTable.TitleName == "Начальник службы" &amp;&amp; x.CompanyTable.AliasCompanyName == "ATK"</mca:CSharpValue>
+                    </InArgument>
+                  </local1:WFChooseStaffStructureBookmark.inputPredicate>
+                  <local1:WFChooseStaffStructureBookmark.inputStep>
+                    <InArgument x:TypeArguments="local:DocumentState">
+                      <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
+                    </InArgument>
+                  </local1:WFChooseStaffStructureBookmark.inputStep>
+                  <local1:WFChooseStaffStructureBookmark.outputCurrentUser>
+                    <OutArgument x:TypeArguments="x:String">
+                      <mca:CSharpReference x:TypeArguments="x:String">inputCurrentUser</mca:CSharpReference>
+                    </OutArgument>
+                  </local1:WFChooseStaffStructureBookmark.outputCurrentUser>
+                  <local1:WFChooseStaffStructureBookmark.outputDocumentData>
+                    <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+                      <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpReference>
+                    </OutArgument>
+                  </local1:WFChooseStaffStructureBookmark.outputDocumentData>
+                  <local1:WFChooseStaffStructureBookmark.outputStep>
+                    <OutArgument x:TypeArguments="local:DocumentState">
+                      <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
+                    </OutArgument>
+                  </local1:WFChooseStaffStructureBookmark.outputStep>
+                </local1:WFChooseStaffStructureBookmark>
+                <FlowStep.Next>
+                  <FlowDecision x:Name="__ReferenceID9" DisplayName="Условие" sap2010:WorkflowViewState.IdRef="FlowDecision_3">
+                    <FlowDecision.Condition>
+                      <mca:CSharpValue x:TypeArguments="x:Boolean">outputStep == DocumentState.Agreement</mca:CSharpValue>
+                    </FlowDecision.Condition>
+                    <FlowDecision.True>
+                      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_3">
+                        <local1:WFChooseSpecificUserBookmark _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник ОМА&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseSpecificUserBookmark_1" inputUserName="NaPodg" useManual="False">
+                          <local1:WFChooseSpecificUserBookmark.inputCurrentUser>
+                            <InArgument x:TypeArguments="x:String">
+                              <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
+                            </InArgument>
+                          </local1:WFChooseSpecificUserBookmark.inputCurrentUser>
+                          <local1:WFChooseSpecificUserBookmark.inputDocumentData>
+                            <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+                              <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpValue>
+                            </InArgument>
+                          </local1:WFChooseSpecificUserBookmark.inputDocumentData>
+                          <local1:WFChooseSpecificUserBookmark.inputDocumentId>
+                            <InArgument x:TypeArguments="s:Guid">
+                              <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
+                            </InArgument>
+                          </local1:WFChooseSpecificUserBookmark.inputDocumentId>
+                          <local1:WFChooseSpecificUserBookmark.inputStep>
+                            <InArgument x:TypeArguments="local:DocumentState">
+                              <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
+                            </InArgument>
+                          </local1:WFChooseSpecificUserBookmark.inputStep>
+                          <local1:WFChooseSpecificUserBookmark.outputCurrentUser>
+                            <OutArgument x:TypeArguments="x:String">
+                              <mca:CSharpReference x:TypeArguments="x:String">inputCurrentUser</mca:CSharpReference>
+                            </OutArgument>
+                          </local1:WFChooseSpecificUserBookmark.outputCurrentUser>
+                          <local1:WFChooseSpecificUserBookmark.outputDocumentData>
+                            <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+                              <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpReference>
+                            </OutArgument>
+                          </local1:WFChooseSpecificUserBookmark.outputDocumentData>
+                          <local1:WFChooseSpecificUserBookmark.outputStep>
+                            <OutArgument x:TypeArguments="local:DocumentState">
+                              <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
+                            </OutArgument>
+                          </local1:WFChooseSpecificUserBookmark.outputStep>
+                        </local1:WFChooseSpecificUserBookmark>
+                        <FlowStep.Next>
+                          <FlowDecision x:Name="__ReferenceID10" DisplayName="Условие" sap2010:WorkflowViewState.IdRef="FlowDecision_2">
                             <FlowDecision.Condition>
                               <mca:CSharpValue x:TypeArguments="x:Boolean">outputStep == DocumentState.Agreement</mca:CSharpValue>
                             </FlowDecision.Condition>
                             <FlowDecision.True>
-                              <FlowStep x:Name="__ReferenceID14" sap2010:WorkflowViewState.IdRef="FlowStep_14">
-                                <local1:WFChooseSpecificUser _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник ОМА&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseSpecificUser_2" inputUserName="NaPodg" useManual="False">
-                                  <local1:WFChooseSpecificUser.inputCurrentUser>
+                              <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_7">
+                                <local1:WFChooseSpecificUserBookmark _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник ОКЗ КД&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseSpecificUserBookmark_2" inputUserName="SeMyly" useManual="False">
+                                  <local1:WFChooseSpecificUserBookmark.inputCurrentUser>
                                     <InArgument x:TypeArguments="x:String">
                                       <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
                                     </InArgument>
-                                  </local1:WFChooseSpecificUser.inputCurrentUser>
-                                  <local1:WFChooseSpecificUser.inputDocumentId>
+                                  </local1:WFChooseSpecificUserBookmark.inputCurrentUser>
+                                  <local1:WFChooseSpecificUserBookmark.inputDocumentData>
+                                    <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+                                      <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpValue>
+                                    </InArgument>
+                                  </local1:WFChooseSpecificUserBookmark.inputDocumentData>
+                                  <local1:WFChooseSpecificUserBookmark.inputDocumentId>
                                     <InArgument x:TypeArguments="s:Guid">
                                       <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
                                     </InArgument>
-                                  </local1:WFChooseSpecificUser.inputDocumentId>
-                                  <local1:WFChooseSpecificUser.inputStep>
+                                  </local1:WFChooseSpecificUserBookmark.inputDocumentId>
+                                  <local1:WFChooseSpecificUserBookmark.inputStep>
                                     <InArgument x:TypeArguments="local:DocumentState">
                                       <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
                                     </InArgument>
-                                  </local1:WFChooseSpecificUser.inputStep>
-                                  <local1:WFChooseSpecificUser.outputBookmark>
+                                  </local1:WFChooseSpecificUserBookmark.inputStep>
+                                  <local1:WFChooseSpecificUserBookmark.outputCurrentUser>
                                     <OutArgument x:TypeArguments="x:String">
-                                      <mca:CSharpReference x:TypeArguments="x:String">bookmarkName</mca:CSharpReference>
+                                      <mca:CSharpReference x:TypeArguments="x:String">inputCurrentUser</mca:CSharpReference>
                                     </OutArgument>
-                                  </local1:WFChooseSpecificUser.outputBookmark>
-                                  <local1:WFChooseSpecificUser.outputSkipStep>
-                                    <OutArgument x:TypeArguments="x:Boolean">
-                                      <mca:CSharpReference x:TypeArguments="x:Boolean">outputSkipStep</mca:CSharpReference>
+                                  </local1:WFChooseSpecificUserBookmark.outputCurrentUser>
+                                  <local1:WFChooseSpecificUserBookmark.outputDocumentData>
+                                    <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+                                      <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpReference>
                                     </OutArgument>
-                                  </local1:WFChooseSpecificUser.outputSkipStep>
-                                  <local1:WFChooseSpecificUser.outputStep>
+                                  </local1:WFChooseSpecificUserBookmark.outputDocumentData>
+                                  <local1:WFChooseSpecificUserBookmark.outputStep>
                                     <OutArgument x:TypeArguments="local:DocumentState">
                                       <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
                                     </OutArgument>
-                                  </local1:WFChooseSpecificUser.outputStep>
-                                </local1:WFChooseSpecificUser>
+                                  </local1:WFChooseSpecificUserBookmark.outputStep>
+                                </local1:WFChooseSpecificUserBookmark>
                                 <FlowStep.Next>
-                                  <FlowDecision x:Name="__ReferenceID17" DisplayName="Статус текущего шага" sap2010:WorkflowViewState.IdRef="FlowDecision_8">
+                                  <FlowDecision x:Name="__ReferenceID11" DisplayName="Условие" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
                                     <FlowDecision.Condition>
-                                      <mca:CSharpValue x:TypeArguments="x:Boolean">outputSkipStep == true</mca:CSharpValue>
+                                      <mca:CSharpValue x:TypeArguments="x:Boolean">outputStep == DocumentState.Agreement</mca:CSharpValue>
                                     </FlowDecision.Condition>
                                     <FlowDecision.True>
-                                      <FlowDecision x:Name="__ReferenceID0" DisplayName="Статус документа" sap2010:WorkflowViewState.IdRef="FlowDecision_6">
-                                        <FlowDecision.Condition>
-                                          <mca:CSharpValue x:TypeArguments="x:Boolean">outputStep == DocumentState.Agreement</mca:CSharpValue>
-                                        </FlowDecision.Condition>
-                                        <FlowDecision.True>
-                                          <FlowStep x:Name="__ReferenceID20" sap2010:WorkflowViewState.IdRef="FlowStep_24">
-                                            <local1:WFChooseSpecificUser _service="{x:Null}" executionStep="{x:Null}" slaOffset="{x:Null}" DisplayName="Мылымко С.С.&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseSpecificUser_3" inputUserName="SeMyly" noneSkip="True" useManual="False">
-                                              <local1:WFChooseSpecificUser.inputCurrentUser>
-                                                <InArgument x:TypeArguments="x:String">
-                                                  <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
-                                                </InArgument>
-                                              </local1:WFChooseSpecificUser.inputCurrentUser>
-                                              <local1:WFChooseSpecificUser.inputDocumentId>
-                                                <InArgument x:TypeArguments="s:Guid">
-                                                  <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
-                                                </InArgument>
-                                              </local1:WFChooseSpecificUser.inputDocumentId>
-                                              <local1:WFChooseSpecificUser.inputStep>
-                                                <InArgument x:TypeArguments="local:DocumentState">
-                                                  <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
-                                                </InArgument>
-                                              </local1:WFChooseSpecificUser.inputStep>
-                                              <local1:WFChooseSpecificUser.outputBookmark>
-                                                <OutArgument x:TypeArguments="x:String">
-                                                  <mca:CSharpReference x:TypeArguments="x:String">bookmarkName</mca:CSharpReference>
-                                                </OutArgument>
-                                              </local1:WFChooseSpecificUser.outputBookmark>
-                                              <local1:WFChooseSpecificUser.outputSkipStep>
-                                                <OutArgument x:TypeArguments="x:Boolean">
-                                                  <mca:CSharpReference x:TypeArguments="x:Boolean">outputSkipStep</mca:CSharpReference>
-                                                </OutArgument>
-                                              </local1:WFChooseSpecificUser.outputSkipStep>
-                                              <local1:WFChooseSpecificUser.outputStep>
-                                                <OutArgument x:TypeArguments="local:DocumentState">
-                                                  <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                </OutArgument>
-                                              </local1:WFChooseSpecificUser.outputStep>
-                                            </local1:WFChooseSpecificUser>
-                                            <FlowStep.Next>
-                                              <FlowStep x:Name="__ReferenceID18" sap2010:WorkflowViewState.IdRef="FlowStep_23">
-                                                <local1:WFWaitingPersonBookmark DisplayName="Сохранение" sap2010:WorkflowViewState.IdRef="WFWaitingPersonBookmark_7">
-                                                  <local1:WFWaitingPersonBookmark.inputBookmarkName>
-                                                    <InArgument x:TypeArguments="x:String">
-                                                      <mca:CSharpValue x:TypeArguments="x:String">bookmarkName</mca:CSharpValue>
-                                                    </InArgument>
-                                                  </local1:WFWaitingPersonBookmark.inputBookmarkName>
-                                                  <local1:WFWaitingPersonBookmark.inputStep>
-                                                    <InArgument x:TypeArguments="local:DocumentState">
-                                                      <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
-                                                    </InArgument>
-                                                  </local1:WFWaitingPersonBookmark.inputStep>
-                                                  <local1:WFWaitingPersonBookmark.outputCurrentUser>
-                                                    <OutArgument x:TypeArguments="x:String">
-                                                      <mca:CSharpReference x:TypeArguments="x:String">inputCurrentUser</mca:CSharpReference>
-                                                    </OutArgument>
-                                                  </local1:WFWaitingPersonBookmark.outputCurrentUser>
-                                                  <local1:WFWaitingPersonBookmark.outputDocumentData>
-                                                    <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
-                                                      <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpReference>
-                                                    </OutArgument>
-                                                  </local1:WFWaitingPersonBookmark.outputDocumentData>
-                                                  <local1:WFWaitingPersonBookmark.outputStep>
-                                                    <OutArgument x:TypeArguments="local:DocumentState">
-                                                      <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                    </OutArgument>
-                                                  </local1:WFWaitingPersonBookmark.outputStep>
-                                                </local1:WFWaitingPersonBookmark>
-                                                <FlowStep.Next>
-                                                  <FlowDecision x:Name="__ReferenceID23" DisplayName="Статус документа" sap2010:WorkflowViewState.IdRef="FlowDecision_11">
-                                                    <FlowDecision.Condition>
-                                                      <mca:CSharpValue x:TypeArguments="x:Boolean">outputStep == DocumentState.Agreement</mca:CSharpValue>
-                                                    </FlowDecision.Condition>
-                                                    <FlowDecision.True>
-                                                      <FlowStep x:Name="__ReferenceID19" sap2010:WorkflowViewState.IdRef="FlowStep_21">
-                                                        <local1:WFChooseManualExecution _service="{x:Null}" executionStep="{x:Null}" slaOffset="{x:Null}" DisplayName="Ручное назначение&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseManualExecution_1" inputManualKey="UserChooseManual1" noneSkip="True" useManual="False">
-                                                          <local1:WFChooseManualExecution.inputCurrentUser>
-                                                            <InArgument x:TypeArguments="x:String">
-                                                              <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
-                                                            </InArgument>
-                                                          </local1:WFChooseManualExecution.inputCurrentUser>
-                                                          <local1:WFChooseManualExecution.inputDocumentData>
-                                                            <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
-                                                              <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpValue>
-                                                            </InArgument>
-                                                          </local1:WFChooseManualExecution.inputDocumentData>
-                                                          <local1:WFChooseManualExecution.inputDocumentId>
-                                                            <InArgument x:TypeArguments="s:Guid">
-                                                              <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
-                                                            </InArgument>
-                                                          </local1:WFChooseManualExecution.inputDocumentId>
-                                                          <local1:WFChooseManualExecution.inputStep>
-                                                            <InArgument x:TypeArguments="local:DocumentState">
-                                                              <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
-                                                            </InArgument>
-                                                          </local1:WFChooseManualExecution.inputStep>
-                                                          <local1:WFChooseManualExecution.outputBookmark>
-                                                            <OutArgument x:TypeArguments="x:String">
-                                                              <mca:CSharpReference x:TypeArguments="x:String">bookmarkName</mca:CSharpReference>
-                                                            </OutArgument>
-                                                          </local1:WFChooseManualExecution.outputBookmark>
-                                                          <local1:WFChooseManualExecution.outputSkipStep>
-                                                            <OutArgument x:TypeArguments="x:Boolean">
-                                                              <mca:CSharpReference x:TypeArguments="x:Boolean">outputSkipStep</mca:CSharpReference>
-                                                            </OutArgument>
-                                                          </local1:WFChooseManualExecution.outputSkipStep>
-                                                          <local1:WFChooseManualExecution.outputStep>
-                                                            <OutArgument x:TypeArguments="local:DocumentState">
-                                                              <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                            </OutArgument>
-                                                          </local1:WFChooseManualExecution.outputStep>
-                                                        </local1:WFChooseManualExecution>
-                                                        <FlowStep.Next>
-                                                          <FlowStep x:Name="__ReferenceID21" sap2010:WorkflowViewState.IdRef="FlowStep_20">
-                                                            <local1:WFWaitingPersonBookmark outputDocumentData="{x:Null}" DisplayName="Сохранение" sap2010:WorkflowViewState.IdRef="WFWaitingPersonBookmark_8">
-                                                              <local1:WFWaitingPersonBookmark.inputBookmarkName>
-                                                                <InArgument x:TypeArguments="x:String">
-                                                                  <mca:CSharpValue x:TypeArguments="x:String">bookmarkName</mca:CSharpValue>
-                                                                </InArgument>
-                                                              </local1:WFWaitingPersonBookmark.inputBookmarkName>
-                                                              <local1:WFWaitingPersonBookmark.inputStep>
-                                                                <InArgument x:TypeArguments="local:DocumentState">
-                                                                  <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
-                                                                </InArgument>
-                                                              </local1:WFWaitingPersonBookmark.inputStep>
-                                                              <local1:WFWaitingPersonBookmark.outputCurrentUser>
-                                                                <OutArgument x:TypeArguments="x:String">
-                                                                  <mca:CSharpReference x:TypeArguments="x:String">inputCurrentUser</mca:CSharpReference>
-                                                                </OutArgument>
-                                                              </local1:WFWaitingPersonBookmark.outputCurrentUser>
-                                                              <local1:WFWaitingPersonBookmark.outputStep>
-                                                                <OutArgument x:TypeArguments="local:DocumentState">
-                                                                  <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                                </OutArgument>
-                                                              </local1:WFWaitingPersonBookmark.outputStep>
-                                                            </local1:WFWaitingPersonBookmark>
-                                                            <FlowStep.Next>
-                                                              <FlowDecision x:Name="__ReferenceID26" DisplayName="Статус документа" sap2010:WorkflowViewState.IdRef="FlowDecision_10">
-                                                                <FlowDecision.Condition>
-                                                                  <mca:CSharpValue x:TypeArguments="x:Boolean">outputStep == DocumentState.Agreement</mca:CSharpValue>
-                                                                </FlowDecision.Condition>
-                                                                <FlowDecision.True>
-                                                                  <FlowStep x:Name="__ReferenceID25" sap2010:WorkflowViewState.IdRef="FlowStep_18">
-                                                                    <local1:WFChooseSpecificUser _service="{x:Null}" slaOffset="{x:Null}" DisplayName="Исполнитель&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseSpecificUser_4" executionStep="True" noneSkip="True" useManual="False">
-                                                                      <local1:WFChooseSpecificUser.inputCurrentUser>
-                                                                        <InArgument x:TypeArguments="x:String">
-                                                                          <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
-                                                                        </InArgument>
-                                                                      </local1:WFChooseSpecificUser.inputCurrentUser>
-                                                                      <local1:WFChooseSpecificUser.inputDocumentId>
-                                                                        <InArgument x:TypeArguments="s:Guid">
-                                                                          <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
-                                                                        </InArgument>
-                                                                      </local1:WFChooseSpecificUser.inputDocumentId>
-                                                                      <local1:WFChooseSpecificUser.inputStep>
-                                                                        <InArgument x:TypeArguments="local:DocumentState">
-                                                                          <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
-                                                                        </InArgument>
-                                                                      </local1:WFChooseSpecificUser.inputStep>
-                                                                      <local1:WFChooseSpecificUser.inputUserName>
-                                                                        <InArgument x:TypeArguments="x:String">
-                                                                          <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
-                                                                        </InArgument>
-                                                                      </local1:WFChooseSpecificUser.inputUserName>
-                                                                      <local1:WFChooseSpecificUser.outputBookmark>
-                                                                        <OutArgument x:TypeArguments="x:String">
-                                                                          <mca:CSharpReference x:TypeArguments="x:String">bookmarkName</mca:CSharpReference>
-                                                                        </OutArgument>
-                                                                      </local1:WFChooseSpecificUser.outputBookmark>
-                                                                      <local1:WFChooseSpecificUser.outputSkipStep>
-                                                                        <OutArgument x:TypeArguments="x:Boolean">
-                                                                          <mca:CSharpReference x:TypeArguments="x:Boolean">outputSkipStep</mca:CSharpReference>
-                                                                        </OutArgument>
-                                                                      </local1:WFChooseSpecificUser.outputSkipStep>
-                                                                      <local1:WFChooseSpecificUser.outputStep>
-                                                                        <OutArgument x:TypeArguments="local:DocumentState">
-                                                                          <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                                        </OutArgument>
-                                                                      </local1:WFChooseSpecificUser.outputStep>
-                                                                    </local1:WFChooseSpecificUser>
-                                                                    <FlowStep.Next>
-                                                                      <FlowStep x:Name="__ReferenceID24" sap2010:WorkflowViewState.IdRef="FlowStep_17">
-                                                                        <local1:WFWaitingPersonBookmark DisplayName="Сохранение" sap2010:WorkflowViewState.IdRef="WFWaitingPersonBookmark_9">
-                                                                          <local1:WFWaitingPersonBookmark.inputBookmarkName>
-                                                                            <InArgument x:TypeArguments="x:String">
-                                                                              <mca:CSharpValue x:TypeArguments="x:String">bookmarkName</mca:CSharpValue>
-                                                                            </InArgument>
-                                                                          </local1:WFWaitingPersonBookmark.inputBookmarkName>
-                                                                          <local1:WFWaitingPersonBookmark.inputStep>
-                                                                            <InArgument x:TypeArguments="local:DocumentState">
-                                                                              <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
-                                                                            </InArgument>
-                                                                          </local1:WFWaitingPersonBookmark.inputStep>
-                                                                          <local1:WFWaitingPersonBookmark.outputCurrentUser>
-                                                                            <OutArgument x:TypeArguments="x:String">
-                                                                              <mca:CSharpReference x:TypeArguments="x:String">inputCurrentUser</mca:CSharpReference>
-                                                                            </OutArgument>
-                                                                          </local1:WFWaitingPersonBookmark.outputCurrentUser>
-                                                                          <local1:WFWaitingPersonBookmark.outputDocumentData>
-                                                                            <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
-                                                                              <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpReference>
-                                                                            </OutArgument>
-                                                                          </local1:WFWaitingPersonBookmark.outputDocumentData>
-                                                                          <local1:WFWaitingPersonBookmark.outputStep>
-                                                                            <OutArgument x:TypeArguments="local:DocumentState">
-                                                                              <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                                            </OutArgument>
-                                                                          </local1:WFWaitingPersonBookmark.outputStep>
-                                                                        </local1:WFWaitingPersonBookmark>
-                                                                        <FlowStep.Next>
-                                                                          <FlowDecision x:Name="__ReferenceID6" DisplayName="Статус документа" sap2010:WorkflowViewState.IdRef="FlowDecision_4">
-                                                                            <FlowDecision.Condition>
-                                                                              <mca:CSharpValue x:TypeArguments="x:Boolean">outputStep == DocumentState.Agreement</mca:CSharpValue>
-                                                                            </FlowDecision.Condition>
-                                                                            <FlowDecision.True>
-                                                                              <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_9">
-                                                                                <Assign DisplayName="Завершение" sap2010:WorkflowViewState.IdRef="Assign_4">
-                                                                                  <Assign.To>
-                                                                                    <OutArgument x:TypeArguments="local:DocumentState">
-                                                                                      <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                                                    </OutArgument>
-                                                                                  </Assign.To>
-                                                                                  <Assign.Value>
-                                                                                    <InArgument x:TypeArguments="local:DocumentState">
-                                                                                      <mca:CSharpValue x:TypeArguments="local:DocumentState">DocumentState.Closed</mca:CSharpValue>
-                                                                                    </InArgument>
-                                                                                  </Assign.Value>
-                                                                                </Assign>
-                                                                              </FlowStep>
-                                                                            </FlowDecision.True>
-                                                                            <FlowDecision.False>
-                                                                              <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_8">
-                                                                                <Assign DisplayName="Завершение" sap2010:WorkflowViewState.IdRef="Assign_3">
-                                                                                  <Assign.To>
-                                                                                    <OutArgument x:TypeArguments="local:DocumentState">
-                                                                                      <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                                                    </OutArgument>
-                                                                                  </Assign.To>
-                                                                                  <Assign.Value>
-                                                                                    <InArgument x:TypeArguments="local:DocumentState">
-                                                                                      <mca:CSharpValue x:TypeArguments="local:DocumentState">DocumentState.Cancelled</mca:CSharpValue>
-                                                                                    </InArgument>
-                                                                                  </Assign.Value>
-                                                                                </Assign>
-                                                                              </FlowStep>
-                                                                            </FlowDecision.False>
-                                                                          </FlowDecision>
-                                                                        </FlowStep.Next>
-                                                                      </FlowStep>
-                                                                    </FlowStep.Next>
-                                                                  </FlowStep>
-                                                                </FlowDecision.True>
-                                                                <FlowDecision.False>
-                                                                  <FlowStep x:Name="__ReferenceID27" sap2010:WorkflowViewState.IdRef="FlowStep_19">
-                                                                    <Assign DisplayName="Выход" sap2010:WorkflowViewState.IdRef="Assign_7">
-                                                                      <Assign.To>
-                                                                        <OutArgument x:TypeArguments="local:DocumentState">
-                                                                          <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                                        </OutArgument>
-                                                                      </Assign.To>
-                                                                      <Assign.Value>
-                                                                        <InArgument x:TypeArguments="local:DocumentState">
-                                                                          <mca:CSharpValue x:TypeArguments="local:DocumentState">outputStep</mca:CSharpValue>
-                                                                        </InArgument>
-                                                                      </Assign.Value>
-                                                                    </Assign>
-                                                                  </FlowStep>
-                                                                </FlowDecision.False>
-                                                              </FlowDecision>
-                                                            </FlowStep.Next>
-                                                          </FlowStep>
-                                                        </FlowStep.Next>
-                                                      </FlowStep>
-                                                    </FlowDecision.True>
-                                                    <FlowDecision.False>
-                                                      <FlowStep x:Name="__ReferenceID22" sap2010:WorkflowViewState.IdRef="FlowStep_22">
-                                                        <Assign DisplayName="Выход" sap2010:WorkflowViewState.IdRef="Assign_8">
-                                                          <Assign.To>
-                                                            <OutArgument x:TypeArguments="local:DocumentState">
-                                                              <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                            </OutArgument>
-                                                          </Assign.To>
-                                                          <Assign.Value>
-                                                            <InArgument x:TypeArguments="local:DocumentState">
-                                                              <mca:CSharpValue x:TypeArguments="local:DocumentState">outputStep</mca:CSharpValue>
-                                                            </InArgument>
-                                                          </Assign.Value>
-                                                        </Assign>
-                                                      </FlowStep>
-                                                    </FlowDecision.False>
-                                                  </FlowDecision>
-                                                </FlowStep.Next>
-                                              </FlowStep>
-                                            </FlowStep.Next>
-                                          </FlowStep>
-                                        </FlowDecision.True>
-                                        <FlowDecision.False>
-                                          <FlowStep x:Name="__ReferenceID13" sap2010:WorkflowViewState.IdRef="FlowStep_11">
-                                            <Assign DisplayName="Выход" sap2010:WorkflowViewState.IdRef="Assign_5">
-                                              <Assign.To>
-                                                <OutArgument x:TypeArguments="local:DocumentState">
-                                                  <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                                </OutArgument>
-                                              </Assign.To>
-                                              <Assign.Value>
-                                                <InArgument x:TypeArguments="local:DocumentState">
-                                                  <mca:CSharpValue x:TypeArguments="local:DocumentState">outputStep</mca:CSharpValue>
-                                                </InArgument>
-                                              </Assign.Value>
-                                            </Assign>
-                                          </FlowStep>
-                                        </FlowDecision.False>
-                                      </FlowDecision>
-                                    </FlowDecision.True>
-                                    <FlowDecision.False>
-                                      <FlowStep x:Name="__ReferenceID15" sap2010:WorkflowViewState.IdRef="FlowStep_13">
-                                        <local1:WFWaitingPersonBookmark outputDocumentData="{x:Null}" DisplayName="Сохранение" sap2010:WorkflowViewState.IdRef="WFWaitingPersonBookmark_5">
-                                          <local1:WFWaitingPersonBookmark.inputBookmarkName>
+                                      <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_4">
+                                        <local1:WFChooseManualExecutionBookmark _service="{x:Null}" slaOffset="{x:Null}" DisplayName="Исполнитель&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseManualExecutionBookmark_1" executionStep="True" inputManualKey="UserChooseManual1" noneSkip="True" useManual="False">
+                                          <local1:WFChooseManualExecutionBookmark.inputCurrentUser>
                                             <InArgument x:TypeArguments="x:String">
-                                              <mca:CSharpValue x:TypeArguments="x:String">bookmarkName</mca:CSharpValue>
+                                              <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
                                             </InArgument>
-                                          </local1:WFWaitingPersonBookmark.inputBookmarkName>
-                                          <local1:WFWaitingPersonBookmark.inputStep>
+                                          </local1:WFChooseManualExecutionBookmark.inputCurrentUser>
+                                          <local1:WFChooseManualExecutionBookmark.inputDocumentData>
+                                            <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+                                              <mca:CSharpValue x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpValue>
+                                            </InArgument>
+                                          </local1:WFChooseManualExecutionBookmark.inputDocumentData>
+                                          <local1:WFChooseManualExecutionBookmark.inputDocumentId>
+                                            <InArgument x:TypeArguments="s:Guid">
+                                              <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
+                                            </InArgument>
+                                          </local1:WFChooseManualExecutionBookmark.inputDocumentId>
+                                          <local1:WFChooseManualExecutionBookmark.inputStep>
                                             <InArgument x:TypeArguments="local:DocumentState">
                                               <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
                                             </InArgument>
-                                          </local1:WFWaitingPersonBookmark.inputStep>
-                                          <local1:WFWaitingPersonBookmark.outputCurrentUser>
+                                          </local1:WFChooseManualExecutionBookmark.inputStep>
+                                          <local1:WFChooseManualExecutionBookmark.outputCurrentUser>
                                             <OutArgument x:TypeArguments="x:String">
                                               <mca:CSharpReference x:TypeArguments="x:String">inputCurrentUser</mca:CSharpReference>
                                             </OutArgument>
-                                          </local1:WFWaitingPersonBookmark.outputCurrentUser>
-                                          <local1:WFWaitingPersonBookmark.outputStep>
+                                          </local1:WFChooseManualExecutionBookmark.outputCurrentUser>
+                                          <local1:WFChooseManualExecutionBookmark.outputDocumentData>
+                                            <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+                                              <mca:CSharpReference x:TypeArguments="scg:Dictionary(x:String, x:Object)">documentData</mca:CSharpReference>
+                                            </OutArgument>
+                                          </local1:WFChooseManualExecutionBookmark.outputDocumentData>
+                                          <local1:WFChooseManualExecutionBookmark.outputStep>
                                             <OutArgument x:TypeArguments="local:DocumentState">
                                               <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
                                             </OutArgument>
-                                          </local1:WFWaitingPersonBookmark.outputStep>
-                                        </local1:WFWaitingPersonBookmark>
-                                        <FlowStep.Next>
-                                          <x:Reference>__ReferenceID0</x:Reference>
-                                        </FlowStep.Next>
+                                          </local1:WFChooseManualExecutionBookmark.outputStep>
+                                        </local1:WFChooseManualExecutionBookmark>
+                                      </FlowStep>
+                                    </FlowDecision.True>
+                                    <FlowDecision.False>
+                                      <FlowStep x:Name="__ReferenceID6" sap2010:WorkflowViewState.IdRef="FlowStep_5">
+                                        <Assign DisplayName="Завершение" sap2010:WorkflowViewState.IdRef="Assign_1">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="local:DocumentState">
+                                              <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="local:DocumentState">
+                                              <mca:CSharpValue x:TypeArguments="local:DocumentState">DocumentState.Closed</mca:CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
+                                        </Assign>
                                       </FlowStep>
                                     </FlowDecision.False>
                                   </FlowDecision>
@@ -615,448 +378,96 @@
                               </FlowStep>
                             </FlowDecision.True>
                             <FlowDecision.False>
-                              <FlowStep x:Name="__ReferenceID16" sap2010:WorkflowViewState.IdRef="FlowStep_15">
-                                <Assign DisplayName="Выход" sap2010:WorkflowViewState.IdRef="Assign_6">
-                                  <Assign.To>
-                                    <OutArgument x:TypeArguments="local:DocumentState">
-                                      <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                    </OutArgument>
-                                  </Assign.To>
-                                  <Assign.Value>
-                                    <InArgument x:TypeArguments="local:DocumentState">
-                                      <mca:CSharpValue x:TypeArguments="local:DocumentState">outputStep</mca:CSharpValue>
-                                    </InArgument>
-                                  </Assign.Value>
-                                </Assign>
-                              </FlowStep>
+                              <FlowSwitch x:TypeArguments="x:String" x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowSwitch`1_2">
+                                <FlowSwitch.Default>
+                                  <FlowStep x:Name="__ReferenceID7" sap2010:WorkflowViewState.IdRef="FlowStep_6">
+                                    <Assign DisplayName="Завершение" sap2010:WorkflowViewState.IdRef="Assign_2">
+                                      <Assign.To>
+                                        <OutArgument x:TypeArguments="local:DocumentState">
+                                          <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
+                                        </OutArgument>
+                                      </Assign.To>
+                                      <Assign.Value>
+                                        <InArgument x:TypeArguments="local:DocumentState">
+                                          <mca:CSharpValue x:TypeArguments="local:DocumentState">DocumentState.Cancelled</mca:CSharpValue>
+                                        </InArgument>
+                                      </Assign.Value>
+                                    </Assign>
+                                  </FlowStep>
+                                </FlowSwitch.Default>
+                                <FlowSwitch.Expression>
+                                  <mca:CSharpValue x:TypeArguments="x:String">outputStep.ToString()</mca:CSharpValue>
+                                </FlowSwitch.Expression>
+                                <x:Reference>__ReferenceID0<x:Key>"1"</x:Key></x:Reference>
+                                <x:Reference>__ReferenceID1<x:Key>"2"</x:Key></x:Reference>
+                                <x:Reference>__ReferenceID2<x:Key>"3"</x:Key></x:Reference>
+                                <x:Reference>__ReferenceID3<x:Key>"4"</x:Key></x:Reference>
+                                <x:Reference>__ReferenceID4<x:Key>"5"</x:Key></x:Reference>
+                              </FlowSwitch>
                             </FlowDecision.False>
                           </FlowDecision>
-                        </FlowDecision.True>
-                        <FlowDecision.False>
-                          <FlowStep x:Name="__ReferenceID9" sap2010:WorkflowViewState.IdRef="FlowStep_4">
-                            <local1:WFWaitingPersonBookmark outputDocumentData="{x:Null}" DisplayName="Сохранение" sap2010:WorkflowViewState.IdRef="WFWaitingPersonBookmark_3">
-                              <local1:WFWaitingPersonBookmark.inputBookmarkName>
-                                <InArgument x:TypeArguments="x:String">
-                                  <mca:CSharpValue x:TypeArguments="x:String">bookmarkName</mca:CSharpValue>
-                                </InArgument>
-                              </local1:WFWaitingPersonBookmark.inputBookmarkName>
-                              <local1:WFWaitingPersonBookmark.inputStep>
-                                <InArgument x:TypeArguments="local:DocumentState">
-                                  <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
-                                </InArgument>
-                              </local1:WFWaitingPersonBookmark.inputStep>
-                              <local1:WFWaitingPersonBookmark.outputCurrentUser>
-                                <OutArgument x:TypeArguments="x:String">
-                                  <mca:CSharpReference x:TypeArguments="x:String">inputCurrentUser</mca:CSharpReference>
-                                </OutArgument>
-                              </local1:WFWaitingPersonBookmark.outputCurrentUser>
-                              <local1:WFWaitingPersonBookmark.outputStep>
-                                <OutArgument x:TypeArguments="local:DocumentState">
-                                  <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                                </OutArgument>
-                              </local1:WFWaitingPersonBookmark.outputStep>
-                            </local1:WFWaitingPersonBookmark>
-                            <FlowStep.Next>
-                              <x:Reference>__ReferenceID1</x:Reference>
-                            </FlowStep.Next>
-                          </FlowStep>
-                        </FlowDecision.False>
-                      </FlowDecision>
-                    </FlowStep.Next>
-                  </FlowStep>
-                </FlowDecision.True>
-                <FlowDecision.False>
-                  <FlowStep x:Name="__ReferenceID11" sap2010:WorkflowViewState.IdRef="FlowStep_6">
-                    <Assign DisplayName="Выход" sap2010:WorkflowViewState.IdRef="Assign_2">
-                      <Assign.To>
-                        <OutArgument x:TypeArguments="local:DocumentState">
-                          <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                        </OutArgument>
-                      </Assign.To>
-                      <Assign.Value>
-                        <InArgument x:TypeArguments="local:DocumentState">
-                          <mca:CSharpValue x:TypeArguments="local:DocumentState">outputStep</mca:CSharpValue>
-                        </InArgument>
-                      </Assign.Value>
-                    </Assign>
-                  </FlowStep>
-                </FlowDecision.False>
-              </FlowDecision>
-            </FlowDecision.True>
-            <FlowDecision.False>
-              <FlowStep x:Name="__ReferenceID3" sap2010:WorkflowViewState.IdRef="FlowStep_7">
-                <local1:WFWaitingPersonBookmark outputDocumentData="{x:Null}" DisplayName="Сохранение" sap2010:WorkflowViewState.IdRef="WFWaitingPersonBookmark_1">
-                  <local1:WFWaitingPersonBookmark.inputBookmarkName>
-                    <InArgument x:TypeArguments="x:String">
-                      <mca:CSharpValue x:TypeArguments="x:String">bookmarkName</mca:CSharpValue>
-                    </InArgument>
-                  </local1:WFWaitingPersonBookmark.inputBookmarkName>
-                  <local1:WFWaitingPersonBookmark.inputStep>
-                    <InArgument x:TypeArguments="local:DocumentState">
-                      <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
-                    </InArgument>
-                  </local1:WFWaitingPersonBookmark.inputStep>
-                  <local1:WFWaitingPersonBookmark.outputCurrentUser>
-                    <OutArgument x:TypeArguments="x:String">
-                      <mca:CSharpReference x:TypeArguments="x:String">inputCurrentUser</mca:CSharpReference>
-                    </OutArgument>
-                  </local1:WFWaitingPersonBookmark.outputCurrentUser>
-                  <local1:WFWaitingPersonBookmark.outputStep>
-                    <OutArgument x:TypeArguments="local:DocumentState">
-                      <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
-                    </OutArgument>
-                  </local1:WFWaitingPersonBookmark.outputStep>
-                </local1:WFWaitingPersonBookmark>
-                <FlowStep.Next>
-                  <x:Reference>__ReferenceID2</x:Reference>
+                        </FlowStep.Next>
+                      </FlowStep>
+                    </FlowDecision.True>
+                    <FlowDecision.False>
+                      <x:Reference>__ReferenceID5</x:Reference>
+                    </FlowDecision.False>
+                  </FlowDecision>
                 </FlowStep.Next>
               </FlowStep>
+            </FlowDecision.True>
+            <FlowDecision.False>
+              <x:Reference>__ReferenceID5</x:Reference>
             </FlowDecision.False>
           </FlowDecision>
         </FlowStep.Next>
       </FlowStep>
     </Flowchart.StartNode>
-    <x:Reference>__ReferenceID3</x:Reference>
     <x:Reference>__ReferenceID4</x:Reference>
-    <x:Reference>__ReferenceID5</x:Reference>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
     <x:Reference>__ReferenceID6</x:Reference>
     <x:Reference>__ReferenceID7</x:Reference>
     <x:Reference>__ReferenceID8</x:Reference>
     <x:Reference>__ReferenceID9</x:Reference>
     <x:Reference>__ReferenceID10</x:Reference>
-    <x:Reference>__ReferenceID2</x:Reference>
     <x:Reference>__ReferenceID11</x:Reference>
-    <x:Reference>__ReferenceID12</x:Reference>
-    <x:Reference>__ReferenceID13</x:Reference>
-    <x:Reference>__ReferenceID0</x:Reference>
-    <x:Reference>__ReferenceID14</x:Reference>
-    <x:Reference>__ReferenceID15</x:Reference>
-    <x:Reference>__ReferenceID16</x:Reference>
-    <x:Reference>__ReferenceID1</x:Reference>
-    <x:Reference>__ReferenceID17</x:Reference>
-    <x:Reference>__ReferenceID18</x:Reference>
-    <x:Reference>__ReferenceID19</x:Reference>
-    <x:Reference>__ReferenceID20</x:Reference>
-    <x:Reference>__ReferenceID21</x:Reference>
-    <x:Reference>__ReferenceID22</x:Reference>
-    <x:Reference>__ReferenceID23</x:Reference>
-    <x:Reference>__ReferenceID24</x:Reference>
-    <x:Reference>__ReferenceID25</x:Reference>
-    <x:Reference>__ReferenceID26</x:Reference>
-    <x:Reference>__ReferenceID27</x:Reference>
-    <sads:DebugSymbol.Symbol>d3ZDOlxVc2Vyc1xEbVNoa2EuQUxUWU5UQVVcRGVza3RvcFxHaXRIdWJcRG9jRmxvd1xEb2NmbG93MlxSYXBpZERvY1xBY3Rpdml0aWVzXFVTUl9SRVFfVUJQX1JlcXVlc3RGb3JDb21wZXRpdG9uUHJvYy54YW1sfRwHHGcBAwGpAQGvAQEChgED7AUPAgEBjAEJqwEkAwGCBq8BD68BZAMB+QWwBRHFBTIDAdQFtAETtAF3AwHLBZ4FFakFHgMBuAW4ARXcATUDAfcE4AEb4AFwAwHuBP0EHZIFPgMByQTlAR/lAYMBAwHABOsEIfYEKgMBrQTpASGIAj8DAfQDjAInjAJ8AwHrA8oEKd8ESgMBxgORAiuRAo8BAwG9A7gELcMENgMBqgOVAi20AksDAfACtwIx0QJSAwHCAtUCN9UCmwEDAbkCogQ5rQRCAwGmAtkCOf0CWgMB4wGAAz2VA14DAb4BmQNDmQOnAQMBtQGMBEWXBE4DAaIBnQNFwQNjAgFfxANJ3gNqAgEx4gNP4gOzAQIBKPYDUYEEWgIBFeYDUfEDWgIBApkBD5kBYQMBswaMAYACjAGHAgMBsgajAQ+jAWQDAakGngEPngFhAwGgBowB8QGMAfUBAwGfBqgBD6gBagMBlgaMAeEBjAHkAQMBlQaUAQ+UAVoDAYwGjwEPjwFdAwGDBrgFF7gFaQMB8AW9BRe9BW0DAecFswUXswVhAwHeBcIFF8IFcgMB1QWmBRumBW4DAcIFoQUboQV2AwG5BcoBG8oBbQMBrwW4AfgBuAH/AQMBrgXUARvUAXADAaUFzwEbzwFtAwGcBdkBG9kBdgMBkwXAARvAAWYDAYoFuwEbuwFpAwGBBcUBG8UBxwIDAfgEhQUjhQV1AwHlBIoFI4oFeQMB3ASABSOABW0DAdMEjwUjjwV+AwHKBPMEJ/MEegMBtwTuBCfuBIIBAwGuBPYBJ/YBeQMBpATpAZYC6QGdAgMBowSAAieAAnwDAZoE+wEn+wF5AwGRBIUCJ4UCggEDAYgE6QGDAukBiwIDAYcE8QEn8QFyAwH+A+wBJ+wBdQMB9QPSBC/SBIEBAwHiA9cEL9cEhQEDAdkDzQQvzQR5AwHQA9wEL9wEigEDAccDwAQzwASGAQMBtAO7BDO7BI4BAwGrA6ICM6IChQEDAaEDlQKdApUCpAIDAaADrAIzrAKIAQMBlwOnAjOnAoUBAwGOA7ECM7ECjgEDAYUDlQL6AZUCggIDAYQDlQKMApUCkgIDAYMDnQIznQJ+AwH6ApgCM5gCgQEDAfECvwI3vwKJAQMB5wLEAjfEAo0BAwHeAroCN7oCgQEDAdUCzgI3zgKSAQMBzALJAjfJAqMBAwHDAqoEP6oEkgEDAbACpQQ/pQSaAQMBpwLrAj/rApEBAwGdAtkCkgLZAqUCAwGcAtkCwALZAscCAwGbAvUCP/UClAEDAZIC8AI/8AKRAQMBiQL6Aj/6ApoBAwGAAtkCrwLZArUCAwH/AeYCP+YCigEDAfYB3AI/3AKNAQMB7QHhAj/hAqMBAwHkAYgDQ4gDlQEDAdoBjQNDjQOZAQMB0QGDA0ODA40BAwHIAZIDQ5IDngEDAb8BlARLlASeAQMBrAGPBEuPBKYBAwGjAaoDS6oDnQEDAZkBnQOZAp0DoAIDAZgBuQNLuQOgAQMBjwG0A0u0A50BAwGGAZ0D+AGdA/4BAwGFAb4DS74DpgECAXyvA0uvA5kBAgFznQOIAp0DjgICAXKlA0ulA5YBAgFpoANLoAOZAQIBYMwDT8wDoQECAVbRA0/RA6UBAgFNxwNPxwOZAQIBRNsDT9sDqgECATvWA0/WA7sBAgEy/gNX/gO3AQIBH/kDV/kDsgECARbuA1fuA7QBAgEM6QNX6QOyAQIBAw==</sads:DebugSymbol.Symbol>
+    <x:Reference>__ReferenceID5</x:Reference>
+    <sads:DebugSymbol.Symbol>d3ZDOlxVc2Vyc1xEbVNoa2EuQUxUWU5UQVVcRGVza3RvcFxHaXRIdWJcRG9jRmxvd1xEb2NmbG93MlxSYXBpZERvY1xBY3Rpdml0aWVzXFVTUl9SRVFfVUJQX1JlcXVlc3RGb3JDb21wZXRpdG9uUHJvYy54YW1sQxwHHGcBAwGpAQGvAQEChgEDtwMPAgEBjAEJsAEsAwHnArQBD7QBcwMB3gKPAyOPA3YDAdUCgAMliwMuAwHCArgBEeEBOQMB+AHlARflAXsDAe8B6QEZjQI/AwGtAZECH5ECgwEDAaQBlQIhuQJHAgFivQInvQKLAQIBWeoCKfUCMgIBRsECKeUCUgIBAp4BD54BYQMBoQOjAQ+jAWUDAZgDjAGQAowBlwIDAZcDjAGBAowBhQIDAZYDrQEPrQFqAwGNA4wB8QGMAfQBAwGMA5kBD5kBWgMBgwOoAQ+oAXsDAfoCjwEPjwFdAwHxApQBD5QBcwMB6AKIAyuIA4sBAwHMAoMDK4MDhgEDAcMCzwEXzwFpAwG5AtQBF9QBbQMBsAK4AYQCuAGLAgMBrwLeARfeAXIDAaYCxQEXxQFiAwGdAtkBF9kBgwEDAZQCuwEXuwFlAwGLAsABF8ABewMBggLKARfKAcMCAwH5AfsBH/sBcQMB5gGAAh+AAnUDAd0B6QGeAukBpQIDAdwBigIfigJ6AwHTAekBiwLpAZMCAwHSAfYBH/YBagMByQGFAh+FAosBAwHAAewBH+wBbQMBtwHxAR/xAYMBAwGuAacCJ6cCeQMBmwGsAiesAn0DAZIBlQKpApUCsAIDAZEBtgIntgKCAQMBiAGVApYClQKeAgMBhwGiAieiAnICAX6xAiexApMBAgF1mAInmAJ1AgFsnQInnQKLAQIBY/ICL/ICjAECAVDtAi/tAooBAgFH0wIv0wKBAQIBPcECiALBApsCAgE82AIv2AKFAQIBM8ECtgLBAr0CAgEywQLyAcEC+AECATHiAi/iAooBAgEowQKlAsECqwICASfOAi/OAnoCAR7dAi/dApsBAgEVxAIvxAJ9AgEMyQIvyQKTAQIBAw==</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="WFChooseUpManager_1" sap:VirtualizedContainerService.HintSize="200,22">
+      <sap2010:ViewStateData Id="WFChooseUpManagerBookmark_1" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFChooseStaffStructure_1" sap:VirtualizedContainerService.HintSize="200,22">
+      <sap2010:ViewStateData Id="WFChooseStaffStructureBookmark_1" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFChooseSpecificUser_2" sap:VirtualizedContainerService.HintSize="200,22">
+      <sap2010:ViewStateData Id="WFChooseSpecificUserBookmark_1" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFChooseSpecificUser_3" sap:VirtualizedContainerService.HintSize="200,22">
+      <sap2010:ViewStateData Id="WFChooseSpecificUserBookmark_2" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFWaitingPersonBookmark_7" sap:VirtualizedContainerService.HintSize="200,22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFChooseManualExecution_1" sap:VirtualizedContainerService.HintSize="200,22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFWaitingPersonBookmark_8" sap:VirtualizedContainerService.HintSize="200,22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFChooseSpecificUser_4" sap:VirtualizedContainerService.HintSize="200,22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFWaitingPersonBookmark_9" sap:VirtualizedContainerService.HintSize="200,22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="242,62">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_9">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">79,1979</av:Point>
-            <av:Size x:Key="ShapeSize">242,62</av:Size>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="242,62">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_8">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">489,1969</av:Point>
-            <av:Size x:Key="ShapeSize">242,62</av:Size>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_4" sap:VirtualizedContainerService.HintSize="103,87">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <av:Point x:Key="ShapeLocation">338.5,1836.5</av:Point>
-            <av:Size x:Key="ShapeSize">103,87</av:Size>
-            <x:String x:Key="FalseLabel">Cancelled</x:String>
-            <x:String x:Key="TrueLabel">Agreement</x:String>
-            <av:PointCollection x:Key="TrueConnector">338.5,1880 200,1880 200,1979</av:PointCollection>
-            <av:PointCollection x:Key="FalseConnector">441.5,1880 610,1880 610,1969</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_17">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">120,1749</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">220,1771 220,1801 390,1801 390,1836.5</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_18">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">120,1699</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">220,1721 220,1749</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_7" sap:VirtualizedContainerService.HintSize="242,62">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_19">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">479,1689</av:Point>
-            <av:Size x:Key="ShapeSize">242,62</av:Size>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_10" sap:VirtualizedContainerService.HintSize="103,87">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <av:Point x:Key="ShapeLocation">348.5,1586.5</av:Point>
-            <av:Size x:Key="ShapeSize">103,87</av:Size>
-            <x:String x:Key="FalseLabel">Cancelled</x:String>
-            <x:String x:Key="TrueLabel">Agreement</x:String>
-            <av:PointCollection x:Key="FalseConnector">451.5,1630 600,1630 600,1689</av:PointCollection>
-            <av:PointCollection x:Key="TrueConnector">348.5,1630 220,1630 220,1699</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_20">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">100,1509</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">200,1531 200,1561 400,1561 400,1586.5</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_21">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">100,1439</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">200,1461 200,1509</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_8" sap:VirtualizedContainerService.HintSize="242,62">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">459,1429</av:Point>
-            <av:Size x:Key="ShapeSize">242,62</av:Size>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_11" sap:VirtualizedContainerService.HintSize="103,87">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <av:Point x:Key="ShapeLocation">338.5,1316.5</av:Point>
-            <av:Size x:Key="ShapeSize">103,87</av:Size>
-            <x:String x:Key="FalseLabel">Cancelled</x:String>
-            <x:String x:Key="TrueLabel">Agreement</x:String>
-            <av:PointCollection x:Key="FalseConnector">441.5,1360 580,1360 580,1429</av:PointCollection>
-            <av:PointCollection x:Key="TrueConnector">338.5,1360 200,1360 200,1439</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_23">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">100,1239</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">200,1261 200,1291 390,1291 390,1316.5</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_24">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">100,1169</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">200,1191 200,1239</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_5" sap:VirtualizedContainerService.HintSize="242,62">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_11">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">459,1159</av:Point>
-            <av:Size x:Key="ShapeSize">242,62</av:Size>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_6" sap:VirtualizedContainerService.HintSize="103,87">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <av:Point x:Key="ShapeLocation">338.5,1056.5</av:Point>
-            <av:Size x:Key="ShapeSize">103,87</av:Size>
-            <x:String x:Key="FalseLabel">Cancelled</x:String>
-            <x:String x:Key="TrueLabel">Agreement</x:String>
-            <av:PointCollection x:Key="FalseConnector">441.5,1100 580,1100 580,1159</av:PointCollection>
-            <av:PointCollection x:Key="TrueConnector">338.5,1100 200,1100 200,1169</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFWaitingPersonBookmark_5" sap:VirtualizedContainerService.HintSize="200,22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_13">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">300,939</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">400,961 400,991 415.75,991 415.75,1056.5</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_8" sap:VirtualizedContainerService.HintSize="128,87">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <av:Point x:Key="ShapeLocation">136,866.5</av:Point>
-            <av:Size x:Key="ShapeSize">128,87</av:Size>
-            <av:PointCollection x:Key="FalseConnector">264,910 400,910 400,939</av:PointCollection>
-            <av:PointCollection x:Key="TrueConnector">136,910 124.25,910 124.25,1026.5 364.25,1026.5 364.25,1056.5</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_14">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">110,799</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">210,821 210,851 200,851 200,866.5</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_6" sap:VirtualizedContainerService.HintSize="242,62">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_15">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">509,809</av:Point>
-            <av:Size x:Key="ShapeSize">242,62</av:Size>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_9" sap:VirtualizedContainerService.HintSize="103,87">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <av:Point x:Key="ShapeLocation">358.5,716.5</av:Point>
-            <av:Size x:Key="ShapeSize">103,87</av:Size>
-            <x:String x:Key="FalseLabel">Cancelled</x:String>
-            <x:String x:Key="TrueLabel">Agreement</x:String>
-            <av:PointCollection x:Key="FalseConnector">461.5,760 630,760 630,809</av:PointCollection>
-            <av:PointCollection x:Key="TrueConnector">358.5,760 210,760 210,799</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFWaitingPersonBookmark_3" sap:VirtualizedContainerService.HintSize="200,22">
+      <sap2010:ViewStateData Id="WFChooseManualExecutionBookmark_1" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -1066,29 +477,45 @@
       <sap2010:ViewStateData Id="FlowStep_4">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">290,619</av:Point>
+            <av:Point x:Key="ShapeLocation">180,739</av:Point>
             <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">390,641 390,671 410,671 410,716.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_2" sap:VirtualizedContainerService.HintSize="128,87">
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="242,62">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <av:Point x:Key="ShapeLocation">126,526.5</av:Point>
-            <av:Size x:Key="ShapeSize">128,87</av:Size>
-            <av:PointCollection x:Key="FalseConnector">254,570 390,570 390,619</av:PointCollection>
-            <av:PointCollection x:Key="TrueConnector">126,570 114.25,570 114.25,686.5 384.25,686.5 384.25,716.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="FlowStep_5">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">90,459</av:Point>
+            <av:Point x:Key="ShapeLocation">509,879</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_1" sap:VirtualizedContainerService.HintSize="70,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">415,786.5</av:Point>
+            <av:Size x:Key="ShapeSize">70,87</av:Size>
+            <x:String x:Key="FalseLabel">Cancelled</x:String>
+            <x:String x:Key="TrueLabel">Agreement</x:String>
+            <av:PointCollection x:Key="FalseConnector">485,830 630,830 630,879</av:PointCollection>
+            <av:PointCollection x:Key="TrueConnector">415,830 280,830 280,761</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_7">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">20,669</av:Point>
             <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">190,481 190,526.5</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">120,691 120,903.5 450,903.5 450,873.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -1102,73 +529,105 @@
       <sap2010:ViewStateData Id="FlowStep_6">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">469,499</av:Point>
+            <av:Point x:Key="ShapeLocation">629,429</av:Point>
             <av:Size x:Key="ShapeSize">242,62</av:Size>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_3" sap:VirtualizedContainerService.HintSize="103,87">
+      <sap2010:ViewStateData Id="FlowSwitch`1_2" sap:VirtualizedContainerService.HintSize="70,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <av:Point x:Key="ShapeLocation">348.5,376.5</av:Point>
-            <av:Size x:Key="ShapeSize">103,87</av:Size>
+            <av:Point x:Key="ShapeLocation">465,416.5</av:Point>
+            <av:Size x:Key="ShapeSize">70,87</av:Size>
+            <av:PointCollection x:Key="&quot;1&quot;Connector">465,460 420.5,460 420.5,464.04 265,464.04 265,480 210,480</av:PointCollection>
+            <av:PointCollection x:Key="&quot;4&quot;Connector">482.5,416.5 482.5,290 250,290</av:PointCollection>
+            <av:PointCollection x:Key="Default">535,460 629,460</av:PointCollection>
+            <av:PointCollection x:Key="&quot;2&quot;Connector">482.5,503.5 482.5,525.5 431.5,525.5 431.5,628.04 288,628.04 288,680 220,680</av:PointCollection>
+            <av:PointCollection x:Key="&quot;3&quot;Connector">500,503.5 500,571.5 492.5,571.5 492.5,738.04 432,738.04 432,750 380,750</av:PointCollection>
+            <av:PointCollection x:Key="&quot;5&quot;Connector">535,438.25 565,438.25 565,130 450,130</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_2" sap:VirtualizedContainerService.HintSize="70,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">215,536.5</av:Point>
+            <av:Size x:Key="ShapeSize">70,87</av:Size>
             <x:String x:Key="FalseLabel">Cancelled</x:String>
             <x:String x:Key="TrueLabel">Agreement</x:String>
-            <av:PointCollection x:Key="FalseConnector">451.5,420 590,420 590,499</av:PointCollection>
-            <av:PointCollection x:Key="TrueConnector">348.5,420 190,420 190,459</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">285,580 335.5,580 335.5,500.04 421,500.04 421,481.75 465,481.75</av:PointCollection>
+            <av:PointCollection x:Key="TrueConnector">215,580 120,580 120,669</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFWaitingPersonBookmark_1" sap:VirtualizedContainerService.HintSize="200,22">
+      <sap2010:ViewStateData Id="FlowStep_3">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">10,469</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">110,491 110,521 250,521 250,536.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_3" sap:VirtualizedContainerService.HintSize="70,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">225,366.5</av:Point>
+            <av:Size x:Key="ShapeSize">70,87</av:Size>
+            <x:String x:Key="FalseLabel">Cancelled</x:String>
+            <x:String x:Key="TrueLabel">Agreement</x:String>
+            <av:PointCollection x:Key="FalseConnector">295,410 325,410 325,438.25 465,438.25</av:PointCollection>
+            <av:PointCollection x:Key="TrueConnector">225,410 110,410 110,469</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_7">
+      <sap2010:ViewStateData Id="FlowStep_2">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">370,289</av:Point>
+            <av:Point x:Key="ShapeLocation">50,279</av:Point>
             <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">470,311 470,341 425.75,341 425.75,376.5</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">150,301 150,331 260,331 260,366.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_5" sap:VirtualizedContainerService.HintSize="128,87">
+      <sap2010:ViewStateData Id="FlowDecision_4" sap:VirtualizedContainerService.HintSize="70,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <av:Point x:Key="ShapeLocation">226,176.5</av:Point>
-            <av:Size x:Key="ShapeSize">128,87</av:Size>
-            <av:PointCollection x:Key="FalseConnector">354,220 470,220 470,289</av:PointCollection>
-            <av:PointCollection x:Key="TrueConnector">226,220 196,220 196,346.5 374.25,346.5 374.25,376.5</av:PointCollection>
+            <av:Point x:Key="ShapeLocation">315,186.5</av:Point>
+            <av:Size x:Key="ShapeSize">70,87</av:Size>
+            <x:String x:Key="FalseLabel">Cancelled</x:String>
+            <x:String x:Key="TrueLabel">Agreement</x:String>
+            <av:PointCollection x:Key="FalseConnector">385,230 500,230 500,416.5</av:PointCollection>
+            <av:PointCollection x:Key="TrueConnector">315,230 150,230 150,279</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_10">
+      <sap2010:ViewStateData Id="FlowStep_1">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">190,119</av:Point>
+            <av:Point x:Key="ShapeLocation">250,119</av:Point>
             <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">290,141 290,176.5</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">350,141 350,186.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="1004,2383">
+      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="885,2219">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-            <av:Point x:Key="ShapeLocation">260,12.5</av:Point>
+            <av:Point x:Key="ShapeLocation">320,2.5</av:Point>
             <av:Size x:Key="ShapeSize">60,75</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">290,87.5 290,119</av:PointCollection>
-            <x:Double x:Key="Width">990</x:Double>
-            <x:Double x:Key="Height">2346.96</x:Double>
+            <x:Double x:Key="Width">871</x:Double>
+            <x:Double x:Key="Height">2182.92</x:Double>
+            <av:PointCollection x:Key="ConnectorLocation">350,77.5 350,119</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="RapidDoc.Activities.USR_REQ_UBP_RequestForCompetitonProc_1" sap:VirtualizedContainerService.HintSize="1044,2463" />
+      <sap2010:ViewStateData Id="RapidDoc.Activities.USR_REQ_UBP_RequestForCompetitonProc_1" sap:VirtualizedContainerService.HintSize="925,2299" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

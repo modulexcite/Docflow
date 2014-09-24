@@ -38,7 +38,7 @@ namespace RapidDoc.Activities
         protected override void Execute(NativeActivityContext context)
         {
             context = CreateTrackingRecord(context.GetValue<DocumentState>(inputStep), context);
-            context.CreateBookmark(context.GetValue<string>(inputBookmarkName), 
+            context.CreateBookmark(context.GetValue<string>(inputBookmarkName),
                 new BookmarkCallback(this.resumeBookmark));
         }
 
