@@ -135,7 +135,7 @@
     </Flowchart.Variables>
     <Flowchart.StartNode>
       <FlowStep x:Name="__ReferenceID7" sap2010:WorkflowViewState.IdRef="FlowStep_10">
-        <local1:WFChooseUpManager _service="{x:Null}" executionStep="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник управления&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseUpManager_1" inputLevel="1" profileName="НУ" useManual="False">
+        <local1:WFChooseUpManager _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник управления" sap2010:WorkflowViewState.IdRef="WFChooseUpManager_1" inputLevel="1" profileName="НУ" useManual="False">
           <local1:WFChooseUpManager.inputCurrentUser>
             <InArgument x:TypeArguments="x:String">
               <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
@@ -179,7 +179,7 @@
                 </FlowDecision.Condition>
                 <FlowDecision.True>
                   <FlowStep x:Name="__ReferenceID8" sap2010:WorkflowViewState.IdRef="FlowStep_7">
-                    <local1:WFChooseStaffStructure _service="{x:Null}" executionStep="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник ССТ&lt;step&gt;" sap2010:WorkflowViewState.IdRef="WFChooseStaffStructure_1" useManual="False">
+                    <local1:WFChooseStaffStructure _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник ССТ" sap2010:WorkflowViewState.IdRef="WFChooseStaffStructure_1" useManual="False">
                       <local1:WFChooseStaffStructure.inputCurrentUser>
                         <InArgument x:TypeArguments="x:String">
                           <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
@@ -227,8 +227,8 @@
                               <mca:CSharpValue x:TypeArguments="x:Boolean">outputStep == DocumentState.Agreement</mca:CSharpValue>
                             </FlowDecision.Condition>
                             <FlowDecision.True>
-                              <FlowStep x:Name="__ReferenceID14">
-                                <local1:WFChooseRoleUser _service="{x:Null}" DisplayName="Исполнитель&lt;step&gt;" executionStep="True" inputRoleName="ExecutorCTS_RADIO" slaOffset="8" useManual="False">
+                              <FlowStep x:Name="__ReferenceID14" sap2010:WorkflowViewState.IdRef="FlowStep_11">
+                                <local1:WFChooseRoleUser _service="{x:Null}" noneSkip="{x:Null}" DisplayName="Исполнитель" sap2010:WorkflowViewState.IdRef="WFChooseRoleUser_1" executionStep="True" inputRoleName="ExecutorCTS_RADIO" slaOffset="8" useManual="False">
                                   <local1:WFChooseRoleUser.inputCurrentUser>
                                     <InArgument x:TypeArguments="x:String">
                                       <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
@@ -259,7 +259,6 @@
                                       <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
                                     </OutArgument>
                                   </local1:WFChooseRoleUser.outputStep>
-                                  <sap2010:WorkflowViewState.IdRef>WFChooseRoleUser_1</sap2010:WorkflowViewState.IdRef>
                                 </local1:WFChooseRoleUser>
                                 <FlowStep.Next>
                                   <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_3">
@@ -326,7 +325,6 @@
                                     </FlowStep.Next>
                                   </FlowStep>
                                 </FlowStep.Next>
-                                <sap2010:WorkflowViewState.IdRef>FlowStep_11</sap2010:WorkflowViewState.IdRef>
                               </FlowStep>
                             </FlowDecision.True>
                             <FlowDecision.False>
@@ -446,7 +444,7 @@
     <x:Reference>__ReferenceID12</x:Reference>
     <x:Reference>__ReferenceID13</x:Reference>
     <x:Reference>__ReferenceID14</x:Reference>
-    <sads:DebugSymbol.Symbol>d3ZDOlxVc2Vyc1xEbVNoa2EuQUxUWU5UQVVcRGVza3RvcFxHaXRIdWJcRG9jRmxvd1xEb2NmbG93XFJhcGlkRG9jXEFjdGl2aXRpZXNcVVNSX1JFUV9JVF9DVFNfRGVsaXZlcnlPZkNvbXBvbmVudHNXUy54YW1sQRwHHGcBAwGrAQGxAQEChAEDwgMPAgEBigEJqQEkAwHmAq0BD60BZAMB3QKTAxGoAzIDAbgCsgETsgF3AwGvAoEDFYwDHgMBnAK2ARXaATUDAdsB3gEb3gFwAwHSAeACHfUCPgMBrQHjAR/jAYMBAwGkAc4CIdkCKgMBkQHnASGHAjsCAVaKAiWfAkYCATGjAiujAo8BAgEotwItwgI2AgEVpwItsgI2AgEClwEPlwFhAwGXA4oB9AGKAfsBAwGWA6EBD6EBZAMBjQOcAQ+cAWEDAYQDigHlAYoB6QEDAYMDpgEPpgFqAwH6AooB1QGKAdgBAwH5ApIBD5IBWgMB8AKNAQ+NAV0DAecCmwMXmwNpAwHUAqADF6ADbQMBywKWAxeWA2EDAcICpQMXpQNyAwG5AokDG4kDbgMBpgKEAxuEA3YDAZ0CyAEbyAFtAwGTArYB4wG2AeoBAwGSAtIBG9IBcAMBiQLNARvNAW0DAYAC1wEb1wF2AwH3Ab4BG74BZgMB7gG5ARu5AWkDAeUBwwEbwwGCAgMB3AHoAiPoAnUDAckB7QIj7QJ5AwHAAeMCI+MCbQMBtwHyAiPyAn4DAa4B1gIn1gJ6AwGbAdECJ9ECggEDAZIB9AEn9AF5AwGIAecBwwHnAcoBAwGHAf4BJ/4BfAIBfvkBJ/kBeQIBdecBggHnAYgBAgF05wG1AecBuAECAXODAieDAoIBAgFq5wGXAecBqgECAWnvASfvAXICAWDqASfqAXUCAVeSAiuSAn0CAU2XAiuXAoEBAgFEjQIrjQJ1AgE7nAIrnAKGAQIBMr8CM78CkwECAR+6AjO6Ao4BAgEWrwIzrwKQAQIBDKoCM6oCjgECAQM=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d2tDOlxVc2Vyc1xpZ2RtaXRcRGVza3RvcFxEb2NmbG93UmVwb1xEb2NmbG93MVxSYXBpZERvY1xBY3Rpdml0aWVzXFVTUl9SRVFfSVRfQ1RTX0RlbGl2ZXJ5T2ZDb21wb25lbnRzV1MueGFtbEEcBxxnAQMBqwEBsQEBAoQBA8ADDwIBAYoBCakBJAMB5gKtAQ+tAWQDAd0CkQMRpgMyAwG4ArIBE7IBdwMBrwL/AhWKAx4DAZwCtgEV2gE1AwHbAd4BG94BcAMB0gHeAh3zAj4DAa0B4wEf4wGDAQMBpAHMAiHXAioDAZEB5wEhhgI7AgFWiQIlngJGAgExogIrogKPAQIBKLYCLcECNgIBFaYCLbECNgIBApcBD5cBYQMBlwOKAfwBigGDAgMBlgOhAQ+hAWQDAY0DnAEPnAFhAwGEA4oB7QGKAfEBAwGDA6YBD6YBagMB+gKKAd0BigHgAQMB+QKSAQ+SAVoDAfACjQEPjQFdAwHnApkDF5kDaQMB1AKeAxeeA20DAcsClAMXlANhAwHCAqMDF6MDcgMBuQKHAxuHA24DAaYCggMbggN2AwGdAsgBG8gBbQMBkwK2AesBtgHyAQMBkgLSARvSAXADAYkCzQEbzQFtAwGAAtcBG9cBdgMB9wG+ARu+AWYDAe4BuQEbuQFpAwHlAcMBG8MBggIDAdwB5gIj5gJ1AwHJAesCI+sCeQMBwAHhAiPhAm0DAbcB8AIj8AJ+AwGuAdQCJ9QCegMBmwHPAifPAoIBAwGSAfQBJ/QBeQMBiAHnAYAC5wGHAgMBhwH+ASf+AXwCAX75ASf5AXkCAXXnAb8B5wHFAQIBdOcB8gHnAfUBAgFzgwIngwKCAQIBaucB1AHnAecBAgFp7wEn7wFyAgFg6gEn6gF1AgFXkQIrkQJ9AgFNlgIrlgKBAQIBRIwCK4wCdQIBO5sCK5sChgECATK+AjO+ApMBAgEfuQIzuQKOAQIBFq4CM64CkAECAQypAjOpAo4BAgED</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -508,16 +506,16 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_1" sap:VirtualizedContainerService.HintSize="103,87">
+      <sap2010:ViewStateData Id="FlowDecision_1" sap:VirtualizedContainerService.HintSize="101,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">268.5,956.5</av:Point>
-            <av:Size x:Key="ShapeSize">103,87</av:Size>
+            <av:Size x:Key="ShapeSize">101,87</av:Size>
             <x:String x:Key="FalseLabel">Cancelled</x:String>
             <x:String x:Key="TrueLabel">Agreement</x:String>
             <av:PointCollection x:Key="TrueConnector">268.5,1000 130,1000 130,1079</av:PointCollection>
-            <av:PointCollection x:Key="FalseConnector">371.5,1000 540,1000 540,1079</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">369.5,1000 540,1000 540,1079</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -554,15 +552,15 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_2" sap:VirtualizedContainerService.HintSize="103,87">
+      <sap2010:ViewStateData Id="FlowDecision_2" sap:VirtualizedContainerService.HintSize="101,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">288.5,716.5</av:Point>
-            <av:Size x:Key="ShapeSize">103,87</av:Size>
+            <av:Size x:Key="ShapeSize">101,87</av:Size>
             <x:String x:Key="FalseLabel">Cancelled</x:String>
             <x:String x:Key="TrueLabel">Agreement</x:String>
-            <av:PointCollection x:Key="FalseConnector">391.5,760 510,760 510,839</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">389.5,760 510,760 510,839</av:PointCollection>
             <av:PointCollection x:Key="TrueConnector">288.5,760 120,760 120,839</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
@@ -583,13 +581,13 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_4" sap:VirtualizedContainerService.HintSize="128,87">
+      <sap2010:ViewStateData Id="FlowDecision_4" sap:VirtualizedContainerService.HintSize="126,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">36,506.5</av:Point>
-            <av:Size x:Key="ShapeSize">128,87</av:Size>
-            <av:PointCollection x:Key="FalseConnector">164,550 280,550 280,609</av:PointCollection>
+            <av:Size x:Key="ShapeSize">126,87</av:Size>
+            <av:PointCollection x:Key="FalseConnector">162,550 280,550 280,609</av:PointCollection>
             <av:PointCollection x:Key="TrueConnector">36,550 14.25,550 14.25,686.5 314.25,686.5 314.25,716.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
@@ -618,15 +616,15 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_3" sap:VirtualizedContainerService.HintSize="103,87">
+      <sap2010:ViewStateData Id="FlowDecision_3" sap:VirtualizedContainerService.HintSize="101,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">253.5,356.5</av:Point>
-            <av:Size x:Key="ShapeSize">103,87</av:Size>
+            <av:Size x:Key="ShapeSize">101,87</av:Size>
             <x:String x:Key="FalseLabel">Cancelled</x:String>
             <x:String x:Key="TrueLabel">Agreement</x:String>
-            <av:PointCollection x:Key="FalseConnector">356.5,400 490,400 490,469</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">354.5,400 490,400 490,469</av:PointCollection>
             <av:PointCollection x:Key="TrueConnector">253.5,400 100,400 100,449</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
@@ -643,17 +641,17 @@
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">430,279</av:Point>
             <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">530,301 530,331 330.75,331 330.75,356.5</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">530,301 530,331 329.25,331 329.25,356.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_5" sap:VirtualizedContainerService.HintSize="128,87">
+      <sap2010:ViewStateData Id="FlowDecision_5" sap:VirtualizedContainerService.HintSize="126,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">236,176.5</av:Point>
-            <av:Size x:Key="ShapeSize">128,87</av:Size>
-            <av:PointCollection x:Key="FalseConnector">364,220 530,220 530,279</av:PointCollection>
+            <av:Size x:Key="ShapeSize">126,87</av:Size>
+            <av:PointCollection x:Key="FalseConnector">362,220 530,220 530,279</av:PointCollection>
             <av:PointCollection x:Key="TrueConnector">236,220 219.25,220 219.25,326.5 279.25,326.5 279.25,356.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
