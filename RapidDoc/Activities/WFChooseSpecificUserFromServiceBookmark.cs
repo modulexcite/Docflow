@@ -13,12 +13,11 @@ using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Activities
 {
-    public class WFChooseSpecificUserBookmark : NativeActivity
+    public class WFChooseSpecificUserFromServiceBookmark : NativeActivity
     {
-        public WFChooseSpecificUserBookmark() : base() { }
+        public WFChooseSpecificUserFromServiceBookmark() : base() { }
 
         public InArgument<Guid> inputDocumentId { get; set; }
-        public InArgument<string> inputUserName { get; set; }
         public InArgument<string> inputCurrentUser { get; set; }
         public InArgument<DocumentState> inputStep { get; set; }
         public InArgument<bool> useManual { get; set; }
@@ -33,6 +32,9 @@ namespace RapidDoc.Activities
 
         [Inject]
         public IWorkflowService _service { get; set; }
+
+        [Inject]
+        public IServiceIncidentService _serviceServiceIncident { get; set; }
 
         protected override bool CanInduceIdle
         {
@@ -52,17 +54,24 @@ namespace RapidDoc.Activities
 
         protected override void Execute(NativeActivityContext context)
         {
-            string userName = context.GetValue(this.inputUserName);
+            Dictionary<string, Object> currentService = context.GetValue(this.inputDocumentData);
             Guid documentId = context.GetValue(this.inputDocumentId);
             DocumentState documentStep = context.GetValue(this.inputStep);
             string currentUserId = context.GetValue(this.inputCurrentUser);
             bool useManual = context.GetValue(this.useManual);
             int slaOffset = context.GetValue(this.slaOffset);
             bool executionStep = context.GetValue(this.executionStep);
+            String serviceName = (string)currentService["ServiceName"];
+            ServiceIncidientPriority priority = (ServiceIncidientPriority)currentService["ServiceIncidientPriority"];
+            ServiceIncidientLevel level = (ServiceIncidientLevel)currentService["ServiceIncidientLevel"];
+            ServiceIncidientLocation location = (ServiceIncidientLocation)currentService["ServiceIncidientLocation"];
             bool noneSkipStep = context.GetValue(this.noneSkip);
 
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
-            WFUserFunctionResult userFunctionResult = _service.WFSpecificUser(documentId, userName);
+            _serviceServiceIncident = DependencyResolver.Current.GetService<IServiceIncidentService>();
+
+            string roleName = _service.WFChooseSpecificUserFromService(serviceName, priority, level, location);
+            WFUserFunctionResult userFunctionResult = _service.WFRoleUser(documentId, roleName);
 
             if ((userFunctionResult.Skip == false) || (executionStep == true || noneSkipStep == true))
             {
@@ -71,7 +80,6 @@ namespace RapidDoc.Activities
                 context.CreateBookmark(this.DisplayName,
                     new BookmarkCallback(this.resumeBookmark));
             }
-
         }
 
         void resumeBookmark(NativeActivityContext context, Bookmark bookmark, object obj)
@@ -82,6 +90,5 @@ namespace RapidDoc.Activities
             context.SetValue(outputCurrentUser, (string)inputArguments["inputCurrentUser"]);
             context.SetValue(outputDocumentData, (Dictionary<String, Object>)inputArguments["documentData"]);
         }
-
     }
 }

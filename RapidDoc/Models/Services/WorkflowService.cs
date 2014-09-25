@@ -54,7 +54,6 @@ namespace RapidDoc.Models.Services
         
         IDictionary<string, object> outputParameters;
         private List<Array> allSteps = new List<Array>();
-        private const string keyForStep = "<step>";
 
         public WorkflowService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, 
             IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService,

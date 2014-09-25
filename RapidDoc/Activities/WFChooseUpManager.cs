@@ -56,7 +56,7 @@ namespace RapidDoc.Activities
             else if (executionStep == true || noneSkipStep == true)
                 _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUserId, this.Id, useManual, slaOffset, executionStep);
 
-            outputBookmark.Set(context, this.DisplayName.Replace("<step>", ""));
+            outputBookmark.Set(context, this.DisplayName);
             outputSkipStep.Set(context, executionStep ? false : userFunctionResult.Skip);
             outputStep.Set(context, documentStep);
         }

@@ -74,7 +74,7 @@ namespace RapidDoc.Activities
             {
                 _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUserId, this.Id, useManual, slaOffset, executionStep);
                 context = CreateTrackingRecord(context.GetValue<DocumentState>(inputStep), context);
-                context.CreateBookmark(this.DisplayName.Replace("<step>", ""),
+                context.CreateBookmark(this.DisplayName,
                     new BookmarkCallback(this.resumeBookmark));
             }
       

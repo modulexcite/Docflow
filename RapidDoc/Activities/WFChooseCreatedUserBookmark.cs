@@ -13,12 +13,11 @@ using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Activities
 {
-    public class WFChooseSpecificUserBookmark : NativeActivity
+    public class WFChooseCreatedUserBookmark : NativeActivity
     {
-        public WFChooseSpecificUserBookmark() : base() { }
+        public WFChooseCreatedUserBookmark() : base() { }
 
         public InArgument<Guid> inputDocumentId { get; set; }
-        public InArgument<string> inputUserName { get; set; }
         public InArgument<string> inputCurrentUser { get; set; }
         public InArgument<DocumentState> inputStep { get; set; }
         public InArgument<bool> useManual { get; set; }
@@ -52,7 +51,6 @@ namespace RapidDoc.Activities
 
         protected override void Execute(NativeActivityContext context)
         {
-            string userName = context.GetValue(this.inputUserName);
             Guid documentId = context.GetValue(this.inputDocumentId);
             DocumentState documentStep = context.GetValue(this.inputStep);
             string currentUserId = context.GetValue(this.inputCurrentUser);
@@ -62,7 +60,7 @@ namespace RapidDoc.Activities
             bool noneSkipStep = context.GetValue(this.noneSkip);
 
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
-            WFUserFunctionResult userFunctionResult = _service.WFSpecificUser(documentId, userName);
+            WFUserFunctionResult userFunctionResult = _service.WFCreatedUser(documentId);
 
             if ((userFunctionResult.Skip == false) || (executionStep == true || noneSkipStep == true))
             {
@@ -82,6 +80,7 @@ namespace RapidDoc.Activities
             context.SetValue(outputCurrentUser, (string)inputArguments["inputCurrentUser"]);
             context.SetValue(outputDocumentData, (Dictionary<String, Object>)inputArguments["documentData"]);
         }
+
 
     }
 }
