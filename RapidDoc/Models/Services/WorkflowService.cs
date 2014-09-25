@@ -496,21 +496,13 @@ namespace RapidDoc.Models.Services
             List<Array> allSteps = new List<Array>();
 
             if (activity.GetType() == typeof(WFChooseUpManager) ||
-                activity.GetType() == typeof(WFChooseUpManagerBookmark) ||
-                activity.GetType() == typeof(WFChooseStaffStructureBookmark) ||
                 activity.GetType() == typeof(WFChooseStaffStructure) ||
                 activity.GetType() == typeof(WFChooseSpecificUserFromService) ||
-                activity.GetType() == typeof(WFChooseSpecificUserFromServiceBookmark) ||
-                activity.GetType() == typeof(WFChooseSpecificUserBookmark) ||
                 activity.GetType() == typeof(WFChooseSpecificUser) ||
                 activity.GetType() == typeof(WFChooseRoleUser) ||
-                activity.GetType() == typeof(WFChooseRoleUserBookmark) ||
-                activity.GetType() == typeof(WFChooseManualExecutionBookmark) ||
                 activity.GetType() == typeof(WFChooseManualExecution) ||
                 activity.GetType() == typeof(WFChooseDocUsers) ||
-                activity.GetType() == typeof(WFChooseDocUsersBookmark) ||
-                activity.GetType() == typeof(WFChooseCreatedUser) ||
-                activity.GetType() == typeof(WFChooseCreatedUserBookmark))
+                activity.GetType() == typeof(WFChooseCreatedUser))
             {
                 myIntArray.SetValue(activity.DisplayName, 0);
                 myIntArray.SetValue(activity.Id, 1);
