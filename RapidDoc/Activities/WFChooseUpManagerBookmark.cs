@@ -77,7 +77,10 @@ namespace RapidDoc.Activities
                 context.CreateBookmark(this.DisplayName,
                     new BookmarkCallback(this.resumeBookmark));
             }
-      
+
+            outputDocumentData.Set(context, context.GetValue(this.inputDocumentData));
+            outputCurrentUser.Set(context, currentUserId);
+            outputStep.Set(context, documentStep);
         }
 
         void resumeBookmark(NativeActivityContext context, Bookmark bookmark, object obj)
