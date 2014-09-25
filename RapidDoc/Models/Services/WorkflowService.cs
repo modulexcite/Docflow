@@ -496,7 +496,19 @@ namespace RapidDoc.Models.Services
             string[] myIntArray = new string[3];
             List<Array> allSteps = new List<Array>();
 
-            if ((activity is NativeActivity) && (activity.DisplayName.IndexOf(keyForStep) > 0))
+            //if ((activity is NativeActivity) && (activity.DisplayName.IndexOf(keyForStep) > 0))
+            if (activity.GetType() == typeof(WFChooseUpManager) ||
+                activity.GetType() == typeof(WFChooseUpManagerBookmark) ||
+                activity.GetType() == typeof(WFChooseStaffStructureBookmark) ||
+                activity.GetType() == typeof(WFChooseStaffStructure) ||
+                activity.GetType() == typeof(WFChooseSpecificUserFromService) ||
+                activity.GetType() == typeof(WFChooseSpecificUserBookmark) ||
+                activity.GetType() == typeof(WFChooseSpecificUser) ||
+                activity.GetType() == typeof(WFChooseRoleUser) ||
+                activity.GetType() == typeof(WFChooseManualExecutionBookmark) ||
+                activity.GetType() == typeof(WFChooseManualExecution) ||
+                activity.GetType() == typeof(WFChooseDocUsers) ||
+                activity.GetType() == typeof(WFChooseCreatedUser))
             {
                 myIntArray.SetValue(activity.DisplayName.Replace(keyForStep, ""), 0);
                 myIntArray.SetValue(activity.Id, 1);
