@@ -453,7 +453,7 @@ namespace RapidDoc.Models.Services
                 (step != DocumentState.Closed))
             {
                 WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == documentId);
-                trackerTable.ActivityName = bookmarkName.Replace(keyForStep, "");
+                trackerTable.ActivityName = bookmarkName;
                 if (trackerTable.Users == null || trackerTable.Users.Count() == 0)
                     trackerTable.Users = listUser;
                 trackerTable.TrackerType = TrackerType.Waiting;
@@ -495,21 +495,24 @@ namespace RapidDoc.Models.Services
             string[] myIntArray = new string[3];
             List<Array> allSteps = new List<Array>();
 
-            //if ((activity is NativeActivity) && (activity.DisplayName.IndexOf(keyForStep) > 0))
             if (activity.GetType() == typeof(WFChooseUpManager) ||
                 activity.GetType() == typeof(WFChooseUpManagerBookmark) ||
                 activity.GetType() == typeof(WFChooseStaffStructureBookmark) ||
                 activity.GetType() == typeof(WFChooseStaffStructure) ||
                 activity.GetType() == typeof(WFChooseSpecificUserFromService) ||
+                activity.GetType() == typeof(WFChooseSpecificUserFromServiceBookmark) ||
                 activity.GetType() == typeof(WFChooseSpecificUserBookmark) ||
                 activity.GetType() == typeof(WFChooseSpecificUser) ||
                 activity.GetType() == typeof(WFChooseRoleUser) ||
+                activity.GetType() == typeof(WFChooseRoleUserBookmark) ||
                 activity.GetType() == typeof(WFChooseManualExecutionBookmark) ||
                 activity.GetType() == typeof(WFChooseManualExecution) ||
                 activity.GetType() == typeof(WFChooseDocUsers) ||
-                activity.GetType() == typeof(WFChooseCreatedUser))
+                activity.GetType() == typeof(WFChooseDocUsersBookmark) ||
+                activity.GetType() == typeof(WFChooseCreatedUser) ||
+                activity.GetType() == typeof(WFChooseCreatedUserBookmark))
             {
-                myIntArray.SetValue(activity.DisplayName.Replace(keyForStep, ""), 0);
+                myIntArray.SetValue(activity.DisplayName, 0);
                 myIntArray.SetValue(activity.Id, 1);
                 myIntArray.SetValue(_parallel, 2);
                 allSteps.Add(myIntArray);
