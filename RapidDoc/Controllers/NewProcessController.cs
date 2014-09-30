@@ -137,7 +137,7 @@ namespace RapidDoc.Controllers
         {
             string searchString = searchText.Trim();
 
-            if (searchString.Length > 2)
+            if (searchString.Length >= 1)
             {
                 var model = _ProcessService.GetPartialView(x => x.ProcessName.Contains(searchString));
                 

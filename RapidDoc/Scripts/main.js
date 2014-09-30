@@ -1,4 +1,4 @@
-﻿function calendar_init(url_json_calendar) {
+﻿ function calendar_init(url_json_calendar) {
     var date = new Date();
     var workScheduleId = $('#WorkScheduleId').val();
 
@@ -169,44 +169,48 @@ function grid_init(url_json) {
 }
 
 function custom_tagsinputEmpl_init(url_json) {
-    var element = document.getSelection('input[data-role=tagsinputEmpl]');
-    if (typeof (element) != 'undefined' && element != null) {
-        elt = $('input[data-role=tagsinputEmpl]');
-        elt.tagsinput({
-            itemValue: 'value',
-            itemText: 'text',
-            tagClass: function (item) {
-                return 'label label-primary bts-tags';
-            }
-        });
+    try {
+        var element = document.getSelection('input[data-role=tagsinputEmpl]');
+        if (typeof (element) != 'undefined' && element != null) {
+            elt = $('input[data-role=tagsinputEmpl]');
+            elt.tagsinput({
+                itemValue: 'value',
+                itemText: 'text',
+                tagClass: function (item) {
+                    return 'label label-primary bts-tags';
+                }
+            });
 
-        elt.tagsinput('input').typeahead({
-            valueKey: 'text',
-            prefetch: url_json,
-            template: '<p>{{text}}</p>',
-            engine: Hogan
+            elt.tagsinput('input').typeahead({
+                valueKey: 'text',
+                prefetch: url_json,
+                template: '<p>{{text}}</p>',
+                engine: Hogan
 
-        }).bind('typeahead:selected', $.proxy(function (obj, datum) {
-            this.tagsinput('add', datum);
-            this.tagsinput('input').typeahead('setQuery', '');
-        }, elt));
+            }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                this.tagsinput('add', datum);
+                this.tagsinput('input').typeahead('setQuery', '');
+            }, elt));
 
-        currentValue = $('input[data-role=tagsinputEmpl]').val();
-        if (currentValue != null) {
-            currentArrData = currentValue.split(",");
-            $('input[data-role=tagsinputEmpl]').val('');
+            currentValue = $('input[data-role=tagsinputEmpl]').val();
+            if (currentValue != null) {
+                currentArrData = currentValue.split(",");
+                $('input[data-role=tagsinputEmpl]').val('');
 
-            if (currentArrData.length > 1) {
-                for (var i = 0; i < currentArrData.length; i += 2) {
-                    var key = currentArrData[i];
-                    var numValue = i;
-                    numValue++;
-                    var value = currentArrData[numValue];
-                    if(value.length > 0)
-                        $('input[data-role=tagsinputEmpl]').tagsinput('add', { "value": key +"," + value, "text": value });
+                if (currentArrData.length > 1) {
+                    for (var i = 0; i < currentArrData.length; i += 2) {
+                        var key = currentArrData[i];
+                        var numValue = i;
+                        numValue++;
+                        var value = currentArrData[numValue];
+                        if (value.length > 0)
+                            $('input[data-role=tagsinputEmpl]').tagsinput('add', { "value": key + "," + value, "text": value });
+                    }
                 }
             }
         }
+    }
+    catch (e) { 
     }
 }
 
