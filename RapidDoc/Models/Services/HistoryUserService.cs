@@ -32,12 +32,14 @@ namespace RapidDoc.Models.Services
         private IRepository<HistoryUserTable> repo;
         private IUnitOfWork _uow;
         private readonly IAccountService _AccountService;
+        private readonly IEmplService _EmplService;
 
-        public HistoryUserService(IUnitOfWork uow, IAccountService accountService)
+        public HistoryUserService(IUnitOfWork uow, IAccountService accountService, IEmplService emplService)
         {
             _uow = uow;
             repo = uow.GetRepository<HistoryUserTable>();
             _AccountService = accountService;
+            _EmplService = emplService;
         }
         public IEnumerable<HistoryUserTable> GetAll()
         {
@@ -46,6 +48,16 @@ namespace RapidDoc.Models.Services
         public IEnumerable<HistoryUserView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<HistoryUserTable>, IEnumerable<HistoryUserView>>(GetAll());
+            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+
+            foreach(var item in items)
+            {
+                EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
+                item.CreatedEmplName = empl.FullName;
+                item.CreatedEmplTitle = empl.TitleName;
+                item.CreatedEmplDepartment = empl.DepartmentName;
+            }
+
             return items;
         }
         public IEnumerable<HistoryUserTable> GetPartial(Expression<Func<HistoryUserTable, bool>> predicate)
@@ -55,6 +67,16 @@ namespace RapidDoc.Models.Services
         public IEnumerable<HistoryUserView> GetPartialView(Expression<Func<HistoryUserTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<HistoryUserTable>, IEnumerable<HistoryUserView>>(GetPartial(predicate));
+
+            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            foreach (var item in items)
+            {
+                EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
+                item.CreatedEmplName = empl.FullName;
+                item.CreatedEmplTitle = empl.TitleName;
+                item.CreatedEmplDepartment = empl.DepartmentName;
+            }
+
             return items;
         }        
         public HistoryUserTable FirstOrDefault(Expression<Func<HistoryUserTable, bool>> predicate)
@@ -63,7 +85,13 @@ namespace RapidDoc.Models.Services
         }
         public HistoryUserView FirstOrDefaultView(Expression<Func<HistoryUserTable, bool>> predicate)
         {
-            return Mapper.Map<HistoryUserTable, HistoryUserView>(FirstOrDefault(predicate));
+            var item = Mapper.Map<HistoryUserTable, HistoryUserView>(FirstOrDefault(predicate));
+            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
+            item.CreatedEmplName = empl.FullName;
+            item.CreatedEmplTitle = empl.TitleName;
+            item.CreatedEmplDepartment = empl.DepartmentName;
+            return item;
         }
         public void SaveDomain(HistoryUserTable domainTable)
         {
@@ -95,7 +123,14 @@ namespace RapidDoc.Models.Services
         }
         public HistoryUserView FindView(Guid id)
         {
-            return Mapper.Map<HistoryUserTable, HistoryUserView>(Find(id));
+            var item = Mapper.Map<HistoryUserTable, HistoryUserView>(Find(id));
+            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
+            item.CreatedEmplName = empl.FullName;
+            item.CreatedEmplTitle = empl.TitleName;
+            item.CreatedEmplDepartment = empl.DepartmentName;
+
+            return item;
         }
     }
 }

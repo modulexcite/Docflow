@@ -170,6 +170,9 @@ namespace RapidDoc.Models.ViewModels
         public Guid DocumentTableId { get; set; }
         public string ApplicationCreatedUser { get; set; }
         public string Description { get; set; }
+        public string CreatedEmplName { get; set; }
+        public string CreatedEmplTitle { get; set; }
+        public string CreatedEmplDepartment { get; set; }
     }
 
     public class SearchView : BasicView
