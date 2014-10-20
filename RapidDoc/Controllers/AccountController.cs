@@ -48,6 +48,7 @@ namespace RapidDoc.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
+        [ValidateInput(false)]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)

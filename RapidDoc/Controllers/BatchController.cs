@@ -23,7 +23,7 @@ namespace RapidDoc.Controllers
             IReviewDocLogService _ReviewDocLogService = DependencyResolver.Current.GetService<IReviewDocLogService>();
             IWorkScheduleService _WorkScheduleService = DependencyResolver.Current.GetService<IWorkScheduleService>();
             IAccountService _AccountService = DependencyResolver.Current.GetService<IAccountService>();
-            var allDocument = _Documentservice.GetPartial(x => x.CompanyTable.AliasCompanyName == companyId && x.DocumentNum == "RD0000965");
+            var allDocument = _Documentservice.GetPartial(x => x.CompanyTable.AliasCompanyName == companyId);
 
             if (allDocument == null)
                 return;

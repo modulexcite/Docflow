@@ -115,7 +115,7 @@
                             <ul>
                                 @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)
                             {
-                                    <li>@UIElementRes.UIElement.DocumentReject @history.CreatedBy @Html.DateTimeLocal(history.CreatedDate)</li>
+                                    <li>@UIElementRes.UIElement.DocumentReject <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr> @Html.DateTimeLocal(history.CreatedDate)</li>
                             }
                             </ul>
                     }
@@ -126,7 +126,7 @@
                                     <ul>
                                         @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders)
                                     {
-                                            <li>@UIElementRes.UIElement.DocumentAddReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), @history.CreatedBy</li>
+                                            <li>@UIElementRes.UIElement.DocumentAddReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr></li>
                                     }
                                     </ul>
                             }
@@ -137,7 +137,7 @@
                                     <ul>
                                         @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders)
                                     {
-                                            <li>@UIElementRes.UIElement.DocumentRemoveReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), @history.CreatedBy</li>
+                                            <li>@UIElementRes.UIElement.DocumentRemoveReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr></li>
                                     }
                                     </ul>
                             }
@@ -158,7 +158,7 @@
                     <div class="hidden-print">
                         @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
                             <div class="row">
-                                <div class="col-md-7"><kbd>Ctrl + Enter</kbd></div>
+                                <div class="col-md-7 visible-lg-inline"><kbd>Ctrl + Enter</kbd></div>
                                 <div class="col-md-5"><input class="btn btn-primary btn-xs btn-block pull-right" id="saveCommentBtn" type="submit" value=@UIElementRes.UIElement.Save></div>
                             </div>
                         </div>
@@ -238,7 +238,7 @@
 </script>
     <br class="hidden-print">
     <br class="hidden-print">
-    <div class="row">
+    <div class="row visible-lg-inline">
         <div id="qrcode" class="pull-right"></div>
     </div>
 
@@ -312,4 +312,9 @@
                 document.getElementById('saveCommentBtn').click();
             }
         });
+
+        $('.popover-link').popover({
+            trigger: 'hover',
+            placement: 'auto'
+        })
     }
