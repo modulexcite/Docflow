@@ -62,7 +62,7 @@ namespace RapidDoc.Controllers
             return PartialView("_Empty");
         }
 
-        public ActionResult GetManualRequest(RapidDoc.Models.ViewModels.USR_REQ_UBP_RequestForCompetitonProc_View model)
+        public ActionResult GetManualRequest(RapidDoc.Models.ViewModels.USR_REQ_KD_RequestForCompetitonProc_View model)
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
@@ -71,10 +71,70 @@ namespace RapidDoc.Controllers
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
                 {
-                    if (current.Any(x => x.ActivityName == "Мылымко С.С."))
+                    if (current.Any(x => x.ActivityName == "Начальник ОКЗ КД"))
                     {
                         ViewBag.ServiceIncidentList = _ServiceIncidentService.GetDropListServiceIncident(String.Empty);
                         return PartialView("USR_REQ_UBP_RequestForCompetitonProc_Edit_Manual", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualRequest1(RapidDoc.Models.ViewModels.USR_REQ_KD_RequestForCompetitonProcUZL_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник ОКЗ КД"))
+                    {
+                        ViewBag.ServiceIncidentList = _ServiceIncidentService.GetDropListServiceIncident(String.Empty);
+                        return PartialView("USR_REQ_UBP_RequestForCompetitonProcUZL_Edit_Manual", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualRequest2(RapidDoc.Models.ViewModels.USR_REQ_KD_RequestForCompetitonProcServices_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник ОКЗ КД"))
+                    {
+                        ViewBag.ServiceIncidentList = _ServiceIncidentService.GetDropListServiceIncident(String.Empty);
+                        return PartialView("USR_REQ_KD_RequestForCompetitonProcServices_Edit_Manual", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualRequest3(RapidDoc.Models.ViewModels.USR_REQ_KD_RequestForCompetitonProcServicesBGP_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник ОКЗ КД"))
+                    {
+                        ViewBag.ServiceIncidentList = _ServiceIncidentService.GetDropListServiceIncident(String.Empty);
+                        return PartialView("USR_REQ_KD_RequestForCompetitonProcServicesBGP_Edit_Manual", model);
                     }
                 }
             }

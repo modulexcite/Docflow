@@ -128,8 +128,32 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_USH_RequestForReclassification_Table> USR_REQ_USH_RequestForReclassification_Table { get; set; }
         public DbSet<USR_REQ_UBP_RequestForExportWastes_Table> USR_REQ_UBP_RequestForExportWastes_Table { get; set; }
         public DbSet<USR_REQ_UBP_RequestForGetConclusion_Table> USR_REQ_UBP_RequestForGetConclusion_Table { get; set; }
-        public DbSet<USR_REQ_UBP_RequestForCompetitonProc_Table> USR_REQ_UBP_RequestForCompetitonProc_Table { get; set; }
-
+        public DbSet<USR_REQ_KD_RequestForCompetitonProc_Table> USR_REQ_KD_RequestForCompetitonProc_Table { get; set; }
+        public DbSet<USR_REQ_KD_RequestForCompetitonProcUZL_Table> USR_REQ_KD_RequestForCompetitonProcUZL_Table { get; set; }
+        public DbSet<USR_REQ_KD_RequestForCompetitonProcServices_Table> USR_REQ_KD_RequestForCompetitonProcServices_Table { get; set; }
+        public DbSet<USR_REQ_KD_RequestForCompetitonProcServicesBGP_Table> USR_REQ_KD_RequestForCompetitonProcServicesBGP_Table { get; set; }
+        public DbSet<USR_REQ_SK_RequestForRegContactNonresident_Table> USR_REQ_SK_RequestForRegContactNonresident_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForImportTMCZIF_Table> USR_REQ_UB_RequestForImportTMCZIF_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForImportORZZIF_Table> USR_REQ_UB_RequestForImportORZZIF_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForImportTMCNoneZIF_Table> USR_REQ_UB_RequestForImportTMCNoneZIF_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForImportTMCUZL_Table> USR_REQ_UB_RequestForImportTMCUZL_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForInOutNotebook_Table> USR_REQ_UB_RequestForInOutNotebook_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForCarAccess_Table> USR_REQ_UB_RequestForCarAccess_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForExportAsset_Table> USR_REQ_UB_RequestForExportAsset_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForExportZIFOre_Table> USR_REQ_UB_RequestForExportZIFOre_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForExportOSPVHZIF_Table> USR_REQ_UB_RequestForExportOSPVHZIF_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForExportItems_Table> USR_REQ_UB_RequestForExportItems_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForHU_Table> USR_REQ_UB_RequestForHU_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForMovementItems_Table> USR_REQ_UB_RequestForMovementItems_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForMovementAssets_Table> USR_REQ_UB_RequestForMovementAssets_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForTemporaryORZ_Table> USR_REQ_UB_RequestForTemporaryORZ_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForTemporaryAccess_Table> USR_REQ_UB_RequestForTemporaryAccess_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForExportItemFromZIF_Table> USR_REQ_UB_RequestForExportItemFromZIF_Table { get; set; }
+        public DbSet<USR_REQ_UB_RequestForExportItemFromORZ_Table> USR_REQ_UB_RequestForExportItemFromORZ_Table { get; set; }
+        public DbSet<USR_REQ_UBUO_RequestForInspectionPropertyItems_Table> USR_REQ_SK_RequestForInspectionPropertyItems_Table { get; set; }
+        public DbSet<USR_REQ_UBUO_RequestForInspectionPropertyAssets_Table> USR_REQ_SK_RequestForInspectionPropertyAssets_Table { get; set; }
+        public DbSet<USR_REQ_UBUO_RequestForClearenceLetter_Table> USR_REQ_SK_RequestForClearenceLetter_Table { get; set; }
+        public DbSet<USR_REQ_UBUO_RequestForReferenceTax_Table> USR_REQ_SK_RequestForReferenceTax_Table { get; set; }
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();

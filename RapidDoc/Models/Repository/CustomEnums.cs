@@ -413,4 +413,38 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Мырзакольсорский пром.водозабор")]
         Element3 = 2
     }
+
+    public enum ContragentType : byte
+    {
+        [Display(Name = "Клиент")]
+        Сustomer = 0,
+
+        [Display(Name = "Поставщик")]
+        Provider = 1,
+
+        [Display(Name = "Клиент\\Поставщик")]
+        Both = 2
+    }
+
+    public enum ObjectAccess : byte
+    {
+        [Display(Name = "АБК")]
+        Element1 = 0,
+
+        [Display(Name = "ЗИФ/РЗ")]
+        Element2 = 1,
+
+        [Display(Name = "ЗИФ/ОРЗ")]
+        Element3 = 2,
+
+        [Display(Name = "Пром. Площадка")]
+        Element4 = 2
+    }
+
+    public enum Warehouse : byte
+    {
+        [Display(Name = "Склад")]
+        Element1 = 0
+    }
+
 }

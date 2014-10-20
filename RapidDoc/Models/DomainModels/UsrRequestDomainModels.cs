@@ -1509,7 +1509,7 @@ namespace RapidDoc.Models.DomainModels
     #endregion
 
     #region КД
-    public class USR_REQ_UBP_RequestForCompetitonProc_Table : BasicDocumentTable
+    public class USR_REQ_KD_RequestForCompetitonProc_Table : BasicDocumentTable
     {
         [Required]
         public string NamePurchase { get; set; }
@@ -1529,6 +1529,750 @@ namespace RapidDoc.Models.DomainModels
         public string Destination { get; set; }
 
         public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_KD_RequestForCompetitonProcUZL_Table : BasicDocumentTable
+    {
+        [Required]
+        public string NamePurchase { get; set; }
+
+        [Required]
+        public string BudgetArticle { get; set; }
+
+        public string Project { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+
+        [Required]
+        public string Circumstance { get; set; }
+
+        [Required]
+        public string Destination { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_KD_RequestForCompetitonProcServices_Table : BasicDocumentTable
+    {
+        [Required]
+        public string NamePurchase { get; set; }
+
+        [Required]
+        public string BudgetArticle { get; set; }
+
+        public string Project { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+
+        [Required]
+        public string Circumstance { get; set; }
+
+        [Required]
+        public string Destination { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_KD_RequestForCompetitonProcServicesBGP_Table : BasicDocumentTable
+    {
+        [Required]
+        public string NamePurchase { get; set; }
+
+        [Required]
+        public string BudgetArticle { get; set; }
+
+        public string Project { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+
+        [Required]
+        public string Circumstance { get; set; }
+
+        [Required]
+        public string Destination { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+    }
+    #endregion
+
+    #region СК
+
+    public class USR_REQ_SK_RequestForRegContactNonresident_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public DateTime OrderDate { get; set; }
+
+        [Required]
+        public string  Department { get; set; }
+
+        [Required]
+        public ContragentType ContragentType { get; set; }
+
+        [Required]
+        public string ContragentName { get; set; }
+
+        [Required]
+        public string DataMainContract { get; set; }
+
+        [Required]
+        public string DataAdditionalContract { get; set; }
+    }
+
+    #endregion
+
+    #region УБ
+
+    public class USR_REQ_UB_RequestForImportTMCZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForImportORZZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForImportTMCNoneZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForImportTMCUZL_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }
+
+    }
+
+    public class USR_REQ_UB_RequestForInOutNotebook_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Organization { get; set; }
+
+        [Required]
+        public string Model { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public ObjectAccess ObjectAccess { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime FromDate { get; set; }
+
+        [Required]
+        public DateTime ToDate { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForCarAccess_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public DateTime FromDate { get; set; }
+
+        [Required]
+        public DateTime ToDate { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForExportAsset_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Number { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }
+
+    }
+
+    public class USR_REQ_UB_RequestForExportZIFOre_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }
+
+    }
+
+    public class USR_REQ_UB_RequestForExportOSPVHZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }
+    
+    }
+
+
+    public class USR_REQ_UB_RequestForExportItems_Table : BasicDocumentTable
+    {
+        [Required]
+        public string ItemName { get; set; }
+
+        [Required]
+        public string ItemNumber { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public Warehouse Warehouse { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string NamesMOL { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        
+        public bool Post1 { get; set; }  
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }
+
+    }
+
+    public class USR_REQ_UB_RequestForHU_Table : BasicDocumentTable
+    {
+        [Required]
+        public string ItemName { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public Warehouse Warehouse { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string NamesMOL { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForMovementItems_Table : BasicDocumentTable
+    {
+        [Required]
+        public string ItemName { get; set; }
+
+        [Required]
+        public string ItemNumber { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public Warehouse Warehouse { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }        
+    }
+
+    public class USR_REQ_UB_RequestForMovementAssets_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Number { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }    
+    }
+
+    public class USR_REQ_UB_RequestForTemporaryORZ_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Company { get; set; }
+
+        [Required]
+        public DateTime FromDate { get; set; }
+
+        [Required]
+        public DateTime ToDate { get; set; }
+
+        [Required]
+        public string Time { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForTemporaryAccess_Table : BasicDocumentTable
+    {
+        [Required]
+        public ObjectAccess ObjectAccess { get; set; }
+        
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Company { get; set; }
+
+        [Required]
+        public DateTime FromDate { get; set; }
+
+        [Required]
+        public DateTime ToDate { get; set; }
+
+    }
+
+    public class USR_REQ_UB_RequestForExportItemFromZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string ItemName { get; set; }
+
+        [Required]
+        public string ItemNumber { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; } 
+
+
+    }
+
+    public class USR_REQ_UB_RequestForExportItemFromORZ_Table : BasicDocumentTable
+    {
+        [Required]
+        public string ItemName { get; set; }
+
+        [Required]
+        public string ItemNumber { get; set; }
+
+        [Required]
+        public string DeparturePlace { get; set; }
+
+        [Required]
+        public string DestinationPlace { get; set; }
+
+        [Required]
+        public string CarBrand { get; set; }
+
+        [Required]
+        public string NamesPeople { get; set; }
+
+        [Required]
+        public string Aim { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+
+        public bool Post1 { get; set; }
+        public bool Post2 { get; set; }
+        public bool Post3 { get; set; }
+        public bool Post4 { get; set; }
+        public bool Post5 { get; set; }
+        public bool Post6 { get; set; }
+
+
+    }
+    #endregion 
+
+    #region УБУиО
+
+    public class USR_REQ_UBUO_RequestForInspectionPropertyItems_Table : BasicDocumentTable
+    { 
+        
+    }
+
+    public class USR_REQ_UBUO_RequestForInspectionPropertyAssets_Table : BasicDocumentTable
+    {
+
+    }
+
+    public class USR_REQ_UBUO_RequestForClearenceLetter_Table : BasicDocumentTable
+    {
+        [Required]
+        public string User { get; set; }
+
+        [Required]
+        public string Number { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string FullName { get; set; }
+
+        [Required]
+        public string Contract { get; set; }
+
+        [Required]
+        public string NameItem { get; set; }
+
+        [Required]
+        public string Count { get; set; }
+
+        [Required]
+        public DateTime LetterDate { get; set; }
+
+    }
+
+    public class USR_REQ_UBUO_RequestForReferenceTax_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Customer { get; set; }
+
+        [Required]
+        public string ForNotice { get; set; }
+        
+        [Required]
+        public string Aim { get; set; }    
     }
     #endregion
 

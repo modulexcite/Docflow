@@ -2085,7 +2085,7 @@ namespace RapidDoc.Models.ViewModels
 
     #region КД
 
-    public class USR_REQ_UBP_RequestForCompetitonProc_View : BasicDocumentView
+    public class USR_REQ_KD_RequestForCompetitonProc_View : BasicDocumentView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Наименование закупа")]
@@ -2115,12 +2115,1015 @@ namespace RapidDoc.Models.ViewModels
         public string UserChooseManual1 { get; set; }
     }
 
+    public class USR_REQ_KD_RequestForCompetitonProcUZL_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование закупа")]
+        public string NamePurchase { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Статья бюджета")]
+        public string BudgetArticle { get; set; }
+
+        [Display(Name = "Проект")]
+        public string Project { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Общая сумма, выделенная для закупки (в тенге, без учета НДС)")]
+        public string Amount { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Условия оплаты")]
+        public string Circumstance { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Место поставки товара")]
+        public string Destination { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Исполнитель")]
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_KD_RequestForCompetitonProcServices_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование закупа")]
+        public string NamePurchase { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Статья бюджета")]
+        public string BudgetArticle { get; set; }
+
+        [Display(Name = "Проект")]
+        public string Project { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Общая сумма, выделенная для закупки (в тенге, без учета НДС)")]
+        public string Amount { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Условия оплаты")]
+        public string Circumstance { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Место поставки товара")]
+        public string Destination { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Исполнитель")]
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_KD_RequestForCompetitonProcServicesBGP_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование закупа")]
+        public string NamePurchase { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Статья бюджета")]
+        public string BudgetArticle { get; set; }
+
+        [Display(Name = "Проект")]
+        public string Project { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Общая сумма, выделенная для закупки (в тенге, без учета НДС)")]
+        public string Amount { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Условия оплаты")]
+        public string Circumstance { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Место поставки товара")]
+        public string Destination { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Исполнитель")]
+        public string UserChooseManual1 { get; set; }
+    }
     #endregion
 
     #region СК
+
+    public class USR_REQ_SK_RequestForRegContactNonresident_View : BasicDocumentView
+    {
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Инициатор Ф.И.О.")]
+        public string Users { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата создания заявки")]
+        public DateTime? OrderDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение инициатор")]
+        public string Department { get; set; }
+
+        [Display(Name = "Вид контрагента")]
+        public ContragentType ContragentType { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование клиента\\поставщика")]
+        public string ContragentName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Номер и дата основного контракта")]
+        public string DataMainContract { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Номер и дата приложения\\доп.соглащения")]
+        public string DataAdditionalContract { get; set; }
+
+    }
+
+    #endregion
+
+    #region УБ
+
+    public class USR_REQ_UB_RequestForImportTMCZIF_View : BasicDocumentView
+    {
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
     
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
 
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForImportORZZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForImportTMCNoneZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+
+    }
+
+    public class USR_REQ_UB_RequestForImportTMCUZL_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForInOutNotebook_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование организации")]
+        public string Organization { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Модель ноутбука")]
+        public string Model { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО владельца")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Объект доступа")]
+        public ObjectAccess ObjectAccess { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Объект доступа")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "С даты")]
+        public DateTime? FromDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "До даты")]
+        public DateTime? ToDate { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForCarAccess_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО(полностью)")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Должность")]
+        public string Position { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "С даты")]
+        public DateTime? FromDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "До даты")]
+        public DateTime? ToDate { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForExportAsset_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ОС")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Инвентарный номер ОС")]
+        public string Number { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "МОЛ")]
+        public string UserChooseManual1 { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForExportZIFOre_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForExportOSPVHZIF_View : BasicDocumentView
+    {
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+
+    }
+
+    public class USR_REQ_UB_RequestForExportItems_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ")]
+        public string ItemName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Номенклатурный номер ТМЦ")]
+        public string ItemNumber { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Склад")]
+        public Warehouse Warehouse { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Руководитель МОЛ-а указанного склада")]
+        public string NamesMOL { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+
+    }
+
+    public class USR_REQ_UB_RequestForHU_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ")]
+        public string ItemName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Склад")]
+        public Warehouse Warehouse { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Руководитель МОЛ-а указанного склада")]
+        public string NamesMOL { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForMovementItems_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ")]
+        public string ItemName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Номенклатурный номер ТМЦ")]
+        public string ItemNumber { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Склад")]
+        public Warehouse Warehouse { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Руководитель МОЛ-а указанного склада")]
+        public string UserChooseManual1 { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForMovementAssets_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ОС")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Инвентарный номер ОС")]
+        public string Number { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "МОЛ")]
+        public string UserChooseManual1 { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForTemporaryORZ_View : BasicDocumentView
+    {
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО(полностью)")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Должность")]
+        public string Position { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Организация")]
+        public string Company { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "С даты")]
+        public DateTime? FromDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "До даты")]
+        public DateTime? ToDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Время нахождения в ОРЗ")]
+        public string Time { get; set; }
+    }
+
+    public class USR_REQ_UB_RequestForTemporaryAccess_View : BasicDocumentView
+    {
+        [Display(Name = "Объект доступа")]
+        public ObjectAccess ObjectAccess { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО(полностью)")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Должность")]
+        public string Position { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Организация")]
+        public string Company { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "С даты")]
+        public DateTime? FromDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "До даты")]
+        public DateTime? ToDate { get; set; } 
+    }
+
+    public class USR_REQ_UB_RequestForExportItemFromZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ")]
+        public string ItemName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Номенклатурный номер ТМЦ")]
+        public string ItemNumber { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+
+    }
+
+    public class USR_REQ_UB_RequestForExportItemFromORZ_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ")]
+        public string ItemName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Номенклатурный номер ТМЦ")]
+        public string ItemNumber { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт отправки")]
+        public string DeparturePlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string DestinationPlace { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Марка автомобиля, гос.номер")]
+        public string CarBrand { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО водителя, сопровождающих лиц")]
+        public string NamesPeople { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Aim { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+
+        [Display(Name = "Пост №1 (Блокпост АТК)")]
+        public bool Post1 { get; set; }
+        [Display(Name = "Пост №2 (Проходная ЗИФ)")]
+        public bool Post2 { get; set; }
+        [Display(Name = "Пост №3 (КПП Ж/Д ЗИФ)")]
+        public bool Post3 { get; set; }
+        [Display(Name = "Пост №4 (Пристройка КИ ЗИФ)")]
+        public bool Post4 { get; set; }
+        [Display(Name = "Пост №6 (КПП Транспортный АТК)")]
+        public bool Post5 { get; set; }
+        [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
+        public bool Post6 { get; set; }
+
+    }
+    #endregion
+
+    #region УБУиО
+
+    public class USR_REQ_UBUO_RequestForInspectionPropertyItems_View : BasicDocumentView
+    {
+
+    }
+
+    public class USR_REQ_UBUO_RequestForInspectionPropertyAssets_View : BasicDocumentView
+    {
+
+    }
+
+    public class USR_REQ_UBUO_RequestForClearenceLetter_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пользователь")]
+        public string User { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Табельный номер")]
+        public string Number { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение-инициатор")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Полное наименование юридического или физического лица, перед которым представляються интересы Товарищества")]
+        public string FullName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "№ и дата Договора")]
+        public string Contract { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наименование ТМЦ/ОС")]
+        public string NameItem { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Количество")]
+        public string Count { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата оформления доверености")]
+        public DateTime? LetterDate { get; set; }
+
+    }
+
+    public class USR_REQ_UBUO_RequestForReferenceTax_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Заказчик")]
+        public string Customer { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Для предъявления")]
+        public string ForNotice { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "В целях")]
+        public string Aim { get; set; }
+    }
     #endregion
  
 }
