@@ -238,7 +238,7 @@ namespace RapidDoc.Models.Services
         }
         public void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
-            Activity activity = ChooseRightWorkflow(TableName);
+            Activity activity = ChooseRightWorkflow(TableName, documentId);
             _WorkflowTrackerService.SaveTrackList(documentId, printActivityTree(activity));
             SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
             StartAndPersistInstance(documentId, DocumentState.Agreement, documentData, instanceStore, activity);
@@ -247,7 +247,7 @@ namespace RapidDoc.Models.Services
         }
         public void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
-            Activity activity = ChooseRightWorkflow(TableName);
+            Activity activity = ChooseRightWorkflow(TableName, documentId);
             this.printActivityTree(activity);
             SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
             LoadAOrCompleteInstance(documentId, DocumentState.Agreement, TrackerType.Approved, documentData, instanceStore, activity);
@@ -257,7 +257,7 @@ namespace RapidDoc.Models.Services
         }
         public void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
-            Activity activity = ChooseRightWorkflow(TableName);
+            Activity activity = ChooseRightWorkflow(TableName, documentId);
             this.printActivityTree(activity);
             SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
             LoadAOrCompleteInstance(documentId, DocumentState.Cancelled, TrackerType.Cancelled, documentData, instanceStore, activity);
@@ -315,7 +315,7 @@ namespace RapidDoc.Models.Services
 
             #endregion Workflow Delegates
 
-            application.Persist();
+            //application.Persist();
             application.Run();
             instanceUnloaded.WaitOne();
 
@@ -379,7 +379,7 @@ namespace RapidDoc.Models.Services
                     {
                         application.ResumeBookmark(bookmark.ActivityName, inputArguments);
 
-                        application.Persist();
+                        //application.Persist();
                         instanceUnloaded.WaitOne();             
                     }
                 }
@@ -443,13 +443,21 @@ namespace RapidDoc.Models.Services
                 }
             }
         }
-        public Activity ChooseRightWorkflow(string _tableName)
+        public Activity ChooseRightWorkflow(string _tableName, Guid documentId)
         {
+            DocumentTable documentTable = _DocumentService.Find(documentId);
+            FileTable fileWF = _DocumentService.GetAllTemplatesDocument(documentTable.ProcessTableId).FirstOrDefault();
+            System.IO.Stream stream = new System.IO.MemoryStream(fileWF.Data);
+            System.Xaml.XamlXmlReader xamlReader = new System.Xaml.XamlXmlReader(stream, new System.Xaml.XamlXmlReaderSettings { LocalAssembly = System.Reflection.Assembly.GetExecutingAssembly() });
+            return System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, new System.Activities.XamlIntegration.ActivityXamlServicesSettings { CompileExpressions = true} );
+
+            /*
             Type type = Type.GetType("RapidDoc.Activities." + _tableName);
             if (type != null)
                 return Activator.CreateInstance(type) as Activity;
 
             return null;
+            */
         }
         public void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUserId, string activityId, bool useManual, int slaOffset, bool executionStep)
         {

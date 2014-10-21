@@ -104,6 +104,9 @@ namespace RapidDoc.Models.DomainModels
         public byte[] Thumbnail { get; set; }
         public string ContentType { get; set; }
         public int ContentLength { get; set; }
+        public string VersionName { get; set; }
+        public string Version { get; set; }
+        public string VersionComments { get; set; }
     }
 
     public class EmailParameterTable : BasicTable

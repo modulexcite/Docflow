@@ -1,0 +1,13 @@
+﻿@model List<RapidDoc.Models.DomainModels.FileTable>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td class="hidden fileId" id="@item.Id">@item.Id</td>
+        <td>@item.FileName</td>
+        <td class="edit versionName">@item.VersionName</td>
+        <td class="edit version">@item.Version</td>
+        <td class="edit versionComments">@item.VersionComments</td>
+        <td><a href=@Url.Action("DeleteFileWF", new { id = item.Id, processId = item.DocumentFileId })><span class="fa fa-trash-o fa-lg"></span></a></td>
+    </tr>
+}

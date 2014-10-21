@@ -124,7 +124,7 @@ namespace RapidDoc.Controllers
             excelWorksheet = (Excel.Worksheet)excelWorkbook.ActiveSheet;
 
             Excel.Range range = excelWorksheet.get_Range("ReportDate");
-            range.Value = model.StartDate.ToShortDateString() + " - " + model.EndDate.ToShortDateString();
+            range.Value = model.StartDate.ToShortDateString() + " - " + model.EndDate.AddDays(-1).ToShortDateString();
 
             foreach (var line in gridData)
             {

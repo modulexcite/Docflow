@@ -40,6 +40,7 @@ namespace RapidDoc.Models.Services
         SLAStatusList SLAStatus(Guid documentId, string currentUserId = "", ApplicationUser user = null);
         void SaveSignData(IEnumerable<WFTrackerTable> trackerTables, TrackerType trackerType);
         Guid SaveFile(FileTable file);
+        void UpdateFile(FileTable file);
         bool FileContains(Guid documentFileId);
         FileTable GetFile(Guid Id);
         IEnumerable<FileTable> GetAllFilesDocument(Guid documentFileId);
@@ -702,6 +703,16 @@ namespace RapidDoc.Models.Services
             _uow.Save();
 
             return file.Id;
+        }
+
+        public void UpdateFile(FileTable file)
+        {
+            string userId = HttpContext.Current.User.Identity.GetUserId();
+            file.ApplicationUserModifiedId = userId;
+            file.ModifiedDate = DateTime.UtcNow;
+
+            _uow.GetRepository<FileTable>().Update(file);
+            _uow.Save();
         }
 
         public FileTable GetFile(Guid Id)

@@ -206,13 +206,13 @@ namespace RapidDoc.Controllers
             var statuses = new List<RapidDoc.Controllers.DocumentController.ViewDataUploadFilesResult>();
             var files = _DocumentService.GetAllFilesDocument(id);
 
-            foreach (var file in files)
+            foreach (var file in files.Where(x => x.ContentType != "APPLICATION/XAML+XML"))
             {
                 var thumbnail = new byte[] { };
                 System.IO.FileStream inFile;
                 byte[] binaryData;
 
-                if (file.Thumbnail.Length == 0)
+                if (file.Thumbnail != null && file.Thumbnail.Length == 0)
                 {
                     inFile = new System.IO.FileStream(Server.MapPath("~/Content/FileUpload/content-types/64/Text.png"),
                                 System.IO.FileMode.Open,
@@ -309,6 +309,67 @@ namespace RapidDoc.Controllers
             result.ContentType = "text/plain";
          
             return result;
+        }
+
+        [HttpPost]
+        public ActionResult FileUploadWF(HttpPostedFileBase fileWF, Guid id)
+        {
+            if (fileWF != null)
+            {
+                if (fileWF != null && fileWF.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(fileWF.FileName);
+                    string contentType = fileWF.ContentType.ToString().ToUpper();
+                    BinaryReader binaryReader = new BinaryReader(fileWF.InputStream);
+                    byte[] data = binaryReader.ReadBytes(fileWF.ContentLength);
+
+                    FileTable doc = new FileTable();
+                    doc.DocumentFileId = id;
+                    doc.FileName = fileName;
+                    doc.ContentType = contentType;
+                    doc.ContentLength = fileWF.ContentLength;
+                    doc.Data = data;
+                    doc.Version = "1.0.0";
+                    doc.VersionName = "Version 1";
+                    _DocumentService.SaveFile(doc);
+
+                    return DownloadFileWF(id);
+                }
+            }
+
+            return null;
+        }
+
+        public ActionResult DownloadFileWF(Guid processId)
+        {
+            var files = _DocumentService.GetAllFilesDocument(processId).Where(x => x.ContentType == "APPLICATION/XAML+XML").ToList();
+            return PartialView("_DownloadFileWF", files);
+        }
+
+        public ActionResult DeleteFileWF(Guid id, Guid processId)
+        {
+            _DocumentService.DeleteFile(id);
+            var files = _DocumentService.GetAllFilesDocument(processId).Where(x => x.ContentType == "APPLICATION/XAML+XML").ToList();
+            return RedirectToAction("Edit", new { id = processId });
+        }
+
+        [HttpPost]
+        public void UpdateFileWF(Guid id, string versionName, string version, string versionComments)
+        {
+            FileTable file = _DocumentService.GetFile(id);
+
+            if(file != null)
+            {
+                if(versionName != "undefined")
+                    file.VersionName = versionName;
+
+                if (version != "undefined")
+                    file.Version = version;
+
+                if (versionComments != "undefined")
+                    file.VersionComments = versionComments;
+                _DocumentService.UpdateFile(file);
+            }
         }
 
         private byte[] GetThumbnail(byte[] fileData, string contentType)

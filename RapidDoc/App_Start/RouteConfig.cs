@@ -46,6 +46,18 @@ namespace RapidDoc
                 defaults: new { controller = "Document", action = "DeleteFile", id = UrlParameter.Optional }
             ).RouteHandler = new DefaultMvcRouteHandler();
 
+            routes.MapRoute(
+                name: "FileUploadWF",
+                url: "Process/FileUploadWF/{id}",
+                defaults: new { controller = "Process", action = "FileUploadWF", id = UrlParameter.Optional }
+            ).RouteHandler = new DefaultMvcRouteHandler();
+
+            routes.MapRoute(
+                name: "FileUpdateWF",
+                url: "Process/UpdateFileWF/{id}",
+                defaults: new { controller = "Process", action = "UpdateFileWF", id = UrlParameter.Optional }
+            ).RouteHandler = new DefaultMvcRouteHandler();
+
             foreach (Route r in routes)
             {
                 if (!(r.RouteHandler is DefaultMvcRouteHandler) && !(r.RouteHandler is System.Web.Http.WebHost.HttpControllerRouteHandler)

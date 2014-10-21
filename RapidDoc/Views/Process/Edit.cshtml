@@ -83,6 +83,30 @@
             @Html.TextBoxFor(model => model.MandatoryNumberFiles, new { @class = "form-control bfh-number" })
             @Html.ValidationMessageFor(model => model.MandatoryNumberFiles)
         </div>
+
+        <h3>Workflow</h3>
+        @using (Ajax.BeginForm("FileUploadWF", "Process", new AjaxOptions() { HttpMethod = "POST" }, new { id = "formWF", enctype = "multipart/form-data" }))
+        {
+            <input type="file" name="fileWF"><br>
+            <button id="buttonSubmitWF" type="button" class="btn btn-default">Upload File to Server</button>
+        }
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="hidden"></th>
+                    <th style="width: 30%;">File Name</th>
+                    <th style="width: 20%;">Name</th>
+                    <th style="width: 5%;">Version</th>
+                    <th style="width: 40%;">Comments</th>
+                    <th style="width: 5%;"></th>
+                </tr>
+            </thead>
+            <tbody id="downloadWFTable">
+                @Html.Action("DownloadFileWF", new { processId = Model.Id })
+            </tbody>
+        </table>
+
+
         @Html.HiddenFor(model => model.Id, new { @id = "documentFileId" })
         <br>
         <h3>@UIElementRes.UIElement.Templates</h3>
@@ -197,4 +221,72 @@
 }
 @section jslaunch {
     selectpicker_init();
+
+    $("#buttonSubmitWF").click(function(){
+        var formData = new FormData();
+        formData.append('fileWF', $("input[type='file'][name='fileWF']")[0].files[0]);     
+
+        $.ajax({
+             type: 'POST',
+             url: '/Process/FileUploadWF/' + '@Model.Id',
+             data: formData,
+             contentType: false,
+             processData: false,
+             success: function(response) {
+                $("input[type='file'][name='fileWF']").val('');
+                $('#downloadWFTable').html(response);
+                editFileUploadData();
+             }
+        });
+    });
+
+    editFileUploadData();
+
+    function editFileUploadData() {
+        $('td.edit').click(function(){
+            if($('#editbox').length>0) {return false}
+
+            $('.ajax').html($('.ajax input').val());
+            $('.ajax').removeClass('ajax');
+            $(this).addClass('ajax');
+            $(this).html('<input id="editbox" size="'+ $(this).text().length+'" value="' + $(this).text() + '" type="text">');
+            $('#editbox').focus();
+        });
+
+        $(document).on('blur', '#editbox', function(){
+            $('.ajax').html($('.ajax input').val());
+            $('.ajax').removeClass('ajax');
+        });
+
+        $('td.edit').keypress(function(event){
+            if(event.which == 10 || event.which == 13)
+            {
+                event.preventDefault();
+                var rowId = $(this).closest("tr").find('.fileId').attr('id');
+                var versionName = $(this).closest("tr").find('.versionName').find('#editbox').val();
+                var version = $(this).closest("tr").find('.version').find('#editbox').val();
+                var versionComments = $(this).closest("tr").find('.versionComments').find('#editbox').val();
+
+                var formData = new FormData();
+                formData.append('versionName', versionName);
+                formData.append('version', version);
+                formData.append('versionComments', versionComments);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Process/UpdateFileWF/' + rowId,
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                    }
+                });
+
+                $('.ajax').html($('.ajax input').val());
+                $('.ajax').removeClass('ajax');
+
+                return false;
+            }
+        });
+    }
 }

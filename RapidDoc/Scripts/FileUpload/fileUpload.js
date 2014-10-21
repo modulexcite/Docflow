@@ -17,7 +17,8 @@ $(function () {
 	$('#ajaxUploadForm').fileupload({
 		autoUpload: true,
 		dataType: 'json',
-		limitMultiFileUploads: 1
+		limitMultiFileUploads: 1,
+		fileInput: $("input[type='file'][name='files']")
 	});
 	
 	if (document.getElementById("documentFileId")) {
