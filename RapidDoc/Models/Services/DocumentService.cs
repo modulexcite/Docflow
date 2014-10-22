@@ -50,6 +50,7 @@ namespace RapidDoc.Models.Services
         DateTime? GetSLAPerformDate(Guid DocumentId, DateTime? CreatedDate, double SLAOffset);
         List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable);
         IEnumerable<FileTable> GetAllTemplatesDocument(Guid processId);
+        IEnumerable<FileTable> GetAllXAMLDocument(Guid processId);
         void DeleteFiles(Guid documentId);
     }
 
@@ -729,6 +730,12 @@ namespace RapidDoc.Models.Services
         {
             ProcessTable process = _ProcessService.FirstOrDefault(x => x.Id == processId);
             return repoFile.FindAll(x => x.DocumentFileId == process.Id && x.ContentType != "APPLICATION/XAML+XML");
+        }
+
+        public IEnumerable<FileTable> GetAllXAMLDocument(Guid processId)
+        {
+            ProcessTable process = _ProcessService.FirstOrDefault(x => x.Id == processId);
+            return repoFile.FindAll(x => x.DocumentFileId == process.Id && x.ContentType == "APPLICATION/XAML+XML");
         }
 
         public bool FileContains(Guid documentFileId)

@@ -464,7 +464,7 @@ namespace RapidDoc.Models.Services
         public FileTable GetActualFileWF(string _tableName, Guid documentId)
         {
             DocumentTable documentTable = _DocumentService.Find(documentId);
-            FileTable fileWF = _DocumentService.GetAllTemplatesDocument(documentTable.ProcessTableId).OrderByDescending(x => x.Version).FirstOrDefault();
+            FileTable fileWF = _DocumentService.GetAllXAMLDocument(documentTable.ProcessTableId).OrderByDescending(x => x.Version).FirstOrDefault();
 
             return fileWF;
         }
