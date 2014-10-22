@@ -728,7 +728,7 @@ namespace RapidDoc.Models.Services
         public IEnumerable<FileTable> GetAllTemplatesDocument(Guid processId)
         {
             ProcessTable process = _ProcessService.FirstOrDefault(x => x.Id == processId);
-            return repoFile.FindAll(x => x.DocumentFileId == process.Id);
+            return repoFile.FindAll(x => x.DocumentFileId == process.Id && x.ContentType != "APPLICATION/XAML+XML");
         }
 
         public bool FileContains(Guid documentFileId)

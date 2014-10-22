@@ -240,7 +240,7 @@ namespace RapidDoc.Models.Services
         {        
             SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
             FileTable fileTableWF = GetActualFileWF(TableName, documentId);
-            Activity activity = ChooseActualWorkflow(fileTableWF);
+            Activity activity = ChooseActualWorkflow(TableName, fileTableWF);
             _WorkflowTrackerService.SaveTrackList(documentId, printActivityTree(activity));
             StartAndPersistInstance(documentId, DocumentState.Agreement, documentData, instanceStore, activity, fileTableWF);
             DeleteInstanceStoreOwner(instanceStore);
@@ -248,7 +248,6 @@ namespace RapidDoc.Models.Services
         }
         public void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
-            
             SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
 
             DocumentTable documentTable = _DocumentService.Find(documentId);
@@ -256,7 +255,7 @@ namespace RapidDoc.Models.Services
                     WorkflowApplication.GetInstance(documentTable.WWFInstanceId, instanceStore);
 
             FileTable fileTableWF = GetRightFileWF(TableName, documentTable, instanceInfo);
-            Activity activity = ChooseActualWorkflow(fileTableWF);
+            Activity activity = ChooseActualWorkflow(TableName, fileTableWF, instanceInfo.DefinitionIdentity != null);
             this.printActivityTree(activity);
             LoadAOrCompleteInstance(documentId, DocumentState.Agreement, TrackerType.Approved, documentData, instanceStore, activity, instanceInfo);
             DeleteInstanceStoreOwner(instanceStore);
@@ -265,7 +264,6 @@ namespace RapidDoc.Models.Services
         }
         public void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
-            
             SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
 
             DocumentTable documentTable = _DocumentService.Find(documentId);
@@ -273,14 +271,14 @@ namespace RapidDoc.Models.Services
                     WorkflowApplication.GetInstance(documentTable.WWFInstanceId, instanceStore);
 
             FileTable fileTableWF = GetRightFileWF(TableName, documentTable, instanceInfo);
-            Activity activity = ChooseActualWorkflow(fileTableWF);
+            Activity activity = ChooseActualWorkflow(TableName, fileTableWF, instanceInfo.DefinitionIdentity != null);
             this.printActivityTree(activity);
             LoadAOrCompleteInstance(documentId, DocumentState.Cancelled, TrackerType.Cancelled, documentData, instanceStore, activity, instanceInfo);
             DeleteInstanceStoreOwner(instanceStore);
             _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.CancelledDocument });
             _EmailService.SendInitiatorRejectEmail(documentId);
         }
-        public SqlWorkflowInstanceStore SetupInstanceStore()
+        private SqlWorkflowInstanceStore SetupInstanceStore()
         {
             SqlWorkflowInstanceStore instanceStore =
                 new SqlWorkflowInstanceStore(ConfigurationManager.ConnectionStrings["WFConnection"].ToString());
@@ -289,7 +287,7 @@ namespace RapidDoc.Models.Services
 
             return instanceStore;
         }
-        public void DeleteInstanceStoreOwner(SqlWorkflowInstanceStore instanceStore)
+        private void DeleteInstanceStoreOwner(SqlWorkflowInstanceStore instanceStore)
         {
             InstanceView view = instanceStore.Execute(instanceStore.CreateInstanceHandle(instanceStore.DefaultInstanceOwner), new DeleteWorkflowOwnerCommand(), TimeSpan.FromSeconds(40));
         }
@@ -435,7 +433,6 @@ namespace RapidDoc.Models.Services
             }
             catch (Exception ex)
             {
-                
                 throw ex;
             }
         }
@@ -471,29 +468,34 @@ namespace RapidDoc.Models.Services
 
             return fileWF;
         }
-        public Activity ChooseActualWorkflow(FileTable fileWF)
+        public Activity ChooseActualWorkflow(string _tableName, FileTable fileWF, bool flag = true)
         {
-            using (System.IO.Stream stream = new System.IO.MemoryStream(fileWF.Data))
+            if (flag == true)
             {
-                using (var xamlReader = new System.Xaml.XamlXmlReader(stream, new System.Xaml.XamlXmlReaderSettings { LocalAssembly = System.Reflection.Assembly.GetExecutingAssembly() }))
+                using (System.IO.Stream stream = new System.IO.MemoryStream(fileWF.Data))
                 {
-                    return System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, new System.Activities.XamlIntegration.ActivityXamlServicesSettings { CompileExpressions = true });
+                    using (var xamlReader = new System.Xaml.XamlXmlReader(stream, new System.Xaml.XamlXmlReaderSettings { LocalAssembly = System.Reflection.Assembly.GetExecutingAssembly() }))
+                    {
+                        Activity activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, new System.Activities.XamlIntegration.ActivityXamlServicesSettings { CompileExpressions = true });
+                        return activity;
+                    }
                 }
             }
-            /*
-            Type type = Type.GetType("RapidDoc.Activities." + _tableName);
-            if (type != null)
-                return Activator.CreateInstance(type) as Activity;
+            else
+            { 
+                Type type = Type.GetType("RapidDoc.Activities." + _tableName);
+                if (type != null)
+                    return Activator.CreateInstance(type) as Activity;
 
-            return null;
-            */
+                return null;
+            }
         }
 
         public FileTable GetRightFileWF(string _tableName, DocumentTable documentTable, WorkflowApplicationInstance instanceInfo)
         {
             FileTable fileWF;
 
-            if (instanceInfo.DefinitionIdentity != null)
+            if (instanceInfo != null && instanceInfo.DefinitionIdentity != null)
             {
                 Int32 revision = instanceInfo.DefinitionIdentity.Version.Revision;              
                 return fileWF = _DocumentService.GetAllTemplatesDocument(documentTable.ProcessTableId).Where(x => x.Version == revision.ToString()).FirstOrDefault();
