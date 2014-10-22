@@ -497,12 +497,12 @@ namespace RapidDoc.Models.Services
 
             if (instanceInfo != null && instanceInfo.DefinitionIdentity != null)
             {
-                Int32 revision = instanceInfo.DefinitionIdentity.Version.Revision;              
-                return fileWF = _DocumentService.GetAllTemplatesDocument(documentTable.ProcessTableId).Where(x => x.Version == revision.ToString()).FirstOrDefault();
+                Int32 revision = instanceInfo.DefinitionIdentity.Version.Revision;
+                return fileWF = _DocumentService.GetAllXAMLDocument(documentTable.ProcessTableId).Where(x => x.Version == revision.ToString()).FirstOrDefault();
             }
             else
             {
-                return fileWF = _DocumentService.GetAllTemplatesDocument(documentTable.ProcessTableId).OrderBy(x => x.Version).FirstOrDefault();
+                return fileWF = _DocumentService.GetAllXAMLDocument(documentTable.ProcessTableId).OrderBy(x => x.Version).FirstOrDefault();
             }
         }
 
