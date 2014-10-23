@@ -329,7 +329,7 @@ namespace RapidDoc.Controllers
                     doc.ContentType = contentType;
                     doc.ContentLength = fileWF.ContentLength;
                     doc.Data = data;
-                    doc.Version = "1.0.0";
+                    doc.Version = "1";
                     doc.VersionName = "Version 1";
                     _DocumentService.SaveFile(doc);
 

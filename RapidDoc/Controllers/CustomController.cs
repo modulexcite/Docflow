@@ -74,7 +74,7 @@ namespace RapidDoc.Controllers
                     if (current.Any(x => x.ActivityName == "Начальник ОКЗ КД"))
                     {
                         ViewBag.ServiceIncidentList = _ServiceIncidentService.GetDropListServiceIncident(String.Empty);
-                        return PartialView("USR_REQ_UBP_RequestForCompetitonProc_Edit_Manual", model);
+                        return PartialView("USR_REQ_KD_RequestForCompetitonProc_Edit_Manual", model);
                     }
                 }
             }
@@ -94,7 +94,7 @@ namespace RapidDoc.Controllers
                     if (current.Any(x => x.ActivityName == "Начальник ОКЗ КД"))
                     {
                         ViewBag.ServiceIncidentList = _ServiceIncidentService.GetDropListServiceIncident(String.Empty);
-                        return PartialView("USR_REQ_UBP_RequestForCompetitonProcUZL_Edit_Manual", model);
+                        return PartialView("USR_REQ_KD_RequestForCompetitonProcUZL_Edit_Manual", model);
                     }
                 }
             }
