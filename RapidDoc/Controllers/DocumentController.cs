@@ -906,7 +906,111 @@ namespace RapidDoc.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "Неверно указан диапазон дат");
                 }
-            }   
+            }
+
+            if (type == (new USR_REQ_UB_RequestForImportTMCZIF_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForImportORZZIF_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForImportTMCNoneZIF_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForImportTMCUZL_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForExportAsset_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForExportZIFOre_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForExportOSPVHZIF_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForExportItems_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForHU_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForMovementItems_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForMovementAssets_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForImportORZZIF_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForExportItemFromZIF_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Не указан пост охраны");
+                }
+            }
         }
 
         private void SaveSearchData(dynamic docModel, string actionModelName, Guid documentId)
