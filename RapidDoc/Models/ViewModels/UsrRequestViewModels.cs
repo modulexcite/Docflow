@@ -2076,6 +2076,10 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_UBP_RequestForGetConclusion_View : BasicDocumentView
     {
+        [Display(Name = "Подразделение")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Department { get; set; }
+
         [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Обоснование")]
