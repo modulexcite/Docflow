@@ -443,8 +443,167 @@ namespace RapidDoc.Models.Repository
 
     public enum Warehouse : byte
     {
-        [Display(Name = "Склад")]
-        Element1 = 0
+        [Display(Name = "ГП ТМЦ (УГР, УТОР)")]
+        Element1 = 0,
+
+        [Display(Name = "ГСМ Управление техобслуживания и ремонта")]
+        Element2 = 1,
+
+        [Display(Name = "ГСМ_Участок буровзрывных работ")]
+        Element3 = 2,
+
+        [Display(Name = "ГСМ_Участок содержания дорог и отвалов")]
+        Element4 = 3,
+
+        [Display(Name = "ГСМ_Участок экскавации и транспортировки")]
+        Element5 = 4,
+
+        [Display(Name = "Забалансовый склад УТ Цех вспомогательного транспорта")]
+        Element6 = 5,
+
+        [Display(Name = "Забалансовый склад УТ Цех легкового транспорта")]
+        Element7 = 6,
+
+        [Display(Name = "Забалансовый склад УТЦОиР")]
+        Element8 = 7,
+
+        [Display(Name = "Забалансовый склад УТ Цех пассажирского транспорта")]
+        Element9 = 8,
+
+        [Display(Name = "ЗИФ Служба АСУ ТП")]
+        Element10 = 9,
+
+        [Display(Name = "ЗИФ отделение гидрометалургии")]
+        Element11 = 10,
+
+        [Display(Name = "ЗИФ Дробильное отделение")]
+        Element12 = 11,
+
+        [Display(Name = "ЗИФ ДО (Среднее дробление)")]
+        Element13 = 12,
+
+        [Display(Name = "ЗИФ Отделение сгущения, произв. водоснабжения и хвостового хозяйства")]
+        Element14 = 13,
+
+        [Display(Name = "ЗИФ Отделение флотации и гравитации")]
+        Element15 = 14,
+
+        [Display(Name = "ЗИФ Реагентное отделение")]
+        Element16 = 15,
+
+        [Display(Name = "ЗИФ Служба главного энергетика")]
+        Element17 = 16,
+
+        [Display(Name = "ЗИФ Хозяйственная служба")]
+        Element18 = 17,
+
+        [Display(Name = "Склад неликвидов")]
+        Element19 = 18,
+
+        [Display(Name = "Склад отдела охраны здоровья и техники безопасности")]
+        Element20 = 19,
+
+        [Display(Name = "Организационно-контрольная служба")]
+        Element21 = 20,
+
+        [Display(Name = "ЗИФ Отделение тонкого дробления и измельчения Корпус измельчения")]
+        Element22 = 21,
+
+        [Display(Name = "ЗИФ Отделение тонкого дробления и измельчения Корпус тонкого дробления")]
+        Element23 = 22,
+
+        [Display(Name = "Пробирно-аналитическая лаборатория (золото)")]
+        Element24 = 23,
+
+        [Display(Name = "Реагентное отделение СУиХ")]
+        Element25 = 24,
+
+        [Display(Name = "Отдел технического контроля")]
+        Element26 = 25,
+
+        [Display(Name = "Пробирно-аналитическая лаборатория")]
+        Element27 = 26,
+
+        [Display(Name = "Центральный склад СДЯВ")]
+        Element28 = 27,
+
+        [Display(Name = "Служба по связям с общественностью")]
+        Element29 = 28,
+
+        [Display(Name = "Служба учета и хранения")]
+        Element30 = 29,
+
+        [Display(Name = "Управление безопасности")]
+        Element31 = 30,
+
+        [Display(Name = "Управление информационных технологий")]
+        Element32 = 31,
+
+        [Display(Name = "Участок кучного выщелачивания")]
+        Element33 = 32,
+
+        [Display(Name = "Управление по работе с персоналом")]
+        Element34 = 33,
+
+        [Display(Name = "Управление по развитию персонала СОР")]
+        Element35 = 34,
+
+        [Display(Name = "Управление транспорта")]
+        Element36 = 35,
+
+        [Display(Name = "УТОР ЦРМ")]
+        Element37 = 36,
+
+        [Display(Name = "Служба Охраны ОС")]
+        Element38 = 37,
+
+        [Display(Name = "Сектор переводов ОКС")]
+        Element39 = 38,
+
+        [Display(Name = "Управление безопасности_золото")]
+        Element40 = 39,
+
+        [Display(Name = "УКВ золото")]
+        Element41 = 40,
+
+        [Display(Name = "ГСМ Управления транспорта")]
+        Element42 = 41,
+
+        [Display(Name = "Цех железнодорожных перевозок")]
+        Element43 = 42,
+
+        [Display(Name = "Управление технического планирования горных работ")]
+        Element44 = 43,
+
+        [Display(Name = "Объединенная котельная")]
+        Element45 = 44,
+
+        [Display(Name = "Цех сетей и подстанций")]
+        Element46 = 45,
+
+        [Display(Name = "Цех тепло и водоснабжения")]
+        Element47 = 46,
+
+        [Display(Name = "ХУ Коттедж")]
+        Element48 = 47,
+
+        [Display(Name = "ХУ Отдел эксплуатации здания")]
+        Element49 = 48,
+
+        [Display(Name = "ХУ Фитнес клуб")]
+        Element50 = 49,
+
+        [Display(Name = "Центральный склад № 1/1")]
+        Element51 = 50,
+
+        [Display(Name = "Центральный склад №2")]
+        Element52 = 51,
+
+        [Display(Name = "Центральный склад №3")]
+        Element53 = 52,
+
+        [Display(Name = "Центральный склад ГСМ")]
+        Element54 = 53
     }
 
 }
