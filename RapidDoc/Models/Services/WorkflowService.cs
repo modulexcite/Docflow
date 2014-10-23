@@ -321,6 +321,12 @@ namespace RapidDoc.Models.Services
                 return PersistableIdleAction.Unload;
 
             };
+
+            application.Completed = (e) =>
+            {
+                outputParameters = e.Outputs;
+            };
+
             application.Unloaded = (e) =>
             {
                 instanceUnloaded.Set();
