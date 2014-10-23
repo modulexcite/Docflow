@@ -1504,6 +1504,9 @@ namespace RapidDoc.Models.DomainModels
     public class USR_REQ_UBP_RequestForGetConclusion_Table : BasicDocumentTable
     {
         [Required]
+        public string Department { get; set; }
+
+        [Required]
         public string Explanation { get; set; }
     }
     #endregion
