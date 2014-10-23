@@ -1011,6 +1011,164 @@ namespace RapidDoc.Controllers
                     ModelState.AddModelError(string.Empty, "Не указан пост охраны");
                 }
             }
+
+            if (type == (new USR_REQ_UBP_RequestForExportWastes_View()).GetType())
+            {
+                if (actionModel.Number1 == true && (actionModel.Number32 == String.Empty || actionModel.Number63 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 1");
+                }
+
+                if (actionModel.Number2 == true && (actionModel.Number33 == String.Empty || actionModel.Number64 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 2");
+                }
+
+                if (actionModel.Number3 == true && (actionModel.Number34 == String.Empty || actionModel.Number65 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 3");
+                }
+
+                if (actionModel.Number4 == true && (actionModel.Number35 == String.Empty || actionModel.Number66 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 4");
+                }
+
+                if (actionModel.Number5 == true && (actionModel.Number36 == String.Empty || actionModel.Number67 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 5");
+                }
+
+                if (actionModel.Number6 == true && (actionModel.Number37 == String.Empty || actionModel.Number68 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 6");
+                }
+
+                if (actionModel.Number7 == true && (actionModel.Number38 == String.Empty || actionModel.Number69 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 7");
+                }
+
+                if (actionModel.Number8 == true && (actionModel.Number39 == String.Empty || actionModel.Number70 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 8");
+                }
+
+                if (actionModel.Number9 == true && (actionModel.Number40 == String.Empty || actionModel.Number71 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 9");
+                }
+
+                if (actionModel.Number10 == true && (actionModel.Number41 == String.Empty || actionModel.Number72 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 10");
+                }
+
+                if (actionModel.Number11 == true && (actionModel.Number42 == String.Empty || actionModel.Number73 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 11");
+                }
+
+                if (actionModel.Number12 == true && (actionModel.Number43 == String.Empty || actionModel.Number74 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 12");
+                }
+
+                if (actionModel.Number13 == true && (actionModel.Number44 == String.Empty || actionModel.Number75 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 13");
+                }
+
+                if (actionModel.Number14 == true && (actionModel.Number45 == String.Empty || actionModel.Number76 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 14");
+                }
+
+                if (actionModel.Number15 == true && (actionModel.Number46 == String.Empty || actionModel.Number77 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 15");
+                }
+
+                if (actionModel.Number16 == true && (actionModel.Number47 == String.Empty || actionModel.Number78 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 16");
+                }
+
+                if (actionModel.Number17 == true && (actionModel.Number48 == String.Empty || actionModel.Number79 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 17");
+                }
+
+                if (actionModel.Number18 == true && (actionModel.Number49 == String.Empty || actionModel.Number80 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 18");
+                }
+
+                if (actionModel.Number19 == true && (actionModel.Number50 == String.Empty || actionModel.Number81 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 19");
+                }
+
+                if (actionModel.Number20 == true && (actionModel.Number51 == String.Empty || actionModel.Number82 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 20");
+                }
+
+                if (actionModel.Number21 == true && (actionModel.Number52 == String.Empty || actionModel.Number83 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 21");
+                }
+
+                if (actionModel.Number22 == true && (actionModel.Number53 == String.Empty || actionModel.Number84 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 22");
+                }
+
+                if (actionModel.Number23 == true && (actionModel.Number54 == String.Empty || actionModel.Number85 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 23");
+                }
+
+                if (actionModel.Number24 == true && (actionModel.Number55 == String.Empty || actionModel.Number86 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 24");
+                }
+
+                if (actionModel.Number25 == true && (actionModel.Number56 == String.Empty || actionModel.Number87 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 25");
+                }
+
+                if (actionModel.Number26 == true && (actionModel.Number57 == String.Empty || actionModel.Number88 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 26");
+                }
+
+                if (actionModel.Number27 == true && (actionModel.Number58 == String.Empty || actionModel.Number89 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 27");
+                }
+
+                if (actionModel.Number28 == true && (actionModel.Number59 == String.Empty || actionModel.Number90 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 28");
+                }
+
+                if (actionModel.Number29 == true && (actionModel.Number60 == String.Empty || actionModel.Number91 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 29");
+                }
+
+                if (actionModel.Number30 == true && (actionModel.Number61 == String.Empty || actionModel.Number92 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 30");
+                }
+
+                if (actionModel.Number31 == true && (actionModel.Number62 == String.Empty || actionModel.Number93 == String.Empty))
+                {
+                    ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 31");
+                }
+            }
         }
 
         private void SaveSearchData(dynamic docModel, string actionModelName, Guid documentId)
