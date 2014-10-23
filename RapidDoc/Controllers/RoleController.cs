@@ -187,7 +187,7 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            return RedirectToAction("Index");
+            return Json(new { result = "Redirect", url = Url.Action("Index") });
         }
 	}
 }
