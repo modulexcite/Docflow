@@ -125,6 +125,10 @@ namespace RapidDoc.Controllers
         {
             ActionResult view;
 
+            var filesXaml = _DocumentService.GetAllXAMLDocument(documentFileId).FirstOrDefault();
+            if (filesXaml == null && model.isApproved == true)
+                ModelState.AddModelError(string.Empty,  ValidationRes.ValidationResource.ErrorProcessXAML);
+
             if (files != null)
             {
                 return view = AjaxUpload(files, documentFileId);

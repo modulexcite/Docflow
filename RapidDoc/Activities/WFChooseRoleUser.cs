@@ -16,16 +16,33 @@ namespace RapidDoc.Activities
 
     public sealed class WFChooseRoleUser : CodeActivity
     {
+        [RequiredArgument]
         public InArgument<string> inputRoleName { get; set; }
+
+        [RequiredArgument]
         public InArgument<Guid> inputDocumentId { get; set; }
+
+        [RequiredArgument]
         public InArgument<string> inputCurrentUser { get; set; }
+
+        [RequiredArgument]
         public InArgument<DocumentState> inputStep { get; set; }
+
+        [RequiredArgument]
         public OutArgument<string> outputBookmark { get; set; }
+
         public InArgument<bool> useManual { get; set; }
+
         public InArgument<int> slaOffset { get; set; }
+
         public InArgument<bool> executionStep { get; set; }
+
+        [RequiredArgument]
         public OutArgument<bool> outputSkipStep { get; set; }
+
+        [RequiredArgument]
         public OutArgument<DocumentState> outputStep { get; set; }
+
         public InArgument<bool> noneSkip { get; set; }
 
         [Inject]

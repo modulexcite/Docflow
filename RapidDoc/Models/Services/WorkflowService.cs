@@ -20,6 +20,8 @@ using System.ServiceModel.Activities.Description;
 using RapidDoc.Models.Services;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using System.Activities.XamlIntegration;
+using System.Activities.Expressions;
 
 namespace RapidDoc.Models.Services
 {
@@ -476,13 +478,15 @@ namespace RapidDoc.Models.Services
         }
         public Activity ChooseActualWorkflow(string _tableName, FileTable fileWF, bool flag = true)
         {
+            flag = true;
             if (flag == true)
             {
                 using (System.IO.Stream stream = new System.IO.MemoryStream(fileWF.Data))
                 {
                     using (var xamlReader = new System.Xaml.XamlXmlReader(stream, new System.Xaml.XamlXmlReaderSettings { LocalAssembly = System.Reflection.Assembly.GetExecutingAssembly() }))
                     {
-                        Activity activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, new System.Activities.XamlIntegration.ActivityXamlServicesSettings { CompileExpressions = true });
+                        DynamicActivity activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, new System.Activities.XamlIntegration.ActivityXamlServicesSettings { CompileExpressions = true }) as DynamicActivity;
+                        CompileExpressions(activity);
                         return activity;
                     }
                 }
@@ -495,6 +499,52 @@ namespace RapidDoc.Models.Services
 
                 return null;
             }
+        }
+        private void ParseActivityTypeInformation(string activityName, out string activityTypeName, out string activityNamespace)
+        {
+            int separator = activityName.LastIndexOf('.');
+            activityTypeName = String.Concat(activityName.Substring(separator + 1), "_CompiledExpressionRoot");
+            activityNamespace = activityName.Substring(0, separator);
+
+        }
+
+        private void CompileExpressions(DynamicActivity activity)
+        {
+            string activityTypeName, activityNamespace;
+
+            ParseActivityTypeInformation(activity.Name, out activityTypeName, out activityNamespace);
+
+            TextExpressionCompilerSettings settings =
+                new TextExpressionCompilerSettings
+                {
+                    AlwaysGenerateSource = true,
+                    ActivityName = activityTypeName,
+                    ActivityNamespace = activityNamespace,
+                    ForImplementation = true,
+                    Activity = activity,
+                    Language = "C#",
+                    RootNamespace = null,
+                    GenerateAsPartialClass = false
+                };
+
+            TextExpressionCompilerResults results =
+                new TextExpressionCompiler(settings).Compile();
+
+            if (results.HasErrors)
+            {
+                throw new ApplicationException(
+                    String.Concat("Compiler errors:",
+                        string.Join<TextExpressionCompilerError>("|", results.CompilerMessages)));
+            }
+
+            ICompiledExpressionRoot compiledExpressionRoot =
+                 Activator.CreateInstance(results.ResultType,
+                        new object[] { activity }) as ICompiledExpressionRoot;
+
+            // Attach it to the activity.
+            CompiledExpressionInvoker.SetCompiledExpressionRootForImplementation(
+                activity, compiledExpressionRoot);
+
         }
 
         public FileTable GetRightFileWF(string _tableName, DocumentTable documentTable, WorkflowApplicationInstance instanceInfo)

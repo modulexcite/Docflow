@@ -13,10 +13,19 @@ namespace RapidDoc.Activities
     public sealed class WFWaitingPersonBookmark : NativeActivity
     {
         public WFWaitingPersonBookmark() : base() { }
+
+        [RequiredArgument]
         public InArgument<DocumentState> inputStep { get; set; }
+
+        [RequiredArgument]
         public InArgument<string> inputBookmarkName { get; set; }
+
+        [RequiredArgument]
         public OutArgument<DocumentState> outputStep { get; set; }
+
+        [RequiredArgument]
         public OutArgument<string> outputCurrentUser { get; set; }
+
         public OutArgument<Dictionary<String, Object>> outputDocumentData { get; set; }
 
         protected override bool CanInduceIdle
