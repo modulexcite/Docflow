@@ -84,6 +84,7 @@ namespace RapidDoc.App_Start
             kernel.Bind<IHistoryUserService>().To<HistoryUserService>();
             kernel.Bind<ISearchService>().To<SearchService>();
             kernel.Bind<IServiceIncidentService>().To<ServiceIncidentService>();
+            kernel.Bind<ITripSettingsService>().To<TripSettingsService>();
         }        
     }
 }

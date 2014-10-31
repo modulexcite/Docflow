@@ -41,6 +41,12 @@ function selectpicker_init() {
     });
 }
 
+function selectpickerfull_init() {
+    $('.selectpickerfull').selectpicker({
+        width: '100%'
+    });
+}
+
 function duallist_init(placeholder) {
     $('.duallist').bootstrapDualListbox({
         infoText: false,

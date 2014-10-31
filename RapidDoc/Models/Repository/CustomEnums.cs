@@ -606,4 +606,162 @@ namespace RapidDoc.Models.Repository
         Element54 = 53
     }
 
+    public enum SettlView : byte
+    {
+        [Display(Name = "Основное")]
+        Element1 = 0,
+
+        [Display(Name = "Дополнительное")]
+        Element2 = 1
+    }
+
+    public enum SettlType : byte
+    {
+        [Display(Name = "Начисление")]
+        Element1 = 0,
+
+        [Display(Name = "Удержание")]
+        Element2 = 1,
+
+        [Display(Name = "Отчисление")]
+        Element3 = 2
+    }
+
+    public enum СompositionFEP : byte
+    {
+        [Display(Name = "Не входит")]
+        Element1 = 0,
+
+        [Display(Name = "Тарифные ставки и должностные оклады")]
+        Element2 = 1,
+
+        [Display(Name = "Выплаты стимулирующего характера")]
+        Element3 = 2,
+
+        [Display(Name = "Надбавки по выслуге лет")]
+        Element4 = 3,
+
+        [Display(Name = "Вознагрождение по итогом работы за год")]
+        Element5 = 4,
+
+        [Display(Name = "Компенсационные выплаты связанные с условиеми труда")]
+        Element6 = 5,
+
+        [Display(Name = "Оплата трудовых отпусков и компенсации за неиспользованный отпуск")]
+        Element7 = 6,
+
+        [Display(Name = "Выплаты вынужденно работавшим неполное время")]
+        Element8 = 7,
+
+        [Display(Name = "Другие денежные суммы")]
+        Element9 = 8
+    }
+
+    public enum ViewCostWorkforce : byte
+    {
+        [Display(Name = "нет")]
+        Element1 = 0,
+
+        [Display(Name = "Другие расходы на содержание раб. силы, не отнесенные к ранее приведенным квалификационным группам")]
+        Element2 = 1,
+
+        [Display(Name = "Расходы на проведение культурных мероприятий, а также по организации отдыха и развлечений")]
+        Element3 = 2,
+
+        [Display(Name = "Расходы организации на социальную защиту работников")]
+        Element4 = 3,
+
+        [Display(Name = "Выходное пособие при расторжении трудового договора и суммы, начисленные при увольнении на период трудоустройства в связи с ликвидацией")]
+        Element5 = 4,
+        
+        [Display(Name = "Материальная помощь, предоставленная отдельным работникам по семейным обстоятельствам, на медикаменты, погребение и т.п.")]
+        Element6 = 5,
+
+        [Display(Name = "Расходы организации по обеспечению работников жильем")]
+        Element7 = 6,
+
+        [Display(Name = "Расходы, связанные с обучением работников")]
+        Element8 = 7,
+
+        [Display(Name = "Оплата учебных отпусков, предоставляемых работникам, обучающимся в вечерних и заочных учебных организациях образования, в заочной аспирантуре")]
+        Element9 = 8,
+
+        [Display(Name = "Стипендии студентам и учащимся, направленным работодателем на обучение в учеб. заведениях, выплачиваемые за счет средств организации")]
+        Element10 = 9,
+
+        [Display(Name = "Суммы пособий по временной нетрудоспособности, выплачиваемые за счет средств организации в соответствии с законодательством")]
+        Element11 = 10
+    }
+
+    public enum TypeCompensation : byte
+    {
+        [Display(Name = "нет")]
+        Element1 = 0,
+
+        [Display(Name = "Бесплатное лечебно-профилактическое питание")]
+        Element2 = 1,
+
+        [Display(Name = "Бесплатное получение молока или других равноценных продуктов")]
+        Element3 = 2,
+
+        [Display(Name = "Доплаты за вредные и другие неблагоприятные условия труда")]
+        Element4 = 3,
+
+        [Display(Name = "Дополнительный отпуск")]
+        Element5 = 4,
+
+        [Display(Name = "Сокращенный рабочий день")]
+        Element6 = 5
+    }
+
+    public enum EmplTripType : byte
+    {
+        [Display(Name = "Генеральный директор")]
+        GeneralManager = 0,
+
+        [Display(Name = "Исполнительные Директора")]
+        ExecutiveDirector = 1,
+
+        [Display(Name = "Главный бухгалтер, Начальники управлений, зам. Начальников управлений, начальники самостоятельных служб, директор ЗИФ, иностранные специалисты (если условиями ТД не предусмотрено иное)")]
+        HeadDepartment = 2,
+
+        [Display(Name = "Начальники служб, секторов, цехов и участков")]
+        HeadService = 3,
+
+        [Display(Name = "Остальные ИТР, производственный персонал, рабочие и водители")]
+        Other = 4,
+    }
+
+    public enum TripDirection : byte
+    {
+        [Display(Name = "Алматы")]
+        Almaty = 0,
+
+        [Display(Name = "Астана")]
+        Astana = 1,
+
+        [Display(Name = "Областные и районные центры")]
+        DistrictCenter = 2,
+
+        [Display(Name = "Усть-Каменогорск")]
+        UstKamenogorsk = 3
+    }
+
+    public enum TripPassage : byte
+    {
+        [Display(Name = "Нет")]
+        None = 0,
+
+        [Display(Name = "Авиа бизнес-класс")]
+        AirBussiness = 1,
+
+        [Display(Name = "Авиа эконом-класс")]
+        AirEconom = 2,
+
+        [Display(Name = "Ж/Д (купе)")]
+        Train = 3,
+
+        [Display(Name = "Авиа по разрешению")]
+        AirPermission = 4,
+    }
 }

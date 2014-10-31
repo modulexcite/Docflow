@@ -221,25 +221,4 @@ namespace RapidDoc.Models.DomainModels
         public Guid DocumentTableId { get; set; }
         public virtual DocumentTable DocumentTable { get; set; }
     }
-
-    public class ServiceIncidentTable : BasicCompanyNullTable
-    {
-        [StringLength(70)]
-        [Required]
-        public string ServiceName { get; set; }
-
-        [StringLength(256)]
-        [Required]
-        public string Description { get; set; }
-        public ServiceIncidientPriority ServiceIncidientPriority { get; set; }
-        public ServiceIncidientLevel ServiceIncidientLevel { get; set; }
-        public ServiceIncidientLocation ServiceIncidientLocation { get; set; }
-        public int SLAIncident { get; set; }
-
-        [Required]
-        public string RoleTableId { get; set; }
-
-        [ForeignKey("RoleTableId")]
-        public virtual IdentityRole IdentityRole { get; set; }
-    }
 }

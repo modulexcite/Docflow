@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using RapidDoc.Models.DomainModels;
+using RapidDoc.Models.Repository;
+using RapidDoc.Models.ViewModels;
 
 namespace RapidDoc.Controllers
 {
@@ -15,14 +17,16 @@ namespace RapidDoc.Controllers
         private readonly ISystemService _SystemService;
         private readonly IDocumentService _DocumentService;
         private readonly IServiceIncidentService _ServiceIncidentService;
+        private readonly ITripSettingsService _TripSettingsService;
 
-        public CustomController(IEmplService emplService, ISystemService systemService, IDocumentService documentService, IServiceIncidentService serviceIncidentService, ICompanyService companyService, IAccountService accountService)
+        public CustomController(IEmplService emplService, ISystemService systemService, IDocumentService documentService, IServiceIncidentService serviceIncidentService, ICompanyService companyService, IAccountService accountService, ITripSettingsService tripSettingsService)
             : base(companyService, accountService)
         {
             _EmplService = emplService;
             _SystemService = systemService;
             _DocumentService = documentService;
             _ServiceIncidentService = serviceIncidentService;
+            _TripSettingsService = tripSettingsService;
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
@@ -162,6 +166,45 @@ namespace RapidDoc.Controllers
                 || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Closed || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Cancelled)
             {
                 return PartialView("USR_REQ_IT_CTP_ReissueComputer_View_TableView", model);
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetRequestCreateSettlViewData(RapidDoc.Models.ViewModels.USR_REQ_UBUO_RequestCreateSettlView_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник СТЗП"))
+                    {
+                        return PartialView("USR_REQ_UBUO_RequestCreateSettlView_Edit_StatAcxcounting", model);
+                    }
+                    if (current.Any(x => x.ActivityName == "Начальник СНУ"))
+                    {
+                        return PartialView("USR_REQ_UBUO_RequestCreateSettlView_Edit_BeginAcxcounting", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_UBUO_RequestCreateSettlView_View_Full", model);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateCalcTripUBUO(byte EmplTripType, byte TripDirection, int Day, int DayLive, int TicketSum)
+        {
+            EmplTripType emplTripType = (EmplTripType)EmplTripType;
+            TripDirection tripDirection = (TripDirection)TripDirection;
+
+            TripSettingsTable tripSettingsTable = _TripSettingsService.FirstOrDefault(x => x.EmplTripType == emplTripType && x.TripDirection == tripDirection);
+            if (tripSettingsTable != null)
+            {
+                var model = new USR_REQ_UBUO_RequestCalcDriveTripCals_View(emplTripType, tripDirection, Day, DayLive, TicketSum, tripSettingsTable.DayRate, tripSettingsTable.ResidenceRate);
+                return PartialView(@"~/Views/Custom/USR_REQ_UBUO_RequestCalcDriveTrip_Calc.cshtml", model);
             }
 
             return PartialView("_Empty");

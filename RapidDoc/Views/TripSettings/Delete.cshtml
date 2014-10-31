@@ -1,0 +1,35 @@
+﻿@model RapidDoc.Models.ViewModels.TripSettingsView
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Delete;
+}
+
+<h2>@UIElementRes.UIElement.Delete</h2>
+
+<h3>@UIElementRes.UIElement.СonfirmDeletion</h3>
+<fieldset>
+    <legend></legend>
+
+    <div class="display-label">
+        @Html.DisplayNameFor(model => model.EmplTripType)
+    </div>
+    <div class="display-field text-danger">
+        @Html.DisplayFor(model => model.EmplTripType)
+    </div>
+
+    <div class="display-label">
+        @Html.DisplayNameFor(model => model.TripDirection)
+    </div>
+    <div class="display-field text-danger">
+        @Html.DisplayFor(model => model.TripDirection)
+    </div>
+</fieldset>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <br>
+    <p>
+        <input class="btn btn-primary btn-sm" type="submit" value=@UIElementRes.UIElement.Delete />
+        @Html.ActionLink(UIElementRes.UIElement.Back, "Index")
+    </p>
+}

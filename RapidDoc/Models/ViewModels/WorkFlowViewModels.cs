@@ -191,33 +191,4 @@ namespace RapidDoc.Models.ViewModels
         public string HTMLString { get; set; }
         public bool NoMoreData { get; set; }
     }
-
-    public class ServiceIncidentView : BasicCompanyNullView
-    {
-        [StringLength(70, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "ProcessName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
-        public string ServiceName { get; set; }
-
-        [StringLength(256, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
-        [Display(Name = "Description", ResourceType = typeof(FieldNameRes.FieldNameResource))]
-        public string Description { get; set; }
-
-        [Display(Name = "Приоритет")]
-        public ServiceIncidientPriority ServiceIncidientPriority { get; set; }
-
-        [Display(Name = "Уровень поддержки")]
-        public ServiceIncidientLevel ServiceIncidientLevel { get; set; }
-
-        [Display(Name = "Местоположение")]
-        public ServiceIncidientLocation ServiceIncidientLocation { get; set; }
-
-        [Display(Name = "SLA инцидентов")]
-        public int SLAIncident { get; set; }
-
-        public string RoleTableId { get; set; }
-
-        [Display(Name = "Роль")]
-        public string RoleName { get; set; }
-    }
 }

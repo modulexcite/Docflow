@@ -1,0 +1,47 @@
+﻿@model RapidDoc.Models.Grids.TripSettingsGrid
+@using GridMvc.Html;
+
+@helper EditField(RapidDoc.Models.ViewModels.TripSettingsView item)
+{
+    <a href=@Url.Action("Edit", new { id=item.Id })><span class="fa fa-pencil fa-lg"></span></a>
+}
+
+@helper DetailField(RapidDoc.Models.ViewModels.TripSettingsView item)
+{
+    <a href=@Url.Action("Detail", new { id=item.Id })><span class="fa fa-info-circle fa-lg"></span></a>
+}
+
+@helper DeleteField(RapidDoc.Models.ViewModels.TripSettingsView item)
+{
+    <a href=@Url.Action("Delete", new { id=item.Id })><span class="fa fa-trash-o fa-lg"></span></a>
+}
+
+@Html.Grid(Model).Named("ordersGrid").Columns(columns =>
+{
+    columns.Add(o => o.Id).Css("hidden");
+    columns.Add(o => o.CompanyTableId).Css("hidden");
+
+    columns.Add(o => o.EmplTripType).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.TripSettingsView)o.Columns).EmplTripType).ToHtmlString()).Sortable(false).Filterable(false);
+
+    columns.Add(o => o.TripDirection).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.TripSettingsView)o.Columns).TripDirection).ToHtmlString()).Sortable(false).Filterable(false);
+
+    columns.Add(o => o.DayRate).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.TripSettingsView)o.Columns).DayRate).ToHtmlString()).Sortable(false).Filterable(false);
+
+    columns.Add(o => o.ResidenceRate).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.TripSettingsView)o.Columns).ResidenceRate).ToHtmlString()).Sortable(false).Filterable(false);
+    
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => EditField(o));
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => DetailField(o));
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .SetWidth(30)
+        .RenderValueAs(o => DeleteField(o));
+}).Selectable(true).SetLanguage(UIElementRes.UIElement.LangName).Sortable().WithPaging(30)

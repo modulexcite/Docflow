@@ -2277,6 +2277,230 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Aim { get; set; }    
     }
+
+    public class USR_REQ_UBUO_RequestCreateSettlView_Table : BasicDocumentTable
+    {
+        public string NameSettlView1 { get; set; }
+        public string NameSettlView2 { get; set; }
+        public string NameSettlView3 { get; set; }
+        public string NameSettlView4 { get; set; }
+        public string NameSettlView5 { get; set; }
+        public string NameSettlView6 { get; set; }
+        public string NameSettlView7 { get; set; }
+        public string NameSettlView8 { get; set; }
+        public string NameSettlView9 { get; set; }
+
+        public SettlView SettlView1 { get; set; }
+        public SettlView SettlView2 { get; set; }
+        public SettlView SettlView3 { get; set; }
+        public SettlView SettlView4 { get; set; }
+        public SettlView SettlView5 { get; set; }
+        public SettlView SettlView6 { get; set; }
+        public SettlView SettlView7 { get; set; }
+        public SettlView SettlView8 { get; set; }
+        public SettlView SettlView9 { get; set; }
+
+        public SettlType SettlType1 { get; set; }
+        public SettlType SettlType2 { get; set; }
+        public SettlType SettlType3 { get; set; }
+        public SettlType SettlType4 { get; set; }
+        public SettlType SettlType5 { get; set; }
+        public SettlType SettlType6 { get; set; }
+        public SettlType SettlType7 { get; set; }
+        public SettlType SettlType8 { get; set; }
+        public SettlType SettlType9 { get; set; }
+
+        public string WaySettl1 { get; set; }
+        public string WaySettl2 { get; set; }
+        public string WaySettl3 { get; set; }
+        public string WaySettl4 { get; set; }
+        public string WaySettl5 { get; set; }
+        public string WaySettl6 { get; set; }
+        public string WaySettl7 { get; set; }
+        public string WaySettl8 { get; set; }
+        public string WaySettl9 { get; set; }
+
+        public bool TimesheetManagement1 { get; set; }
+        public bool TimesheetManagement2 { get; set; }
+        public bool TimesheetManagement3 { get; set; }
+        public bool TimesheetManagement4 { get; set; }
+        public bool TimesheetManagement5 { get; set; }
+        public bool TimesheetManagement6 { get; set; }
+        public bool TimesheetManagement7 { get; set; }
+        public bool TimesheetManagement8 { get; set; }
+        public bool TimesheetManagement9 { get; set; }
+
+        public string ReflectedBU1 { get; set; }
+        public string ReflectedBU2 { get; set; }
+        public string ReflectedBU3 { get; set; }
+        public string ReflectedBU4 { get; set; }
+        public string ReflectedBU5 { get; set; }
+        public string ReflectedBU6 { get; set; }
+        public string ReflectedBU7 { get; set; }
+        public string ReflectedBU8 { get; set; }
+        public string ReflectedBU9 { get; set; }
+
+        public string ReflectedDepartment1 { get; set; }
+        public string ReflectedDepartment2 { get; set; }
+        public string ReflectedDepartment3 { get; set; }
+        public string ReflectedDepartment4 { get; set; }
+        public string ReflectedDepartment5 { get; set; }
+        public string ReflectedDepartment6 { get; set; }
+        public string ReflectedDepartment7 { get; set; }
+        public string ReflectedDepartment8 { get; set; }
+        public string ReflectedDepartment9 { get; set; }
+
+        public string AverageEarnings1 { get; set; }
+        public string AverageEarnings2 { get; set; }
+        public string AverageEarnings3 { get; set; }
+        public string AverageEarnings4 { get; set; }
+        public string AverageEarnings5 { get; set; }
+        public string AverageEarnings6 { get; set; }
+        public string AverageEarnings7 { get; set; }
+        public string AverageEarnings8 { get; set; }
+        public string AverageEarnings9 { get; set; }
+
+        public string TypeCost1 { get; set; }
+        public string TypeCost2 { get; set; }
+        public string TypeCost3 { get; set; }
+        public string TypeCost4 { get; set; }
+        public string TypeCost5 { get; set; }
+        public string TypeCost6 { get; set; }
+        public string TypeCost7 { get; set; }
+        public string TypeCost8 { get; set; }
+        public string TypeCost9 { get; set; }
+
+        public bool IPN1 { get; set; }
+        public bool IPN2 { get; set; }
+        public bool IPN3 { get; set; }
+        public bool IPN4 { get; set; }
+        public bool IPN5 { get; set; }
+        public bool IPN6 { get; set; }
+        public bool IPN7 { get; set; }
+        public bool IPN8 { get; set; }
+        public bool IPN9 { get; set; }
+
+        public bool OPV1 { get; set; }
+        public bool OPV2 { get; set; }
+        public bool OPV3 { get; set; }
+        public bool OPV4 { get; set; }
+        public bool OPV5 { get; set; }
+        public bool OPV6 { get; set; }
+        public bool OPV7 { get; set; }
+        public bool OPV8 { get; set; }
+        public bool OPV9 { get; set; }
+
+        public bool CO1 { get; set; }
+        public bool CO2 { get; set; }
+        public bool CO3 { get; set; }
+        public bool CO4 { get; set; }
+        public bool CO5 { get; set; }
+        public bool CO6 { get; set; }
+        public bool CO7 { get; set; }
+        public bool CO8 { get; set; }
+        public bool CO9 { get; set; }
+
+        public bool CN1 { get; set; }
+        public bool CN2 { get; set; }
+        public bool CN3 { get; set; }
+        public bool CN4 { get; set; }
+        public bool CN5 { get; set; }
+        public bool CN6 { get; set; }
+        public bool CN7 { get; set; }
+        public bool CN8 { get; set; }
+        public bool CN9 { get; set; }
+
+        public bool FEP1 { get; set; }
+        public bool FEP2 { get; set; }
+        public bool FEP3 { get; set; }
+        public bool FEP4 { get; set; }
+        public bool FEP5 { get; set; }
+        public bool FEP6 { get; set; }
+        public bool FEP7 { get; set; }
+        public bool FEP8 { get; set; }
+        public bool FEP9 { get; set; }
+
+        public СompositionFEP СompositionFEP1 { get; set; }
+        public СompositionFEP СompositionFEP2 { get; set; }
+        public СompositionFEP СompositionFEP3 { get; set; }
+        public СompositionFEP СompositionFEP4 { get; set; }
+        public СompositionFEP СompositionFEP5 { get; set; }
+        public СompositionFEP СompositionFEP6 { get; set; }
+        public СompositionFEP СompositionFEP7 { get; set; }
+        public СompositionFEP СompositionFEP8 { get; set; }
+        public СompositionFEP СompositionFEP9 { get; set; }
+
+        public ViewCostWorkforce ViewCostWorkforce1 { get; set; }
+        public ViewCostWorkforce ViewCostWorkforce2 { get; set; }
+        public ViewCostWorkforce ViewCostWorkforce3 { get; set; }
+        public ViewCostWorkforce ViewCostWorkforce4 { get; set; }
+        public ViewCostWorkforce ViewCostWorkforce5 { get; set; }
+        public ViewCostWorkforce ViewCostWorkforce6 { get; set; }
+        public ViewCostWorkforce ViewCostWorkforce7 { get; set; }
+        public ViewCostWorkforce ViewCostWorkforce8 { get; set; }
+        public ViewCostWorkforce ViewCostWorkforce9 { get; set; }
+
+        public TypeCompensation TypeCompensation1 { get; set; }
+        public TypeCompensation TypeCompensation2 { get; set; }
+        public TypeCompensation TypeCompensation3 { get; set; }
+        public TypeCompensation TypeCompensation4 { get; set; }
+        public TypeCompensation TypeCompensation5 { get; set; }
+        public TypeCompensation TypeCompensation6 { get; set; }
+        public TypeCompensation TypeCompensation7 { get; set; }
+        public TypeCompensation TypeCompensation8 { get; set; }
+        public TypeCompensation TypeCompensation9 { get; set; }
+    }
+
+    public class USR_REQ_UBUO_RequestCalcDriveTrip_Table : BasicDocumentTable
+    {
+        public string OrderNum { get; set; }
+        public DateTime OrderDate { get; set; }
+
+        public string FIO1 { get; set; }
+        public string FIO2 { get; set; }
+        public string FIO3 { get; set; }
+        public string FIO4 { get; set; }
+
+        public EmplTripType EmplTripType1 { get; set; }
+        public EmplTripType EmplTripType2 { get; set; }
+        public EmplTripType EmplTripType3 { get; set; }
+        public EmplTripType EmplTripType4 { get; set; }
+
+        public TripDirection TripDirection1 { get; set; }
+        public TripDirection TripDirection2 { get; set; }
+        public TripDirection TripDirection3 { get; set; }
+        public TripDirection TripDirection4 { get; set; }
+
+        public int Day1 { get; set; }
+        public int Day2 { get; set; }
+        public int Day3 { get; set; }
+        public int Day4 { get; set; }
+
+        public int DayLive1 { get; set; }
+        public int DayLive2 { get; set; }
+        public int DayLive3 { get; set; }
+        public int DayLive4 { get; set; }
+
+        public TripPassage TripPassage1 { get; set; }
+        public TripPassage TripPassage2 { get; set; }
+        public TripPassage TripPassage3 { get; set; }
+        public TripPassage TripPassage4 { get; set; }
+
+        public int TicketSum1 { get; set; }
+        public int TicketSum2 { get; set; }
+        public int TicketSum3 { get; set; }
+        public int TicketSum4 { get; set; }
+
+        public int DayRate1 { get; set; }
+        public int DayRate2 { get; set; }
+        public int DayRate3 { get; set; }
+        public int DayRate4 { get; set; }
+
+        public int ResidenceRate1 { get; set; }
+        public int ResidenceRate2 { get; set; }
+        public int ResidenceRate3 { get; set; }
+        public int ResidenceRate4 { get; set; }
+    }
     #endregion
 
 }

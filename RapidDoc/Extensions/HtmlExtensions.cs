@@ -205,5 +205,32 @@ namespace RapidDoc.Extensions
 
             return MvcHtmlString.Create(model);
         }
+
+        public static string EnumToDescription(this HtmlHelper html, Enum value)
+        {
+            Type enumType = value.GetType();
+            var enumValue = Enum.GetName(enumType, value);
+            MemberInfo member = enumType.GetMember(enumValue)[0];
+            string outString = "";
+
+            var attrs = member.GetCustomAttributes(typeof(DisplayAttribute), false);
+            if (attrs.Any())
+            {
+                var displayAttr = ((DisplayAttribute)attrs[0]);
+
+                outString = displayAttr.Name;
+
+                if (displayAttr.ResourceType != null)
+                {
+                    outString = displayAttr.GetName();
+                }
+            }
+            else
+            {
+                outString = value.ToString();
+            }
+
+            return outString;
+        }
     }
 }
