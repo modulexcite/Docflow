@@ -39,6 +39,7 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<SearchTable> SearchTable { get; set; }
         public DbSet<ServiceIncidentTable> ServiceIncidentTable { get; set; }
         public DbSet<DocumentTable> DocumentTable { get; set; }
+        public DbSet<TripSettingsTable> TripSettingsTable { get; set; }
 
         //Custom Requests
         public DbSet<USR_REQ_IT_CTS_DeliveryOfPinCode_Table> USR_REQ_IT_CTS_DeliveryOfPinCode_Table { get; set; }
@@ -154,6 +155,8 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_UBUO_RequestForInspectionPropertyAssets_Table> USR_REQ_SK_RequestForInspectionPropertyAssets_Table { get; set; }
         public DbSet<USR_REQ_UBUO_RequestForClearenceLetter_Table> USR_REQ_SK_RequestForClearenceLetter_Table { get; set; }
         public DbSet<USR_REQ_UBUO_RequestForReferenceTax_Table> USR_REQ_SK_RequestForReferenceTax_Table { get; set; }
+        public DbSet<USR_REQ_UBUO_RequestCreateSettlView_Table> USR_REQ_UBUO_RequestCreateSettlView_Table { get; set; }
+        public DbSet<USR_REQ_UBUO_RequestCalcDriveTrip_Table> USR_REQ_UBUO_RequestCalcDriveTrip_Table { get; set; }
         public DbSet<USR_REQ_UBP_RequestForInstructionBIOT_Table> USR_REQ_UBP_RequestForInstructionBIOT_Table { get; set; }
         public DbSet<USR_REQ_UZL_RequestForAccident_Table> USR_REQ_UZL_RequestForAccident_Table { get; set; }
         public DbSet<USR_REQ_UZL_RequestForUnscheduledIB_Table> USR_REQ_UZL_RequestForUnscheduledIB_Table { get; set; }
