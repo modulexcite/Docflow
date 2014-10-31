@@ -52,6 +52,7 @@ namespace RapidDoc.Models.Services
         private readonly IEmailService _EmailService;
         private readonly IHistoryUserService _HistoryUserService;
         private readonly IReviewDocLogService _ReviewDocLogService;
+        private readonly ICustomCheckDocument _CustomCheckDocument;
         private readonly IServiceIncidentService _ServiceIncidentService;
         
         IDictionary<string, object> outputParameters;
@@ -59,7 +60,7 @@ namespace RapidDoc.Models.Services
 
         public WorkflowService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, 
             IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService,
-            IServiceIncidentService serviceIncidentService, IReviewDocLogService reviewDocLogService)
+            IServiceIncidentService serviceIncidentService, IReviewDocLogService reviewDocLogService, ICustomCheckDocument customCheckDocument)
         {
             _uow = uow;
             _AccountService = accountService;
@@ -69,6 +70,7 @@ namespace RapidDoc.Models.Services
             _EmailService = emailService;
             _HistoryUserService = historyUserService;
             _ReviewDocLogService = reviewDocLogService;
+            _CustomCheckDocument = customCheckDocument;
             _ServiceIncidentService = serviceIncidentService;
         }
 
@@ -431,7 +433,7 @@ namespace RapidDoc.Models.Services
                     }
                 }
 
-                CustomParamUpdate(documentTable, documentData);
+                _CustomCheckDocument.UpdateDocumentData(documentTable, documentData);
 
                 if(documentTable.DocumentState == DocumentState.Closed)
                 {
@@ -441,30 +443,6 @@ namespace RapidDoc.Models.Services
             catch (Exception ex)
             {
                 throw ex;
-            }
-        }
-        public void CustomParamUpdate(DocumentTable document, IDictionary<string, object> documentData)
-        {
-            if(document.ProcessTable.TableName == "USR_REQ_IT_CTP_IncidentIT")
-            {
-                if (document.ActivityName == "Исполнитель")
-                {
-                    ServiceIncidientPriority priority = ((ServiceIncidientPriority)documentData["ServiceIncidientPriority"]);
-                    ServiceIncidientLevel level = ((ServiceIncidientLevel)documentData["ServiceIncidientLevel"]);
-                    ServiceIncidientLocation location = ((ServiceIncidientLocation)documentData["ServiceIncidientLocation"]);
-
-                    var serviceIncident = _ServiceIncidentService.GetAll().ToList().FirstOrDefault(x => x.ServiceName == ((string)documentData["ServiceName"]) && x.ServiceIncidientPriority == priority && x.ServiceIncidientLevel == level && x.ServiceIncidientLocation == location);
-                    if(serviceIncident != null)
-                    {
-                        var items = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == document.Id && x.ActivityName == document.ActivityName).ToList();
-
-                        foreach (var item in items)
-                        {
-                            item.SLAOffset = serviceIncident.SLAIncident;
-                            _WorkflowTrackerService.SaveDomain(item);
-                        }
-                    }
-                }
             }
         }
 
