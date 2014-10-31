@@ -58,13 +58,15 @@ namespace RapidDoc.Activities
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
             WFUserFunctionResult userFunctionResult = _service.WFCreatedUser(documentId);
 
-            if (userFunctionResult.Skip == false)
+            if (executionStep == true || noneSkipStep == true || userFunctionResult.Skip == false)
+            {
                 _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUserId, this.Id, useManual, slaOffset, executionStep);
-            else if (executionStep == true || noneSkipStep == true)
-                _service.CreateTrackerRecord(documentStep, documentId, this.DisplayName, userFunctionResult.Users, currentUserId, this.Id, useManual, slaOffset, executionStep);
+                outputSkipStep.Set(context, false);
+            }
+            else
+                outputSkipStep.Set(context, true);
 
             outputBookmark.Set(context, this.DisplayName);
-            outputSkipStep.Set(context, executionStep ? false : userFunctionResult.Skip);
             outputStep.Set(context, documentStep);
         }
     }

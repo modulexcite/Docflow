@@ -175,7 +175,7 @@ namespace RapidDoc.Controllers
         [HttpPost]
         public ActionResult ShowDocument(Guid id, string approveDoc, string rejectDoc, IDictionary<string, object> documentData, string lastComment = "")
         {
-            DocumentTable docuTable = _DocumentService.Find(id);
+            DocumentTable docuTable = _DocumentService.Find(id); 
             if (docuTable == null) return HttpNotFound();
 
             if (lastComment != "")
@@ -1168,6 +1168,55 @@ namespace RapidDoc.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 31");
                 }
+            }
+            if (type == (new USR_REQ_UZL_RequestForPeopleAcceptanceItems_View()).GetType())
+            {
+                string executive;
+                if ((actionModel.UserChooseManual1 != null && actionModel.UserChooseManual2 != null && actionModel.UserChooseManual3 != null && actionModel.UserChooseManual4 != null) && ((actionModel.UserChooseManual4 == "") && (actionModel.UserChooseManual1 == "") && (actionModel.UserChooseManual2 == "") && (actionModel.UserChooseManual3 == "")))
+                {
+                    ModelState.AddModelError(string.Empty, "Неоюходимо заполнить хотя бы одного руководителя");               
+                }
+                executive = actionModel.UserChooseManual1;
+                if (((actionModel.UserChooseManual1 != String.Empty && actionModel.Department1 == String.Empty) || (actionModel.Department1 != String.Empty && actionModel.UserChooseManual1 == String.Empty)) && actionModel.Department1 != null)
+                {
+                    ModelState.AddModelError(string.Empty, "ФИО Руководителя 1 и его подразделение должно быть заполнено");
+                }
+
+                if (((actionModel.UserChooseManual2 != String.Empty && actionModel.Department2 == String.Empty) || (actionModel.Department2 != String.Empty && actionModel.UserChooseManual2 == String.Empty)) && actionModel.Department2 != null)
+                {
+                    ModelState.AddModelError(string.Empty, "ФИО Руководителя 2 и его подразделение должно быть заполнено");
+                }
+
+                if (((actionModel.UserChooseManual3 != String.Empty && actionModel.Department3 == String.Empty) || (actionModel.Department3 != String.Empty && actionModel.UserChooseManual3 == String.Empty)) && actionModel.Department3 != null)
+                {
+                    ModelState.AddModelError(string.Empty, "ФИО Руководителя 3 и его подразделение должно быть заполнено");
+                }
+
+                if (((actionModel.UserChooseManual4 != String.Empty && actionModel.Department4 == String.Empty) || (actionModel.Department4 != String.Empty && actionModel.UserChooseManual4 == String.Empty)) && actionModel.Department4 != null)
+                {
+                    ModelState.AddModelError(string.Empty, "ФИО Руководителя 4 и его подразделение должно быть заполнено");
+                }
+
+                if ((actionModel.Contact1 == String.Empty || actionModel.UserChooseManual5 == ",") && actionModel.Contact1 != null)
+                {
+                    ModelState.AddModelError(string.Empty, "ФИО специалиста 1 и его контакты должны быть заполнены");
+                }
+
+                if ((actionModel.Contact2 == String.Empty || actionModel.UserChooseManual6 == ",") && actionModel.Contact2 != null)
+                {
+                    ModelState.AddModelError(string.Empty, "ФИО специалиста 2 и его контакты должны быть заполнены");
+                }
+
+                if ((actionModel.Contact3 == String.Empty || actionModel.UserChooseManual7 == ",") && actionModel.Contact3 != null)
+                {
+                    ModelState.AddModelError(string.Empty, "ФИО специалиста 3 и его контакты должны быть заполнены");
+                }
+
+                if ((actionModel.Contact4 == String.Empty || actionModel.UserChooseManual8 == ",") && actionModel.Contact4 != null)
+                {
+                    ModelState.AddModelError(string.Empty, "ФИО специалиста 4 и его контакты должны быть заполнены");
+                }
+
             }
         }
 

@@ -2085,6 +2085,17 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Обоснование")]
         public string Explanation { get; set; }
     }
+
+    public class USR_REQ_UBP_RequestForInstructionBIOT_View : BasicDocumentView
+    {
+        [Display(Name = "Подразделение")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Тех. Руководитель")]
+        public string UserChooseManual1 { get; set; }
+    }
     #endregion
 
     #region КД
@@ -3127,6 +3138,338 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "В целях")]
         public string Aim { get; set; }
+    }
+    #endregion
+
+    #region УЗЛ
+
+    public class USR_REQ_UZL_RequestForAccident_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Обоснование")]
+        public string Reason { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Причина отсутствия в ОБ\\БКВ")]
+        public string ReasonAbsent { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Источник финансирования")]
+        public string FinancialSource { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "C даты")]
+        public DateTime? FromDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "По дату")]
+        public DateTime? ToDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Сумма заявки")]
+        public string Amount { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForUnscheduledIB_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Обоснование")]
+        public string Reason { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Причина отсутствия в ОБ\\БКВ")]
+        public string ReasonAbsent { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Источник финансирования")]
+        public string FinancialSource { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "C даты")]
+        public DateTime? FromDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "По дату")]
+        public DateTime? ToDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Сумма заявки")]
+        public string Amount { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForUnscheduledOB_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Обоснование")]
+        public string Reason { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Причина отсутствия в ОБ\\БКВ")]
+        public string ReasonAbsent { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Источник финансирования")]
+        public string FinancialSource { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "C даты")]
+        public DateTime? FromDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "По дату")]
+        public DateTime? ToDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Сумма заявки")]
+        public string Amount { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForIlliquid_View : BasicDocumentView
+    {
+
+        [Display(Name = "Подразделение инициатора")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Department { get; set; }
+
+        [Display(Name = "Наименование ТМЦ")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string ItemName { get; set; }
+
+        [Display(Name = "Количество")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string ItemCount { get; set; }
+
+        [Display(Name = "Мероприятие")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Event { get; set; }
+
+        [DataType(DataType.Date)]
+        [Display(Name = "Дата")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public DateTime? Date { get; set; }
+    
+    }
+
+    public class USR_REQ_UZL_RequestForPeopleAcceptanceItems_View : BasicDocumentView
+    {
+
+        [Display(Name = "Инициатор")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Iniciator { get; set; }
+
+        [Display(Name = "Подразделение")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Department { get; set; }
+
+        [Display(Name = "Контактные телефоны")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string ContactPhone { get; set; }
+
+        [Display(Name = "Тема")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Theme { get; set; }
+
+        [Display(Name = "ФИО Руководителя 1")]
+        public string UserChooseManual1 { get; set; }
+
+        [Display(Name = "ФИО Руководителя 2")]
+        public string UserChooseManual2 { get; set; }
+
+        [Display(Name = "ФИО Руководителя 3")]
+        public string UserChooseManual3 { get; set; }
+
+        [Display(Name = "ФИО Руководителя 4")]
+        public string UserChooseManual4 { get; set; }
+
+        [Display(Name = "Подразделение")]
+        public string Department1 { get; set; }
+
+        [Display(Name = "Подразделение")]
+        public string Department2 { get; set; }
+
+        [Display(Name = "Подразделение")]
+        public string Department3 { get; set; }
+
+        [Display(Name = "Подразделение")]
+        public string Department4 { get; set; }
+
+        [Display(Name = "ФИО специалиста 1")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string UserChooseManual5 { get; set; }
+
+        [Display(Name = "ФИО специалиста 2")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string UserChooseManual6 { get; set; }
+
+        [Display(Name = "ФИО специалиста 3")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string UserChooseManual7 { get; set; }
+
+        [Display(Name = "ФИО специалиста 4")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string UserChooseManual8 { get; set; }
+
+        [Display(Name = "Контакты специалиста 1")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Contact1 { get; set; }
+
+        [Display(Name = "Контакты специалиста 2")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Contact2 { get; set; }
+
+        [Display(Name = "Контакты специалиста 3")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Contact3 { get; set; }
+
+        [Display(Name = "Контакты специалиста 4")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Contact4 { get; set; }
+    
+    }
+
+    public class USR_REQ_UZL_RequestForContractNoneresident_View : BasicDocumentView
+    {
+        [Display(Name = "Исполнитель")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForContractResident_View : BasicDocumentView
+    {
+        [Display(Name = "Исполнитель")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForrepresentationKD_View : BasicDocumentView
+    {
+        [Display(Name = "Исполнитель")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForUT_View : BasicDocumentView
+    {
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Обоснование")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Reason { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Источник финансирования")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string FinancialSource { get; set; }
+
+    }
+
+    public class USR_REQ_UZL_RequestForExtraIBBGP_View : BasicDocumentView
+    {
+        [Display(Name = "Обоснование")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Explanation { get; set; }
+
+        [Display(Name = "Причина отсутствия в ОБ\\БКВ")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Reason { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Источник финансирования")]
+        public string FinancialSource { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "C даты")]
+        public DateTime? FromDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "По дату")]
+        public DateTime? ToDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Сумма заявки")]
+        public string Amount { get; set; }
+
+
+    }
+
+    public class USR_REQ_UZL_RequestForExtraIBZIF_View : BasicDocumentView
+    {
+        [Display(Name = "Обоснование")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Explanation { get; set; }
+
+        [Display(Name = "Причина отсутствия в ОБ\\БКВ")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Reason { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Источник финансирования")]
+        public string FinancialSource { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "C даты")]
+        public DateTime? FromDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "По дату")]
+        public DateTime? ToDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Сумма заявки")]
+        public string Amount { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForExtraOBBGP_View : BasicDocumentView
+    {
+        [Display(Name = "Обоснование")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Explanation { get; set; }
+
+        [Display(Name = "Причина отсутствия в ОБ\\БКВ")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Reason { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Источник финансирования")]
+        public string FinancialSource { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "C даты")]
+        public DateTime? FromDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "По дату")]
+        public DateTime? ToDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Сумма заявки")]
+        public string Amount { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForExtraOBZIF_View : BasicDocumentView
+    {
+        [Display(Name = "Обоснование")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Explanation { get; set; }
+
+        [Display(Name = "Причина отсутствия в ОБ\\БКВ")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Reason { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Источник финансирования")]
+        public string FinancialSource { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "C даты")]
+        public DateTime? FromDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "По дату")]
+        public DateTime? ToDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Сумма заявки")]
+        public string Amount { get; set; }
     }
     #endregion
  

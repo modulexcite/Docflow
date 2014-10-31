@@ -139,7 +139,7 @@ namespace RapidDoc.Models.Services
         {
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
-
+            
             if ((string)documentData[manualKey] != "" )
             {              
                 string users = (string)documentData[manualKey];
@@ -478,7 +478,6 @@ namespace RapidDoc.Models.Services
         }
         public Activity ChooseActualWorkflow(string _tableName, FileTable fileWF, bool flag = true)
         {
-            flag = true;
             if (flag == true)
             {
                 using (System.IO.Stream stream = new System.IO.MemoryStream(fileWF.Data))

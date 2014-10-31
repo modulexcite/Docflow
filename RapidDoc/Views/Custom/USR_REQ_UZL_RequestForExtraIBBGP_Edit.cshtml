@@ -1,0 +1,51 @@
+﻿@model RapidDoc.Models.ViewModels.USR_REQ_UZL_RequestForExtraIBBGP_View
+@using RapidDoc.Extensions;
+
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Explanation)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.Explanation, new { @class = "form-control", @row = 5, placeholder = "Обоснование", @autofocus = "required" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Reason)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.Reason, new { @class = "form-control", @row = 5, placeholder = "Причина отсутствия в ОБ\\БКВ" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.FinancialSource)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.FinancialSource, new { @class = "form-control", placeholder = "Источник финансирования" })
+</div>
+
+<hr />
+<h4 class="text-info">Требуемый срок поставки</h4>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.FromDate)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.FromDate, new { @class = "datepicker", placeholder = "C даты", startDate = "" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.ToDate)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.ToDate, new { @class = "datepicker", placeholder = "По дату", startDate = "", @autofocus = "required" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Amount)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.Amount, new { @class = "form-control", placeholder = "Сумма заявки" })
+</div>
+
+@section jslaunch {
+    datepicker_init("@UIElementRes.UIElement.LangName");
+}

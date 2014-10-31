@@ -154,6 +154,20 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_UBUO_RequestForInspectionPropertyAssets_Table> USR_REQ_SK_RequestForInspectionPropertyAssets_Table { get; set; }
         public DbSet<USR_REQ_UBUO_RequestForClearenceLetter_Table> USR_REQ_SK_RequestForClearenceLetter_Table { get; set; }
         public DbSet<USR_REQ_UBUO_RequestForReferenceTax_Table> USR_REQ_SK_RequestForReferenceTax_Table { get; set; }
+        public DbSet<USR_REQ_UBP_RequestForInstructionBIOT_Table> USR_REQ_UBP_RequestForInstructionBIOT_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForAccident_Table> USR_REQ_UZL_RequestForAccident_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForUnscheduledIB_Table> USR_REQ_UZL_RequestForUnscheduledIB_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForUnscheduledOB_Table> USR_REQ_UZL_RequestForUnscheduledOB_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForIlliquid_Table> USR_REQ_UZL_RequestForIlliquid_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForPeopleAcceptanceItems_Table> USR_REQ_UZL_RequestForPeopleAcceptanceItems_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForContractNoneresident_Table> USR_REQ_UZL_RequestForContractNoneresident_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForContractResident_Table> USR_REQ_UZL_RequestForContractResident_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForrepresentationKD_Table> USR_REQ_UZL_RequestForrepresentationKD_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForUT_Table> USR_REQ_UZL_RequestForUT_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForExtraIBBGP_Table> USR_REQ_UZL_RequestForExtraIBBGP_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForExtraIBZIF_Table> USR_REQ_UZL_RequestForExtraIBZIF_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForExtraOBBGP_Table> USR_REQ_UZL_RequestForExtraOBBGP_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForExtraOBZIF_Table> USR_REQ_UZL_RequestForExtraOBZIF_Table { get; set; }
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();

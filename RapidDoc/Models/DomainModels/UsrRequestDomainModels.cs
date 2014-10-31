@@ -1509,6 +1509,15 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Explanation { get; set; }
     }
+
+    public class USR_REQ_UBP_RequestForInstructionBIOT_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+
+        
+        public string UserChooseManual1 { get; set; }
+    }
     #endregion
 
     #region КД
@@ -2276,6 +2285,271 @@ namespace RapidDoc.Models.DomainModels
         
         [Required]
         public string Aim { get; set; }    
+    }
+    #endregion
+
+    #region УЗЛ
+
+    public class USR_REQ_UZL_RequestForAccident_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string ReasonAbsent { get; set; }
+
+        [Required]
+        public string FinancialSource { get; set; }
+
+        [Required]
+        public DateTime? FromDate { get; set; }
+
+        [Required]
+        public DateTime? ToDate { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForUnscheduledIB_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string ReasonAbsent { get; set; }
+
+        [Required]
+        public string FinancialSource { get; set; }
+
+        [Required]
+        public DateTime? FromDate { get; set; }
+
+        [Required]
+        public DateTime? ToDate { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForUnscheduledOB_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string ReasonAbsent { get; set; }
+
+        [Required]
+        public string FinancialSource { get; set; }
+
+        [Required]
+        public DateTime? FromDate { get; set; }
+
+        [Required]
+        public DateTime? ToDate { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForIlliquid_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string ItemName { get; set; }
+
+        [Required]
+        public string ItemCount { get; set; }
+
+        [Required]
+        public string Event { get; set; }
+
+        [Required]
+        public DateTime? Date { get; set; }
+
+    }
+
+    public class USR_REQ_UZL_RequestForPeopleAcceptanceItems_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Iniciator { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string ContactPhone { get; set; }
+
+        [Required]
+        public string Theme { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+
+
+        public string UserChooseManual2 { get; set; }
+
+
+        public string UserChooseManual3 { get; set; }
+
+
+        public string UserChooseManual4 { get; set; }
+
+
+        public string Department1 { get; set; }
+
+
+        public string Department2 { get; set; }
+
+
+        public string Department3 { get; set; }
+
+
+        public string Department4 { get; set; }
+
+
+        public string UserChooseManual5 { get; set; }
+
+
+        public string UserChooseManual6 { get; set; }
+
+
+        public string UserChooseManual7 { get; set; }
+
+
+        public string UserChooseManual8 { get; set; }
+
+
+        public string Contact1 { get; set; }
+
+
+        public string Contact2 { get; set; }
+
+
+        public string Contact3 { get; set; }
+
+
+        public string Contact4 { get; set; }
+
+    }
+
+    public class USR_REQ_UZL_RequestForContractNoneresident_Table : BasicDocumentTable
+    {
+
+        public string UserChooseManual1 { get; set; }
+
+    }
+
+    public class USR_REQ_UZL_RequestForContractResident_Table : BasicDocumentTable
+    {
+
+        public string UserChooseManual1 { get; set; }
+
+    }
+
+    public class USR_REQ_UZL_RequestForrepresentationKD_Table : BasicDocumentTable
+    {
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForUT_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string FinancialSource { get; set; }
+
+    }
+
+    public class USR_REQ_UZL_RequestForExtraIBBGP_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Explanation { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string FinancialSource { get; set; }
+
+        [Required]
+        public DateTime? FromDate { get; set; }
+
+        [Required]
+        public DateTime? ToDate { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+
+
+    }
+
+    public class USR_REQ_UZL_RequestForExtraIBZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Explanation { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string FinancialSource { get; set; }
+
+        [Required]
+        public DateTime? FromDate { get; set; }
+
+        [Required]
+        public DateTime? ToDate { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForExtraOBBGP_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Explanation { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string FinancialSource { get; set; }
+
+        [Required]
+        public DateTime? FromDate { get; set; }
+
+        [Required]
+        public DateTime? ToDate { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+    }
+
+    public class USR_REQ_UZL_RequestForExtraOBZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Explanation { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string FinancialSource { get; set; }
+
+        [Required]
+        public DateTime? FromDate { get; set; }
+
+        [Required]
+        public DateTime? ToDate { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
     }
     #endregion
 
