@@ -266,3 +266,145 @@ function custom_tagsinputEmpl2_init(url_json) {
         }
     }
 }
+
+function custom_tagsinputEmpl3_init(url_json) {
+    var element = document.getSelection('input[data-role=tagsinputEmpl3]');
+    if (typeof (element) != 'undefined' && element != null) {
+        try {
+            elt2 = $('input[data-role=tagsinputEmpl3]');
+            elt2.tagsinput({
+                itemValue: 'value',
+                itemText: 'text',
+                tagClass: function (item) {
+                    return 'label label-primary bts-tags';
+                }
+            });
+
+            elt2.tagsinput('input').typeahead({
+                valueKey: 'text',
+                prefetch: url_json,
+                template: '<p>{{text}}</p>',
+                engine: Hogan
+
+            }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                this.tagsinput('add', datum);
+                this.tagsinput('input').typeahead('setQuery', '');
+            }, elt2));
+
+            currentValue2 = $('input[data-role=tagsinputEmpl3]').val();
+            if (currentValue2 != null) {
+                currentArrData2 = currentValue2.split(",");
+                $('input[data-role=tagsinputEmpl3]').val('');
+
+                if (currentArrData2.length > 1) {
+                    for (var i = 0; i < currentArrData2.length; i += 2) {
+                        var key = currentArrData2[i];
+                        var numValue = i;
+                        numValue++;
+                        var value = currentArrData2[numValue];
+                        if (value.length > 0)
+                            $('input[data-role=tagsinputEmpl3]').tagsinput('add', { "value": key + "," + value, "text": value });
+                    }
+                }
+            }
+        }
+        catch (e) {
+
+        }
+    }
+}
+
+function custom_tagsinputEmpl4_init(url_json) {
+    var element = document.getSelection('input[data-role=tagsinputEmpl4]');
+    if (typeof (element) != 'undefined' && element != null) {
+        try {
+            elt2 = $('input[data-role=tagsinputEmpl4]');
+            elt2.tagsinput({
+                itemValue: 'value',
+                itemText: 'text',
+                tagClass: function (item) {
+                    return 'label label-primary bts-tags';
+                }
+            });
+
+            elt2.tagsinput('input').typeahead({
+                valueKey: 'text',
+                prefetch: url_json,
+                template: '<p>{{text}}</p>',
+                engine: Hogan
+
+            }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                this.tagsinput('add', datum);
+                this.tagsinput('input').typeahead('setQuery', '');
+            }, elt2));
+
+            currentValue2 = $('input[data-role=tagsinputEmpl4]').val();
+            if (currentValue2 != null) {
+                currentArrData2 = currentValue2.split(",");
+                $('input[data-role=tagsinputEmpl4]').val('');
+
+                if (currentArrData2.length > 1) {
+                    for (var i = 0; i < currentArrData2.length; i += 2) {
+                        var key = currentArrData2[i];
+                        var numValue = i;
+                        numValue++;
+                        var value = currentArrData2[numValue];
+                        if (value.length > 0)
+                            $('input[data-role=tagsinputEmpl4]').tagsinput('add', { "value": key + "," + value, "text": value });
+                    }
+                }
+            }
+        }
+        catch (e) {
+
+        }
+    }
+}
+
+function custom_tagsinputEmpl5_init(url_json) {
+    var element = document.getSelection('input[data-role=tagsinputEmpl5]');
+    if (typeof (element) != 'undefined' && element != null) {
+        try {
+            elt2 = $('input[data-role=tagsinputEmpl5]');
+            elt2.tagsinput({
+                itemValue: 'value',
+                itemText: 'text',
+                tagClass: function (item) {
+                    return 'label label-primary bts-tags';
+                }
+            });
+
+            elt2.tagsinput('input').typeahead({
+                valueKey: 'text',
+                prefetch: url_json,
+                template: '<p>{{text}}</p>',
+                engine: Hogan
+
+            }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                this.tagsinput('add', datum);
+                this.tagsinput('input').typeahead('setQuery', '');
+            }, elt2));
+
+            currentValue2 = $('input[data-role=tagsinputEmpl5]').val();
+            if (currentValue2 != null) {
+                currentArrData2 = currentValue2.split(",");
+                $('input[data-role=tagsinputEmpl5]').val('');
+
+                if (currentArrData2.length > 1) {
+                    for (var i = 0; i < currentArrData2.length; i += 2) {
+                        var key = currentArrData2[i];
+                        var numValue = i;
+                        numValue++;
+                        var value = currentArrData2[numValue];
+                        if (value.length > 0)
+                            $('input[data-role=tagsinputEmpl5]').tagsinput('add', { "value": key + "," + value, "text": value });
+                    }
+                }
+            }
+        }
+        catch (e) {
+
+        }
+    }
+}
+

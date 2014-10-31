@@ -8,16 +8,18 @@
         @Html.Label((string)property.Name)
     </div>
     
+    @Html.Hidden((string)property.Name)
     if (property.PropertyType == typeof(string))
     {
-        if ((string)property.Name == "Users" || (string)property.Name == "ToUsers" || (string)property.Name == "FromUsers")
+        if ((string)property.Name == "Users" || (string)property.Name == "ToUsers" || (string)property.Name == "FromUsers"
+            || (string)property.Name == "UserChooseManual1" || (string)property.Name == "UserChooseManual2" || (string)property.Name == "UserChooseManual3" || (string)property.Name == "UserChooseManual4" || (string)property.Name == "UserChooseManual5" || (string)property.Name == "UserChooseManual6" || (string)property.Name == "UserChooseManual7" || (string)property.Name == "UserChooseManual8" || (string)property.Name == "UserChooseManual9")
         {
             <div class="editor-field">
                 @Html.HtmlDisplayTags(property.GetValue(Model, null).ToString())
             </div>
         }
         else
-        { 
+        {
             <div class="editor-field">
                 @Html.DisplayText((string)property.Name)
             </div>
@@ -25,7 +27,6 @@
     }
     else if (property.PropertyType == typeof(DateTime?))
     {
-        @Html.Hidden((string)property.Name)
         if (dataTypeAttr == null)
         {
             <div class="editor-field">

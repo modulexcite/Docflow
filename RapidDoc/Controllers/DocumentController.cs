@@ -40,13 +40,12 @@ namespace RapidDoc.Controllers
         private readonly IHistoryUserService _HistoryUserService;
         private readonly ISearchService _SearchService;
         private readonly IServiceIncidentService _ServiceIncidentService;
-        private readonly ITripSettingsService _TripSettingsService;
 
         public DocumentController(IDocumentService documentService, IProcessService processService, 
             IWorkflowService workflowService, IEmplService emplService, IAccountService accountService, ISystemService systemService,
             IWorkflowTrackerService workflowTrackerService, IReviewDocLogService reviewDocLogService,
             IDocumentReaderService documentReaderService, ICommentService commentService, IEmailService emailService,
-            IHistoryUserService historyUserService, ISearchService searchService, IServiceIncidentService serviceIncidentService, ICompanyService companyService, ITripSettingsService tripSettingsService)
+            IHistoryUserService historyUserService, ISearchService searchService, IServiceIncidentService serviceIncidentService, ICompanyService companyService)
             : base(companyService, accountService)
         {
             _DocumentService = documentService;
@@ -62,7 +61,6 @@ namespace RapidDoc.Controllers
             _HistoryUserService = historyUserService;
             _SearchService = searchService;
             _ServiceIncidentService = serviceIncidentService;
-            _TripSettingsService = tripSettingsService;
         }
 
         public ActionResult ArchiveDocuments()
@@ -177,7 +175,7 @@ namespace RapidDoc.Controllers
         [HttpPost]
         public ActionResult ShowDocument(Guid id, string approveDoc, string rejectDoc, IDictionary<string, object> documentData, string lastComment = "")
         {
-            DocumentTable docuTable = _DocumentService.Find(id);
+            DocumentTable docuTable = _DocumentService.Find(id); 
             if (docuTable == null) return HttpNotFound();
 
             if (lastComment != "")
@@ -736,7 +734,7 @@ namespace RapidDoc.Controllers
                     }
                     else if(propertyInfo.PropertyType == typeof(bool))
                     {
-                        bool valueBool = collection[key].ToLower().Contains("true");
+                        bool valueBool = collection[key].Contains("true");
                         propertyInfo.SetValue(actionModel, valueBool, null);
                         documentData.Add(key, valueBool);
                     }
@@ -1171,92 +1169,54 @@ namespace RapidDoc.Controllers
                     ModelState.AddModelError(string.Empty, "Укажите количество и вес в строке 31");
                 }
             }
-
-            if (type == (new USR_REQ_UBUO_RequestCreateSettlView_View()).GetType())
+            if (type == (new USR_REQ_UZL_RequestForPeopleAcceptanceItems_View()).GetType())
             {
-                if (actionModel.NameSettlView1 != String.Empty && (actionModel.WaySettl1 == String.Empty || actionModel.ReflectedBU1 == String.Empty || actionModel.ReflectedDepartment1 == String.Empty || actionModel.AverageEarnings1 == String.Empty || actionModel.TypeCost1 == String.Empty))
+                string executive;
+                if ((actionModel.UserChooseManual1 != null && actionModel.UserChooseManual2 != null && actionModel.UserChooseManual3 != null && actionModel.UserChooseManual4 != null) && ((actionModel.UserChooseManual4 == "") && (actionModel.UserChooseManual1 == "") && (actionModel.UserChooseManual2 == "") && (actionModel.UserChooseManual3 == "")))
                 {
-                    ModelState.AddModelError(string.Empty, "В строке 1 не заполнены все необходимые поля");
+                    ModelState.AddModelError(string.Empty, "Неоюходимо заполнить хотя бы одного руководителя");               
+                }
+                executive = actionModel.UserChooseManual1;
+                if (((actionModel.UserChooseManual1 != String.Empty && actionModel.Department1 == String.Empty) || (actionModel.Department1 != String.Empty && actionModel.UserChooseManual1 == String.Empty)) && actionModel.Department1 != null)
+                {
+                    ModelState.AddModelError(string.Empty, "ФИО Руководителя 1 и его подразделение должно быть заполнено");
                 }
 
-                if (actionModel.NameSettlView2 != String.Empty && (actionModel.WaySettl2 == String.Empty || actionModel.ReflectedBU2 == String.Empty || actionModel.ReflectedDepartment2 == String.Empty || actionModel.AverageEarnings2 == String.Empty || actionModel.TypeCost2 == String.Empty))
+                if (((actionModel.UserChooseManual2 != String.Empty && actionModel.Department2 == String.Empty) || (actionModel.Department2 != String.Empty && actionModel.UserChooseManual2 == String.Empty)) && actionModel.Department2 != null)
                 {
-                    ModelState.AddModelError(string.Empty, "В строке 2 не заполнены все необходимые поля");
+                    ModelState.AddModelError(string.Empty, "ФИО Руководителя 2 и его подразделение должно быть заполнено");
                 }
 
-                if (actionModel.NameSettlView3 != String.Empty && (actionModel.WaySettl3 == String.Empty || actionModel.ReflectedBU3 == String.Empty || actionModel.ReflectedDepartment3 == String.Empty || actionModel.AverageEarnings3 == String.Empty || actionModel.TypeCost3 == String.Empty))
+                if (((actionModel.UserChooseManual3 != String.Empty && actionModel.Department3 == String.Empty) || (actionModel.Department3 != String.Empty && actionModel.UserChooseManual3 == String.Empty)) && actionModel.Department3 != null)
                 {
-                    ModelState.AddModelError(string.Empty, "В строке 3 не заполнены все необходимые поля");
+                    ModelState.AddModelError(string.Empty, "ФИО Руководителя 3 и его подразделение должно быть заполнено");
                 }
 
-                if (actionModel.NameSettlView4 != String.Empty && (actionModel.WaySettl4 == String.Empty || actionModel.ReflectedBU4 == String.Empty || actionModel.ReflectedDepartment4 == String.Empty || actionModel.AverageEarnings4 == String.Empty || actionModel.TypeCost4 == String.Empty))
+                if (((actionModel.UserChooseManual4 != String.Empty && actionModel.Department4 == String.Empty) || (actionModel.Department4 != String.Empty && actionModel.UserChooseManual4 == String.Empty)) && actionModel.Department4 != null)
                 {
-                    ModelState.AddModelError(string.Empty, "В строке 4 не заполнены все необходимые поля");
+                    ModelState.AddModelError(string.Empty, "ФИО Руководителя 4 и его подразделение должно быть заполнено");
                 }
 
-                if (actionModel.NameSettlView5 != String.Empty && (actionModel.WaySettl5 == String.Empty || actionModel.ReflectedBU5 == String.Empty || actionModel.ReflectedDepartment5 == String.Empty || actionModel.AverageEarnings5 == String.Empty || actionModel.TypeCost5 == String.Empty))
+                if ((actionModel.Contact1 == String.Empty || actionModel.UserChooseManual5 == ",") && actionModel.Contact1 != null)
                 {
-                    ModelState.AddModelError(string.Empty, "В строке 5 не заполнены все необходимые поля");
+                    ModelState.AddModelError(string.Empty, "ФИО специалиста 1 и его контакты должны быть заполнены");
                 }
 
-                if (actionModel.NameSettlView6 != String.Empty && (actionModel.WaySettl6 == String.Empty || actionModel.ReflectedBU6 == String.Empty || actionModel.ReflectedDepartment6 == String.Empty || actionModel.AverageEarnings6 == String.Empty || actionModel.TypeCost6 == String.Empty))
+                if ((actionModel.Contact2 == String.Empty || actionModel.UserChooseManual6 == ",") && actionModel.Contact2 != null)
                 {
-                    ModelState.AddModelError(string.Empty, "В строке 6 не заполнены все необходимые поля");
+                    ModelState.AddModelError(string.Empty, "ФИО специалиста 2 и его контакты должны быть заполнены");
                 }
 
-                if (actionModel.NameSettlView7 != String.Empty && (actionModel.WaySettl7 == String.Empty || actionModel.ReflectedBU7 == String.Empty || actionModel.ReflectedDepartment7 == String.Empty || actionModel.AverageEarnings7 == String.Empty || actionModel.TypeCost7 == String.Empty))
+                if ((actionModel.Contact3 == String.Empty || actionModel.UserChooseManual7 == ",") && actionModel.Contact3 != null)
                 {
-                    ModelState.AddModelError(string.Empty, "В строке 7 не заполнены все необходимые поля");
+                    ModelState.AddModelError(string.Empty, "ФИО специалиста 3 и его контакты должны быть заполнены");
                 }
 
-                if (actionModel.NameSettlView8 != String.Empty && (actionModel.WaySettl8 == String.Empty || actionModel.ReflectedBU8 == String.Empty || actionModel.ReflectedDepartment8 == String.Empty || actionModel.AverageEarnings8 == String.Empty || actionModel.TypeCost8 == String.Empty))
+                if ((actionModel.Contact4 == String.Empty || actionModel.UserChooseManual8 == ",") && actionModel.Contact4 != null)
                 {
-                    ModelState.AddModelError(string.Empty, "В строке 8 не заполнены все необходимые поля");
+                    ModelState.AddModelError(string.Empty, "ФИО специалиста 4 и его контакты должны быть заполнены");
                 }
 
-                if (actionModel.NameSettlView9 != String.Empty && (actionModel.WaySettl9 == String.Empty || actionModel.ReflectedBU9 == String.Empty || actionModel.ReflectedDepartment9 == String.Empty || actionModel.AverageEarnings9 == String.Empty || actionModel.TypeCost9 == String.Empty))
-                {
-                    ModelState.AddModelError(string.Empty, "В строке 9 не заполнены все необходимые поля");
-                }
-            }
-
-            if (type == (new USR_REQ_UBUO_RequestCalcDriveTrip_View()).GetType())
-            {
-                if(actionModel.FIO1 != null)
-                {
-                    EmplTripType emplTripType1 = (EmplTripType)actionModel.EmplTripType1;
-                    TripDirection tripDirection1 = (TripDirection)actionModel.TripDirection1;
-                    TripSettingsTable tripSettingsTable = _TripSettingsService.FirstOrDefault(x => x.EmplTripType == emplTripType1 && x.TripDirection == tripDirection1);
-                    actionModel.DayRate1 = tripSettingsTable.DayRate;
-                    actionModel.ResidenceRate1 = tripSettingsTable.ResidenceRate;
-                }
-
-                if (actionModel.FIO2 != null)
-                {
-                    EmplTripType emplTripType2 = (EmplTripType)actionModel.EmplTripType2;
-                    TripDirection tripDirection2 = (TripDirection)actionModel.TripDirection2;
-                    TripSettingsTable tripSettingsTable = _TripSettingsService.FirstOrDefault(x => x.EmplTripType == emplTripType2 && x.TripDirection == tripDirection2);
-                    actionModel.DayRate2 = tripSettingsTable.DayRate;
-                    actionModel.ResidenceRate2 = tripSettingsTable.ResidenceRate;
-                }
-
-                if (actionModel.FIO3 != null)
-                {
-                    EmplTripType emplTripType3 = (EmplTripType)actionModel.EmplTripType3;
-                    TripDirection tripDirection3 = (TripDirection)actionModel.TripDirection3;
-                    TripSettingsTable tripSettingsTable = _TripSettingsService.FirstOrDefault(x => x.EmplTripType == emplTripType3 && x.TripDirection == tripDirection3);
-                    actionModel.DayRate3 = tripSettingsTable.DayRate;
-                    actionModel.ResidenceRate3 = tripSettingsTable.ResidenceRate;
-                }
-
-                if (actionModel.FIO4 != null)
-                {
-                    EmplTripType emplTripType4 = (EmplTripType)actionModel.EmplTripType4;
-                    TripDirection tripDirection4 = (TripDirection)actionModel.TripDirection4;
-                    TripSettingsTable tripSettingsTable = _TripSettingsService.FirstOrDefault(x => x.EmplTripType == emplTripType4 && x.TripDirection == tripDirection4);
-                    actionModel.DayRate4 = tripSettingsTable.DayRate;
-                    actionModel.ResidenceRate4 = tripSettingsTable.ResidenceRate;
-                }
             }
         }
 
