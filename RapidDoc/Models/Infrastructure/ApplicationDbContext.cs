@@ -171,6 +171,9 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_UZL_RequestForExtraIBZIF_Table> USR_REQ_UZL_RequestForExtraIBZIF_Table { get; set; }
         public DbSet<USR_REQ_UZL_RequestForExtraOBBGP_Table> USR_REQ_UZL_RequestForExtraOBBGP_Table { get; set; }
         public DbSet<USR_REQ_UZL_RequestForExtraOBZIF_Table> USR_REQ_UZL_RequestForExtraOBZIF_Table { get; set; }
+        public DbSet<USR_REQ_UKR_RequestForExpertiseDKU_Table> USR_REQ_UZL_RequestForExpertiseDKU_Table { get; set; }
+        public DbSet<USR_REQ_UKR_RequestForExpertiseInstruction_Table> USR_REQ_UKR_RequestForExpertiseInstruction_Table { get; set; }
+        public DbSet<USR_REQ_UKR_RequestForExpertiseDepartment_Table> USR_REQ_UKR_RequestForExpertiseDepartment_Table { get; set; }
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();

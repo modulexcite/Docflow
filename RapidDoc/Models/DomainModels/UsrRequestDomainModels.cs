@@ -2777,5 +2777,41 @@ namespace RapidDoc.Models.DomainModels
     }
     #endregion
 
+    #region УКР
+
+    public class USR_REQ_UKR_RequestForExpertiseDKU_Table : BasicDocumentTable
+    {
+        [Required]
+        public string UserExecutive { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+    }
+
+    public class USR_REQ_UKR_RequestForExpertiseInstruction_Table : BasicDocumentTable
+    {
+        [Required]
+        public string UserExecutive { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_UKR_RequestForExpertiseDepartment_Table : BasicDocumentTable
+    {
+        [Required]
+        public string UserExecutive { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+    }
+
+
+    #endregion
+
 }
     
