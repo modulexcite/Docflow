@@ -68,6 +68,28 @@
             @Html.ValidationMessageFor(model => model.isApproved)
         </div>
 
+        <br>
+        <blockquote>
+            <p>@UIElementRes.UIElement.CreateWorkTimeHint</p>
+        </blockquote>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.StartWorkTime)
+        </div>
+        <div class="bootstrap-timepicker editor-field">
+            @Html.TextBoxFor(model => model.StartWorkTime, new { @class = "timepicker" })
+            <span class="add-on"><i class="glyphicon glyphicon-time"></i></span>
+            @Html.ValidationMessageFor(model => model.StartWorkTime)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.EndWorkTime)
+        </div>
+        <div class="bootstrap-timepicker editor-field">
+            @Html.TextBoxFor(model => model.EndWorkTime, new { @class = "timepicker" })
+            <span class="add-on"><i class="glyphicon glyphicon-time"></i></span>
+            @Html.ValidationMessageFor(model => model.EndWorkTime)
+        </div>
+
         <div class="editor-label">
             @Html.LabelFor(model => model.MandatoryFileTypes)
         </div>
@@ -221,6 +243,7 @@
 }
 @section jslaunch {
     selectpicker_init();
+    timepicker_init();
 
     $("#buttonSubmitWF").click(function(){
         var formData = new FormData();

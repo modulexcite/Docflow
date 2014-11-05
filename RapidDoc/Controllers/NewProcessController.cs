@@ -51,32 +51,47 @@ namespace RapidDoc.Controllers
                         break;
                     }
 
-                    ApplicationDbContext context = new ApplicationDbContext();
-                    UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                    RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
                     List<ProcessView> result = new List<ProcessView>();
                     ProcessView process = _ProcessService.FindView(processId);
 
-                    if (!String.IsNullOrEmpty(process.RoleId))
-                    {
-                        string roleName = RoleManager.FindById(process.RoleId).Name;
-                        if (UserManager.IsInRole(user.Id, roleName))
-                        {
-                            num++;
-                            topProcess.Add(process);
-                        }
-                    }
-                    else
+                    if (CheckCreateProcess(process, user.Id))
                     {
                         num++;
                         topProcess.Add(process);
                     }
-                    context.Dispose();
                 }
             }
 
             ViewBag.TopProcess = topProcess;
+
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+            ViewBag.CurrentTimeZoneOffset = timeZoneInfo.BaseUtcOffset;
             return View(_GroupProcessService.GetPartialView(x => x.GroupProcessParentId == null));
+        }
+
+        public bool CheckCreateProcess(ProcessView process, String UserId)
+        {
+            DateTime date = DateTime.UtcNow;
+            DateTime startTime = new DateTime(date.Year, date.Month, date.Day) + process.StartWorkTime;
+            DateTime endTime = new DateTime(date.Year, date.Month, date.Day) + process.EndWorkTime;
+            if ((startTime < date || date > endTime) && process.StartWorkTime != process.EndWorkTime) return false;
+
+            if (!String.IsNullOrEmpty(process.RoleId))
+            {
+                ApplicationDbContext context = new ApplicationDbContext();
+                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+
+                string roleName = RoleManager.FindById(process.RoleId).Name;
+                if (!UserManager.IsInRole(UserId, roleName))
+                {
+                    context.Dispose();
+                    return false;
+                }
+                context.Dispose();
+            }
+
+            return true;
         }
 
         public ActionResult ProcessList(Guid groupProcessId)
@@ -84,6 +99,9 @@ namespace RapidDoc.Controllers
             List<GroupProcessTable> breadCrumbsList = new List<GroupProcessTable>();
             breadCrumbsList = GetBreadCrumbs(breadCrumbsList, groupProcessId);
             ViewBag.BreadCrumbs = breadCrumbsList;
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+            ViewBag.CurrentTimeZoneOffset = timeZoneInfo.BaseUtcOffset;
 
             var groupChildItems = _GroupProcessService.GetPartialView(x => x.GroupProcessParentId == groupProcessId);
             if(groupChildItems.Count() == 0)
@@ -94,23 +112,14 @@ namespace RapidDoc.Controllers
                 UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                 RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
                 List<ProcessView> result = new List<ProcessView>();
-                string userId = User.Identity.GetUserId();
+
                 foreach (var item in model)
                 {
-                    if (!String.IsNullOrEmpty(item.RoleId))
-                    {
-                        string roleName = RoleManager.FindById(item.RoleId).Name;
-                        if (UserManager.IsInRole(userId, roleName))
-                        {
-                            result.Add(item);
-                        }
-                    }
-                    else
+                    if (CheckCreateProcess(item, user.Id))
                     {
                         result.Add(item);
                     }
                 }
-                context.Dispose();
 
                 return View(result);
             }
@@ -145,23 +154,18 @@ namespace RapidDoc.Controllers
                 UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                 RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
                 List<ProcessView> result = new List<ProcessView>();
-                string userId = User.Identity.GetUserId();
+
+                ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+                ViewBag.CurrentTimeZoneOffset = timeZoneInfo.BaseUtcOffset;
+
                 foreach (var item in model)
                 {
-                    if (!String.IsNullOrEmpty(item.RoleId))
-                    {
-                        string roleName = RoleManager.FindById(item.RoleId).Name;
-                        if (UserManager.IsInRole(userId, roleName))
-                        {
-                            result.Add(item);
-                        }
-                    }
-                    else
+                    if (CheckCreateProcess(item, user.Id))
                     {
                         result.Add(item);
                     }
                 }
-                context.Dispose();
 
                 return PartialView("_SearchResultProcess", result);
             }
