@@ -28,7 +28,14 @@
         }      
         <br>
         <h3>@UIElementRes.UIElement.AttachedFiles</h3>
-
+        @if(!String.IsNullOrEmpty(Model.ProcessView.MandatoryFileTypes))
+        {
+            <h5 class="text-danger">@UIElementRes.UIElement.SupportFileTypes: @Model.ProcessView.MandatoryFileTypes</h5>
+        }
+        @if (Model.ProcessView.MandatoryNumberFiles > 0)
+        {
+            <h5 class="text-danger">@String.Format(UIElementRes.UIElement.MustAttachedFiles, Model.ProcessView.MandatoryNumberFiles)</h5>
+        }
         <div class="row fileupload-buttonbar">
             <div class="col-lg-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->

@@ -628,6 +628,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to В документе нужно прикрепить {0} файл(-а).
+        /// </summary>
+        public static string MustAttachedFiles {
+            get {
+                return ResourceManager.GetString("MustAttachedFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Активные документы.
         /// </summary>
         public static string MyProcesses {
@@ -1083,6 +1092,15 @@ namespace UIElementRes {
         public static string Staff {
             get {
                 return ResourceManager.GetString("Staff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Поддерживаемые типы файлов.
+        /// </summary>
+        public static string SupportFileTypes {
+            get {
+                return ResourceManager.GetString("SupportFileTypes", resourceCulture);
             }
         }
         

@@ -29,6 +29,7 @@ namespace RapidDoc.Controllers
             CompanyTable company = _Companyservice.FirstOrDefault(x => x.AliasCompanyName == "ATK");
             BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "");
             BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "", true);
+            CheckActiveUsers(company);
 
             //Отключаем на всякий случай VIP группу
             IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
@@ -363,5 +364,39 @@ namespace RapidDoc.Controllers
             return results;
         }
 
+        private void CheckActiveUsers(CompanyTable _item)
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+            var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+            foreach (ApplicationUser user in um.Users.Where(x => x.isDomainUser == true))
+            {
+                DirectoryEntry entry = new DirectoryEntry("LDAP://" + _item.DomainTable.LDAPServer + ":"
+                + Convert.ToString(_item.DomainTable.LDAPPort)
+                , _item.DomainTable.LDAPLogin, _item.DomainTable.LDAPPassword, AuthenticationTypes.None);
+                DirectorySearcher ds = new DirectorySearcher(entry);
+
+                ds.Filter = "(SAMAccountName=" + user.UserName + ")";
+
+                try
+                {
+                    SearchResult results = ds.FindOne();
+                    if (results.ToString() != "")
+                    {
+                        int flags = Convert.ToInt32(results.Properties["userAccountControl"][0].ToString());
+                        if(Convert.ToBoolean(flags & 0x0002))
+                        {
+                            um.RemoveFromRole(user.Id, "ActiveUser");
+                        }
+                    }
+                    ds.Dispose();
+                    entry.Dispose();
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+        }
     }
 }

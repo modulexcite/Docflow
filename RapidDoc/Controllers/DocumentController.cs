@@ -277,6 +277,11 @@ namespace RapidDoc.Controllers
 
             ProcessView process = _ProcessService.FindView(id);
 
+            DateTime date = DateTime.UtcNow;
+            DateTime startTime = new DateTime(date.Year, date.Month, date.Day) + process.StartWorkTime;
+            DateTime endTime = new DateTime(date.Year, date.Month, date.Day) + process.EndWorkTime;
+            if ((startTime < date || date > endTime) && process.StartWorkTime != process.EndWorkTime) return HttpNotFound();
+
             ApplicationDbContext context = new ApplicationDbContext();
             UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));

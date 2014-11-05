@@ -62,6 +62,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "MandatoryFileTypes", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string MandatoryFileTypes { get; set; }
+
+        [Display(Name = "StartWorkTime", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Display(Name = "EndWorkTime", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public TimeSpan EndWorkTime { get; set; }
     }
 
     public class DocumentComposite

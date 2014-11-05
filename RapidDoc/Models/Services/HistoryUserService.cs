@@ -53,9 +53,18 @@ namespace RapidDoc.Models.Services
             foreach(var item in items)
             {
                 EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
-                item.CreatedEmplName = empl.FullName;
-                item.CreatedEmplTitle = empl.TitleName;
-                item.CreatedEmplDepartment = empl.DepartmentName;
+                if (empl != null)
+                {
+                    item.CreatedEmplName = empl.FullName;
+                    item.CreatedEmplTitle = empl.TitleName;
+                    item.CreatedEmplDepartment = empl.DepartmentName;
+                }
+                else
+                {
+                    item.CreatedEmplName = currentUser.UserName;
+                    item.CreatedEmplTitle = String.Empty;
+                    item.CreatedEmplDepartment = String.Empty;
+                }
             }
 
             return items;
@@ -72,9 +81,18 @@ namespace RapidDoc.Models.Services
             foreach (var item in items)
             {
                 EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
-                item.CreatedEmplName = empl.FullName;
-                item.CreatedEmplTitle = empl.TitleName;
-                item.CreatedEmplDepartment = empl.DepartmentName;
+                if (empl != null)
+                {
+                    item.CreatedEmplName = empl.FullName;
+                    item.CreatedEmplTitle = empl.TitleName;
+                    item.CreatedEmplDepartment = empl.DepartmentName;
+                }
+                else
+                {
+                    item.CreatedEmplName = currentUser.UserName;
+                    item.CreatedEmplTitle = String.Empty;
+                    item.CreatedEmplDepartment = String.Empty;
+                }
             }
 
             return items;
@@ -88,9 +106,18 @@ namespace RapidDoc.Models.Services
             var item = Mapper.Map<HistoryUserTable, HistoryUserView>(FirstOrDefault(predicate));
             ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
-            item.CreatedEmplName = empl.FullName;
-            item.CreatedEmplTitle = empl.TitleName;
-            item.CreatedEmplDepartment = empl.DepartmentName;
+            if (empl != null)
+            {
+                item.CreatedEmplName = empl.FullName;
+                item.CreatedEmplTitle = empl.TitleName;
+                item.CreatedEmplDepartment = empl.DepartmentName;
+            }
+            else
+            {
+                item.CreatedEmplName = currentUser.UserName;
+                item.CreatedEmplTitle = String.Empty;
+                item.CreatedEmplDepartment = String.Empty;
+            }
             return item;
         }
         public void SaveDomain(HistoryUserTable domainTable)
@@ -126,9 +153,18 @@ namespace RapidDoc.Models.Services
             var item = Mapper.Map<HistoryUserTable, HistoryUserView>(Find(id));
             ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
-            item.CreatedEmplName = empl.FullName;
-            item.CreatedEmplTitle = empl.TitleName;
-            item.CreatedEmplDepartment = empl.DepartmentName;
+            if (empl != null)
+            {
+                item.CreatedEmplName = empl.FullName;
+                item.CreatedEmplTitle = empl.TitleName;
+                item.CreatedEmplDepartment = empl.DepartmentName;
+            }
+            else
+            {
+                item.CreatedEmplName = currentUser.UserName;
+                item.CreatedEmplTitle = String.Empty;
+                item.CreatedEmplDepartment = String.Empty;
+            }
 
             return item;
         }

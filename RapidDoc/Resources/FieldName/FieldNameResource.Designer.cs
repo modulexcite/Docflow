@@ -322,6 +322,15 @@ namespace FieldNameRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Активен до.
+        /// </summary>
+        public static string EndWorkTime {
+            get {
+                return ResourceManager.GetString("EndWorkTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Исполнитель.
         /// </summary>
         public static string Executor {
@@ -633,6 +642,15 @@ namespace FieldNameRes {
         public static string StartDate {
             get {
                 return ResourceManager.GetString("StartDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Активен с.
+        /// </summary>
+        public static string StartWorkTime {
+            get {
+                return ResourceManager.GetString("StartWorkTime", resourceCulture);
             }
         }
         

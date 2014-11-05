@@ -59,6 +59,9 @@ namespace RapidDoc.Models.DomainModels
         public int MandatoryNumberFiles { get; set; }
         public string MandatoryFileTypes { get; set; }
 
+        public TimeSpan StartWorkTime { get; set; }
+        public TimeSpan EndWorkTime { get; set; }
+
         public string GroupProcessName
         {
             get
