@@ -2526,10 +2526,10 @@ namespace RapidDoc.Models.DomainModels
         public string FinancialSource { get; set; }
 
         [Required]
-        public DateTime? FromDate { get; set; }
+        public DateTime FromDate { get; set; }
 
         [Required]
-        public DateTime? ToDate { get; set; }
+        public DateTime ToDate { get; set; }
 
         [Required]
         public string Amount { get; set; }
@@ -2547,10 +2547,10 @@ namespace RapidDoc.Models.DomainModels
         public string FinancialSource { get; set; }
 
         [Required]
-        public DateTime? FromDate { get; set; }
+        public DateTime FromDate { get; set; }
 
         [Required]
-        public DateTime? ToDate { get; set; }
+        public DateTime ToDate { get; set; }
 
         [Required]
         public string Amount { get; set; }
@@ -2746,10 +2746,10 @@ namespace RapidDoc.Models.DomainModels
         public string FinancialSource { get; set; }
 
         [Required]
-        public DateTime? FromDate { get; set; }
+        public DateTime FromDate { get; set; }
 
         [Required]
-        public DateTime? ToDate { get; set; }
+        public DateTime ToDate { get; set; }
 
         [Required]
         public string Amount { get; set; }
@@ -2812,6 +2812,211 @@ namespace RapidDoc.Models.DomainModels
 
 
     #endregion
+
+    #region УРП
+
+    public class USR_REQ_URP_RequestForKindergarten_Table : BasicDocumentTable
+    {
+        public TeachGroup TeachGroup { get; set; }
+
+        [Required]
+        public string ChildName { get; set; }
+
+        [Required]
+        public DateTime BirthDate { get; set; }
+
+        public RelateRate RelateRate { get; set; }
+
+        [Required]
+        public string FatherName { get; set; }
+
+        [Required]
+        public string FatherWorkPlace { get; set; }
+
+        [Required]
+        public string MotherName { get; set; }
+
+        [Required]
+        public string MotherWorkPlace { get; set; }
+
+        [Required]
+        public string ActualAddress { get; set; }
+
+        [Required]
+        public string Contact { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForResponsibilities_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string UsersOff { get; set; }
+
+        [Required]
+        public string PositionOff { get; set; }
+
+        [Required]
+        public string DepartmentOff { get; set; }
+
+        [Required]
+        public string ScheduleOff{ get; set; }
+
+        [Required]
+        public string UsersOn { get; set; }
+
+        [Required]
+        public string PositionOn { get; set; }
+
+        [Required]
+        public string DepartmentOn { get; set; }
+
+        [Required]
+        public string ScheduleOn { get; set; }
+
+        [Required]
+        public DateTime FromDate { get; set; }
+
+        [Required]
+        public DateTime ToDate { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForResponsibilitiesSOTB_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string UsersOff { get; set; }
+
+        [Required]
+        public string PositionOff { get; set; }
+
+        [Required]
+        public string DepartmentOff { get; set; }
+
+        [Required]
+        public string ScheduleOff { get; set; }
+
+        [Required]
+        public string UsersOn { get; set; }
+
+        [Required]
+        public string PositionOn { get; set; }
+
+        [Required]
+        public string DepartmentOn { get; set; }
+
+        [Required]
+        public string ScheduleOn { get; set; }
+
+        [Required]
+        public DateTime FromDate { get; set; }
+
+        [Required]
+        public DateTime ToDate { get; set; }
+
+        [Required]
+        public string Amount { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForPrepayMaster_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Schedule { get; set; }
+
+        [Required]
+        public DateTime DocDate { get; set; }
+
+        [Required]
+        public string Percent { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForAccrualExceptZIFBGP_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForAccrualBGP_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForAccrualZIF_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForTeaching_Table : BasicDocumentTable
+    {
+        [Required]
+        public string ToUsers { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Theme { get; set; }
+
+        [Required]
+        public DateTime DocDate { get; set; }
+
+        [Required]
+        public string Place { get; set; }
+
+        public string Company { get; set; }
+    }
+    #endregion
+
+
 
 }
     

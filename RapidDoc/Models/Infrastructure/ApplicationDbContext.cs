@@ -174,6 +174,14 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_UKR_RequestForExpertiseDKU_Table> USR_REQ_UZL_RequestForExpertiseDKU_Table { get; set; }
         public DbSet<USR_REQ_UKR_RequestForExpertiseInstruction_Table> USR_REQ_UKR_RequestForExpertiseInstruction_Table { get; set; }
         public DbSet<USR_REQ_UKR_RequestForExpertiseDepartment_Table> USR_REQ_UKR_RequestForExpertiseDepartment_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForKindergarten_Table> USR_REQ_URP_RequestForKindergarten_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForResponsibilities_Table> USR_REQ_URP_RequestForResponsibilities_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForResponsibilitiesSOTB_Table> USR_REQ_URP_RequestForResponsibilitiesSOTB_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForPrepayMaster_Table> USR_REQ_URP_RequestForPrepayMaster_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForAccrualExceptZIFBGP_Table> USR_REQ_URP_RequestForAccrualExceptZIFBGP_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForAccrualBGP_Table> USR_REQ_URP_RequestForAccrualBGP_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForAccrualZIF_Table> USR_REQ_URP_RequestForAccrualZIF_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForTeaching_Table> USR_REQ_URP_RequestForTeaching_Table { get; set; }
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();

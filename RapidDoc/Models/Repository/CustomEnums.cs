@@ -764,4 +764,28 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Авиа по разрешению")]
         AirPermission = 4,
     }
+
+    public enum TeachGroup : byte
+    {
+        [Display(Name = "Казахская")]
+        Kazakh = 0,
+
+        [Display(Name = "Русская")]
+        Russian = 1
+    }
+
+    public enum RelateRate : byte
+    {
+        [Display(Name = "Сын/Дочь")]
+        Son = 0,
+
+        [Display(Name = "Внук/Внучка")]
+        Grandson = 1,
+
+        [Display(Name = "Племянник/Племянница")]
+        Nephew = 2,
+
+        [Display(Name = "Брат/Сестра")]
+        Brother = 3
+    }
 }
