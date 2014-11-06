@@ -14,10 +14,14 @@
     @Scripts.Render("~/bundles/gridmvc")
 }
 @section jslaunch {
+<script type="text/javascript">
+$(function () {
     grid_init("@Url.Action("GetEmplList", "Empl")")
 
     var detailsUrl = '@Url.Action("Edit", "Empl")';
     pageGrids.ordersGrid.onRowSelect(function (e) {
     window.location.href = detailsUrl  + '/' + e.row.Id;
     });
+});
+</script>
 }

@@ -63,25 +63,29 @@ namespace RapidDoc.Controllers
             _CustomCheckDocument = customCheckDocument;
         }
 
+        public ActionResult Index()
+        {
+            return View();
+        }
+
         public ActionResult ArchiveDocuments()
+        {
+            return View();
+        }
+
+        public ActionResult AgreedDocuments()
         {
             return View();
         }
 
         public ActionResult GetAllDocument()
         {
-            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
-            ViewBag.CurrentTimeId = user.TimeZoneId;
-
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
             return PartialView("~/Views/Document/DocumentList.cshtml", grid);
         }
 
         public ActionResult GetArchiveDocument()
         {
-            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
-            ViewBag.CurrentTimeId = user.TimeZoneId;
-
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetArchiveView(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
             return PartialView("~/Views/Document/DocumentList.cshtml", grid);
         }
@@ -89,9 +93,6 @@ namespace RapidDoc.Controllers
         public JsonResult GetDocumentList(int page)
         {
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
-
-            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
-            ViewBag.CurrentTimeId = user.TimeZoneId;
 
             return Json(new
             {
@@ -104,9 +105,6 @@ namespace RapidDoc.Controllers
         {
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetArchiveView(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
 
-            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
-            ViewBag.CurrentTimeId = user.TimeZoneId;
-
             return Json(new
             {
                 Html = RenderPartialViewToString("DocumentList", grid),
@@ -116,9 +114,6 @@ namespace RapidDoc.Controllers
 
         public ActionResult GetAllAgreedDocument()
         {
-            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
-            ViewBag.CurrentTimeId = user.TimeZoneId;
-
             var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
             return PartialView("~/Views/Document/DocumentList.cshtml", grid);
         }
@@ -127,19 +122,11 @@ namespace RapidDoc.Controllers
         {
             var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
 
-            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
-            ViewBag.CurrentTimeId = user.TimeZoneId;
-
             return Json(new
             {
                 Html = RenderPartialViewToString("DocumentList", grid),
                 HasItems = grid.DisplayingItemsCount >= grid.Pager.PageSize
             }, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult AgreedDocuments()
-        {
-            return View();
         }
 
         public ActionResult ShowDocument(Guid id, bool isAfterView = false)
@@ -165,7 +152,7 @@ namespace RapidDoc.Controllers
             ApplicationUser userTable = _AccountService.Find(docuView.ApplicationUserCreatedId);
             if (emplTable == null || userTable == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("PageNotFound", "Error");
             }
 
             object viewModel = InitialViewShowDocument(id, process, docuView, userTable, emplTable);
@@ -175,8 +162,8 @@ namespace RapidDoc.Controllers
         [HttpPost]
         public ActionResult ShowDocument(Guid id, string approveDoc, string rejectDoc, IDictionary<string, object> documentData, string lastComment = "")
         {
-            DocumentTable docuTable = _DocumentService.Find(id); 
-            if (docuTable == null) return HttpNotFound();
+            DocumentTable docuTable = _DocumentService.Find(id);
+            if (docuTable == null) return RedirectToAction("PageNotFound", "Error");
 
             if (lastComment != "")
             {
@@ -187,7 +174,7 @@ namespace RapidDoc.Controllers
             if(rejectDoc != String.Empty)
             {
                 ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
-                if (userTable == null) return HttpNotFound();
+                if (userTable == null) return RedirectToAction("PageNotFound", "Error");
 
                 DateTime checkRejectDate = DateTime.UtcNow.AddMinutes(-5);
                 HistoryUserTable history = _HistoryUserService.FirstOrDefault(x => x.DocumentTableId == id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
@@ -221,7 +208,7 @@ namespace RapidDoc.Controllers
                         _WorkflowService.AgreementWorkflowReject(id, processTable.TableName, documentData);
                     }
                 }
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Document");
             }
 
             ApplicationUser userResult = _AccountService.Find(User.Identity.GetUserId());
@@ -270,17 +257,17 @@ namespace RapidDoc.Controllers
         public ActionResult Create(Guid id)
         {
             ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
-            if (userTable == null) return HttpNotFound();
+            if (userTable == null) return RedirectToAction("PageNotFound", "Error");
 
             EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id && x.CompanyTableId == userTable.CompanyTableId);
-            if (emplTable == null) return HttpNotFound();
+            if (emplTable == null) return RedirectToAction("PageNotFound", "Error");
 
             ProcessView process = _ProcessService.FindView(id);
 
             DateTime date = DateTime.UtcNow;
             DateTime startTime = new DateTime(date.Year, date.Month, date.Day) + process.StartWorkTime;
             DateTime endTime = new DateTime(date.Year, date.Month, date.Day) + process.EndWorkTime;
-            if ((startTime < date || date > endTime) && process.StartWorkTime != process.EndWorkTime) return HttpNotFound();
+            if ((startTime < date || date > endTime) && process.StartWorkTime != process.EndWorkTime) return RedirectToAction("PageNotFound", "Error");
 
             ApplicationDbContext context = new ApplicationDbContext();
             UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
@@ -290,7 +277,7 @@ namespace RapidDoc.Controllers
                 string roleName = RoleManager.FindById(process.RoleId).Name;
                 if (!UserManager.IsInRole(userTable.Id, roleName))
                 {
-                    return HttpNotFound();
+                    return RedirectToAction("PageNotFound", "Error");
                 }
             }
             context.Dispose();
@@ -317,7 +304,7 @@ namespace RapidDoc.Controllers
             }
 
             var model = _CommentService.GetPartialView(x => x.DocumentTableId == documentId);
-            return PartialView("~/Views/Shared/Comments.cshtml", model);
+            return PartialView("~/Views/Shared/_Comments.cshtml", model);
         }
 
         [HttpPost]
@@ -345,7 +332,7 @@ namespace RapidDoc.Controllers
                 SaveSearchData(docModel, actionModelName, documentId);
                 _WorkflowService.RunWorkflow(documentId, process.TableName, documentData);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Document");
             }
 
             var viewModel = new DocumentComposite();
@@ -431,7 +418,6 @@ namespace RapidDoc.Controllers
                     var empls = InitializeReaderView(id);
                     return View(empls);
                 }
-                
             }
 
             return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id, isAfterView = true }) });
@@ -579,7 +565,6 @@ namespace RapidDoc.Controllers
         [HttpGet]
         public JsonResult GetAllFileDocument(Guid id)
         {
- 
             var statuses = new List<ViewDataUploadFilesResult>();
             var files = _DocumentService.GetAllFilesDocument(id);          
 
@@ -678,16 +663,6 @@ namespace RapidDoc.Controllers
             JsonResult result = Json(deletedFiles);
             result.ContentType = "text/plain";
             return result;
-        }
-
-        public class ViewDataUploadFilesResult
-        {
-            public string name { get; set; }
-            public int size { get; set; }
-            public string url { get; set; }
-            public string deleteUrl { get; set; }
-            public string thumbnailUrl { get; set; }
-            public string deleteType { get; set; }
         }
 
         public ActionResult RoutePostMethod(Guid processId, dynamic docModel, int type, Guid? documentId, Guid fileId, String actionModelName, HttpPostedFileBase file, IDictionary<string, object> documentData, string approveDoc = "", string rejectDoc = "", string lastComment = "")

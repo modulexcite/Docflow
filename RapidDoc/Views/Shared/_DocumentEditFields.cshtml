@@ -1,7 +1,7 @@
 ﻿@model object
 @using RapidDoc.Extensions
 
-@{ int index = 0; bool isDate = false; bool isDateTime = false; }
+@{ int index = 0; }
 @foreach (var property in Model.VisibleProperties())
 {
     object dataTypeAttr = property.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DataTypeAttribute), false).FirstOrDefault();
@@ -57,7 +57,6 @@
     {
         if (dataTypeAttr == null)
         {
-            isDate = true;
             <div class="editor-field">
                 @Html.TextBox((string)property.Name, null, new { @class = "datepicker form-control form-control-date", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), format = "mm/dd/yyyy", placeholder = "Дата", startDate = "" })
             </div>
@@ -66,14 +65,12 @@
         {
             if(((System.ComponentModel.DataAnnotations.DataTypeAttribute)dataTypeAttr).DataType == System.ComponentModel.DataAnnotations.DataType.Date)
             {
-                isDate = true;
                 <div class="editor-field">
                     @Html.TextBox((string)property.Name, null, new { @class = "datepicker form-control form-control-date", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), format = "mm/dd/yyyy", placeholder = "Дата", startDate = "" })
                 </div>
             }
             else if (((System.ComponentModel.DataAnnotations.DataTypeAttribute)dataTypeAttr).DataType == System.ComponentModel.DataAnnotations.DataType.DateTime)
             {
-                isDateTime = true;
                 <div class="editor-field">
                     @Html.TextBox((string)property.Name, null, new { @class = "datetimepicker form-control form-control-date", placeholder = "Дата/время", startDate = "" })
                 </div>
@@ -101,17 +98,4 @@
     }
 
     index++;
-}
-
-@if (isDate)
-{
-    @section jslaunch {
-        datepicker_init("@UIElementRes.UIElement.LangName");
-    }
-}
-@if (isDateTime)
-{
-    @section jslaunch {
-        datetimepicker_init("@UIElementRes.UIElement.LangName");
-    }
 }

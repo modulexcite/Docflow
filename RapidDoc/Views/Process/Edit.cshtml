@@ -242,12 +242,14 @@
     var urlFileUpload = "@Url.Action("GetAllFileDocument", "Process")";
 }
 @section jslaunch {
+<script type="text/javascript">
+$(function () {
     selectpicker_init();
     timepicker_init();
 
     $("#buttonSubmitWF").click(function(){
         var formData = new FormData();
-        formData.append('fileWF', $("input[type='file'][name='fileWF']")[0].files[0]);     
+        formData.append('fileWF', $("input[type='file'][name='fileWF']")[0].files[0]);
 
         $.ajax({
              type: 'POST',
@@ -312,4 +314,6 @@
             }
         });
     }
+});
+</script>
 }
