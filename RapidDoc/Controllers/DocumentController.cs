@@ -739,7 +739,7 @@ namespace RapidDoc.Controllers
                     }
                     else if(propertyInfo.PropertyType == typeof(bool))
                     {
-                        bool valueBool = collection[key].Contains("true");
+                        bool valueBool = collection[key].ToLower().Contains("true");
                         propertyInfo.SetValue(actionModel, valueBool, null);
                         documentData.Add(key, valueBool);
                     }
@@ -761,6 +761,13 @@ namespace RapidDoc.Controllers
                         propertyInfo.SetValue(actionModel, valueGuid, null);
                         documentData.Add(key, valueGuid);
                     }
+                    else if (propertyInfo.PropertyType == typeof(TimeSpan))
+                    {
+                        TimeSpan valueTimeSpan = TimeSpan.Parse(collection[key]);
+                        propertyInfo.SetValue(actionModel, valueTimeSpan, null);
+                        documentData.Add(key, valueTimeSpan);
+                    }
+
                     else
                     {
                         bool isRequired = actionModel.GetType().GetProperty(key)

@@ -788,4 +788,230 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Брат/Сестра")]
         Brother = 3
     }
+
+    public enum HROpinion : byte
+    {
+        [Display(Name = "Благоприятное")]
+        Fortunate = 0,
+
+        [Display(Name = "Неблагоприятное")]
+        Unfortunate = 1
+    }
+
+    public enum StatusResidence : byte
+    {
+        [Display(Name = "Привлеченный")]
+        Recruiting = 0,
+
+        [Display(Name = "Непривлеченный")]
+        Failure = 1
+    }
+
+    public enum HRGraphics : byte
+    {
+        [Display(Name = "№1 (день) (для JDE №2)")]
+        Graphics1 = 0,
+
+        [Display(Name = "№1 (день-ночь) (для JDE №1)")]
+        Graphics2 = 1,
+
+        [Display(Name = "№1 (ночь)")]
+        Graphics3 = 2,
+
+        [Display(Name = "№3 (день-ночь) (для JDE №3)")]
+        Graphics4 = 3,
+
+        [Display(Name = "№3 (день) (для JDE №5)")]
+        Graphics5 = 4,
+
+        [Display(Name = "№3 (ночь)")]
+        Graphics6 = 5,
+
+        [Display(Name = "№1 (день) для ПТО БГП (для JDE №6)")]
+        Graphics7 = 6,
+
+        [Display(Name = "№2 (для JDE №98)")]
+        Graphics8 = 7,
+
+        [Display(Name = "№4")]
+        Graphics9 = 8
+    }
+
+    public enum HRDuration : byte
+    {
+        [Display(Name = "8 чаc")]
+        Duration1 = 0,
+
+        [Display(Name = "11 час")]
+        Duration2 = 1,
+
+        [Display(Name = "7.2 час")]
+        Duration3 = 2
+    }
+
+    public enum HRDepartmentFirstDay : byte
+    {
+        [Display(Name = "Цех легкового транспорта УТ")]
+        Department1 = 0,
+
+        [Display(Name = "Цех пассажирского транспорта УТ")]
+        Department2 = 1,
+
+        [Display(Name = "Цех вспомогательного транспорта УТ")]
+        Department3 = 2
+    }
+
+    public enum HRDestinationFirstDay : byte
+    {
+        [Display(Name = "Астана")]
+        Department1 = 0,
+
+        [Display(Name = "Областные и районные центры")]
+        Department2 = 1
+    }
+
+    public enum CategoryTrip : byte
+    {
+        [Display(Name = "Плановый")]
+        Plan = 0,
+
+        [Display(Name = "Внеплановый")]
+        UnPlan = 1
+    }
+
+    public enum TypeTrip : byte
+    {
+        [Display(Name = "Производственная")]
+        Production = 0,
+
+        [Display(Name = "Учебная")]
+        Training = 1,
+
+        [Display(Name = "Для участия в конференции")]
+        Conference = 2,
+
+        [Display(Name = "Для участия в семинаре")]
+        Workshop = 3,
+
+        [Display(Name = "Другое")]
+        Other = 4
+    }
+
+    public enum PassageTrip : byte
+    {
+        [Display(Name = "Поезд")]
+        Train = 0,
+
+        [Display(Name = "Автотранспорт")]
+        Car = 1,
+
+        [Display(Name = "Самолет")]
+        Airplane = 2,
+
+        [Display(Name = "Водный транспорт")]
+        Water = 3
+    }
+
+    public enum PaymentTrip : byte
+    {
+        [Display(Name = "Компания")]
+        Element1 = 0,
+
+        [Display(Name = "Приглашающая сторона")]
+        Element2 = 1,
+
+        [Display(Name = "Не оплачивается")]
+        Element3 = 2
+    }
+
+    public enum Months : byte
+    {
+        [Display(Name = "Январь")]
+        January = 0,
+
+        [Display(Name = "Февраль")]
+        February = 1,
+
+        [Display(Name = "Март")]
+        March = 2,
+
+        [Display(Name = "Апрель")]
+        April = 3,
+
+        [Display(Name = "Май")]
+        May = 4,
+
+        [Display(Name = "Июнь")]
+        June = 5,
+
+        [Display(Name = "Июль")]
+        July = 6,
+
+        [Display(Name = "Август")]
+        August = 7,
+
+        [Display(Name = "Сентябрь")]
+        September = 8,
+
+        [Display(Name = "Октябрь")]
+        October = 9,
+
+        [Display(Name = "Ноябрь")]
+        November = 10,
+
+        [Display(Name = "Декабрь")]
+        December = 11
+    }
+
+    public enum Payment : byte
+    {
+        [Display(Name = "Самостоятельно")]
+        Element1 = 0,
+
+        [Display(Name = "За счет Altyntau Kokshetau")]
+        Element2 = 1,
+
+        [Display(Name = "За счет Kazzinc Holding")]
+        Element3 = 2
+    }
+
+    public enum PurposeTrip : byte
+    {
+        [Display(Name = "Встретить")]
+        Element1 = 0,
+
+        [Display(Name = "Сопроводить")]
+        Element2 = 1
+    }
+
+    public enum EmplTrip : byte
+    {
+        [Display(Name = "Kazzinc Holding")]
+        Element1 = 0,
+
+        [Display(Name = "ATV")]
+        Element2 = 1,
+
+        [Display(Name = "Kazzinc")]
+        Element3 = 2,
+
+        [Display(Name = "Казцинктех")]
+        Element4 = 3,
+
+        [Display(Name = "Приглашенные спец.\\подрядчики")]
+        Element5 = 4
+    }
+
+    public enum PurposeAuxiliaryTransportTrip : byte
+    {
+        [Display(Name = "Плановыми")]
+        Element1 = 0,
+
+        [Display(Name = "Производственной необходимостью")]
+        Element2 = 1,
+
+        [Display(Name = "Ликвидацией аварии")]
+        Element3 = 2
+    }
+    
 }

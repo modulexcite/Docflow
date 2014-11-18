@@ -1,8 +1,16 @@
 ﻿@model object
 @using RapidDoc.Extensions
+@{
+    var fieldName = (string)ViewData["FieldName"];
+}
 
 @foreach (var property in Model.VisibleProperties())
 {
+    if (((string)property.Name) != null && fieldName != null && !String.IsNullOrEmpty(fieldName) && ((string)property.Name) != fieldName)
+    {
+        continue;
+    }
+    
     object dataTypeAttr = property.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DataTypeAttribute), false).FirstOrDefault();
     <div class="editor-label">
         @Html.Label((string)property.Name)
@@ -65,6 +73,12 @@
     {
         <div class="editor-field">
             @Html.CheckBox((string)property.Name, new { @disabled = true })
+        </div>
+    }
+    else if (property.PropertyType == typeof(TimeSpan))
+    {
+        <div class="editor-field">
+            @Html.DisplayText((string)property.Name)
         </div>
     }
 }

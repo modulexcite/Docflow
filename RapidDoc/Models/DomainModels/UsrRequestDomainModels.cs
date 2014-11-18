@@ -3014,8 +3014,2743 @@ namespace RapidDoc.Models.DomainModels
 
         public string Company { get; set; }
     }
+
+    public class USR_REQ_URP_RequestForWithdrawVocationITR1_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Subject { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForWithdrawVocationITR2_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Subject { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForWVAuxiliaryBlock_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Subject { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForWVMiningBlock_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Subject { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForWVFinBlock_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Subject { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForWVStraight_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Subject { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForForeignVisa_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string DateAndPlace { get; set; }
+
+        [Required]
+        public string Citizenship { get; set; }
+
+        [Required]
+        public string Nationality { get; set; }
+
+        [Required]
+        public string Passport { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Address { get; set; }
+
+        [Required]
+        public string PlaceVisa { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+        [Required]
+        public string Multiplicity { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public string Route { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForTransferVocationITR1_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public DateTime PlanDate { get; set; }
+
+        [Required]
+        public DateTime TransferDate { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForTransferVocationITR2_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public DateTime PlanDate { get; set; }
+
+        [Required]
+        public DateTime TransferDate { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForTransfVacWorkerMining_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public DateTime PlanDate { get; set; }
+
+        [Required]
+        public DateTime TransferDate { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForTransfVacWorkerStraight_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public DateTime PlanDate { get; set; }
+
+        [Required]
+        public DateTime TransferDate { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForTransfVacWorkerFin_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public DateTime PlanDate { get; set; }
+
+        [Required]
+        public DateTime TransferDate { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForTransfVacWorkerAuxiliary_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public DateTime PlanDate { get; set; }
+
+        [Required]
+        public DateTime TransferDate { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForProvisionGraphVac_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string UserChooseManual2 { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForProvisionGraphExit_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForWeekend_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Employee { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForReduction_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForReductionCandidate_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+    }
+
+    public class USR_REQ_URP_RequestForReductionTB_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Bulk { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+
+    }
+
+    public class USR_REQ_URP_RequestForReductionThird_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string UserChooseManual2 { get; set; }
+
+        [Required]
+        public string UserChooseManual3 { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForSelectionPersonal_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public int Count { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public DateTime ClosedDate { get; set; }
+
+        [Required]
+        public string Possibility { get; set; }
+
+        [Required]
+        public string Executive { get; set; }
+
+        [Required]
+        public string ContactPerson { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string Age { get; set; }
+
+        [Required]
+        public string Education { get; set; }
+
+        [Required]
+        public string Experience { get; set; }
+
+        [Required]
+        public string Requirement { get; set; }
+
+        [Required]
+        public string Skills { get; set; }
+
+        [Required]
+        public string Character { get; set; }
+
+        [Required]
+        public string Additional { get; set; }
+
+        [Required]
+        public string FuncDuties { get; set; }
+
+        [Required]
+        public string AddDuties { get; set; }
+
+        [Required]
+        public string DirectExecutive { get; set; }
+
+        [Required]
+        public string Management { get; set; }
+
+        [Required]
+        public string Salary { get; set; }
+
+        [Required]
+        public string AddSalary { get; set; }
+
+        [Required]
+        public string Schedule { get; set; }
+
+        [Required]
+        public string BusinessTrip { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForHRCardITR1_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string OnPosition { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Tutor { get; set; }
+
+        [Required]
+        public string UserChooseManual2 { get; set; }
+
+        [Required]
+        public string Report1 { get; set; }
+
+        [Required]
+        public DateTime DateInterview1 { get; set; }
+
+        [Required]
+        public HROpinion Opinion1 { get; set; }
+
+        [Required]
+        public string Reason1 { get; set; }
+
+        public string Report2 { get; set; }
+
+        public DateTime? DateInterview2 { get; set; }
+
+        public HROpinion Opinion2 { get; set; }
+
+        public string Reason2 { get; set; }
+
+        public string Report3 { get; set; }
+
+        public DateTime? DateInterview3 { get; set; }
+
+        public HROpinion Opinion3 { get; set; }
+
+        public string Reason3 { get; set; }
+
+        public string Report4 { get; set; }
+
+        public DateTime? DateInterview4 { get; set; }
+
+        public HROpinion Opinion4 { get; set; }
+
+        public string Reason4 { get; set; }
+     
+        public string Circumstances { get; set; }
+
+        [Required]
+        public string SalaryCode { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+        [Required]
+        public string Schedule { get; set; }
+
+        [Required]
+        public string Solution { get; set; }
+
+        [Required]
+        public StatusResidence Status { get; set; }
+
+        [Required]
+        public bool External { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForHRCardITR2_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string OnPosition { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Tutor { get; set; }
+
+        [Required]
+        public string UserChooseManual2 { get; set; }
+
+        [Required]
+        public string UserChooseManual3 { get; set; }
+
+        [Required]
+        public string Report1 { get; set; }
+
+        [Required]
+        public DateTime DateInterview1 { get; set; }
+
+        [Required]
+        public HROpinion Opinion1 { get; set; }
+
+        [Required]
+        public string Reason1 { get; set; }
+
+        public string Report2 { get; set; }
+
+        public DateTime? DateInterview2 { get; set; }
+
+        public HROpinion Opinion2 { get; set; }
+
+        public string Reason2 { get; set; }
+
+        public string Report3 { get; set; }
+
+        public DateTime? DateInterview3 { get; set; }
+
+        public HROpinion Opinion3 { get; set; }
+
+        public string Reason3 { get; set; }
+
+        public string Report4 { get; set; }
+
+        public DateTime? DateInterview4 { get; set; }
+
+        public HROpinion Opinion4 { get; set; }
+
+        public string Reason4 { get; set; }
+
+        public string Circumstances { get; set; }
+
+        [Required]
+        public string SalaryCode { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+        [Required]
+        public string Schedule { get; set; }
+
+        [Required]
+        public string Solution { get; set; }
+
+        [Required]
+        public StatusResidence Status { get; set; }
+
+        [Required]
+        public bool External { get; set; }
+    
+    }
+
+    public class USR_REQ_URP_RequestForHRCardITRZIF_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string OnPosition { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Tutor { get; set; }
+
+        [Required]
+        public string UserChooseManual2 { get; set; }
+
+        [Required]
+        public string Report1 { get; set; }
+
+        [Required]
+        public DateTime DateInterview1 { get; set; }
+
+        [Required]
+        public HROpinion Opinion1 { get; set; }
+
+        [Required]
+        public string Reason1 { get; set; }
+
+        public string Report2 { get; set; }
+
+        public DateTime? DateInterview2 { get; set; }
+
+        public HROpinion Opinion2 { get; set; }
+
+        public string Reason2 { get; set; }
+
+        public string Report3 { get; set; }
+
+        public DateTime? DateInterview3 { get; set; }
+
+        public HROpinion Opinion3 { get; set; }
+
+        public string Reason3 { get; set; }
+
+        public string Circumstances { get; set; }
+
+        [Required]
+        public string SalaryCode { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+        [Required]
+        public string Schedule { get; set; }
+
+        [Required]
+        public string Solution { get; set; }
+
+        [Required]
+        public StatusResidence Status { get; set; }
+
+        [Required]
+        public bool External { get; set; }
+    
+    }
+
+    public class USR_REQ_URP_RequestForHRCardWork_Table : BasicDocumentTable
+    {
+        [Required]
+        public string OnPosition { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Tutor { get; set; }
+
+        [Required]
+        public string UserChooseManual2 { get; set; }
+
+        [Required]
+        public string UserChooseManual3 { get; set; }
+
+        [Required]
+        public string Report1 { get; set; }
+
+        [Required]
+        public DateTime DateInterview1 { get; set; }
+
+        [Required]
+        public HROpinion Opinion1 { get; set; }
+
+        [Required]
+        public string Reason1 { get; set; }
+
+        public string Report2 { get; set; }
+
+        public DateTime? DateInterview2 { get; set; }
+
+        public HROpinion Opinion2 { get; set; }
+
+        public string Reason2 { get; set; }
+
+        public string Report3 { get; set; }
+
+        public DateTime? DateInterview3 { get; set; }
+
+        public HROpinion Opinion3 { get; set; }
+
+        public string Reason3 { get; set; }
+
+        public string Report4 { get; set; }
+
+        public DateTime? DateInterview4 { get; set; }
+
+        public HROpinion Opinion4 { get; set; }
+
+        public string Reason4 { get; set; }
+
+        public string Circumstances { get; set; }
+
+        [Required]
+        public string SalaryCode { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+        [Required]
+        public string Schedule { get; set; }
+
+        [Required]
+        public string Solution { get; set; }
+
+        [Required]
+        public StatusResidence Status { get; set; }
+
+        [Required]
+        public bool External { get; set; }
+    
+
+
+    }
+
+    public class USR_REQ_URP_RequestForHRCardWorkZIF_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string OnPosition { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Tutor { get; set; }
+
+        [Required]
+        public string UserChooseManual2 { get; set; }
+
+        [Required]
+        public string Report1 { get; set; }
+
+        [Required]
+        public DateTime DateInterview1 { get; set; }
+
+        [Required]
+        public HROpinion Opinion1 { get; set; }
+
+        [Required]
+        public string Reason1 { get; set; }
+
+        public string Report2 { get; set; }
+
+        public DateTime? DateInterview2 { get; set; }
+
+        public HROpinion Opinion2 { get; set; }
+
+        public string Reason2 { get; set; }
+
+        public string Report3 { get; set; }
+
+        public DateTime? DateInterview3 { get; set; }
+
+        public HROpinion Opinion3 { get; set; }
+
+        public string Reason3 { get; set; }
+
+        public string Circumstances { get; set; }
+
+        [Required]
+        public string SalaryCode { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+        [Required]
+        public string Schedule { get; set; }
+
+        [Required]
+        public string Solution { get; set; }
+
+        [Required]
+        public StatusResidence Status { get; set; }
+
+        [Required]
+        public bool External { get; set; }
+    
+    }
+
+    public class USR_REQ_URP_RequestForHRChGraphTime_Table : BasicDocumentTable
+    {
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        public string Name1 { get; set; }
+        public string Name2 { get; set; }
+        public string Name3 { get; set; }
+        public string Name4 { get; set; }
+        public string Name5 { get; set; }
+        public string Name6 { get; set; }
+        public string Name7 { get; set; }
+        public string Name8 { get; set; }
+        public string Name9 { get; set; }
+        public string Name10 { get; set; }
+
+        public string Position1 { get; set; }
+        public string Position2 { get; set; }
+        public string Position3 { get; set; }
+        public string Position4 { get; set; }
+        public string Position5 { get; set; }
+        public string Position6 { get; set; }
+        public string Position7 { get; set; }
+        public string Position8 { get; set; }
+        public string Position9 { get; set; }
+        public string Position10 { get; set; }
+
+        public string Department1 { get; set; }
+        public string Department2 { get; set; }
+        public string Department3 { get; set; }
+        public string Department4 { get; set; }
+        public string Department5 { get; set; }
+        public string Department6 { get; set; }
+        public string Department7 { get; set; }
+        public string Department8 { get; set; }
+        public string Department9 { get; set; }
+        public string Department10 { get; set; }
+
+        public HRGraphics Graphics1 { get; set; }
+        public HRGraphics Graphics2 { get; set; }
+        public HRGraphics Graphics3 { get; set; }
+        public HRGraphics Graphics4 { get; set; }
+        public HRGraphics Graphics5 { get; set; }
+        public HRGraphics Graphics6 { get; set; }
+        public HRGraphics Graphics7 { get; set; }
+        public HRGraphics Graphics8 { get; set; }
+        public HRGraphics Graphics9 { get; set; }
+        public HRGraphics Graphics10 { get; set; }
+
+        public HRDuration FirstDuration1 { get; set; }
+        public HRDuration FirstDuration2 { get; set; }
+        public HRDuration FirstDuration3 { get; set; }
+        public HRDuration FirstDuration4 { get; set; }
+        public HRDuration FirstDuration5 { get; set; }
+        public HRDuration FirstDuration6 { get; set; }
+        public HRDuration FirstDuration7 { get; set; }
+        public HRDuration FirstDuration8 { get; set; }
+        public HRDuration FirstDuration9 { get; set; }
+        public HRDuration FirstDuration10 { get; set; }
+
+        public HRGraphics GraphicsCorrect1 { get; set; }
+        public HRGraphics GraphicsCorrect2 { get; set; }
+        public HRGraphics GraphicsCorrect3 { get; set; }
+        public HRGraphics GraphicsCorrect4 { get; set; }
+        public HRGraphics GraphicsCorrect5 { get; set; }
+        public HRGraphics GraphicsCorrect6 { get; set; }
+        public HRGraphics GraphicsCorrect7 { get; set; }
+        public HRGraphics GraphicsCorrect8 { get; set; }
+        public HRGraphics GraphicsCorrect9 { get; set; }
+        public HRGraphics GraphicsCorrect10 { get; set; }
+
+        public HRDuration SecondDuration1 { get; set; }
+        public HRDuration SecondDuration2 { get; set; }
+        public HRDuration SecondDuration3 { get; set; }
+        public HRDuration SecondDuration4 { get; set; }
+        public HRDuration SecondDuration5 { get; set; }
+        public HRDuration SecondDuration6 { get; set; }
+        public HRDuration SecondDuration7 { get; set; }
+        public HRDuration SecondDuration8 { get; set; }
+        public HRDuration SecondDuration9 { get; set; }
+        public HRDuration SecondDuration10 { get; set; }
+
+
+        public string Reason1 { get; set; }
+        public string Reason2 { get; set; }
+        public string Reason3 { get; set; }
+        public string Reason4 { get; set; }
+        public string Reason5 { get; set; }
+        public string Reason6 { get; set; }
+        public string Reason7 { get; set; }
+        public string Reason8 { get; set; }
+        public string Reason9 { get; set; }
+        public string Reason10 { get; set; }
+
+        public DateTime? StartDate1 { get; set; }
+        public DateTime? StartDate2 { get; set; }
+        public DateTime? StartDate3 { get; set; }
+        public DateTime? StartDate4 { get; set; }
+        public DateTime? StartDate5 { get; set; }
+        public DateTime? StartDate6 { get; set; }
+        public DateTime? StartDate7 { get; set; }
+        public DateTime? StartDate8 { get; set; }
+        public DateTime? StartDate9 { get; set; }
+        public DateTime? StartDate10 { get; set; }
+
+        public DateTime? EndDate1 { get; set; }
+        public DateTime? EndDate2 { get; set; }
+        public DateTime? EndDate3 { get; set; }
+        public DateTime? EndDate4 { get; set; }
+        public DateTime? EndDate5 { get; set; }
+        public DateTime? EndDate6 { get; set; }
+        public DateTime? EndDate7 { get; set; }
+        public DateTime? EndDate8 { get; set; }
+        public DateTime? EndDate9 { get; set; }
+        public DateTime? EndDate10 { get; set; }
+
+        public string Agreement1 { get; set; }
+        public string Agreement2 { get; set; }
+        public string Agreement3 { get; set; }
+        public string Agreement4 { get; set; }
+        public string Agreement5 { get; set; }
+        public string Agreement6 { get; set; }
+        public string Agreement7 { get; set; }
+        public string Agreement8 { get; set; }
+        public string Agreement9 { get; set; }
+        public string Agreement10 { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForHRChGraphConst_Table : BasicDocumentTable
+    {
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        public string Name1 { get; set; }
+        public string Name2 { get; set; }
+        public string Name3 { get; set; }
+        public string Name4 { get; set; }
+        public string Name5 { get; set; }
+        public string Name6 { get; set; }
+        public string Name7 { get; set; }
+        public string Name8 { get; set; }
+        public string Name9 { get; set; }
+        public string Name10 { get; set; }
+
+        public string Position1 { get; set; }
+        public string Position2 { get; set; }
+        public string Position3 { get; set; }
+        public string Position4 { get; set; }
+        public string Position5 { get; set; }
+        public string Position6 { get; set; }
+        public string Position7 { get; set; }
+        public string Position8 { get; set; }
+        public string Position9 { get; set; }
+        public string Position10 { get; set; }
+
+        public string Department1 { get; set; }
+        public string Department2 { get; set; }
+        public string Department3 { get; set; }
+        public string Department4 { get; set; }
+        public string Department5 { get; set; }
+        public string Department6 { get; set; }
+        public string Department7 { get; set; }
+        public string Department8 { get; set; }
+        public string Department9 { get; set; }
+        public string Department10 { get; set; }
+
+        public HRGraphics Graphics1 { get; set; }
+        public HRGraphics Graphics2 { get; set; }
+        public HRGraphics Graphics3 { get; set; }
+        public HRGraphics Graphics4 { get; set; }
+        public HRGraphics Graphics5 { get; set; }
+        public HRGraphics Graphics6 { get; set; }
+        public HRGraphics Graphics7 { get; set; }
+        public HRGraphics Graphics8 { get; set; }
+        public HRGraphics Graphics9 { get; set; }
+        public HRGraphics Graphics10 { get; set; }
+
+        public HRDuration FirstDuration1 { get; set; }
+        public HRDuration FirstDuration2 { get; set; }
+        public HRDuration FirstDuration3 { get; set; }
+        public HRDuration FirstDuration4 { get; set; }
+        public HRDuration FirstDuration5 { get; set; }
+        public HRDuration FirstDuration6 { get; set; }
+        public HRDuration FirstDuration7 { get; set; }
+        public HRDuration FirstDuration8 { get; set; }
+        public HRDuration FirstDuration9 { get; set; }
+        public HRDuration FirstDuration10 { get; set; }
+
+        public HRGraphics GraphicsCorrect1 { get; set; }
+        public HRGraphics GraphicsCorrect2 { get; set; }
+        public HRGraphics GraphicsCorrect3 { get; set; }
+        public HRGraphics GraphicsCorrect4 { get; set; }
+        public HRGraphics GraphicsCorrect5 { get; set; }
+        public HRGraphics GraphicsCorrect6 { get; set; }
+        public HRGraphics GraphicsCorrect7 { get; set; }
+        public HRGraphics GraphicsCorrect8 { get; set; }
+        public HRGraphics GraphicsCorrect9 { get; set; }
+        public HRGraphics GraphicsCorrect10 { get; set; }
+
+        public HRDuration SecondDuration1 { get; set; }
+        public HRDuration SecondDuration2 { get; set; }
+        public HRDuration SecondDuration3 { get; set; }
+        public HRDuration SecondDuration4 { get; set; }
+        public HRDuration SecondDuration5 { get; set; }
+        public HRDuration SecondDuration6 { get; set; }
+        public HRDuration SecondDuration7 { get; set; }
+        public HRDuration SecondDuration8 { get; set; }
+        public HRDuration SecondDuration9 { get; set; }
+        public HRDuration SecondDuration10 { get; set; }
+
+
+        public string Reason1 { get; set; }
+        public string Reason2 { get; set; }
+        public string Reason3 { get; set; }
+        public string Reason4 { get; set; }
+        public string Reason5 { get; set; }
+        public string Reason6 { get; set; }
+        public string Reason7 { get; set; }
+        public string Reason8 { get; set; }
+        public string Reason9 { get; set; }
+        public string Reason10 { get; set; }
+
+        public DateTime? StartDate1 { get; set; }
+        public DateTime? StartDate2 { get; set; }
+        public DateTime? StartDate3 { get; set; }
+        public DateTime? StartDate4 { get; set; }
+        public DateTime? StartDate5 { get; set; }
+        public DateTime? StartDate6 { get; set; }
+        public DateTime? StartDate7 { get; set; }
+        public DateTime? StartDate8 { get; set; }
+        public DateTime? StartDate9 { get; set; }
+        public DateTime? StartDate10 { get; set; }
+
+        public string Agreement1 { get; set; }
+        public string Agreement2 { get; set; }
+        public string Agreement3 { get; set; }
+        public string Agreement4 { get; set; }
+        public string Agreement5 { get; set; }
+        public string Agreement6 { get; set; }
+        public string Agreement7 { get; set; }
+        public string Agreement8 { get; set; }
+        public string Agreement9 { get; set; }
+        public string Agreement10 { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForPaymentFirstDay_Table : BasicDocumentTable
+    {
+        public string Name1 { get; set; }
+        public string Name2 { get; set; }
+        public string Name3 { get; set; }
+        public string Name4 { get; set; }
+
+        public HRDepartmentFirstDay Department1 { get; set; }
+        public HRDepartmentFirstDay Department2 { get; set; }
+        public HRDepartmentFirstDay Department3 { get; set; }
+        public HRDepartmentFirstDay Department4 { get; set; }
+
+        public string Position1 { get; set; }
+        public string Position2 { get; set; }
+        public string Position3 { get; set; }
+        public string Position4 { get; set; }
+
+        public DateTime? StartDate1 { get; set; }
+        public DateTime? StartDate2 { get; set; }
+        public DateTime? StartDate3 { get; set; }
+        public DateTime? StartDate4 { get; set; }
+
+        public HRDestinationFirstDay Destination1 { get; set; }
+        public HRDestinationFirstDay Destination2 { get; set; }
+        public HRDestinationFirstDay Destination3 { get; set; }
+        public HRDestinationFirstDay Destination4 { get; set; }
+
+        public int Term1 { get; set; }
+        public int Term2 { get; set; }
+        public int Term3 { get; set; }
+        public int Term4 { get; set; }
+
+        public string Amount1 { get; set; }
+        public string Amount2 { get; set; }
+        public string Amount3 { get; set; }
+        public string Amount4 { get; set; }
+    }
     #endregion
 
+    #region УТ
+    public class USR_REQ_YT_AuxiliaryTransportOCTMCInvest_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Transport { get; set; }
+
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string ItemId { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public TimeSpan TimeDeparture { get; set; }
+
+        [Required]
+        public string NumberProject { get; set; }
+
+        [Required]
+        public string NumberObject { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_AuxiliaryTransportOCTMCOper_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Transport { get; set; }
+
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string ItemId { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public TimeSpan TimeDeparture { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_AuxiliaryTransportDayOff_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Transport { get; set; }
+
+        public PurposeAuxiliaryTransportTrip PurposeAuxiliaryTransportTrip { get; set; }
+
+        [Required]
+        public string ExecutionWork { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_AuxiliaryTransportWorkDays_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Transport { get; set; }
+
+        public PurposeAuxiliaryTransportTrip PurposeAuxiliaryTransportTrip { get; set; }
+
+        [Required]
+        public string ExecutionWork { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_AuxiliaryTransportOutABK_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Transport { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public string ExecutionWork { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_StandbyTransport_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Client { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Required]
+        public string Route { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_StandbyTransportUIT_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Client { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Required]
+        public string Route { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_LightTransportTripManage_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        public PurposeTrip PurposeTrip { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        public EmplTrip EmplTrip { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public TimeSpan TimeDeparture { get; set; }
+
+        [Required]
+        public string Flight { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_LightTransportTripATK_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        public PurposeTrip PurposeTrip { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string Users { get; set; }
+
+        public EmplTrip EmplTrip { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public TimeSpan TimeDeparture { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_LightTransportOCTMCInvest_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string ItemId { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public TimeSpan TimeDeparture { get; set; }
+
+        [Required]
+        public string NumberProject { get; set; }
+
+        [Required]
+        public string NumberObject { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_LightTransportOCTMCOper_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string ItemId { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public TimeSpan TimeDeparture { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_LightTransportOutOrganizationInvest_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        public PurposeTrip PurposeTrip { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public EmplTrip EmplTrip { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        public string Organization { get; set; }
+
+        public string Purpose { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public string Flight { get; set; }
+
+        [Required]
+        public string NumberProject { get; set; }
+
+        [Required]
+        public string NumberObject { get; set; }
+
+        public bool Account { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_LightTransportOutOrganizationOper_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        public PurposeTrip PurposeTrip { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public EmplTrip EmplTrip { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        public string Organization { get; set; }
+
+        public string Purpose { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public string Flight { get; set; }
+
+        public bool Account { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_LightTransportTripDayOff_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_PassangerTransportTrip_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        [Required]
+        public string Route { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_PassangerTransportTripManage_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_PassangerTransportTripATK_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public TimeSpan TimeArrive { get; set; }
+
+        [Required]
+        public string Flight { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_PassangerTransportOutOrganizationInvest_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        public PurposeTrip PurposeTrip { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public EmplTrip EmplTrip { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        public string Organization { get; set; }
+
+        public string Purpose { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public string Flight { get; set; }
+
+        [Required]
+        public string NumberProject { get; set; }
+
+        [Required]
+        public string NumberObject { get; set; }
+
+        public bool Account { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_PassangerTransportOutOrganizationOper_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        public PurposeTrip PurposeTrip { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public EmplTrip EmplTrip { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        public string Organization { get; set; }
+
+        public string Purpose { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public string Flight { get; set; }
+
+        public bool Account { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_PassangerTransportDayOff_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_PassangerTransportDayOffZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_PassangerTransportCorporate_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Client { get; set; }
+
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime DateCorporate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        [Required]
+        public string Route { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+    #endregion
+
+    #region ХУ
+    public class USR_REQ_HY_EmergencyPurposeTRU_Table : BasicDocumentTable
+    {
+        public string UserChooseManual1 { get; set; }
+        public string UserChooseManual2 { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        public string ItemName1 { get; set; }
+        public string ItemName2 { get; set; }
+        public string ItemName3 { get; set; }
+        public string ItemName4 { get; set; }
+        public string ItemName5 { get; set; }
+        public string ItemName6 { get; set; }
+        public string ItemName7 { get; set; }
+        public string ItemName8 { get; set; }
+        public string ItemName9 { get; set; }
+        public string ItemName10 { get; set; }
+        public string ItemName11 { get; set; }
+        public string ItemName12 { get; set; }
+        public string ItemName13 { get; set; }
+        public string ItemName14 { get; set; }
+        public string ItemName15 { get; set; }
+        public string ItemName16 { get; set; }
+        public string ItemName17 { get; set; }
+
+        public string Unit1 { get; set; }
+        public string Unit2 { get; set; }
+        public string Unit3 { get; set; }
+        public string Unit4 { get; set; }
+        public string Unit5 { get; set; }
+        public string Unit6 { get; set; }
+        public string Unit7 { get; set; }
+        public string Unit8 { get; set; }
+        public string Unit9 { get; set; }
+        public string Unit10 { get; set; }
+        public string Unit11 { get; set; }
+        public string Unit12 { get; set; }
+        public string Unit13 { get; set; }
+        public string Unit14 { get; set; }
+        public string Unit15 { get; set; }
+        public string Unit16 { get; set; }
+        public string Unit17 { get; set; }
+
+        public string Qty1 { get; set; }
+        public string Qty2 { get; set; }
+        public string Qty3 { get; set; }
+        public string Qty4 { get; set; }
+        public string Qty5 { get; set; }
+        public string Qty6 { get; set; }
+        public string Qty7 { get; set; }
+        public string Qty8 { get; set; }
+        public string Qty9 { get; set; }
+        public string Qty10 { get; set; }
+        public string Qty11 { get; set; }
+        public string Qty12 { get; set; }
+        public string Qty13 { get; set; }
+        public string Qty14 { get; set; }
+        public string Qty15 { get; set; }
+        public string Qty16 { get; set; }
+        public string Qty17 { get; set; }
+
+        public string Price1 { get; set; }
+        public string Price2 { get; set; }
+        public string Price3 { get; set; }
+        public string Price4 { get; set; }
+        public string Price5 { get; set; }
+        public string Price6 { get; set; }
+        public string Price7 { get; set; }
+        public string Price8 { get; set; }
+        public string Price9 { get; set; }
+        public string Price10 { get; set; }
+        public string Price11 { get; set; }
+        public string Price12 { get; set; }
+        public string Price13 { get; set; }
+        public string Price14 { get; set; }
+        public string Price15 { get; set; }
+        public string Price16 { get; set; }
+        public string Price17 { get; set; }
+
+        public string Amount1 { get; set; }
+        public string Amount2 { get; set; }
+        public string Amount3 { get; set; }
+        public string Amount4 { get; set; }
+        public string Amount5 { get; set; }
+        public string Amount6 { get; set; }
+        public string Amount7 { get; set; }
+        public string Amount8 { get; set; }
+        public string Amount9 { get; set; }
+        public string Amount10 { get; set; }
+        public string Amount11 { get; set; }
+        public string Amount12 { get; set; }
+        public string Amount13 { get; set; }
+        public string Amount14 { get; set; }
+        public string Amount15 { get; set; }
+        public string Amount16 { get; set; }
+        public string Amount17 { get; set; }
+
+        public string Location1 { get; set; }
+        public string Location2 { get; set; }
+        public string Location3 { get; set; }
+        public string Location4 { get; set; }
+        public string Location5 { get; set; }
+        public string Location6 { get; set; }
+        public string Location7 { get; set; }
+        public string Location8 { get; set; }
+        public string Location9 { get; set; }
+        public string Location10 { get; set; }
+        public string Location11 { get; set; }
+        public string Location12 { get; set; }
+        public string Location13 { get; set; }
+        public string Location14 { get; set; }
+        public string Location15 { get; set; }
+        public string Location16 { get; set; }
+        public string Location17 { get; set; }
+
+        public Months Month1 { get; set; }
+        public Months Month2 { get; set; }
+        public Months Month3 { get; set; }
+        public Months Month4 { get; set; }
+        public Months Month5 { get; set; }
+        public Months Month6 { get; set; }
+        public Months Month7 { get; set; }
+        public Months Month8 { get; set; }
+        public Months Month9 { get; set; }
+        public Months Month10 { get; set; }
+        public Months Month11 { get; set; }
+        public Months Month12 { get; set; }
+        public Months Month13 { get; set; }
+        public Months Month14 { get; set; }
+        public Months Month15 { get; set; }
+        public Months Month16 { get; set; }
+        public Months Month17 { get; set; }
+
+        public string Reason1 { get; set; }
+        public string Reason2 { get; set; }
+        public string Reason3 { get; set; }
+        public string Reason4 { get; set; }
+        public string Reason5 { get; set; }
+        public string Reason6 { get; set; }
+        public string Reason7 { get; set; }
+        public string Reason8 { get; set; }
+        public string Reason9 { get; set; }
+        public string Reason10 { get; set; }
+        public string Reason11 { get; set; }
+        public string Reason12 { get; set; }
+        public string Reason13 { get; set; }
+        public string Reason14 { get; set; }
+        public string Reason15 { get; set; }
+        public string Reason16 { get; set; }
+        public string Reason17 { get; set; }
+
+        public string AccountBZ1 { get; set; }
+        public string AccountBZ2 { get; set; }
+        public string AccountBZ3 { get; set; }
+        public string AccountBZ4 { get; set; }
+        public string AccountBZ5 { get; set; }
+        public string AccountBZ6 { get; set; }
+        public string AccountBZ7 { get; set; }
+        public string AccountBZ8 { get; set; }
+        public string AccountBZ9 { get; set; }
+        public string AccountBZ10 { get; set; }
+        public string AccountBZ11 { get; set; }
+        public string AccountBZ12 { get; set; }
+        public string AccountBZ13 { get; set; }
+        public string AccountBZ14 { get; set; }
+        public string AccountBZ15 { get; set; }
+        public string AccountBZ16 { get; set; }
+        public string AccountBZ17 { get; set; }
+
+        public string Description1 { get; set; }
+        public string Description2 { get; set; }
+        public string Description3 { get; set; }
+        public string Description4 { get; set; }
+        public string Description5 { get; set; }
+        public string Description6 { get; set; }
+        public string Description7 { get; set; }
+        public string Description8 { get; set; }
+        public string Description9 { get; set; }
+        public string Description10 { get; set; }
+        public string Description11 { get; set; }
+        public string Description12 { get; set; }
+        public string Description13 { get; set; }
+        public string Description14 { get; set; }
+        public string Description15 { get; set; }
+        public string Description16 { get; set; }
+        public string Description17 { get; set; }
+    }
+
+    public class USR_REQ_HY_BookingRoom_Table : BasicDocumentTable
+    {
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public DateTime DateArrival { get; set; }
+
+        [Required]
+        public DateTime DateStart { get; set; }
+
+        [Required]
+        public DateTime DateEnd { get; set; }
+
+        public Payment Payment { get; set; }
+
+        [Required]
+        public string HotelName { get; set; }
+    }
+
+    public class USR_REQ_HY_CreateStamp_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string StampName { get; set; }
+
+        public int Qty { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string Location { get; set; }
+    }
+
+    public class USR_REQ_HY_FindApartment_Table : BasicDocumentTable
+    {
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string MaritalStatus { get; set; }
+
+        [Required]
+        public string KidsNumber { get; set; }
+
+        [Required]
+        public DateTime DateArrival { get; set; }
+    }
+
+    public class USR_REQ_HY_RequestRepair_Table : BasicDocumentTable
+    {
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public DateTime DateIncident { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+    }
+
+    public class USR_REQ_HY_RequestTRU_Table : BasicDocumentTable
+    {
+        public string UserChooseManual1 { get; set; }
+        public string UserChooseManual2 { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        public string ItemName1 { get; set; }
+        public string ItemName2 { get; set; }
+        public string ItemName3 { get; set; }
+        public string ItemName4 { get; set; }
+        public string ItemName5 { get; set; }
+        public string ItemName6 { get; set; }
+        public string ItemName7 { get; set; }
+        public string ItemName8 { get; set; }
+        public string ItemName9 { get; set; }
+        public string ItemName10 { get; set; }
+        public string ItemName11 { get; set; }
+        public string ItemName12 { get; set; }
+        public string ItemName13 { get; set; }
+        public string ItemName14 { get; set; }
+        public string ItemName15 { get; set; }
+        public string ItemName16 { get; set; }
+        public string ItemName17 { get; set; }
+
+        public string Unit1 { get; set; }
+        public string Unit2 { get; set; }
+        public string Unit3 { get; set; }
+        public string Unit4 { get; set; }
+        public string Unit5 { get; set; }
+        public string Unit6 { get; set; }
+        public string Unit7 { get; set; }
+        public string Unit8 { get; set; }
+        public string Unit9 { get; set; }
+        public string Unit10 { get; set; }
+        public string Unit11 { get; set; }
+        public string Unit12 { get; set; }
+        public string Unit13 { get; set; }
+        public string Unit14 { get; set; }
+        public string Unit15 { get; set; }
+        public string Unit16 { get; set; }
+        public string Unit17 { get; set; }
+
+        public string Qty1 { get; set; }
+        public string Qty2 { get; set; }
+        public string Qty3 { get; set; }
+        public string Qty4 { get; set; }
+        public string Qty5 { get; set; }
+        public string Qty6 { get; set; }
+        public string Qty7 { get; set; }
+        public string Qty8 { get; set; }
+        public string Qty9 { get; set; }
+        public string Qty10 { get; set; }
+        public string Qty11 { get; set; }
+        public string Qty12 { get; set; }
+        public string Qty13 { get; set; }
+        public string Qty14 { get; set; }
+        public string Qty15 { get; set; }
+        public string Qty16 { get; set; }
+        public string Qty17 { get; set; }
+
+        public string Price1 { get; set; }
+        public string Price2 { get; set; }
+        public string Price3 { get; set; }
+        public string Price4 { get; set; }
+        public string Price5 { get; set; }
+        public string Price6 { get; set; }
+        public string Price7 { get; set; }
+        public string Price8 { get; set; }
+        public string Price9 { get; set; }
+        public string Price10 { get; set; }
+        public string Price11 { get; set; }
+        public string Price12 { get; set; }
+        public string Price13 { get; set; }
+        public string Price14 { get; set; }
+        public string Price15 { get; set; }
+        public string Price16 { get; set; }
+        public string Price17 { get; set; }
+
+        public string Amount1 { get; set; }
+        public string Amount2 { get; set; }
+        public string Amount3 { get; set; }
+        public string Amount4 { get; set; }
+        public string Amount5 { get; set; }
+        public string Amount6 { get; set; }
+        public string Amount7 { get; set; }
+        public string Amount8 { get; set; }
+        public string Amount9 { get; set; }
+        public string Amount10 { get; set; }
+        public string Amount11 { get; set; }
+        public string Amount12 { get; set; }
+        public string Amount13 { get; set; }
+        public string Amount14 { get; set; }
+        public string Amount15 { get; set; }
+        public string Amount16 { get; set; }
+        public string Amount17 { get; set; }
+
+        public string Location1 { get; set; }
+        public string Location2 { get; set; }
+        public string Location3 { get; set; }
+        public string Location4 { get; set; }
+        public string Location5 { get; set; }
+        public string Location6 { get; set; }
+        public string Location7 { get; set; }
+        public string Location8 { get; set; }
+        public string Location9 { get; set; }
+        public string Location10 { get; set; }
+        public string Location11 { get; set; }
+        public string Location12 { get; set; }
+        public string Location13 { get; set; }
+        public string Location14 { get; set; }
+        public string Location15 { get; set; }
+        public string Location16 { get; set; }
+        public string Location17 { get; set; }
+
+        public Months Month1 { get; set; }
+        public Months Month2 { get; set; }
+        public Months Month3 { get; set; }
+        public Months Month4 { get; set; }
+        public Months Month5 { get; set; }
+        public Months Month6 { get; set; }
+        public Months Month7 { get; set; }
+        public Months Month8 { get; set; }
+        public Months Month9 { get; set; }
+        public Months Month10 { get; set; }
+        public Months Month11 { get; set; }
+        public Months Month12 { get; set; }
+        public Months Month13 { get; set; }
+        public Months Month14 { get; set; }
+        public Months Month15 { get; set; }
+        public Months Month16 { get; set; }
+        public Months Month17 { get; set; }
+
+        public string Reason1 { get; set; }
+        public string Reason2 { get; set; }
+        public string Reason3 { get; set; }
+        public string Reason4 { get; set; }
+        public string Reason5 { get; set; }
+        public string Reason6 { get; set; }
+        public string Reason7 { get; set; }
+        public string Reason8 { get; set; }
+        public string Reason9 { get; set; }
+        public string Reason10 { get; set; }
+        public string Reason11 { get; set; }
+        public string Reason12 { get; set; }
+        public string Reason13 { get; set; }
+        public string Reason14 { get; set; }
+        public string Reason15 { get; set; }
+        public string Reason16 { get; set; }
+        public string Reason17 { get; set; }
+
+        public string AccountBZ1 { get; set; }
+        public string AccountBZ2 { get; set; }
+        public string AccountBZ3 { get; set; }
+        public string AccountBZ4 { get; set; }
+        public string AccountBZ5 { get; set; }
+        public string AccountBZ6 { get; set; }
+        public string AccountBZ7 { get; set; }
+        public string AccountBZ8 { get; set; }
+        public string AccountBZ9 { get; set; }
+        public string AccountBZ10 { get; set; }
+        public string AccountBZ11 { get; set; }
+        public string AccountBZ12 { get; set; }
+        public string AccountBZ13 { get; set; }
+        public string AccountBZ14 { get; set; }
+        public string AccountBZ15 { get; set; }
+        public string AccountBZ16 { get; set; }
+        public string AccountBZ17 { get; set; }
+
+        public string Description1 { get; set; }
+        public string Description2 { get; set; }
+        public string Description3 { get; set; }
+        public string Description4 { get; set; }
+        public string Description5 { get; set; }
+        public string Description6 { get; set; }
+        public string Description7 { get; set; }
+        public string Description8 { get; set; }
+        public string Description9 { get; set; }
+        public string Description10 { get; set; }
+        public string Description11 { get; set; }
+        public string Description12 { get; set; }
+        public string Description13 { get; set; }
+        public string Description14 { get; set; }
+        public string Description15 { get; set; }
+        public string Description16 { get; set; }
+        public string Description17 { get; set; }
+    }
+
+    public class USR_REQ_HY_EmergencyRequestTRU_Table : BasicDocumentTable
+    {
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        public string ItemName1 { get; set; }
+        public string ItemName2 { get; set; }
+        public string ItemName3 { get; set; }
+        public string ItemName4 { get; set; }
+        public string ItemName5 { get; set; }
+        public string ItemName6 { get; set; }
+        public string ItemName7 { get; set; }
+        public string ItemName8 { get; set; }
+        public string ItemName9 { get; set; }
+        public string ItemName10 { get; set; }
+        public string ItemName11 { get; set; }
+        public string ItemName12 { get; set; }
+        public string ItemName13 { get; set; }
+        public string ItemName14 { get; set; }
+        public string ItemName15 { get; set; }
+        public string ItemName16 { get; set; }
+        public string ItemName17 { get; set; }
+
+        public string Unit1 { get; set; }
+        public string Unit2 { get; set; }
+        public string Unit3 { get; set; }
+        public string Unit4 { get; set; }
+        public string Unit5 { get; set; }
+        public string Unit6 { get; set; }
+        public string Unit7 { get; set; }
+        public string Unit8 { get; set; }
+        public string Unit9 { get; set; }
+        public string Unit10 { get; set; }
+        public string Unit11 { get; set; }
+        public string Unit12 { get; set; }
+        public string Unit13 { get; set; }
+        public string Unit14 { get; set; }
+        public string Unit15 { get; set; }
+        public string Unit16 { get; set; }
+        public string Unit17 { get; set; }
+
+        public string Qty1 { get; set; }
+        public string Qty2 { get; set; }
+        public string Qty3 { get; set; }
+        public string Qty4 { get; set; }
+        public string Qty5 { get; set; }
+        public string Qty6 { get; set; }
+        public string Qty7 { get; set; }
+        public string Qty8 { get; set; }
+        public string Qty9 { get; set; }
+        public string Qty10 { get; set; }
+        public string Qty11 { get; set; }
+        public string Qty12 { get; set; }
+        public string Qty13 { get; set; }
+        public string Qty14 { get; set; }
+        public string Qty15 { get; set; }
+        public string Qty16 { get; set; }
+        public string Qty17 { get; set; }
+
+        public string Price1 { get; set; }
+        public string Price2 { get; set; }
+        public string Price3 { get; set; }
+        public string Price4 { get; set; }
+        public string Price5 { get; set; }
+        public string Price6 { get; set; }
+        public string Price7 { get; set; }
+        public string Price8 { get; set; }
+        public string Price9 { get; set; }
+        public string Price10 { get; set; }
+        public string Price11 { get; set; }
+        public string Price12 { get; set; }
+        public string Price13 { get; set; }
+        public string Price14 { get; set; }
+        public string Price15 { get; set; }
+        public string Price16 { get; set; }
+        public string Price17 { get; set; }
+
+        public string Amount1 { get; set; }
+        public string Amount2 { get; set; }
+        public string Amount3 { get; set; }
+        public string Amount4 { get; set; }
+        public string Amount5 { get; set; }
+        public string Amount6 { get; set; }
+        public string Amount7 { get; set; }
+        public string Amount8 { get; set; }
+        public string Amount9 { get; set; }
+        public string Amount10 { get; set; }
+        public string Amount11 { get; set; }
+        public string Amount12 { get; set; }
+        public string Amount13 { get; set; }
+        public string Amount14 { get; set; }
+        public string Amount15 { get; set; }
+        public string Amount16 { get; set; }
+        public string Amount17 { get; set; }
+
+        public string Location1 { get; set; }
+        public string Location2 { get; set; }
+        public string Location3 { get; set; }
+        public string Location4 { get; set; }
+        public string Location5 { get; set; }
+        public string Location6 { get; set; }
+        public string Location7 { get; set; }
+        public string Location8 { get; set; }
+        public string Location9 { get; set; }
+        public string Location10 { get; set; }
+        public string Location11 { get; set; }
+        public string Location12 { get; set; }
+        public string Location13 { get; set; }
+        public string Location14 { get; set; }
+        public string Location15 { get; set; }
+        public string Location16 { get; set; }
+        public string Location17 { get; set; }
+
+        public Months Month1 { get; set; }
+        public Months Month2 { get; set; }
+        public Months Month3 { get; set; }
+        public Months Month4 { get; set; }
+        public Months Month5 { get; set; }
+        public Months Month6 { get; set; }
+        public Months Month7 { get; set; }
+        public Months Month8 { get; set; }
+        public Months Month9 { get; set; }
+        public Months Month10 { get; set; }
+        public Months Month11 { get; set; }
+        public Months Month12 { get; set; }
+        public Months Month13 { get; set; }
+        public Months Month14 { get; set; }
+        public Months Month15 { get; set; }
+        public Months Month16 { get; set; }
+        public Months Month17 { get; set; }
+
+        public string Reason1 { get; set; }
+        public string Reason2 { get; set; }
+        public string Reason3 { get; set; }
+        public string Reason4 { get; set; }
+        public string Reason5 { get; set; }
+        public string Reason6 { get; set; }
+        public string Reason7 { get; set; }
+        public string Reason8 { get; set; }
+        public string Reason9 { get; set; }
+        public string Reason10 { get; set; }
+        public string Reason11 { get; set; }
+        public string Reason12 { get; set; }
+        public string Reason13 { get; set; }
+        public string Reason14 { get; set; }
+        public string Reason15 { get; set; }
+        public string Reason16 { get; set; }
+        public string Reason17 { get; set; }
+
+        public string AccountBZ1 { get; set; }
+        public string AccountBZ2 { get; set; }
+        public string AccountBZ3 { get; set; }
+        public string AccountBZ4 { get; set; }
+        public string AccountBZ5 { get; set; }
+        public string AccountBZ6 { get; set; }
+        public string AccountBZ7 { get; set; }
+        public string AccountBZ8 { get; set; }
+        public string AccountBZ9 { get; set; }
+        public string AccountBZ10 { get; set; }
+        public string AccountBZ11 { get; set; }
+        public string AccountBZ12 { get; set; }
+        public string AccountBZ13 { get; set; }
+        public string AccountBZ14 { get; set; }
+        public string AccountBZ15 { get; set; }
+        public string AccountBZ16 { get; set; }
+        public string AccountBZ17 { get; set; }
+
+        public string Description1 { get; set; }
+        public string Description2 { get; set; }
+        public string Description3 { get; set; }
+        public string Description4 { get; set; }
+        public string Description5 { get; set; }
+        public string Description6 { get; set; }
+        public string Description7 { get; set; }
+        public string Description8 { get; set; }
+        public string Description9 { get; set; }
+        public string Description10 { get; set; }
+        public string Description11 { get; set; }
+        public string Description12 { get; set; }
+        public string Description13 { get; set; }
+        public string Description14 { get; set; }
+        public string Description15 { get; set; }
+        public string Description16 { get; set; }
+        public string Description17 { get; set; }
+    }
+    #endregion
+
+    #region Коммандировки
+    public class USR_REQ_TRIP_RegistrationBusinessTripForeign_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+
+        public CategoryTrip CategoryTrip { get; set; }
+
+        public TypeTrip TypeTrip { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public int Days { get; set; }
+
+        [Required]
+        public string City { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        public PassageTrip PassageTrip { get; set; }
+
+        public string Organization { get; set; }
+
+        public PaymentTrip PaymentTripPassage { get; set; }
+
+        public PaymentTrip PaymentTripDaily { get; set; }
+
+        public PaymentTrip PaymentTripLive { get; set; }
+
+        public string Description { get; set; }
+    }
+
+    public class USR_REQ_TRIP_RegistrationBusinessTripKZ_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+
+        public CategoryTrip CategoryTrip { get; set; }
+
+        public TypeTrip TypeTrip { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string City { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        public string Organization { get; set; }
+
+        public string Description { get; set; }
+
+        public string FIO1 { get; set; }
+        public string FIO2 { get; set; }
+        public string FIO3 { get; set; }
+        public string FIO4 { get; set; }
+
+        public EmplTripType EmplTripType1 { get; set; }
+        public EmplTripType EmplTripType2 { get; set; }
+        public EmplTripType EmplTripType3 { get; set; }
+        public EmplTripType EmplTripType4 { get; set; }
+
+        public TripDirection TripDirection1 { get; set; }
+        public TripDirection TripDirection2 { get; set; }
+        public TripDirection TripDirection3 { get; set; }
+        public TripDirection TripDirection4 { get; set; }
+
+        public int Day1 { get; set; }
+        public int Day2 { get; set; }
+        public int Day3 { get; set; }
+        public int Day4 { get; set; }
+
+        public int DayLive1 { get; set; }
+        public int DayLive2 { get; set; }
+        public int DayLive3 { get; set; }
+        public int DayLive4 { get; set; }
+
+        public TripPassage TripPassage1 { get; set; }
+        public TripPassage TripPassage2 { get; set; }
+        public TripPassage TripPassage3 { get; set; }
+        public TripPassage TripPassage4 { get; set; }
+
+        public int TicketSum1 { get; set; }
+        public int TicketSum2 { get; set; }
+        public int TicketSum3 { get; set; }
+        public int TicketSum4 { get; set; }
+
+        public int DayRate1 { get; set; }
+        public int DayRate2 { get; set; }
+        public int DayRate3 { get; set; }
+        public int DayRate4 { get; set; }
+
+        public int ResidenceRate1 { get; set; }
+        public int ResidenceRate2 { get; set; }
+        public int ResidenceRate3 { get; set; }
+        public int ResidenceRate4 { get; set; }
+    }
+
+    public class USR_REQ_TRIP_RegistrationBusinessTripPP_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+
+        public CategoryTrip CategoryTrip { get; set; }
+
+        public TypeTrip TypeTrip { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string City { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        public string Organization { get; set; }
+
+        public string Description { get; set; }
+
+        public string FIO1 { get; set; }
+        public string FIO2 { get; set; }
+        public string FIO3 { get; set; }
+        public string FIO4 { get; set; }
+
+        public EmplTripType EmplTripType1 { get; set; }
+        public EmplTripType EmplTripType2 { get; set; }
+        public EmplTripType EmplTripType3 { get; set; }
+        public EmplTripType EmplTripType4 { get; set; }
+
+        public TripDirection TripDirection1 { get; set; }
+        public TripDirection TripDirection2 { get; set; }
+        public TripDirection TripDirection3 { get; set; }
+        public TripDirection TripDirection4 { get; set; }
+
+        public int Day1 { get; set; }
+        public int Day2 { get; set; }
+        public int Day3 { get; set; }
+        public int Day4 { get; set; }
+
+        public int DayLive1 { get; set; }
+        public int DayLive2 { get; set; }
+        public int DayLive3 { get; set; }
+        public int DayLive4 { get; set; }
+
+        public TripPassage TripPassage1 { get; set; }
+        public TripPassage TripPassage2 { get; set; }
+        public TripPassage TripPassage3 { get; set; }
+        public TripPassage TripPassage4 { get; set; }
+
+        public int TicketSum1 { get; set; }
+        public int TicketSum2 { get; set; }
+        public int TicketSum3 { get; set; }
+        public int TicketSum4 { get; set; }
+
+        public int DayRate1 { get; set; }
+        public int DayRate2 { get; set; }
+        public int DayRate3 { get; set; }
+        public int DayRate4 { get; set; }
+
+        public int ResidenceRate1 { get; set; }
+        public int ResidenceRate2 { get; set; }
+        public int ResidenceRate3 { get; set; }
+        public int ResidenceRate4 { get; set; }
+    }
+    #endregion
 
 
 }

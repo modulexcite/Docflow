@@ -1,0 +1,213 @@
+﻿@model RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardWorkZIF_View
+@using RapidDoc.Extensions;
+
+<hr />
+<h4 class="text-info" style="text-align:left;">Рекруткарта</h4>
+@Html.HiddenFor(model => Model.UserChooseManual2)
+<div class="editor-label">
+    @Html.LabelFor(model => Model.OnPosition)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.OnPosition)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Name)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.Name)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Department)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.Department)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Phone)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.Phone)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.UserChooseManual1)
+</div>
+<div class="editor-field">
+    @Html.HtmlDisplayTagsFor(model => Model.UserChooseManual1)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Tutor)
+</div>
+<div class="editor-field">
+    @Html.HtmlDisplayTagsFor(model => Model.Tutor)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.UserChooseManual2)
+</div>
+<div class="editor-field">
+    @Html.HtmlDisplayTagsFor(model => Model.UserChooseManual2)
+</div>
+
+<hr />
+<h4 class="text-info" style="text-align:left;">1-ое собеседование (Заключение УРП)</h4>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Report1)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.Report1)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.DateInterview1)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.DateInterview1)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Opinion1)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => Model.Opinion1, new { @disabled = true })
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Reason1)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.Reason1)
+</div>
+
+@if (Model.Report2 != null && Model.Report2 != "" && Model.Reason2 != null && Model.Reason2 != "")
+{
+    <hr />
+    <h4 class="text-info" style="text-align:left;">2-ое собеседование (Заключение Непосредственного Руководителя)</h4>
+    <div class="editor-label">
+        @Html.LabelFor(model => Model.Report2)
+    </div>
+    <div class="editor-field">
+        @Html.DisplayTextFor(model => Model.Report2)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => Model.DateInterview2)
+    </div>
+    <div class="editor-field">
+        @Html.DisplayTextFor(model => Model.DateInterview2)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => Model.Opinion2)
+    </div>
+    <div class="editor-field">
+        @Html.EnumDropDownListFor(model => Model.Opinion2, new { @disabled = true })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => Model.Reason2)
+    </div>
+    <div class="editor-field">
+        @Html.DisplayTextFor(model => Model.Reason2)
+    </div>
+}
+else
+{
+
+    @Html.Action("GetManualHRCardITRZIF1", "Custom", new { model = Model })
+}
+
+@if (Model.Report3 != null && Model.Report3 != "" && Model.Reason3 != null && Model.Reason3 != "")
+{
+    <hr />
+    <h4 class="text-info" style="text-align:left;">3-ое собеседование (Заключение Исполнительного Директора)</h4>
+    <div class="editor-label">
+        @Html.LabelFor(model => Model.Report3)
+    </div>
+    <div class="editor-field">
+        @Html.DisplayTextFor(model => Model.Report3)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => Model.DateInterview3)
+    </div>
+    <div class="editor-field">
+        @Html.DisplayTextFor(model => Model.DateInterview3)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => Model.Opinion3)
+    </div>
+    <div class="editor-field">
+        @Html.EnumDropDownListFor(model => Model.Opinion3, new { @disabled = true })
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => Model.Reason3)
+    </div>
+    <div class="editor-field">
+        @Html.DisplayTextFor(model => Model.Reason3)
+    </div>
+}
+else
+{
+    @Html.Action("GetManualHRCardITRZIF2", "Custom", new { model = Model })
+}
+
+<hr />
+<h4 class="text-info" style="text-align:left;">Условия найма</h4>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Circumstances)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.Circumstances)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.SalaryCode)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.SalaryCode)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Period)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.Period)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Schedule)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.Schedule)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Solution)
+</div>
+<div class="editor-field">
+    @Html.DisplayTextFor(model => Model.Solution)
+</div>
+
+<hr />
+<h4 class="text-info" style="text-align:left;">Примечание</h4>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.Status)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => Model.Status, new { @disabled = true })
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => Model.External)
+</div>
+<div class="editor-field">
+    @Html.CheckBoxFor(model => Model.External, new { @disabled = true })
+</div>

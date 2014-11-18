@@ -181,7 +181,69 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_URP_RequestForAccrualExceptZIFBGP_Table> USR_REQ_URP_RequestForAccrualExceptZIFBGP_Table { get; set; }
         public DbSet<USR_REQ_URP_RequestForAccrualBGP_Table> USR_REQ_URP_RequestForAccrualBGP_Table { get; set; }
         public DbSet<USR_REQ_URP_RequestForAccrualZIF_Table> USR_REQ_URP_RequestForAccrualZIF_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForWithdrawVocationITR1_Table> USR_REQ_URP_RequestForWithdrawVocationITR1_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForWithdrawVocationITR2_Table> USR_REQ_URP_RequestForWithdrawVocationITR2_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForWVAuxiliaryBlock_Table> USR_REQ_URP_RequestForWVAuxiliaryBlock_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForWVMiningBlock_Table> USR_REQ_URP_RequestForWVMiningBlock_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForWVFinBlock_Table> USR_REQ_URP_RequestForWVFinBlock_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForWVStraight_Table> USR_REQ_URP_RequestForWVStraight_Table { get; set; }
         public DbSet<USR_REQ_URP_RequestForTeaching_Table> USR_REQ_URP_RequestForTeaching_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForForeignVisa_Table> USR_REQ_URP_RequestForForeignVisa_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForTransferVocationITR1_Table> USR_REQ_URP_RequestForTransferVocationITR1_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForTransferVocationITR2_Table> USR_REQ_URP_RequestForTransferVocationITR2_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForTransfVacWorkerMining_Table> USR_REQ_URP_RequestForTransfVacWorkerMining_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForTransfVacWorkerStraight_Table> USR_REQ_URP_RequestForTransfVacWorkerStraight_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForTransfVacWorkerFin_Table> USR_REQ_URP_RequestForTransfVacWorkerFin_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForTransfVacWorkerAuxiliary_Table> USR_REQ_URP_RequestForTransfVacWorkerAuxiliary_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForProvisionGraphVac_Table> USR_REQ_URP_RequestForProvisionGraphVac_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForProvisionGraphExit_Table> USR_REQ_URP_RequestForProvisionGraphExit_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForWeekend_Table> USR_REQ_URP_RequestForWeekend_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForReduction_Table> USR_REQ_URP_RequestForReduction_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForReductionCandidate_Table> USR_REQ_URP_RequestForReductionCandidate_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForReductionTB_Table> USR_REQ_URP_RequestForReductionTB_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForReductionThird_Table> USR_REQ_URP_RequestForReductionThird_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForSelectionPersonal_Table> USR_REQ_URP_RequestForSelectionPersonal_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForHRCardITR1_Table> USR_REQ_URP_RequestForHRCardITR1_Table { get; set; }
+
+        public DbSet<USR_REQ_URP_RequestForHRCardITR2_Table> USR_REQ_URP_RequestForHRCardITR2_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForHRCardITRZIF_Table> USR_REQ_URP_RequestForHRCardITRZIF_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForHRCardWork_Table> USR_REQ_URP_RequestForHRCardWork_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForHRCardWorkZIF_Table> USR_REQ_URP_RequestForHRCardWorkZIF_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForHRChGraphTime_Table> USR_REQ_URP_RequestForHRChGraphTime_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForHRChGraphConst_Table> USR_REQ_URP_RequestForHRChGraphConst_Table { get; set; }
+        public DbSet<USR_REQ_URP_RequestForPaymentFirstDay_Table> USR_REQ_URP_RequestForPaymentFirstDay_Table { get; set; }
+        public DbSet<USR_REQ_YT_AuxiliaryTransportOCTMCInvest_Table> USR_REQ_YT_AuxiliaryTransportOCTMCInvest_Table { get; set; }
+        public DbSet<USR_REQ_YT_AuxiliaryTransportOCTMCOper_Table> USR_REQ_YT_AuxiliaryTransportOCTMCOper_Table { get; set; }
+        public DbSet<USR_REQ_YT_AuxiliaryTransportDayOff_Table> USR_REQ_YT_AuxiliaryTransportDayOff_Table { get; set; }
+        public DbSet<USR_REQ_YT_AuxiliaryTransportWorkDays_Table> USR_REQ_YT_AuxiliaryTransportWorkDays_Table { get; set; }
+        public DbSet<USR_REQ_YT_AuxiliaryTransportOutABK_Table> USR_REQ_YT_AuxiliaryTransportOutABK_Table { get; set; }
+        public DbSet<USR_REQ_YT_StandbyTransport_Table> USR_REQ_YT_StandbyTransport_Table { get; set; }
+        public DbSet<USR_REQ_YT_StandbyTransportUIT_Table> USR_REQ_YT_StandbyTransportUIT_Table { get; set; }
+        public DbSet<USR_REQ_YT_LightTransportTripManage_Table> USR_REQ_YT_LightTransportTripManage_Table { get; set; }
+        public DbSet<USR_REQ_YT_LightTransportTripATK_Table> USR_REQ_YT_LightTransportTripATK_Table { get; set; }
+        public DbSet<USR_REQ_YT_LightTransportOCTMCInvest_Table> USR_REQ_YT_LightTransportOCTMCInvest_Table { get; set; }
+        public DbSet<USR_REQ_YT_LightTransportOCTMCOper_Table> USR_REQ_YT_LightTransportOCTMCOper_Table { get; set; }
+        public DbSet<USR_REQ_YT_LightTransportOutOrganizationInvest_Table> USR_REQ_YT_LightTransportOutOrganizationInvest_Table { get; set; }
+        public DbSet<USR_REQ_YT_LightTransportOutOrganizationOper_Table> USR_REQ_YT_LightTransportOutOrganizationOper_Table { get; set; }
+        public DbSet<USR_REQ_YT_LightTransportTripDayOff_Table> USR_REQ_YT_LightTransportTripDayOff_Table { get; set; }
+        public DbSet<USR_REQ_YT_PassangerTransportTrip_Table> USR_REQ_YT_PassangerTransportTrip_Table { get; set; }
+        public DbSet<USR_REQ_YT_PassangerTransportTripManage_Table> USR_REQ_YT_PassangerTransportTripManage_Table { get; set; }
+        public DbSet<USR_REQ_YT_PassangerTransportTripATK_Table> USR_REQ_YT_PassangerTransportTripATK_Table { get; set; }
+        public DbSet<USR_REQ_YT_PassangerTransportOutOrganizationInvest_Table> USR_REQ_YT_PassangerTransportOutOrganizationInvest_Table { get; set; }
+        public DbSet<USR_REQ_YT_PassangerTransportOutOrganizationOper_Table> USR_REQ_YT_PassangerTransportOutOrganizationOper_Table { get; set; }
+        public DbSet<USR_REQ_YT_PassangerTransportDayOff_Table> USR_REQ_YT_PassangerTransportDayOff_Table { get; set; }
+        public DbSet<USR_REQ_YT_PassangerTransportDayOffZIF_Table> USR_REQ_YT_PassangerTransportDayOffZIF_Table { get; set; }
+        public DbSet<USR_REQ_YT_PassangerTransportCorporate_Table> USR_REQ_YT_PassangerTransportCorporate_Table { get; set; }
+        public DbSet<USR_REQ_HY_EmergencyPurposeTRU_Table> USR_REQ_HY_EmergencyPurposeTRU_Table { get; set; }
+        public DbSet<USR_REQ_HY_BookingRoom_Table> USR_REQ_HY_BookingRoom_Table { get; set; }
+        public DbSet<USR_REQ_HY_CreateStamp_Table> USR_REQ_HY_CreateStamp_Table { get; set; }
+        public DbSet<USR_REQ_HY_FindApartment_Table> USR_REQ_HY_FindApartment_Table { get; set; }
+        public DbSet<USR_REQ_HY_RequestRepair_Table> USR_REQ_HY_RequestRepair_Table { get; set; }
+        public DbSet<USR_REQ_HY_RequestTRU_Table> USR_REQ_HY_RequestTRU_Table { get; set; }
+        public DbSet<USR_REQ_HY_EmergencyRequestTRU_Table> USR_REQ_HY_EmergencyRequestTRU_Table { get; set; }
+        public DbSet<USR_REQ_TRIP_RegistrationBusinessTripForeign_Table> USR_REQ_TRIP_RegistrationBusinessTripForeign_Table { get; set; }
+        public DbSet<USR_REQ_TRIP_RegistrationBusinessTripKZ_Table> USR_REQ_TRIP_RegistrationBusinessTripKZ_Table { get; set; }
+        public DbSet<USR_REQ_TRIP_RegistrationBusinessTripPP_Table> USR_REQ_TRIP_RegistrationBusinessTripPP_Table { get; set; }
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();

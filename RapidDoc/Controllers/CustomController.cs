@@ -388,5 +388,673 @@ namespace RapidDoc.Controllers
 
             return PartialView("_Empty");
         }
+        //Запрос на рекруткарты-->
+        public ActionResult GetManualHRCardITR11(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITR1_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Непосредственный руководитель"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITR1_Edit_Manual1", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardITR12(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITR1_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "ИД"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITR1_Edit_Manual2", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardITR13(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITR1_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Генеральный директор/и.о. ГД"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITR1_Edit_Manual3", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardITR21(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITR2_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Непосредственный руководитель"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITR2_Edit_Manual1", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardITR22(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITR2_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник управление"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITR2_Edit_Manual2", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardITR23(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITR2_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "ИД"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITR2_Edit_Manual3", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardITRZIF1(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITRZIF_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Непосредственный руководитель"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITRZIF_Edit_Manual1", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardITRZIF2(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITRZIF_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Директор фабрики"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITRZIF_Edit_Manual2", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardWork1(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardWork_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Непосредственный руководитель"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardWork_Edit_Manual1", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardWork2(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardWork_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник управление"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardWork_Edit_Manual2", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardWork3(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardWork_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Исполнительный директор"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardWork_Edit_Manual3", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardWorkZIF1(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardWorkZIF_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Непосредственный руководитель"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardWorkZIF_Edit_Manual1", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardWorkZIF2(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardWorkZIF_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Исполнительный директор"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardWorkZIF_Edit_Manual2", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+        //<--Запрос на рекруткарты
+
+        //УТ-->
+        public ActionResult GetRequestAuxiliaryTransportOCTMCInvest(RapidDoc.Models.ViewModels.USR_REQ_YT_AuxiliaryTransportOCTMCInvest_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_AuxiliaryTransportOCTMCInvest_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_AuxiliaryTransportOCTMCInvest_View_Show", model);
+        }
+
+        public ActionResult GetRequestAuxiliaryTransportOCTMCOper(RapidDoc.Models.ViewModels.USR_REQ_YT_AuxiliaryTransportOCTMCOper_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_AuxiliaryTransportOCTMCOper_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_AuxiliaryTransportOCTMCOper_View_Show", model);
+        }
+
+        public ActionResult GetRequestAuxiliaryTransportDayOff(RapidDoc.Models.ViewModels.USR_REQ_YT_AuxiliaryTransportDayOff_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_AuxiliaryTransportDayOff_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_AuxiliaryTransportDayOff_View_Show", model);
+        }
+
+        public ActionResult GetRequestAuxiliaryTransportWorkDays(RapidDoc.Models.ViewModels.USR_REQ_YT_AuxiliaryTransportWorkDays_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_AuxiliaryTransportWorkDays_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_AuxiliaryTransportWorkDays_View_Show", model);
+        }
+
+        public ActionResult GetRequestAuxiliaryTransportOutABK(RapidDoc.Models.ViewModels.USR_REQ_YT_AuxiliaryTransportOutABK_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_AuxiliaryTransportOutABK_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_AuxiliaryTransportOutABK_View_Show", model);
+        }
+
+        public ActionResult GetRequestStandbyTransport(RapidDoc.Models.ViewModels.USR_REQ_YT_StandbyTransport_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_StandbyTransport_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_StandbyTransport_View_Show", model);
+        }
+
+        public ActionResult GetRequestStandbyTransportUIT(RapidDoc.Models.ViewModels.USR_REQ_YT_StandbyTransportUIT_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_StandbyTransportUIT_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_StandbyTransportUIT_View_Show", model);
+        }
+
+        public ActionResult GetRequestLightTransportTripManage(RapidDoc.Models.ViewModels.USR_REQ_YT_LightTransportTripManage_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_LightTransportTripManage_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_LightTransportTripManage_View_Show", model);
+        }
+
+        public ActionResult GetRequestLightTransportTripATK(RapidDoc.Models.ViewModels.USR_REQ_YT_LightTransportTripATK_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_LightTransportTripATK_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_LightTransportTripATK_View_Show", model);
+        }
+
+        public ActionResult GetRequestLightTransportOCTMCInvest(RapidDoc.Models.ViewModels.USR_REQ_YT_LightTransportOCTMCInvest_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_LightTransportOCTMCInvest_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_LightTransportOCTMCInvest_View_Show", model);
+        }
+
+        public ActionResult GetRequestLightTransportOCTMCOper(RapidDoc.Models.ViewModels.USR_REQ_YT_LightTransportOCTMCOper_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_LightTransportOCTMCOper_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_LightTransportOCTMCOper_View_Show", model);
+        }
+
+        public ActionResult GetRequestLightTransportOutOrganizationInvest(RapidDoc.Models.ViewModels.USR_REQ_YT_LightTransportOutOrganizationInvest_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_LightTransportOutOrganizationInvest_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_LightTransportOutOrganizationInvest_View_Show", model);
+        }
+
+        public ActionResult GetRequestLightTransportOutOrganizationOper(RapidDoc.Models.ViewModels.USR_REQ_YT_LightTransportOutOrganizationOper_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_LightTransportOutOrganizationOper_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_LightTransportOutOrganizationOper_View_Show", model);
+        }
+
+        public ActionResult GetRequestLightTransportTripDayOff(RapidDoc.Models.ViewModels.USR_REQ_YT_LightTransportTripDayOff_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_LightTransportTripDayOff_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_LightTransportTripDayOff_View_Show", model);
+        }
+
+        public ActionResult GetRequestPassangerTransportTrip(RapidDoc.Models.ViewModels.USR_REQ_YT_PassangerTransportTrip_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_PassangerTransportTrip_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_PassangerTransportTrip_View_Show", model);
+        }
+
+        public ActionResult GetRequestPassangerTransportTripManage(RapidDoc.Models.ViewModels.USR_REQ_YT_PassangerTransportTripManage_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_PassangerTransportTripManage_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_PassangerTransportTripManage_View_Show", model);
+        }
+
+        public ActionResult GetRequestPassangerTransportTripATK(RapidDoc.Models.ViewModels.USR_REQ_YT_PassangerTransportTripATK_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_PassangerTransportTripATK_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_PassangerTransportTripATK_View_Show", model);
+        }
+
+        public ActionResult GetRequestPassangerTransportOutOrganizationInvest(RapidDoc.Models.ViewModels.USR_REQ_YT_PassangerTransportOutOrganizationInvest_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_PassangerTransportOutOrganizationInvest_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_PassangerTransportOutOrganizationInvest_View_Show", model);
+        }
+
+        public ActionResult GetRequestPassangerTransportOutOrganizationOper(RapidDoc.Models.ViewModels.USR_REQ_YT_PassangerTransportOutOrganizationOper_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_PassangerTransportOutOrganizationOper_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_PassangerTransportOutOrganizationOper_View_Show", model);
+        }
+
+        public ActionResult GetRequestPassangerTransportDayOff(RapidDoc.Models.ViewModels.USR_REQ_YT_PassangerTransportDayOff_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_PassangerTransportDayOff_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_PassangerTransportDayOff_View_Show", model);
+        }
+
+        public ActionResult GetRequestPassangerTransportDayOffZIF(RapidDoc.Models.ViewModels.USR_REQ_YT_PassangerTransportDayOffZIF_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_PassangerTransportDayOffZIF_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_PassangerTransportDayOffZIF_View_Show", model);
+        }
+
+        public ActionResult GetRequestPassangerTransportCorporate(RapidDoc.Models.ViewModels.USR_REQ_YT_PassangerTransportCorporate_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Диспетчер УТ"))
+                    {
+                        return PartialView("USR_REQ_YT_PassangerTransportCorporate_View_Edit", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_YT_PassangerTransportCorporate_View_Show", model);
+        }
+        //<--УТ
 	}
 }
