@@ -14,7 +14,7 @@
 </h2>
 <h5 class="visible-print-block">@ViewBag.Title</h5>
     <div class="pull-right hidden-sm hidden-xs">
-        <a href=@Url.Action("Index", "Home") class="btn btn-default" role="button">@UIElementRes.UIElement.Close</a>
+        <a href=@Url.Action("Index", "Document") class="btn btn-default" role="button">@UIElementRes.UIElement.Close</a>
     </div>
     <legend class="hidden-print"></legend>
     <h4 class="text-right"><small>(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h4>
@@ -189,7 +189,7 @@
                 </ul>
             </div>
 
-            <a href=@Url.Action("Index", "Home") class="btn btn-default hidden-print" role="button">@UIElementRes.UIElement.Close</a>
+            <a href=@Url.Action("Index", "Document") class="btn btn-default hidden-print" role="button">@UIElementRes.UIElement.Close</a>
         
 <script type="text/javascript">
     function clearTextAreaComment(result) {
@@ -299,7 +299,9 @@
     @section jsinit {
         var urlFileUpload = "@Url.Action("GetAllFileDocument", "Document")";
     }
-    @section jslaunch {
+@section jslaunch {
+<script type="text/javascript">
+    $(function () {
         selectpicker_init();
         custom_tagsinputEmpl_init("@Url.Action("JsonEmpl", "Custom")");
         custom_tagsinputEmpl2_init("@Url.Action("JsonEmpl", "Custom")");
@@ -317,6 +319,6 @@
             trigger: 'hover',
             placement: 'auto'
         })
-        datepicker_init("@UIElementRes.UIElement.LangName");
-        datetimepicker_init("@UIElementRes.UIElement.LangName");
-    }
+});
+</script>
+}

@@ -207,7 +207,7 @@ namespace RapidDoc.Controllers
         [HttpGet]
         public JsonResult GetAllFileDocument(Guid id)
         {
-            var statuses = new List<RapidDoc.Controllers.DocumentController.ViewDataUploadFilesResult>();
+            var statuses = new List<ViewDataUploadFilesResult>();
             var files = _DocumentService.GetAllFilesDocument(id);
 
             foreach (var file in files.Where(x => x.ContentType != "APPLICATION/XAML+XML"))
@@ -233,7 +233,7 @@ namespace RapidDoc.Controllers
                 }
 
 
-                statuses.Add(new RapidDoc.Controllers.DocumentController.ViewDataUploadFilesResult()
+                statuses.Add(new ViewDataUploadFilesResult()
                 {
                     name = file.FileName,
                     size = file.ContentLength,
@@ -256,7 +256,7 @@ namespace RapidDoc.Controllers
 
         public JsonResult AjaxUpload(HttpPostedFileBase files, Guid documentFileId)
         {
-            var statuses = new List<RapidDoc.Controllers.DocumentController.ViewDataUploadFilesResult>();
+            var statuses = new List<ViewDataUploadFilesResult>();
             System.IO.FileStream inFile;
             byte[] binaryData;
             string contentType;
@@ -293,7 +293,7 @@ namespace RapidDoc.Controllers
                     thumbnail = binaryData;
                 }
 
-                statuses.Add(new RapidDoc.Controllers.DocumentController.ViewDataUploadFilesResult()
+                statuses.Add(new ViewDataUploadFilesResult()
                 {
                     name = doc.FileName,
                     size = doc.ContentLength,

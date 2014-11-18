@@ -142,5 +142,11 @@ namespace RapidDoc.Controllers
         {
             return value ?? Guid.Empty;
         }
+
+        [AllowAnonymous]
+        public ActionResult GetCompanyList()
+        {
+            return PartialView("_CompanyList", _CompanyService.GetAllView());
+        }
     }
 }

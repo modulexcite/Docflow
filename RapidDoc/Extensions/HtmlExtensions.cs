@@ -111,7 +111,7 @@ namespace RapidDoc.Extensions
             var name = ExpressionHelper.GetExpressionText(expression);
             var metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
 
-            if (timeZone == String.Empty)
+            if (String.IsNullOrEmpty(timeZone))
             {
                 ApplicationDbContext context = new ApplicationDbContext();
                 UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
@@ -128,7 +128,7 @@ namespace RapidDoc.Extensions
 
         public static MvcHtmlString DateTimeLocal(this HtmlHelper helper, DateTime value, string timeZone = "")
         {
-            if (timeZone == String.Empty)
+            if (String.IsNullOrEmpty(timeZone))
             {
                 ApplicationDbContext context = new ApplicationDbContext();
                 UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));

@@ -54,7 +54,7 @@ namespace RapidDoc.Controllers
                     List<ProcessView> result = new List<ProcessView>();
                     ProcessView process = _ProcessService.FindView(processId);
 
-                    if (CheckCreateProcess(process, user.Id))
+                    if (process != null && CheckCreateProcess(process, user.Id))
                     {
                         num++;
                         topProcess.Add(process);
