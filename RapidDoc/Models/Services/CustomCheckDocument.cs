@@ -622,7 +622,7 @@ namespace RapidDoc.Models.Services
 
         public dynamic PreUpdateViewModel(Type type, dynamic actionModel)
         {
-            if (type == (new USR_REQ_UBUO_RequestCalcDriveTrip_View()).GetType())
+            if (type == (new USR_REQ_UBUO_RequestCalcDriveTrip_View()).GetType() || type == (new USR_REQ_TRIP_RegistrationBusinessTripKZ_View()).GetType() || type == (new USR_REQ_TRIP_RegistrationBusinessTripPP_View()).GetType())
             {
                 if (actionModel.FIO1 != null)
                 {

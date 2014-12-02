@@ -6797,7 +6797,7 @@ namespace RapidDoc.Models.ViewModels
         public string Department { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Наименование печати//штампа")]
+        [Display(Name = "Наименование печати/штампа")]
         public string StampName { get; set; }
 
         [Display(Name = "Количество")]
@@ -6844,11 +6844,11 @@ namespace RapidDoc.Models.ViewModels
         public string UserChooseManual1 { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Дата возникновения поломки//неисправности")]
+        [Display(Name = "Дата возникновения поломки/неисправности")]
         public DateTime? DateIncident { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Описание поломки//неисправности")]
+        [Display(Name = "Описание поломки/неисправности")]
         public string Description { get; set; }
     }
 
@@ -7462,6 +7462,49 @@ namespace RapidDoc.Models.ViewModels
         public int ResidenceRate2 { get; set; }
         public int ResidenceRate3 { get; set; }
         public int ResidenceRate4 { get; set; }
+    }
+    public class USR_REQ_TRIP_RequestCalcDriveBTripCalsPP_View
+    {
+        public USR_REQ_TRIP_RequestCalcDriveBTripCalsPP_View(EmplTripType emplTripType, TripDirection tripDirection, int day, int dayLive, int ticketSum, int dayRate, int residenceRate)
+        {
+            EmplTripType = emplTripType;
+            TripDirection = tripDirection;
+            Day = day;
+            DayLive = dayLive;
+            TicketSum = ticketSum;
+            DayRate = dayRate;
+            ResidenceRate = residenceRate;
+        }
+
+        public EmplTripType EmplTripType { get; set; }
+        public TripDirection TripDirection { get; set; }
+        public int Day { get; set; }
+        public int DayLive { get; set; }
+        public int TicketSum { get; set; }
+        public int DayRate { get; set; }
+        public int ResidenceRate { get; set; }
+    }
+
+    public class USR_REQ_TRIP_RequestCalcDriveBTripCalsKZ_View
+    {
+        public USR_REQ_TRIP_RequestCalcDriveBTripCalsKZ_View(EmplTripType emplTripType, TripDirection tripDirection, int day, int dayLive, int ticketSum, int dayRate, int residenceRate)
+        {
+            EmplTripType = emplTripType;
+            TripDirection = tripDirection;
+            Day = day;
+            DayLive = dayLive;
+            TicketSum = ticketSum;
+            DayRate = dayRate;
+            ResidenceRate = residenceRate;
+        }
+
+        public EmplTripType EmplTripType { get; set; }
+        public TripDirection TripDirection { get; set; }
+        public int Day { get; set; }
+        public int DayLive { get; set; }
+        public int TicketSum { get; set; }
+        public int DayRate { get; set; }
+        public int ResidenceRate { get; set; }
     }
     #endregion
 
