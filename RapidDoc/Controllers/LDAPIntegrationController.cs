@@ -43,7 +43,7 @@ namespace RapidDoc.Controllers
             DirectorySearcher ds = new DirectorySearcher(entry);
 
             ds.SearchScope = SearchScope.OneLevel;
-            ds.Filter = "(&(objectCategory=organizationalUnit)(!(name=Computers))(!(name=Disable))(!(name=Improvers))(!(name=Service&App))(!(name=Labs))(!(name=Servers))(!(name=Users))(!(name=Groups))(!(name=Disabled)))";
+            ds.Filter = "(&(objectCategory=organizationalUnit)(!(name=Computers))(!(name=Disable))(!(name=Improvers))(!(name=Service&App))(!(name=Labs))(!(name=Servers))(!(name=Users))(!(name=User))(!(name=Groups))(!(name=Disabled)))";
             ds.PropertiesToLoad.Add("distinguishedname");
             ds.PropertiesToLoad.Add("name");
 
@@ -156,7 +156,7 @@ namespace RapidDoc.Controllers
                         }
                         else
                         {
-                            PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
+                            PrincipalContext ctx = new PrincipalContext(ContextType.Domain, _item.DomainTable.LDAPServer, _item.DomainTable.LDAPBaseDN, _item.DomainTable.LDAPLogin, _item.DomainTable.LDAPPassword);
                             UserPrincipal user = UserPrincipal.FindByIdentity(ctx, userid);
                             string domainSID = user.Sid.ToString();
 
@@ -192,7 +192,7 @@ namespace RapidDoc.Controllers
                             && x.SecondName == _secondname);
 
                         empl.ManageId = manageId;
-                        _EmplService.SaveDomain(empl, "Admin");
+                        _EmplService.SaveDomain(empl, "Admin", _company);
                     }
                 }
             }
@@ -232,7 +232,7 @@ namespace RapidDoc.Controllers
                     WorkScheduleTableId = _WorkScheduleService.FirstOrDefault(x => x.Id != null).Id,
                     ManageId = manageId,
                     Enable = true
-                }, "Admin");
+                }, "Admin", _company);
             }
             else
             {
@@ -248,7 +248,7 @@ namespace RapidDoc.Controllers
                 empl.TitleTableId = _titleId;
                 empl.isIntegratedLDAP = true;
                 empl.ManageId = manageId;
-                _EmplService.SaveDomain(empl, "Admin");
+                _EmplService.SaveDomain(empl, "Admin", _company);
             }
         }
 
@@ -279,6 +279,11 @@ namespace RapidDoc.Controllers
             {
                 try
                 {
+                    //MIGRATION CODE
+                    um.RemoveLogin(domainModel.Id, new UserLoginInfo("Windows", domainModel.Logins.FirstOrDefault().ProviderKey));
+                    var loginInfo = new UserLoginInfo("Windows", _sid);
+                    um.AddLogin(domainModel.Id, loginInfo);
+
                     domainModel.Email = _email;
                     um.Update(domainModel);
                 }
@@ -317,7 +322,7 @@ namespace RapidDoc.Controllers
                     guid = _DepartmentService.FirstOrDefault(x => x.CompanyTableId == _companyId && x.DepartmentName == _parentDepartmentName).Id;
                 }
 
-                _DepartmentService.SaveDomain(new DepartmentTable() { DepartmentName = _department, ParentDepartmentId = guid, CompanyTableId = _companyId }, "Admin");
+                _DepartmentService.SaveDomain(new DepartmentTable() { DepartmentName = _department, ParentDepartmentId = guid, CompanyTableId = _companyId }, "Admin", _companyId);
             }
 
             guid = _DepartmentService.FirstOrDefault(x => x.DepartmentName == _department && x.CompanyTableId == _companyId).Id;

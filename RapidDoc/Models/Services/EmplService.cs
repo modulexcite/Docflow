@@ -27,7 +27,7 @@ namespace RapidDoc.Models.Services
         EmplView FirstOrDefaultView(Expression<Func<EmplTable, bool>> predicate);
         bool Contains(Expression<Func<EmplTable, bool>> predicate);
         void Save(EmplView viewTable);
-        void SaveDomain(EmplTable domainTable, string currentUserName = "");
+        void SaveDomain(EmplTable domainTable, string currentUserName = "", Guid? companyId = null);
         void Delete(Guid id);
         EmplTable Find(Guid id, string currentUserId = "");
         EmplView FindView(Guid id);
@@ -102,7 +102,7 @@ namespace RapidDoc.Models.Services
                 SaveDomain(domainTable);
             }
         }
-        public void SaveDomain(EmplTable domainTable, string currentUserName = "")
+        public void SaveDomain(EmplTable domainTable, string currentUserName = "", Guid? companyId = null)
         {
             ApplicationUser user = getCurrentUserName(currentUserName);
 
@@ -110,7 +110,10 @@ namespace RapidDoc.Models.Services
             {
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
-                domainTable.CompanyTableId = user.CompanyTableId;
+                if (companyId == null)
+                    domainTable.CompanyTableId = user.CompanyTableId;
+                else
+                    domainTable.CompanyTableId = companyId;
                 domainTable.ApplicationUserCreatedId = user.Id;
                 domainTable.ApplicationUserModifiedId = user.Id;
                 repo.Add(domainTable);

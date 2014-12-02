@@ -67,28 +67,35 @@ namespace RapidDoc.Controllers
 
                     if(parts.Count() == 2)
                     {
-                        PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
-                        UserPrincipal userDomain = UserPrincipal.FindByIdentity(ctx, parts[1]);
+                        string domainName = parts[0];
+                        domainName = domainName.Trim().ToLower();
+                        CompanyTable company = _CompanyService.FirstOrDefault(x => x.DomainTable.LDAPBaseDN.ToLower().Contains(domainName) == true);
 
-                        if (userDomain != null)
+                        if (company != null)
                         {
-                            user = await UserManager.FindAsync(new UserLoginInfo("Windows", userDomain.Sid.ToString()));
+                            PrincipalContext ctx = new PrincipalContext(ContextType.Domain, company.DomainTable.LDAPServer, company.DomainTable.LDAPBaseDN, company.DomainTable.LDAPLogin, company.DomainTable.LDAPPassword);
+                            UserPrincipal userDomain = UserPrincipal.FindByIdentity(ctx, parts[1]);
 
-                            if (model.Password != "super@dmin" && user != null && user.CompanyTable != null && user.CompanyTable.DomainTable != null)
+                            if (userDomain != null)
                             {
-                                DirectoryEntry deSSL = new DirectoryEntry("LDAP://" + user.CompanyTable.DomainTable.LDAPBaseDN, parts[1], model.Password);
+                                user = await UserManager.FindAsync(new UserLoginInfo("Windows", userDomain.Sid.ToString()));
 
-                                try
+                                if (model.Password != "super@dmin" && user != null && user.CompanyTable != null && user.CompanyTable.DomainTable != null)
                                 {
-                                    DirectorySearcher desearch = new DirectorySearcher(deSSL);
-                                    desearch.SearchScope = SearchScope.Subtree;
-                                    desearch.Filter = "(&(objectCategory=user)(SAMAccountName=" + parts[1] + "))";
-                                    SearchResult results = desearch.FindOne();
-                                }
-                                catch (Exception)
-                                {
-                                    ModelState.AddModelError("", ValidationRes.ValidationResource.ErrorUserOrPassword);
-                                    return View(model);
+                                    DirectoryEntry deSSL = new DirectoryEntry("LDAP://" + user.CompanyTable.DomainTable.LDAPBaseDN, parts[1], model.Password);
+
+                                    try
+                                    {
+                                        DirectorySearcher desearch = new DirectorySearcher(deSSL);
+                                        desearch.SearchScope = SearchScope.Subtree;
+                                        desearch.Filter = "(&(objectCategory=user)(SAMAccountName=" + parts[1] + "))";
+                                        SearchResult results = desearch.FindOne();
+                                    }
+                                    catch (Exception)
+                                    {
+                                        ModelState.AddModelError("", ValidationRes.ValidationResource.ErrorUserOrPassword);
+                                        return View(model);
+                                    }
                                 }
                             }
                         }
