@@ -45,7 +45,8 @@ namespace RapidDoc.Models.Services
         }
         public IEnumerable<GroupProcessTable> GetAll()
         {
-            return repo.All();
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<GroupProcessView> GetAllView()
         {
@@ -54,7 +55,8 @@ namespace RapidDoc.Models.Services
         }
         public IEnumerable<GroupProcessTable> GetPartial(Expression<Func<GroupProcessTable, bool>> predicate)
         {
-            return repo.FindAll(predicate);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            return repo.FindAll(predicate).Where(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<GroupProcessView> GetPartialView(Expression<Func<GroupProcessTable, bool>> predicate)
         {
@@ -86,19 +88,20 @@ namespace RapidDoc.Models.Services
         }
         public void SaveDomain(GroupProcessTable domainTable)
         {
-            string userId = HttpContext.Current.User.Identity.GetUserId();
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             if (domainTable.Id == Guid.Empty)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
-                domainTable.ApplicationUserCreatedId = userId;
-                domainTable.ApplicationUserModifiedId = userId;
+                domainTable.ApplicationUserCreatedId = user.Id;
+                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.CompanyTableId = user.CompanyTableId;
                 repo.Add(domainTable);
             }
             else
             {
                 domainTable.ModifiedDate = DateTime.UtcNow;
-                domainTable.ApplicationUserModifiedId = userId;
+                domainTable.ApplicationUserModifiedId = user.Id;
                 repo.Update(domainTable);
             }
             _uow.Save();
@@ -110,7 +113,8 @@ namespace RapidDoc.Models.Services
         }
         public GroupProcessTable Find(Guid id)
         {
-            return repo.GetById(id);
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            return repo.Find(a => a.Id == id && a.CompanyTableId == user.CompanyTableId);
         }
         public GroupProcessView FindView(Guid id)
         {

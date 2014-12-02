@@ -11,7 +11,7 @@ using RapidDoc.Models.Interfaces;
 
 namespace RapidDoc.Models.DomainModels
 {
-    public class GroupProcessTable : BasicTable
+    public class GroupProcessTable : BasicCompanyNullTable
     {
         [StringLength(40)] 
         [Required]
