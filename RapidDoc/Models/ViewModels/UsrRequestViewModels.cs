@@ -7508,4 +7508,12 @@ namespace RapidDoc.Models.ViewModels
     }
     #endregion
 
+    #region Заявки Kazzink Holdings ИТ служба
+    public class USK_REQ_IT_CTP_IncidentIT_View : BasicDocumentRequestView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Контактный номер телефона")]
+        public string Phone { get; set; } 
+    }
+    #endregion
 }
