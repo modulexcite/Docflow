@@ -26,21 +26,13 @@ namespace RapidDoc.Controllers
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
 
             ICompanyService _Companyservice = DependencyResolver.Current.GetService<ICompanyService>();
-            CompanyTable company = _Companyservice.FirstOrDefault(x => x.AliasCompanyName == "ATK");
-            BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "");
-            BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "", true);
-            CheckActiveUsers(company);
-
-            //Отключаем на всякий случай VIP группу
-            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
-            var empls = _EmplService.GetPartialIntercompany(x => x.DepartmentTable.DepartmentName == "VIP").ToList();
-
-            foreach (var item in empls)
+            var companies = _Companyservice.GetAll();
+            foreach (var company in companies)
             {
-                item.ManageId = null;
-                _EmplService.SaveDomain(item, "Admin");
+                BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "");
+                BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "", true);
+                CheckActiveUsers(company);
             }
-            //---
 
             return response;
         }

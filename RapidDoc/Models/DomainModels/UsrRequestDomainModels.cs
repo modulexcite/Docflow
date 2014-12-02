@@ -5752,6 +5752,12 @@ namespace RapidDoc.Models.DomainModels
     }
     #endregion
 
-
+    #region Заявки Kazzink Holdings ИТ служба
+    public class USK_REQ_IT_CTP_IncidentIT_Table : BasicDocumentRequestTable
+    {
+        [Required]
+        public string Phone { get; set; }
+    }
+    #endregion
 }
     
