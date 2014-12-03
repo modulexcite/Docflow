@@ -88,6 +88,7 @@ namespace RapidDoc.Controllers
             return Redirect(returnUrl);
         }
 
+        [Authorize(Roles = "ChangeCompany, Administrator")]
         public ActionResult ChangeCompany(string companyId, string returnUrl)
         {
             var company = _CompanyService.FirstOrDefault(x => x.AliasCompanyName == companyId);

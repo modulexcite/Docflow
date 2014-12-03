@@ -19,7 +19,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class ServiceIncidentController : BasicController
     {
         private readonly IServiceIncidentService _Service;

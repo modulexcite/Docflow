@@ -14,7 +14,7 @@ using RapidDoc.Models.Grids;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class ProfileController : BasicController
     {
         private readonly IProfileService _Service;

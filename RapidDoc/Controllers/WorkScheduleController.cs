@@ -15,7 +15,7 @@ using RapidDoc.Models.Grids;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class WorkScheduleController : BasicController
     {
         private readonly IWorkScheduleService _Service;

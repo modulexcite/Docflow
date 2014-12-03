@@ -14,7 +14,7 @@ using RapidDoc.Models.Grids;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class DomainController : BasicController
     {
         private readonly IDomainService _Service;

@@ -18,7 +18,7 @@ using Simple.ImageResizer;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class ProcessController : BasicController
     {
         private readonly IProcessService _Service;
