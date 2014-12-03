@@ -86,12 +86,15 @@
                         </ul>
                     </li>
 
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><strong>@ViewContext.RouteData.Values["company"]</strong> <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            @Html.Action("GetCompanyList", "Basic")
-                        </ul>
-                    </li>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("ChangeCompany"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><strong>@ViewContext.RouteData.Values["company"]</strong> <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                @Html.Action("GetCompanyList", "Basic")
+                            </ul>
+                        </li>
+                    }    
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
