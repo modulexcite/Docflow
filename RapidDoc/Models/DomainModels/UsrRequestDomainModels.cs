@@ -1020,6 +1020,9 @@ namespace RapidDoc.Models.DomainModels
     public class USR_REQ_OKS_RequestForVisa_Table : BasicDocumentTable
     {
         [Required]
+        public string Users { get; set; }
+
+        [Required]
         public string Country { get; set; }
         [Required]
         public DateTime FromDate { get; set; }

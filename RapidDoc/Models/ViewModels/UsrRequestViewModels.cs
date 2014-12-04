@@ -1449,6 +1449,10 @@ namespace RapidDoc.Models.ViewModels
     public class USR_REQ_OKS_RequestForArchive_View : BasicDocumentView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пользователь")]
+        public string Users { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Данные по запрашиваемому документу")]
         public string DataDoument { get; set; }
 

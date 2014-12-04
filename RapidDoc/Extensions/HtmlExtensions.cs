@@ -232,5 +232,35 @@ namespace RapidDoc.Extensions
 
             return outString;
         }
+
+        public static string EnumToDescription(this HtmlHelper html, string enumName, string value)
+        {
+            Type enumType = Type.GetType(enumName);
+            if (enumType != null)
+            {
+                MemberInfo member = enumType.GetMember(value)[0];
+                string outString = "";
+
+                var attrs = member.GetCustomAttributes(typeof(DisplayAttribute), false);
+                if (attrs.Any())
+                {
+                    var displayAttr = ((DisplayAttribute)attrs[0]);
+
+                    outString = displayAttr.Name;
+
+                    if (displayAttr.ResourceType != null)
+                    {
+                        outString = displayAttr.GetName();
+                    }
+                }
+                else
+                {
+                    outString = value.ToString();
+                }
+
+                return outString;
+            }
+            return String.Empty;
+        }
     }
 }
