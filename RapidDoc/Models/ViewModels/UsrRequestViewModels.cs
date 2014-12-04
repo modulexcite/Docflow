@@ -1449,10 +1449,6 @@ namespace RapidDoc.Models.ViewModels
     public class USR_REQ_OKS_RequestForArchive_View : BasicDocumentView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Пользователь")]
-        public string Users { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Данные по запрашиваемому документу")]
         public string DataDoument { get; set; }
 
@@ -1467,6 +1463,10 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_OKS_RequestForVisa_View : BasicDocumentView
     {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пользователь")]
+        public string Users { get; set; }
+
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Страна следования")]
         public string Country { get; set; }
@@ -1496,10 +1496,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Дата/время")]
         public DateTime? Date { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Обоснование")]
         public string Reason { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Объем выполняемых работ")]
         public string Volume { get; set; }
@@ -1523,10 +1525,6 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
         public DateTime? Date { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Сведения о заполняющем")]
-        public string Information { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Подразделение")]
