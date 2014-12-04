@@ -1123,7 +1123,7 @@ namespace RapidDoc.Models.DomainModels
         public string FullName { get; set; }
 
         [Required]
-        public string DateAssurance { get; set; }
+        public DateTime? DateAssurance { get; set; }
 
         [Required]
         public string AimAssurance { get; set; }

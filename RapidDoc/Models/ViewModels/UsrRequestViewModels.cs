@@ -1601,9 +1601,10 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Полное наименование документа для нотариального заверения")]
         public string FullName { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата заверения документа не менее 2-х дней с момента получения заявки ЮУ")]
-        public string DateAssurance { get; set; }
+        public DateTime? DateAssurance { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Цель заверения документа")]
