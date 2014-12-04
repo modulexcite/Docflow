@@ -1065,9 +1065,6 @@ namespace RapidDoc.Models.DomainModels
         public DateTime? Date { get; set; }
 
         [Required]
-        public string Information { get; set; }
-
-        [Required]
         public string Department { get; set; }
 
         [Required]
