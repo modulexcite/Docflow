@@ -345,6 +345,51 @@ namespace RapidDoc.Controllers
             base.Dispose(disposing);
         }
 
+        //
+        // POST: /Account/WindowsLogin
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<ActionResult> WindowsLogin(string userName, string returnUrl)
+        {
+            if (!Request.LogonUserIdentity.IsAuthenticated)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var loginInfo = GetWindowsLoginInfo();
+
+            // Sign in the user with this external login provider if the user already has a login
+            var user = await UserManager.FindAsync(loginInfo);
+            if (user != null)
+            {
+                await SignInAsync(user, isPersistent: false);
+                return RedirectToLocal(returnUrl);
+            }
+            else
+            {
+                // If the user does not have an account, then prompt the user to create an account
+                var name = userName;
+                if (string.IsNullOrEmpty(name))
+                    name = Request.LogonUserIdentity.Name.Split('\\')[1];
+                var appUser = new ApplicationUser() { UserName = name };
+                var result = await UserManager.CreateAsync(appUser);
+                if (result.Succeeded)
+                {
+                    result = await UserManager.AddLoginAsync(appUser.Id, loginInfo);
+                    if (result.Succeeded)
+                    {
+                        await SignInAsync(appUser, isPersistent: false);
+                        return RedirectToLocal(returnUrl);
+                    }
+                }
+                AddErrors(result);
+                ViewBag.ReturnUrl = returnUrl;
+                ViewBag.LoginProvider = "Windows";
+                return View("WindowsLoginConfirmation", new WindowsLoginConfirmationViewModel { UserName = name });
+            }
+        }
+
         #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
@@ -428,6 +473,14 @@ namespace RapidDoc.Controllers
                 }
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
+        }
+
+        private UserLoginInfo GetWindowsLoginInfo()
+        {
+            if (!Request.LogonUserIdentity.IsAuthenticated)
+                return null;
+
+            return new UserLoginInfo("Windows", Request.LogonUserIdentity.User.ToString());
         }
         #endregion
     }

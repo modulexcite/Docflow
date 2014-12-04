@@ -146,4 +146,11 @@ namespace RapidDoc.Models.ViewModels
         [Compare("Password", ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorPasswordsDoNotMatch")]
         public string ConfirmPassword { get; set; }
     }
+
+    public class WindowsLoginConfirmationViewModel
+    {
+        [Required]
+        [Display(Name = "User name")]
+        public string UserName { get; set; }
+    }
 }
