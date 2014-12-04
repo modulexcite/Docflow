@@ -19,7 +19,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class TripSettingsController : BasicController
     {
         private readonly ITripSettingsService _Service;

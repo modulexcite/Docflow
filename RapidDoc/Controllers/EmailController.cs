@@ -14,7 +14,7 @@ using System.IO;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class EmailController : BasicController
     {
         private readonly IEmailService _Service;

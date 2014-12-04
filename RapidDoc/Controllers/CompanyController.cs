@@ -18,7 +18,7 @@ using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize(Roles = "Administrator, ChangeCompany")]
+    [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class CompanyController : BasicController
     {
         private readonly IDomainService _DomainService;

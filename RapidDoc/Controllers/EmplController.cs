@@ -15,7 +15,7 @@ using RapidDoc.Models.Grids;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class EmplController : BasicController
     {
         private readonly IEmplService _Service;

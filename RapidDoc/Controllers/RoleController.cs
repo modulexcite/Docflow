@@ -16,7 +16,7 @@ using RapidDoc.Models.Services;
 
 namespace RapidDoc.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class RoleController : BasicController
     {
         public UserManager<ApplicationUser> UserManager { get; private set; }
