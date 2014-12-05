@@ -26,7 +26,7 @@ namespace RapidDoc.Controllers
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
 
             ICompanyService _Companyservice = DependencyResolver.Current.GetService<ICompanyService>();
-            var companies = _Companyservice.GetAll();
+            var companies = _Companyservice.GetAll().Where(x => x.AliasCompanyName == "ATK");
             foreach (var company in companies)
             {
                 BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "");
@@ -280,9 +280,11 @@ namespace RapidDoc.Controllers
                 try
                 {
                     //MIGRATION CODE
+                    /*
                     um.RemoveLogin(domainModel.Id, new UserLoginInfo("Windows", domainModel.Logins.FirstOrDefault().ProviderKey));
                     var loginInfo = new UserLoginInfo("Windows", _sid);
                     um.AddLogin(domainModel.Id, loginInfo);
+                    */
 
                     domainModel.Email = _email;
                     um.Update(domainModel);
