@@ -13,6 +13,9 @@ namespace RapidDoc.Models.DomainModels
         public Guid? CompanyTableId { get; set; }
         public virtual CompanyTable CompanyTable { get; set; }
 
+        public Guid? DomainTableId { get; set; }
+        public virtual DomainTable DomainTable { get; set; }
+
         public string TimeZoneId { get; set; }
 
         [StringLength(5)]
@@ -20,6 +23,8 @@ namespace RapidDoc.Models.DomainModels
         public string Lang { get; set; }
 
         public bool isDomainUser { get; set; }
+
+        public string AccountDomainName { get; set; }
 
         public string AliasCompanyName
         {

@@ -108,6 +108,10 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public Guid? CompanyTableId { get; set; }
 
+        public Guid? DomainTableId { get; set; }
+
+        public string AccountDomainName { get; set; }
+
         [Display(Name = "TimeZoneName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string TimeZoneName
         {

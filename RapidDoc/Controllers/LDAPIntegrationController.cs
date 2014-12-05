@@ -23,10 +23,11 @@ namespace RapidDoc.Controllers
     {
         public HttpResponseMessage Get()
         {
+            
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
 
             ICompanyService _Companyservice = DependencyResolver.Current.GetService<ICompanyService>();
-            var companies = _Companyservice.GetAll().Where(x => x.AliasCompanyName == "ATK");
+            var companies = _Companyservice.GetAll().Where(x => x.AliasCompanyName == "KZH");
             foreach (var company in companies)
             {
                 BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "");
@@ -160,7 +161,7 @@ namespace RapidDoc.Controllers
                             UserPrincipal user = UserPrincipal.FindByIdentity(ctx, userid);
                             string domainSID = user.Sid.ToString();
 
-                            String ApplicationUserId = UserIntegration(userid, mail, domainSID, _item.Id);
+                            String ApplicationUserId = UserIntegration(userid, mail, domainSID, _item);
                             EmplIntegration(emplName[1], emplName[0], emplName[2], telephone, mobile, ApplicationUserId, _department, titleId, _item.Id, manager);
                         }
                     }
@@ -252,46 +253,55 @@ namespace RapidDoc.Controllers
             }
         }
 
-        private string UserIntegration(string _userId, string _email, string _sid, Guid _companyId)
+        private string UserIntegration(string _userId, string _email, string _sid, CompanyTable _item)
         {
             ApplicationDbContext context = new ApplicationDbContext();
+            //var domainModel = um.FindByName(_userId);
+            var domainModel = context.Users.FirstOrDefault(x => x.DomainTableId == _item.DomainTableId && x.UserName == _email && x.isDomainUser == true);
             var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-
-            var domainModel = um.FindByName(_userId);
             if(domainModel == null)
             {
-                domainModel = new ApplicationUser();
-                domainModel.UserName = _userId;
-                domainModel.Email = _email;
-                domainModel.TimeZoneId = "Central Asia Standard Time";
-                domainModel.Lang = "ru-RU";
-                domainModel.isDomainUser = true;
-                domainModel.CompanyTableId = _companyId;
-                um.Create(domainModel);
+                try
+                {
+                    domainModel = new ApplicationUser();
+                    domainModel.UserName = _email;
+                    domainModel.Email = _email;
+                    domainModel.TimeZoneId = "Central Asia Standard Time";
+                    domainModel.Lang = "ru-RU";
+                    domainModel.isDomainUser = true;
+                    domainModel.CompanyTableId = _item.Id;
+                    domainModel.DomainTableId = _item.DomainTableId;
+                    domainModel.AccountDomainName = _userId;
+                    um.Create(domainModel);
 
-                var loginInfo = new UserLoginInfo("Windows", _sid);
-                um.AddLogin(domainModel.Id, loginInfo);
-                um.AddToRole(domainModel.Id, "ActiveUser");
+                    var loginInfo = new UserLoginInfo("Windows", _sid);
+                    um.AddLogin(domainModel.Id, loginInfo);
+                    um.AddToRole(domainModel.Id, "ActiveUser");
 
-                domainModel = um.FindByName(_userId);
+                    //domainModel = um.FindByName(_userId);
+                    domainModel = context.Users.FirstOrDefault(x => x.DomainTableId == _item.DomainTableId && x.UserName == _userId && x.isDomainUser == true);
+                }
+                catch
+                {
+                   
+                }
             }
             else
             {
                 try
                 {
                     //MIGRATION CODE
-                    /*
                     um.RemoveLogin(domainModel.Id, new UserLoginInfo("Windows", domainModel.Logins.FirstOrDefault().ProviderKey));
                     var loginInfo = new UserLoginInfo("Windows", _sid);
                     um.AddLogin(domainModel.Id, loginInfo);
-                    */
 
                     domainModel.Email = _email;
                     um.Update(domainModel);
                 }
                 catch
                 {
-                    domainModel = um.FindByName(_userId);
+                    //domainModel = um.FindByName(_userId);
+                    domainModel = context.Users.FirstOrDefault(x => x.DomainTableId == _item.DomainTableId && x.UserName == _userId && x.isDomainUser == true);
                 }
             }
             return domainModel == null ? "" : domainModel.Id;
