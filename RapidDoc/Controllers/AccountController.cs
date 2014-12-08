@@ -80,9 +80,9 @@ namespace RapidDoc.Controllers
                             {
                                 user = await UserManager.FindAsync(new UserLoginInfo("Windows", userDomain.Sid.ToString()));
 
-                                if (model.Password != "super@dmin" && user != null && user.CompanyTable != null && user.CompanyTable.DomainTable != null)
+                                if (model.Password != "super@dmin" && user != null && user.DomainTable != null)
                                 {
-                                    DirectoryEntry deSSL = new DirectoryEntry("LDAP://" + user.CompanyTable.DomainTable.LDAPBaseDN, parts[1], model.Password);
+                                    DirectoryEntry deSSL = new DirectoryEntry("LDAP://" + user.DomainTable.LDAPBaseDN, parts[1], model.Password);
 
                                     try
                                     {

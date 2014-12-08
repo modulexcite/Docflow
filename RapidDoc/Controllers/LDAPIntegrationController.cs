@@ -27,7 +27,7 @@ namespace RapidDoc.Controllers
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
 
             ICompanyService _Companyservice = DependencyResolver.Current.GetService<ICompanyService>();
-            var companies = _Companyservice.GetAll().Where(x => x.AliasCompanyName == "KZH");
+            var companies = _Companyservice.GetAll();
             foreach (var company in companies)
             {
                 BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "");
@@ -256,15 +256,20 @@ namespace RapidDoc.Controllers
         private string UserIntegration(string _userId, string _email, string _sid, CompanyTable _item)
         {
             ApplicationDbContext context = new ApplicationDbContext();
-            //var domainModel = um.FindByName(_userId);
-            var domainModel = context.Users.FirstOrDefault(x => x.DomainTableId == _item.DomainTableId && x.UserName == _email && x.isDomainUser == true);
+            var domainModel = context.Users.FirstOrDefault(x => x.DomainTableId == _item.DomainTableId && x.AccountDomainName == _userId && x.isDomainUser == true);
             var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             if(domainModel == null)
             {
+                string userNameLocal = _userId;
+                if(context.Users.Any(x => x.UserName == _userId))
+                {
+                    userNameLocal = GetRightLocalUserName(context, userNameLocal);
+                }
+
                 try
                 {
                     domainModel = new ApplicationUser();
-                    domainModel.UserName = _email;
+                    domainModel.UserName = userNameLocal;
                     domainModel.Email = _email;
                     domainModel.TimeZoneId = "Central Asia Standard Time";
                     domainModel.Lang = "ru-RU";
@@ -278,8 +283,7 @@ namespace RapidDoc.Controllers
                     um.AddLogin(domainModel.Id, loginInfo);
                     um.AddToRole(domainModel.Id, "ActiveUser");
 
-                    //domainModel = um.FindByName(_userId);
-                    domainModel = context.Users.FirstOrDefault(x => x.DomainTableId == _item.DomainTableId && x.UserName == _userId && x.isDomainUser == true);
+                    domainModel = context.Users.FirstOrDefault(x => x.DomainTableId == _item.DomainTableId && x.AccountDomainName == _userId && x.isDomainUser == true);
                 }
                 catch
                 {
@@ -301,10 +305,23 @@ namespace RapidDoc.Controllers
                 catch
                 {
                     //domainModel = um.FindByName(_userId);
-                    domainModel = context.Users.FirstOrDefault(x => x.DomainTableId == _item.DomainTableId && x.UserName == _userId && x.isDomainUser == true);
+                    domainModel = context.Users.FirstOrDefault(x => x.DomainTableId == _item.DomainTableId && x.AccountDomainName == _userId && x.isDomainUser == true);
                 }
             }
             return domainModel == null ? "" : domainModel.Id;
+        }
+
+        private string GetRightLocalUserName(ApplicationDbContext context, string userName)
+        {
+            int num = 1;
+            if (context.Users.Any(x => x.UserName == userName))
+            {
+                num++;
+                userName = userName + num.ToString();
+                userName = GetRightLocalUserName(context, userName);
+            }
+
+            return userName;
         }
 
         private Guid TitleIntegration(string _title)
