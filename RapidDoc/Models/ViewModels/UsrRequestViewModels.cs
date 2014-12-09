@@ -799,6 +799,10 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Причина")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
+
+        [Display(Name = "Контактный телефон")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string ContactPhone { get; set; }
     }
 
     public class USR_REQ_IT_CAP_ChangePassLotus_View : BasicDocumentView
@@ -823,6 +827,10 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Причина")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Reason { get; set; }
+
+        [Display(Name = "Контактный телефон")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string ContactPhone { get; set; }
     }
 
     public class USR_REQ_IT_CAP_AccessRightParagraf_View : BasicDocumentView

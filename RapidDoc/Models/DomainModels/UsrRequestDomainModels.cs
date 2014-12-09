@@ -549,6 +549,9 @@ namespace RapidDoc.Models.DomainModels
 
         [Required]
         public string Reason { get; set; }
+
+        [Required]
+        public string ContactPhone { get; set; }
     }
 
     public class USR_REQ_IT_CAP_ChangePassLotus_Table : BasicDocumentTable
@@ -567,6 +570,9 @@ namespace RapidDoc.Models.DomainModels
 
         [Required]
         public string Reason { get; set; }
+
+        [Required]
+        public string ContactPhone { get; set; }
     }
 
     public class USR_REQ_IT_CAP_AccessRightParagraf_Table : BasicDocumentTable
