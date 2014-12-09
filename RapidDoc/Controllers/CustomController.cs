@@ -75,7 +75,7 @@ namespace RapidDoc.Controllers
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
                 {
-                    if (current.Any(x => x.ActivityName == "Начальник ОКЗ КД"))
+                    if (current.Any(x => x.ActivityName == "КД"))
                     {
                         return PartialView("USR_REQ_KD_RequestForCompetitonProc_Edit_Manual", model);
                     }
@@ -94,7 +94,7 @@ namespace RapidDoc.Controllers
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
                 {
-                    if (current.Any(x => x.ActivityName == "Начальник ОКЗ КД"))
+                    if (current.Any(x => x.ActivityName == "КД"))
                     {
                         return PartialView("USR_REQ_KD_RequestForCompetitonProcUZL_Edit_Manual", model);
                     }
@@ -113,7 +113,7 @@ namespace RapidDoc.Controllers
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
                 {
-                    if (current.Any(x => x.ActivityName == "Начальник ОКЗ КД"))
+                    if (current.Any(x => x.ActivityName == "КД"))
                     {
                         return PartialView("USR_REQ_KD_RequestForCompetitonProcServices_Edit_Manual", model);
                     }
@@ -132,7 +132,7 @@ namespace RapidDoc.Controllers
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
                 {
-                    if (current.Any(x => x.ActivityName == "Начальник ОКЗ КД"))
+                    if (current.Any(x => x.ActivityName == "КД"))
                     {
                         return PartialView("USR_REQ_KD_RequestForCompetitonProcServicesBGP_Edit_Manual", model);
                     }

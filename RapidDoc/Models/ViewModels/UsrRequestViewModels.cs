@@ -2185,7 +2185,7 @@ namespace RapidDoc.Models.ViewModels
         public string Circumstance { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Место поставки товара")]
+        [Display(Name = "Место оказания/выполнения услуг/работ")]
         public string Destination { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -2215,7 +2215,7 @@ namespace RapidDoc.Models.ViewModels
         public string Circumstance { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Место поставки товара")]
+        [Display(Name = "Место оказания/выполнения услуг/работ")]
         public string Destination { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
