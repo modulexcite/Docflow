@@ -501,20 +501,27 @@ namespace RapidDoc.Controllers
             return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id, isAfterView = true }) });
         }
 
-        public JsonResult AjaxUpload(HttpPostedFileBase filelist, Guid documentFileId)
+        public JsonResult AjaxUpload(HttpPostedFileBase filelist, Guid documentFileId, Guid processId)
         {
             var statuses = new List<ViewDataUploadFilesResult>();
-           
+            bool error = false;
+            ProcessTable process = _ProcessService.Find(processId);
+            if (process.DocSize > 0)
+            {
+                if (((filelist.ContentLength/1024f)/1024f) > process.DocSize)
+                    error = true;
+            }
+
             System.IO.FileStream inFile;
             byte[] binaryData;
             string contentType;
 
-            if (filelist != null && !string.IsNullOrEmpty(filelist.FileName) && documentFileId != Guid.Empty)
+            if (filelist != null && !string.IsNullOrEmpty(filelist.FileName) && documentFileId != Guid.Empty && error != true)
             {
                 BinaryReader binaryReader = new BinaryReader(filelist.InputStream);
                 byte[] data = binaryReader.ReadBytes(filelist.ContentLength);
 
-                var thumbnail = new byte[] {  };
+                var thumbnail = new byte[] { };
                 contentType = filelist.ContentType.ToString().ToUpper();
                 thumbnail = GetThumbnail(data, contentType);
 
@@ -551,6 +558,21 @@ namespace RapidDoc.Controllers
                     deleteType = "DELETE"
                 });
             }
+            else
+            {
+                statuses.Add(new ViewDataUploadFilesResult()
+                {
+
+                    name = filelist.FileName,
+                    error = String.Format(ValidationRes.ValidationResource.ErrorDocSize, process.DocSize, Math.Round(((filelist.ContentLength / 1024f) / 1024f), 2), filelist.ContentLength),
+                    size = filelist.ContentLength,
+                    url = "",
+                    deleteUrl = "",
+                    thumbnailUrl = "",
+                    deleteType = "DELETE"
+                });
+            }
+            
             
             var uploadedFiles = new
             {
@@ -672,7 +694,7 @@ namespace RapidDoc.Controllers
 
             if (file != null)
             {
-                return view = AjaxUpload(file, fileId);
+                return view = AjaxUpload(file, fileId, processId);
             }
 
             switch(type)
@@ -778,8 +800,9 @@ namespace RapidDoc.Controllers
         {
             ProcessTable process = _ProcessService.Find(processId);
             var files = _DocumentService.GetAllFilesDocument(fileId).ToList();
-            if(process.MandatoryNumberFiles > 0)
-            {
+
+            if ((process.MandatoryNumberFiles > 0) && ((documentId != null && process.MandatoryDocDate <= _DocumentService.Find(documentId).CreatedDate) || (process.MandatoryDocDate <= DateTime.Now && documentId == null)))
+            {              
                 if(files.Count < process.MandatoryNumberFiles)
                 {
                     ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorMandatoryNumberFiles, process.MandatoryNumberFiles, files.Count));
@@ -796,7 +819,7 @@ namespace RapidDoc.Controllers
                             ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorMandatoryFileTypes, process.MandatoryFileTypes, file.FileName));
                         }
                     }
-                }
+                }             
             }
         }
 

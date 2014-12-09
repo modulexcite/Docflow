@@ -60,7 +60,12 @@ namespace RapidDoc.Models.DomainModels
         public string MandatoryFileTypes { get; set; }
 
         public TimeSpan StartWorkTime { get; set; }
+
         public TimeSpan EndWorkTime { get; set; }
+
+        public DateTime MandatoryDocDate { get; set; }
+
+        public int DocSize { get; set; }
 
         public string GroupProcessName
         {

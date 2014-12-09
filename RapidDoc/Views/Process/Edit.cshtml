@@ -99,6 +99,22 @@
         </div>
 
         <div class="editor-label">
+            @Html.LabelFor(model => model.DocSize)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.DocSize, new { @class = "form-control bfh-number" })
+            @Html.ValidationMessageFor(model => model.DocSize)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MandatoryDocDate)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.MandatoryDocDate, new { @class = "datetimepicker", startDate = "" })
+            @Html.ValidationMessageFor(model => model.MandatoryDocDate)
+        </div>
+
+        <div class="editor-label">
             @Html.LabelFor(model => model.MandatoryNumberFiles)
         </div>
         <div class="editor-field">
@@ -246,6 +262,7 @@
 $(function () {
     selectpicker_init();
     timepicker_init();
+    datetimepicker_init();
 
     $("#buttonSubmitWF").click(function(){
         var formData = new FormData();

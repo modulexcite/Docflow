@@ -68,6 +68,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "EndWorkTime", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public TimeSpan EndWorkTime { get; set; }
+
+        [Display(Name = "DocSize", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public int DocSize { get; set; }
+
+        [Display(Name = "MandatoryDocDate", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public DateTime MandatoryDocDate { get; set; }
     }
 
     public class DocumentComposite

@@ -130,6 +130,7 @@ namespace RapidDoc.Models.ViewModels
     public class ViewDataUploadFilesResult
     {
         public string name { get; set; }
+        public string error { get; set; }
         public int size { get; set; }
         public string url { get; set; }
         public string deleteUrl { get; set; }

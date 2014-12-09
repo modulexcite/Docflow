@@ -120,6 +120,13 @@ namespace RapidDoc.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public FileContentResult DownloadFile(Guid Id)
+        {
+            FileTable fileTable = _DocumentService.GetFile(Id);
+            return File(fileTable.Data, fileTable.ContentType, fileTable.FileName);
+        }
+
         [HttpPost]
         public ActionResult Edit(ProcessView model, HttpPostedFileBase files, Guid documentFileId)
         {
@@ -128,7 +135,7 @@ namespace RapidDoc.Controllers
             var filesXaml = _DocumentService.GetAllXAMLDocument(documentFileId).FirstOrDefault();
             if (filesXaml == null && model.isApproved == true)
                 ModelState.AddModelError(string.Empty,  ValidationRes.ValidationResource.ErrorProcessXAML);
-
+            
             if (files != null)
             {
                 return view = AjaxUpload(files, documentFileId);

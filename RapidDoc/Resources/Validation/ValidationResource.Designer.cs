@@ -61,6 +61,15 @@ namespace ValidationRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Максиально допустимый размер файла {0} МБ, Вы добавили файл: {1} МБ.
+        /// </summary>
+        public static string ErrorDocSize {
+            get {
+                return ResourceManager.GetString("ErrorDocSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Не найден сотрудник у пользователя {0}.
         /// </summary>
         public static string ErrorEmplNotFound {
