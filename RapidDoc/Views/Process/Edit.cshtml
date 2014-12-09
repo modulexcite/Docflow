@@ -110,7 +110,7 @@
             @Html.LabelFor(model => model.MandatoryDocDate)
         </div>
         <div class="editor-field">
-            @Html.TextBoxFor(model => model.MandatoryDocDate, new { @class = "datetimepicker", startDate = "" })
+            @Html.TextBoxFor(model => model.MandatoryDocDate, new { @class = "datetimepicker form-control form-control-date", startDate = "" })
             @Html.ValidationMessageFor(model => model.MandatoryDocDate)
         </div>
 
@@ -262,7 +262,7 @@
 $(function () {
     selectpicker_init();
     timepicker_init();
-    datetimepicker_init();
+    datetimepicker_init("@UIElementRes.UIElement.LangName");
 
     $("#buttonSubmitWF").click(function(){
         var formData = new FormData();
@@ -274,10 +274,10 @@ $(function () {
              data: formData,
              contentType: false,
              processData: false,
-             success: function(response) {
-                $("input[type='file'][name='fileWF']").val('');
-                $('#downloadWFTable').html(response);
-                editFileUploadData();
+             success: function (response) {
+                 $("input[type='file'][name='fileWF']").val('');
+                 $('#downloadWFTable').html(response);
+                 editFileUploadData();
              }
         });
     });
@@ -285,24 +285,23 @@ $(function () {
     editFileUploadData();
 
     function editFileUploadData() {
-        $('td.edit').click(function(){
-            if($('#editbox').length>0) {return false}
+        $('td.edit').click(function () {
+            if ($('#editbox').length > 0) { return false }
 
             $('.ajax').html($('.ajax input').val());
             $('.ajax').removeClass('ajax');
             $(this).addClass('ajax');
-            $(this).html('<input id="editbox" size="'+ $(this).text().length+'" value="' + $(this).text() + '" type="text">');
+            $(this).html('<input id="editbox" size="' + $(this).text().length + '" value="' + $(this).text() + '" type="text">');
             $('#editbox').focus();
         });
 
-        $(document).on('blur', '#editbox', function(){
+        $(document).on('blur', '#editbox', function () {
             $('.ajax').html($('.ajax input').val());
             $('.ajax').removeClass('ajax');
         });
 
-        $('td.edit').keypress(function(event){
-            if(event.which == 10 || event.which == 13)
-            {
+        $('td.edit').keypress(function (event) {
+            if (event.which == 10 || event.which == 13) {
                 event.preventDefault();
                 var rowId = $(this).closest("tr").find('.fileId').attr('id');
                 var versionName = $(this).closest("tr").find('.versionName').find('#editbox').val();
@@ -320,7 +319,7 @@ $(function () {
                     data: formData,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
+                    success: function (response) {
                     }
                 });
 

@@ -63,7 +63,7 @@ namespace RapidDoc.Models.DomainModels
 
         public TimeSpan EndWorkTime { get; set; }
 
-        public DateTime MandatoryDocDate { get; set; }
+        public DateTime? MandatoryDocDate { get; set; }
 
         public int DocSize { get; set; }
 

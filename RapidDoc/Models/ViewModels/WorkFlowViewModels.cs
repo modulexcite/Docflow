@@ -73,7 +73,7 @@ namespace RapidDoc.Models.ViewModels
         public int DocSize { get; set; }
 
         [Display(Name = "MandatoryDocDate", ResourceType = typeof(FieldNameRes.FieldNameResource))]
-        public DateTime MandatoryDocDate { get; set; }
+        public DateTime? MandatoryDocDate { get; set; }
     }
 
     public class DocumentComposite

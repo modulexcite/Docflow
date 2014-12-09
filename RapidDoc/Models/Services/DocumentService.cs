@@ -32,7 +32,7 @@ namespace RapidDoc.Models.Services
         dynamic RouteCustomModelDomain(string customModel);
         dynamic RouteCustomRepository(string customModel);
         void UpdateDocument(DocumentTable domainTable, string currentUserId = "");
-        void UpdateDocumentFields(dynamic viewTable, Guid processId);
+        void UpdateDocumentFields(dynamic viewTable, ProcessView processView);
         void SaveDocumentText(DocumentTable domainTable);
         bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserId = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null);
         bool isSignDocument(Guid documentId, Guid ProcessId, string currentUserId = "");
@@ -138,10 +138,8 @@ namespace RapidDoc.Models.Services
             return docuTable.Id;
         }
 
-        public void UpdateDocumentFields(dynamic viewTable, Guid processId)
+        public void UpdateDocumentFields(dynamic viewTable, ProcessView process)
         {
-            ProcessTable process = _ProcessService.Find(processId);
-
             try
             {
                 if (viewTable.Id != null)

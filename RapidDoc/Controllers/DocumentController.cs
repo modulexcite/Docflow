@@ -160,7 +160,7 @@ namespace RapidDoc.Controllers
         }
         
         [HttpPost]
-        public ActionResult ShowDocument(Guid id, string approveDoc, string rejectDoc, IDictionary<string, object> documentData, string lastComment = "")
+        public ActionResult ShowDocument(Guid id, string approveDoc, string rejectDoc, IDictionary<string, object> documentData, ProcessView process, Guid processId, string lastComment = "")
         {
             DocumentTable docuTable = _DocumentService.Find(id);
             if (docuTable == null) return RedirectToAction("PageNotFound", "Error");
@@ -186,7 +186,6 @@ namespace RapidDoc.Controllers
                 if (!_CommentService.Contains(x => x.ApplicationUserCreatedId == userTable.Id && x.DocumentTableId == id && x.CreatedDate >= checkRejectDate))
                 {
                     EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuTable.ApplicationUserCreatedId);
-                    ProcessView process = _ProcessService.FindView(docuTable.ProcessTableId);
                     object viewModel = InitialViewShowDocument(id, process, docuView, userTable, emplTable);
                     ModelState.AddModelError(string.Empty, UIElementRes.UIElement.RejectReason);
 
@@ -196,16 +195,15 @@ namespace RapidDoc.Controllers
 
             if (ModelState.IsValid)
             {
-                ProcessTable processTable = docuTable.ProcessTable;
-                if (_DocumentService.isSignDocument(id, processTable.Id))
+                if (_DocumentService.isSignDocument(id, processId))
                 {
                     if (approveDoc != String.Empty)
                     {
-                        _WorkflowService.AgreementWorkflowApprove(id, processTable.TableName, documentData);
+                        _WorkflowService.AgreementWorkflowApprove(id, process.TableName, documentData);
                     }
                     else if (rejectDoc != String.Empty)
                     {
-                        _WorkflowService.AgreementWorkflowReject(id, processTable.TableName, documentData);
+                        _WorkflowService.AgreementWorkflowReject(id, process.TableName, documentData);
                     }
                 }
                 return RedirectToAction("Index", "Document");
@@ -213,8 +211,7 @@ namespace RapidDoc.Controllers
 
             ApplicationUser userResult = _AccountService.Find(User.Identity.GetUserId());
             EmplTable emplResult = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuView.ApplicationUserCreatedId && x.CompanyTableId == userResult.CompanyTableId);
-            ProcessView processResult = _ProcessService.FindView(GuidNull2Guid(docuView.ProcessTableId));
-            object viewModelResult = InitialViewShowDocument(id, processResult, docuView, userResult, emplResult);
+            object viewModelResult = InitialViewShowDocument(id, process, docuView, userResult, emplResult);
 
             return View("~/Views/Document/ShowDocument.cshtml", viewModelResult);
         }
@@ -319,24 +316,22 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Guid processId, dynamic docModel, Guid fileId, String actionModelName, IDictionary<string, object> documentData)
+        public ActionResult Create(ProcessView processView, Guid processId, dynamic docModel, Guid fileId, String actionModelName, IDictionary<string, object> documentData)
         {
-            ProcessView process = _ProcessService.FindView(processId);
-
             if (ModelState.IsValid)
             {
                 //Save Document
-                var documentId = _DocumentService.SaveDocument(docModel, process.TableName, processId, fileId);
+                var documentId = _DocumentService.SaveDocument(docModel, processView.TableName, processId, fileId);
                 _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId });
                 _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
                 SaveSearchData(docModel, actionModelName, documentId);
-                _WorkflowService.RunWorkflow(documentId, process.TableName, documentData);
+                _WorkflowService.RunWorkflow(documentId, processView.TableName, documentData);
 
                 return RedirectToAction("Index", "Document");
             }
 
             var viewModel = new DocumentComposite();
-            viewModel.ProcessView = process;
+            viewModel.ProcessView = processView;
             viewModel.docData = docModel;
             viewModel.fileId = fileId;
             viewModel.ProcessTemplates = _DocumentService.GetAllTemplatesDocument(processId);
@@ -501,14 +496,14 @@ namespace RapidDoc.Controllers
             return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id, isAfterView = true }) });
         }
 
-        public JsonResult AjaxUpload(HttpPostedFileBase filelist, Guid documentFileId, Guid processId)
+        public JsonResult AjaxUpload(HttpPostedFileBase filelist, Guid documentFileId, ProcessView processView)
         {
             var statuses = new List<ViewDataUploadFilesResult>();
             bool error = false;
-            ProcessTable process = _ProcessService.Find(processId);
-            if (process.DocSize > 0)
+
+            if (processView.DocSize > 0)
             {
-                if (((filelist.ContentLength/1024f)/1024f) > process.DocSize)
+                if (((filelist.ContentLength / 1024f) / 1024f) > processView.DocSize)
                     error = true;
             }
 
@@ -564,7 +559,7 @@ namespace RapidDoc.Controllers
                 {
 
                     name = filelist.FileName,
-                    error = String.Format(ValidationRes.ValidationResource.ErrorDocSize, process.DocSize, Math.Round(((filelist.ContentLength / 1024f) / 1024f), 2), filelist.ContentLength),
+                    error = String.Format(ValidationRes.ValidationResource.ErrorDocSize, processView.DocSize, Math.Round(((filelist.ContentLength / 1024f) / 1024f), 2), filelist.ContentLength),
                     size = filelist.ContentLength,
                     url = "",
                     deleteUrl = "",
@@ -691,20 +686,21 @@ namespace RapidDoc.Controllers
         {
             ActionResult view;
             Guid localDocumentId = documentId ?? Guid.Empty;
+            ProcessView processView = _ProcessService.FindView(processId);
 
             if (file != null)
             {
-                return view = AjaxUpload(file, fileId, processId);
+                return view = AjaxUpload(file, fileId, processView);
             }
 
             switch(type)
             {
                 case 1:
-                    view = Create(processId, docModel, fileId, actionModelName, documentData);
+                    view = Create(processView, processId, docModel, fileId, actionModelName, documentData);
                     break;
                 case 2:
-                    _DocumentService.UpdateDocumentFields(docModel, processId);
-                    view = ShowDocument(localDocumentId, approveDoc, rejectDoc, documentData, lastComment);
+                    _DocumentService.UpdateDocumentFields(docModel, processView);
+                    view = ShowDocument(localDocumentId, approveDoc, rejectDoc, documentData, processView, processId, lastComment);
                     break;
                 default:
                     view = View();
