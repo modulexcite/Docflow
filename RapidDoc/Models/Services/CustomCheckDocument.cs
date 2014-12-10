@@ -221,14 +221,6 @@ namespace RapidDoc.Models.Services
                 }
             }
 
-            if (type == (new USR_REQ_UB_RequestForImportORZZIF_View()).GetType())
-            {
-                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
-                {
-                    errorList.Add("Не указан пост охраны");
-                }
-            }
-
             if (type == (new USR_REQ_UB_RequestForExportItemFromZIF_View()).GetType())
             {
                 if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)

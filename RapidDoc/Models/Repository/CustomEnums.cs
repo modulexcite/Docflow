@@ -42,7 +42,10 @@ namespace RapidDoc.Models.Repository
         StationaryInverter = 3,
 
         [Display(Name = "Кабель RG-58")]
-        Cable_RG58 = 4
+        Cable_RG58 = 4,
+
+        [Display(Name = "Ручной микрофон HM-152")]
+        Manual_Microphone = 5
     }
 
     public enum PhoneType : byte
@@ -438,7 +441,7 @@ namespace RapidDoc.Models.Repository
         Element3 = 2,
 
         [Display(Name = "Пром. Площадка")]
-        Element4 = 2
+        Element4 = 3
     }
 
     public enum Warehouse : byte

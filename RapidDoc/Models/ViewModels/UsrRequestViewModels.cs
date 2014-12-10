@@ -2484,7 +2484,7 @@ namespace RapidDoc.Models.ViewModels
         public ObjectAccess ObjectAccess { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Объект доступа")]
+        [Display(Name = "Цель")]
         public string Aim { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -2566,6 +2566,10 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
         public DateTime? Date { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Ожидаемая дата возврата собственных ОС")]
+        public DateTime? DateReturnOC { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
         public bool Post1 { get; set; }

@@ -1861,6 +1861,9 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public DateTime Date { get; set; }
 
+        [Required]
+        public DateTime DateReturnOC { get; set; }
+
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
         public bool Post3 { get; set; }
