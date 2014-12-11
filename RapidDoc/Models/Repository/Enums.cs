@@ -69,4 +69,15 @@ namespace RapidDoc.Models.Repository
         AddReader = 4,
         RemoveReader = 5
     }
+
+    public enum FilterType : byte
+    {
+        Role = 0,
+
+        Login = 1,
+
+        Predicate = 2,
+
+        Other = 3
+    }
 }
