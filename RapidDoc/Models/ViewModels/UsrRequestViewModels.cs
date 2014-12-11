@@ -2304,6 +2304,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
@@ -2352,6 +2353,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
@@ -2400,6 +2402,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
@@ -2449,6 +2452,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
@@ -2489,10 +2493,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "С даты")]
+        [DataType(DataType.Date)]
         public DateTime? FromDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "До даты")]
+        [DataType(DataType.Date)]
         public DateTime? ToDate { get; set; }
     }
 
@@ -2565,10 +2571,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Ожидаемая дата возврата собственных ОС")]
+        [DataType(DataType.Date)]
         public DateTime? DateReturnOC { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
@@ -2609,6 +2617,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
@@ -2658,6 +2667,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
@@ -2723,7 +2733,13 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Ожидаемая дата возврата собственных ОС")]
+        [DataType(DataType.Date)]
+        public DateTime? DateReturnOC { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
         public bool Post1 { get; set; }
@@ -2784,7 +2800,13 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Ожидаемая дата возврата собственных ОС")]
+        [DataType(DataType.Date)]
+        public DateTime? DateReturnOC { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
         public bool Post1 { get; set; }
@@ -2848,7 +2870,13 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Ожидаемая дата возврата собственных ОС")]
+        [DataType(DataType.Date)]
+        public DateTime? DateReturnOC { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
         public bool Post1 { get; set; }
@@ -2908,7 +2936,13 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Ожидаемая дата возврата собственных ОС")]
+        [DataType(DataType.Date)]
+        public DateTime? DateReturnOC { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
         public bool Post1 { get; set; }
@@ -2998,7 +3032,7 @@ namespace RapidDoc.Models.ViewModels
         public string ItemName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Номенклатурный номер ТМЦ")]
+        [Display(Name = "Количество")]
         public string ItemNumber { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -3023,6 +3057,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
@@ -3072,6 +3107,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
 
         [Display(Name = "Пост №1 (Блокпост АТК)")]
