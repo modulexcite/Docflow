@@ -3490,10 +3490,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "C даты")]
+        [DataType(DataType.Date)]
         public DateTime? FromDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "По дату")]
+        [DataType(DataType.Date)]
         public DateTime? ToDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -3517,10 +3519,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "C даты")]
+        [DataType(DataType.Date)]
         public DateTime? FromDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "По дату")]
+        [DataType(DataType.Date)]
         public DateTime? ToDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -3544,10 +3548,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "C даты")]
+        [DataType(DataType.Date)]
         public DateTime? FromDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "По дату")]
+        [DataType(DataType.Date)]
         public DateTime? ToDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -3709,10 +3715,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "C даты")]
+        [DataType(DataType.Date)]
         public DateTime? FromDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "По дату")]
+        [DataType(DataType.Date)]
         public DateTime? ToDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -3738,10 +3746,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "C даты")]
+        [DataType(DataType.Date)]
         public DateTime? FromDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "По дату")]
+        [DataType(DataType.Date)]
         public DateTime? ToDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -3765,10 +3775,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "C даты")]
+        [DataType(DataType.Date)]
         public DateTime? FromDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "По дату")]
+        [DataType(DataType.Date)]
         public DateTime? ToDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -3792,10 +3804,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "C даты")]
+        [DataType(DataType.Date)]
         public DateTime? FromDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "По дату")]
+        [DataType(DataType.Date)]
         public DateTime? ToDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
