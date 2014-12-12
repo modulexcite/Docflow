@@ -35,6 +35,9 @@ namespace RapidDoc.Controllers
                 CheckActiveUsers(company);
             }
 
+            DeleteNotUsedTitle();
+            DeleteNotUsedDepartment();
+
             return response;
         }
 
@@ -421,6 +424,38 @@ namespace RapidDoc.Controllers
                 catch (Exception)
                 {
                     continue;
+                }
+            }
+        }
+
+        private void DeleteNotUsedTitle()
+        {
+            ITitleService _Titleservice = DependencyResolver.Current.GetService<ITitleService>();
+            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
+
+            var titles = _Titleservice.GetPartialIntercompany(x => x.isIntegratedLDAP == true).ToList();
+
+            foreach (var title in titles)
+            {
+                if (!_EmplService.Contains(x => x.TitleTableId == title.Id))
+                {
+                    _Titleservice.Delete(title.Id);
+                }
+            }
+        }
+
+        private void DeleteNotUsedDepartment()
+        {
+            IDepartmentService _DepartmentService = DependencyResolver.Current.GetService<IDepartmentService>();
+            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
+
+            var departments = _DepartmentService.GetPartialIntercompany(x => x.DepartmentName != null).ToList();
+
+            foreach (var department in departments)
+            {
+                if (!_EmplService.Contains(x => x.DepartmentTableId == department.Id))
+                {
+                    _DepartmentService.Delete(department.Id);
                 }
             }
         }

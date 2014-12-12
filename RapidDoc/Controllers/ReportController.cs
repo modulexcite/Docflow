@@ -173,7 +173,6 @@ namespace RapidDoc.Controllers
             var rows = new List<ProcessReportModel>();
             string stageName = "", endText = "", users = "";
             FilterType filterType = FilterType.Other;
-            ActivityContext context;
             ApplicationDbContext contextDb = new ApplicationDbContext();
             System.Drawing.Color color = System.Drawing.Color.LightGreen;
 
@@ -340,8 +339,6 @@ namespace RapidDoc.Controllers
                         activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, new System.Activities.XamlIntegration.ActivityXamlServicesSettings { CompileExpressions = true }) as DynamicActivity;
                     }
                 }
-               /* Type type = Type.GetType("RapidDoc.Activities.USR_REQ_URP_RequestForHRCardWork");
-                activity = Activator.CreateInstance(type) as Activity;*/
                 
                 rows = printActivityTree(typeDict, activity, process);
                 finishRows.AddRange(rows);
@@ -350,7 +347,7 @@ namespace RapidDoc.Controllers
             excelAppl = new Excel.Application();
             excelAppl.Visible = false;
             excelAppl.DisplayAlerts = false;
-            excelWorkbook = excelAppl.Workbooks.Add(@"C:\Users\DmShka.ALTYNTAU\Desktop\ProcessReport.xlsx");
+            excelWorkbook = excelAppl.Workbooks.Add(@"C:\Template\ProcessReport.xlsx");
             excelWorksheet = (Excel.Worksheet)excelWorkbook.ActiveSheet;
 
 
@@ -369,7 +366,7 @@ namespace RapidDoc.Controllers
 
 
             object misValue = System.Reflection.Missing.Value;
-            string path = @"C:\Users\DmShka.ALTYNTAU\Desktop\" + Guid.NewGuid().ToString() + ".xlsx";
+            string path = @"C:\Template\Result\" + Guid.NewGuid().ToString() + ".xlsx";
             excelWorkbook.SaveAs(path, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, misValue,
                 misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue,
                 misValue, misValue, misValue, misValue);
