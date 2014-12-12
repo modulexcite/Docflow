@@ -485,10 +485,8 @@ namespace RapidDoc.Models.Services
                 Int32 revision = instanceInfo.DefinitionIdentity.Version.Revision;
                 return fileWF = _DocumentService.GetAllXAMLDocument(documentTable.ProcessTableId).Where(x => x.Version == revision.ToString()).FirstOrDefault();
             }
-            else
-            {
-                return fileWF = _DocumentService.GetAllXAMLDocument(documentTable.ProcessTableId).OrderBy(x => x.Version).FirstOrDefault();
-            }
+
+            return null;
         }
 
         public void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUserId, string activityId, bool useManual, int slaOffset, bool executionStep)

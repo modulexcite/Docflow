@@ -14,6 +14,9 @@ using RapidDoc.Models.DomainModels;
 using System.Activities;
 using RapidDoc.Activities;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Office.Interop.Excel;
 
 namespace RapidDoc.Controllers
 {
@@ -168,8 +171,11 @@ namespace RapidDoc.Controllers
         public List<ProcessReportModel> printActivityTree(Dictionary<Type, int> dict, Activity activity, ProcessTable processTable)
         {
             var rows = new List<ProcessReportModel>();
-            string stageName = "", endText = "";
-            FilterType filterType = FilterType.Other;          
+            string stageName = "", endText = "", users = "";
+            FilterType filterType = FilterType.Other;
+            ActivityContext context;
+            ApplicationDbContext contextDb = new ApplicationDbContext();
+            System.Drawing.Color color = System.Drawing.Color.LightGreen;
 
             if (activity.GetType() == typeof(WFChooseUpManager) ||
                 activity.GetType() == typeof(WFChooseStaffStructure) ||
@@ -197,8 +203,27 @@ namespace RapidDoc.Controllers
                        if (activityExpressionStaff != null)
                        {                          
                            stageName = activity.DisplayName;
-                           endText = activityExpressionStaff.ExpressionText;
+                           endText = activityExpressionStaff.ExpressionText;                     
                            filterType = FilterType.Predicate;
+
+                           System.Linq.Expressions.Expression expressionTree = activityExpressionStaff.GetExpressionTree();
+                           dynamic dynamicExpression = expressionTree;
+                           Expression<Func<EmplTable, bool>> expressionEmpl = dynamicExpression.Body.Operand;
+                           if (expressionEmpl != null)
+                           {
+                               var empls = _EmplService.GetPartial(expressionEmpl).Select(x => x.FullName).ToList();
+                               if (empls.Count > 0)
+                               {
+                                   foreach (string user in empls)
+                                   {
+                                       users += user + ";";
+                                   }
+                               }
+                               else
+                                   color = System.Drawing.Color.LightPink;
+                           }
+                           else
+                               color = System.Drawing.Color.LightPink;
                        }
                     break;
                     case 3:
@@ -209,6 +234,14 @@ namespace RapidDoc.Controllers
                             stageName = activity.DisplayName;
                             endText = activityExpressionSpecific.Value;
                             filterType = FilterType.Login;
+
+                            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == endText);
+                            if (userTable != null && endText.Length > 0)
+                            {
+                                users = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id).FullName;
+                            }
+                            else
+                                color = System.Drawing.Color.LightPink;
                         }
                     break;
                     case 4:
@@ -219,6 +252,24 @@ namespace RapidDoc.Controllers
                             stageName = activity.DisplayName;
                             endText = activityExpressionRole.Value;
                             filterType = FilterType.Role;
+
+
+                            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(contextDb));
+                            if (RoleManager.RoleExists(endText))
+                            {
+                                var names = RoleManager.FindByName(endText).Users;
+                                if (names != null)
+                                {
+                                    foreach (IdentityUserRole name in names)
+                                    {
+                                        users += _EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId).FullName + ";";
+                                    }
+                                }
+                                else
+                                    color = System.Drawing.Color.LightPink;
+                            }
+                            else
+                                color = System.Drawing.Color.LightPink;
                         }
                     break;
                 }
@@ -229,7 +280,9 @@ namespace RapidDoc.Controllers
                     TableName = processTable.TableName,
                     StageName = stageName,
                     FilterType = filterType,
-                    Filter = endText
+                    Filter = endText,
+                    Users = users,
+                    Color = color
                 });
 
             }
@@ -274,11 +327,11 @@ namespace RapidDoc.Controllers
 
             int rowCount = 1;
 
-            List<ProcessTable> processList = _ProcessService.GetPartial(x => x.isApproved == true).ToList();
+            List<ProcessTable> processList = _ProcessService.GetPartial(x => x.isApproved == true && x.ProcessName == "Предоставление доступа в Internet (Для сотрудников ЗИФ)").ToList();
 
             foreach (var process in processList)
             {
-                fileWF = _DocumentService.GetAllXAMLDocument(process.Id).OrderBy(x => x.Version).FirstOrDefault();
+                fileWF = _DocumentService.GetAllXAMLDocument(process.Id).OrderByDescending(x => x.Version).FirstOrDefault();
 
                 using (System.IO.Stream stream = new System.IO.MemoryStream(fileWF.Data))
                 {
@@ -309,6 +362,9 @@ namespace RapidDoc.Controllers
                 excelWorksheet.Cells[rowCount, 3] = line.StageName.ToString();
                 excelWorksheet.Cells[rowCount, 4] = line.FilterType.ToString();
                 excelWorksheet.Cells[rowCount, 5] = line.Filter.ToString();
+                Range range = (Range)excelWorksheet.Cells[rowCount, 5];
+                range.Interior.Color = System.Drawing.ColorTranslator.ToOle(line.Color);
+                excelWorksheet.Cells[rowCount, 6] = line.Users.ToString();
             }
 
 
@@ -340,6 +396,8 @@ namespace RapidDoc.Controllers
         public string StageName { get; set; }
         public FilterType FilterType { get; set; }
         public string Filter { get; set; }
+        public string Users { get; set; }
+        public System.Drawing.Color Color { get; set; }
     }
 
     public class ReportPerformanceDepartmentModel
