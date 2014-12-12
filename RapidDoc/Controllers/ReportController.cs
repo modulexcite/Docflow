@@ -327,7 +327,7 @@ namespace RapidDoc.Controllers
 
             int rowCount = 1;
 
-            List<ProcessTable> processList = _ProcessService.GetPartial(x => x.isApproved == true && x.ProcessName == "Предоставление доступа в Internet (Для сотрудников ЗИФ)").ToList();
+            List<ProcessTable> processList = _ProcessService.GetPartial(x => x.isApproved == true).ToList();
 
             foreach (var process in processList)
             {
