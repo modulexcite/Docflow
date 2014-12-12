@@ -165,7 +165,7 @@ namespace RapidDoc.Controllers
 
             contextImpersonation.Leave();
 
-            return File(buff, "application/vnd.ms-excel", "ReportDepartment.xls");
+            return File(buff, "application/vnd.ms-excel", "ReportDepartment.xlsx");
         }
 
         public List<ProcessReportModel> printActivityTree(Dictionary<Type, int> dict, Activity activity, ProcessTable processTable)
@@ -382,7 +382,7 @@ namespace RapidDoc.Controllers
 
             contextImpersonation.Leave();
 
-            return File(buff, "application/vnd.ms-excel", "ReportDepartment.xls");
+            return File(buff, "application/vnd.ms-excel", "ReportRoute.xlsx");
         }
 	}
 
