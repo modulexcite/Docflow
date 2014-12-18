@@ -301,8 +301,6 @@ namespace RapidDoc.Controllers
 
         public FileContentResult ReportOfRoutes()
         {
-            WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(ConfigurationManager.AppSettings["ReportAdminDomain"], ConfigurationManager.AppSettings["ReportAdminUser"], ConfigurationManager.AppSettings["ReportAdminPassword"]);
-            contextImpersonation.Enter();
             var rows = new List<ProcessReportModel>();
             var finishRows = new List<ProcessReportModel>();
             FileTable fileWF;
@@ -344,6 +342,9 @@ namespace RapidDoc.Controllers
                 finishRows.AddRange(rows);
             }
 
+            WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(ConfigurationManager.AppSettings["ReportAdminDomain"], ConfigurationManager.AppSettings["ReportAdminUser"], ConfigurationManager.AppSettings["ReportAdminPassword"]);
+            contextImpersonation.Enter();
+
             excelAppl = new Excel.Application();
             excelAppl.Visible = false;
             excelAppl.DisplayAlerts = false;
@@ -366,7 +367,7 @@ namespace RapidDoc.Controllers
 
 
             object misValue = System.Reflection.Missing.Value;
-            string path = @"C:\Template\Result\" + Guid.NewGuid().ToString() + ".xlsx";
+            string path = @"C:\Template\Result\" + Guid.NewGuid().ToString() + ".xls";
             excelWorkbook.SaveAs(path, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, misValue,
                 misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue,
                 misValue, misValue, misValue, misValue);
@@ -382,7 +383,7 @@ namespace RapidDoc.Controllers
 
             contextImpersonation.Leave();
 
-            return File(buff, "application/vnd.ms-excel", "ReportRoute.xlsx");
+            return File(buff, "application/vnd.ms-excel", "ReportRoute.xls");
         }
 	}
 

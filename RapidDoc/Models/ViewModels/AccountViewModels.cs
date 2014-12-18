@@ -110,6 +110,7 @@ namespace RapidDoc.Models.ViewModels
 
         public Guid? DomainTableId { get; set; }
 
+        [Display(Name = "Login", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string AccountDomainName { get; set; }
 
         [Display(Name = "TimeZoneName", ResourceType = typeof(FieldNameRes.FieldNameResource))]

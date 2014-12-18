@@ -82,9 +82,13 @@ namespace RapidDoc.Controllers
 
                 if (viewModel.isDomainUser == true)
                 {
-                    PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
-                    UserPrincipal user = UserPrincipal.FindByIdentity(ctx, viewModel.UserName.ToString());
-                    domainSID = user.Sid.ToString();
+                    CompanyTable company = _CompanyService.Find(GuidNull2Guid(viewModel.CompanyTableId));
+                    if (company != null)
+                    {
+                        PrincipalContext ctx = new PrincipalContext(ContextType.Domain, company.DomainTable.LDAPServer, company.DomainTable.LDAPBaseDN, company.DomainTable.LDAPLogin, company.DomainTable.LDAPPassword);
+                        UserPrincipal user = UserPrincipal.FindByIdentity(ctx, viewModel.AccountDomainName);
+                        domainSID = user.Sid.ToString();
+                    }
                 }
 
                 var domainModel = new ApplicationUser();
@@ -154,9 +158,13 @@ namespace RapidDoc.Controllers
 
                 if (viewModel.isDomainUser == true)
                 {
-                    PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
-                    UserPrincipal user = UserPrincipal.FindByIdentity(ctx, viewModel.UserName.ToString());
-                    domainSID = user.Sid.ToString();
+                    CompanyTable company = _CompanyService.Find(GuidNull2Guid(viewModel.CompanyTableId));
+                    if (company != null)
+                    {
+                        PrincipalContext ctx = new PrincipalContext(ContextType.Domain, company.DomainTable.LDAPServer, company.DomainTable.LDAPBaseDN, company.DomainTable.LDAPLogin, company.DomainTable.LDAPPassword);
+                        UserPrincipal user = UserPrincipal.FindByIdentity(ctx, viewModel.AccountDomainName);
+                        domainSID = user.Sid.ToString();
+                    }
                 }
 
                 var domainModel = await UserManager.FindByIdAsync(viewModel.Id.ToString());
