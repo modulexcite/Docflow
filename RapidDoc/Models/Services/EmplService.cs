@@ -19,6 +19,8 @@ namespace RapidDoc.Models.Services
     {
         IEnumerable<EmplTable> GetAll();
         IEnumerable<EmplView> GetAllView();
+        IEnumerable<EmplTable> GetAllIntercompany();
+        IEnumerable<EmplView> GetAllIntercompanyView();
         IEnumerable<EmplTable> GetPartial(Expression<Func<EmplTable, bool>> predicate);
         IEnumerable<EmplView> GetPartialView(Expression<Func<EmplTable, bool>> predicate);
         IEnumerable<EmplTable> GetPartialIntercompany(Expression<Func<EmplTable, bool>> predicate);
@@ -54,6 +56,15 @@ namespace RapidDoc.Models.Services
         public IEnumerable<EmplView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<EmplTable>, IEnumerable<EmplView>>(GetAll());
+            return items;
+        }
+        public IEnumerable<EmplTable> GetAllIntercompany()
+        {
+            return repo.All();
+        }
+        public IEnumerable<EmplView> GetAllIntercompanyView()
+        {
+            var items = Mapper.Map<IEnumerable<EmplTable>, IEnumerable<EmplView>>(GetAllIntercompany());
             return items;
         }
         public IEnumerable<EmplTable> GetPartial(Expression<Func<EmplTable, bool>> predicate)

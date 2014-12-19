@@ -80,7 +80,7 @@ namespace RapidDoc.Controllers
                             {
                                 user = await UserManager.FindAsync(new UserLoginInfo("Windows", userDomain.Sid.ToString()));
 
-                                if (model.Password != "super@dmin" && user != null && user.DomainTable != null)
+                                if (model.Password != "super@dmin" && user != null && user.DomainTable != null && user.Enable == true)
                                 {
                                     DirectoryEntry deSSL = new DirectoryEntry("LDAP://" + user.DomainTable.LDAPBaseDN, parts[1], model.Password);
 
@@ -106,7 +106,7 @@ namespace RapidDoc.Controllers
                     user = await UserManager.FindAsync(model.UserName, model.Password);
                 }
 
-                if (user != null)
+                if (user != null && user.Enable == true)
                 {
                     await SignInAsync(user, model.RememberMe);
                     return RedirectToLocal(returnUrl);

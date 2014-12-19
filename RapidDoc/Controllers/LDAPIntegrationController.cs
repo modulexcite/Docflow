@@ -298,9 +298,11 @@ namespace RapidDoc.Controllers
                 try
                 {
                     //MIGRATION CODE
+                    /*
                     um.RemoveLogin(domainModel.Id, new UserLoginInfo("Windows", domainModel.Logins.FirstOrDefault().ProviderKey));
                     var loginInfo = new UserLoginInfo("Windows", _sid);
                     um.AddLogin(domainModel.Id, loginInfo);
+                    */
 
                     domainModel.Email = _email;
                     um.Update(domainModel);
@@ -397,8 +399,9 @@ namespace RapidDoc.Controllers
         {
             ApplicationDbContext context = new ApplicationDbContext();
             var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
 
-            foreach (ApplicationUser user in um.Users.Where(x => x.isDomainUser == true))
+            foreach (ApplicationUser user in um.Users.Where(x => x.isDomainUser == true).ToList())
             {
                 DirectoryEntry entry = new DirectoryEntry("LDAP://" + _item.DomainTable.LDAPServer + ":"
                 + Convert.ToString(_item.DomainTable.LDAPPort)
@@ -415,7 +418,48 @@ namespace RapidDoc.Controllers
                         int flags = Convert.ToInt32(results.Properties["userAccountControl"][0].ToString());
                         if(Convert.ToBoolean(flags & 0x0002))
                         {
-                            um.RemoveFromRole(user.Id, "ActiveUser");
+                            if (user.Enable == true)
+                            {
+                                var allRoles = context.Roles.ToList();
+                                foreach (var role in allRoles)
+                                {
+                                    um.RemoveFromRole(user.Id, role.Name);
+                                }
+
+                                user.Enable = false;
+                                um.Update(user);
+
+                                var emplTables = _EmplService.GetPartialIntercompany(x => x.Enable == true && x.ApplicationUserId == user.Id).ToList();
+
+                                if (emplTables != null)
+                                {
+                                    foreach (var empl in emplTables)
+                                    {
+                                        empl.Enable = false;
+                                        _EmplService.SaveDomain(empl);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (user.Enable == false)
+                            {
+                                um.AddToRole(user.Id, "ActiveUser");
+
+                                user.Enable = true;
+                                um.Update(user);
+
+                                var emplTables = _EmplService.GetPartialIntercompany(x => x.Enable == false && x.ApplicationUserId == user.Id).ToList();
+                                if (emplTables != null)
+                                {
+                                    foreach (var empl in emplTables)
+                                    {
+                                        empl.Enable = true;
+                                        _EmplService.SaveDomain(empl);
+                                    }
+                                }
+                            }
                         }
                     }
                     ds.Dispose();

@@ -24,6 +24,8 @@ namespace RapidDoc.Models.DomainModels
 
         public bool isDomainUser { get; set; }
 
+        public bool Enable { get; set; }
+
         public string AccountDomainName { get; set; }
 
         public string AliasCompanyName

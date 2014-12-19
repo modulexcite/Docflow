@@ -115,7 +115,7 @@ namespace RapidDoc.Models.Services
         }
         private EmplTable WFMatchingUpManagerFinder(EmplTable emplTable, int level, string currentUserId, string profileName = "")
         {
-            if ((level == 0 && profileName == null) || (emplTable.ProfileName == profileName || emplTable.TitleTable.ProfileName == profileName)) return emplTable;
+            if (((level == 0 && profileName == null) || (emplTable.ProfileName == profileName || emplTable.TitleTable.ProfileName == profileName)) && emplTable.Enable == true) return emplTable;
             EmplTable manager = _EmplService.Find(emplTable.ManageId ?? Guid.Empty, currentUserId);
 
             if(manager == null || manager.Id == manager.ManageId)
@@ -128,12 +128,11 @@ namespace RapidDoc.Models.Services
         {
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
-            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == userName);
-            if (userTable == null)
+            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == userName && x.Enable == true);
+            if (userTable != null)
             {
-                userTable = _AccountService.Find(userName);
+                userList.Add(new WFTrackerUsersTable { UserId = userTable.Id });
             }
-            userList.Add(new WFTrackerUsersTable { UserId = userTable.Id });
 
             return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(documentId, userList, documentTable.ApplicationUserCreatedId) };
         }
@@ -153,8 +152,9 @@ namespace RapidDoc.Models.Services
                 {
                     Guid emplId = Guid.Parse(item);
                     EmplTable empl = _EmplService.Find(emplId, currentUserId);
-                   
-                    userList.Add(new WFTrackerUsersTable { UserId = empl.ApplicationUserId });
+
+                    if (empl.Enable == true)
+                        userList.Add(new WFTrackerUsersTable { UserId = empl.ApplicationUserId });
                 }
             }
             return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(documentId, userList, documentTable.ApplicationUserCreatedId) }; 
@@ -178,7 +178,7 @@ namespace RapidDoc.Models.Services
         {
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
-            var empls = _EmplService.GetPartialIntercompany(predicate).Select(x => x.ApplicationUserId).ToList();
+            var empls = _EmplService.GetPartialIntercompany(predicate).Where(x => x.Enable == true).Select(x => x.ApplicationUserId).ToList();
 
             foreach(string empl in empls)
             {
@@ -191,7 +191,10 @@ namespace RapidDoc.Models.Services
         {
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
-            userList.Add(new WFTrackerUsersTable { UserId = documentTable.ApplicationUserCreatedId });
+            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.Id == documentTable.ApplicationUserCreatedId && x.Enable == true);
+
+            if (userTable != null)
+                userList.Add(new WFTrackerUsersTable { UserId = userTable.Id });
 
             return new WFUserFunctionResult { Users = userList, Skip = false };
         }
@@ -215,7 +218,7 @@ namespace RapidDoc.Models.Services
                         Guid emplId = Guid.Parse(item);
                         EmplTable empl = _EmplService.Find(emplId, currentUserId);
 
-                        if (empl != null && empl.ApplicationUserId != null && empl.ApplicationUserId != documentTable.ApplicationUserCreatedId)
+                        if (empl != null && empl.Enable == true && empl.ApplicationUserId != null && empl.ApplicationUserId != documentTable.ApplicationUserCreatedId)
                         {
                             userList.Add(new WFTrackerUsersTable { UserId = empl.ApplicationUserId });
                         }

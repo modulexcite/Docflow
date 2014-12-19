@@ -24,11 +24,13 @@ namespace RapidDoc.Controllers
         public RoleManager<IdentityRole> RoleManager { get; private set; }
         public ApplicationDbContext context { get; private set; }
         private readonly IDomainService _DomainService;
+        private readonly IEmplService _EmplService;
 
-        public UserController(ICompanyService companyService, IAccountService accountService, IDomainService domainService)
+        public UserController(ICompanyService companyService, IAccountService accountService, IDomainService domainService, IEmplService emplService)
             : base(companyService, accountService)
         {
             _DomainService = domainService;
+            _EmplService = emplService;
             context = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
@@ -98,6 +100,7 @@ namespace RapidDoc.Controllers
                 domainModel.Lang = viewModel.Lang;
                 domainModel.CompanyTableId = viewModel.CompanyTableId;
                 domainModel.isDomainUser = viewModel.isDomainUser;
+                domainModel.Enable = true;
 
                 var result = await UserManager.CreateAsync(domainModel);
                 if (!result.Succeeded)
@@ -167,7 +170,7 @@ namespace RapidDoc.Controllers
                     }
                 }
 
-                var domainModel = await UserManager.FindByIdAsync(viewModel.Id.ToString());
+                var domainModel = await UserManager.FindByIdAsync(viewModel.Id);
                 if (domainModel == null)
                 {
                     return HttpNotFound();
@@ -179,12 +182,37 @@ namespace RapidDoc.Controllers
                 domainModel.TimeZoneId = viewModel.TimeZoneId;
                 domainModel.Lang = viewModel.Lang;
                 domainModel.isDomainUser = viewModel.isDomainUser;
+                domainModel.Enable = viewModel.Enable;
 
                 var result = await UserManager.UpdateAsync(domainModel);
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", result.Errors.First().ToString());
                     return View();
+                }
+
+                if (viewModel.Enable == false)
+                {
+                    var allRoles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles);
+                    foreach (var role in allRoles)
+                    {
+                        UserManager.RemoveFromRole(viewModel.Id, role.Name);
+                    }
+
+                    var emplTables = _EmplService.GetPartialIntercompany(x => x.Enable == true && x.ApplicationUserId == viewModel.Id).ToList();
+                    if (emplTables != null)
+                    {
+                        foreach (var empl in emplTables)
+                        {
+                            empl.Enable = false;
+                            _EmplService.SaveDomain(empl);
+                        }
+                    }
+
+                }
+                else
+                {
+                    UserManager.AddToRole(viewModel.Id, "ActiveUser");
                 }
 
                 return RedirectToAction("Index");
@@ -222,6 +250,8 @@ namespace RapidDoc.Controllers
         public async Task<ActionResult> AddRoles(string id, string[] listdata, bool? isAjax)
         {
             ApplicationUser userTable  = await UserManager.FindByIdAsync(id);
+            List<string> roleList = new List<string>();
+            bool isDeletedUser = true;
 
             if (userTable == null)
             {
@@ -248,11 +278,42 @@ namespace RapidDoc.Controllers
                         return HttpNotFound();
                     }
 
-                    UserManager.AddToRole(userTable.Id, roleTable.Name);
+                    if (roleTable.Name == "ActiveUser")
+                    {
+                        isDeletedUser = false;
+                    }
+
+                    roleList.Add(roleTable.Name);
                 }
             }
 
-            return RedirectToAction("Index");
+            if (listdata == null || isDeletedUser == true)
+            {
+                userTable.Enable = false;
+                UserManager.Update(userTable);
+
+                var emplTables = _EmplService.GetPartialIntercompany(x => x.Enable == true && x.ApplicationUserId == userTable.Id).ToList();
+                if (emplTables != null)
+                {
+                    foreach (var empl in emplTables)
+                    {
+                        empl.Enable = false;
+                        _EmplService.SaveDomain(empl);
+                    }
+                }
+            }
+            else
+            {
+                userTable.Enable = true;
+                UserManager.Update(userTable);
+
+                foreach(var roleName in roleList)
+                {
+                    UserManager.AddToRole(userTable.Id, roleName);
+                }
+            }
+
+            return Json(new { result = "Redirect", url = Url.Action("Index") });
         }
 
         public async Task<ActionResult> ChangePassword(string id)

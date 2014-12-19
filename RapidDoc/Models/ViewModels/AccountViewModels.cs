@@ -133,6 +133,9 @@ namespace RapidDoc.Models.ViewModels
         public bool isDomainUser { get; set; }
 
         public bool isRoleUser { get; set; }
+
+        [Display(Name = "Enable", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public bool Enable { get; set; }
     }
 
     public class ChangePassword
