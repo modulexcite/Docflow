@@ -164,7 +164,7 @@ namespace RapidDoc.Models.Services
                            {
                                value = string.Format("{0},({1}) {2} - {3}", c.Id, c.AliasCompanyName, c.FullName, c.TitleName),
                                text = string.Format("({0}) {1} - {2}", c.AliasCompanyName, c.FullName, c.TitleName)
-                           };
+                           }; 
 
             return jsondata;
         }
