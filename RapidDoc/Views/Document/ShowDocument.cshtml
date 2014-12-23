@@ -12,6 +12,7 @@
 
     @ViewBag.Title <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
 </h2>
+
 <h5 class="visible-print-block">@ViewBag.Title</h5>
     <div class="pull-right hidden-sm hidden-xs">
         <a href=@Url.Action("Index", "Document") class="btn btn-default" role="button">@UIElementRes.UIElement.Close</a>
@@ -147,25 +148,26 @@
                 </div>
         }
 </fieldset>
-    }
+}
+
+    <br class="hidden-print">
+    <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
+    @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentView.Id })
+    <p>
+        <h4 class="text-right hidden-print">@UIElementRes.UIElement.AddComment</h4>
+        @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentView.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }))
+        {
+            <div class="hidden-print">
+                @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
+                    <div class="row">
+                        <div class="col-md-7 visible-lg-inline"><kbd>Ctrl + Enter</kbd></div>
+                        <div class="col-md-5"><input class="btn btn-primary btn-xs btn-block pull-right" id="saveCommentBtn" type="submit" value=@UIElementRes.UIElement.Save></div>
+                    </div>
+                </div>
             <br class="hidden-print">
-            <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
-            @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentView.Id })
-            <p>
-                <h4 class="text-right hidden-print">@UIElementRes.UIElement.AddComment</h4>
-                @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentView.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }))
-                {
-                    <div class="hidden-print">
-                        @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
-                            <div class="row">
-                                <div class="col-md-7 visible-lg-inline"><kbd>Ctrl + Enter</kbd></div>
-                                <div class="col-md-5"><input class="btn btn-primary btn-xs btn-block pull-right" id="saveCommentBtn" type="submit" value=@UIElementRes.UIElement.Save></div>
-                            </div>
-                        </div>
-                    <br class="hidden-print">
-                }
-            </p>
-            
+        }
+    </p>
+             
 @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.isSign)
 {
     <input class="btn btn-success hidden-print" type="submit" name="approveDoc" id="approveDocId" value=@UIElementRes.UIElement.Approve />
@@ -190,7 +192,7 @@
             </div>
 
             <a href=@Url.Action("Index", "Document") class="btn btn-default hidden-print" role="button">@UIElementRes.UIElement.Close</a>
-        
+      
 <script type="text/javascript">
     function clearTextAreaComment(result) {
         $('#lastComment').val('');

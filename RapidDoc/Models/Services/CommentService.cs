@@ -54,15 +54,19 @@ namespace RapidDoc.Models.Services
         {
             var comments = GetPartial(predicate);
             List<CommentView> commentsView = new List<CommentView>();
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
 
-            foreach (var comment in comments)
+            if (comments != null)
             {
-                EmplView empl = _EmplService.FirstOrDefaultView(x => x.ApplicationUserId == comment.ApplicationUserCreatedId && x.CompanyTableId == comment.CompanyTableId);
-                if(empl != null)
-                    commentsView.Add(new CommentView { Id = comment.Id, Comment = comment.Comment, CreatedDate = _SystemService.ConvertDateTimeToLocal(user, comment.CreatedDate), EmplName = empl.FullName, TitleName = empl.TitleName });
-                else
-                    commentsView.Add(new CommentView { Id = comment.Id, Comment = comment.Comment, CreatedDate = _SystemService.ConvertDateTimeToLocal(user, comment.CreatedDate), EmplName = user.UserName, TitleName = "" });
+                ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+
+                foreach (var comment in comments)
+                {
+                    EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == comment.ApplicationUserCreatedId && x.CompanyTableId == comment.CompanyTableId);
+                    if (empl != null)
+                        commentsView.Add(new CommentView { Id = comment.Id, Comment = comment.Comment, CreatedDate = _SystemService.ConvertDateTimeToLocal(user, comment.CreatedDate), EmplName = empl.FullName, TitleName = empl.TitleName });
+                    else
+                        commentsView.Add(new CommentView { Id = comment.Id, Comment = comment.Comment, CreatedDate = _SystemService.ConvertDateTimeToLocal(user, comment.CreatedDate), EmplName = user.UserName, TitleName = "" });
+                }
             }
 
             return commentsView;

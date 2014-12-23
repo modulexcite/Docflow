@@ -12,6 +12,7 @@ namespace RapidDoc.Models.Services
     public interface ICustomCheckDocument
     {
         List<string> CheckCustomDocument(Type type, dynamic actionModel);
+        List<string> CheckCustomPostDocument(Type type, dynamic actionModel, DocumentTable documentTable, bool isSign);
         dynamic PreUpdateViewModel(Type type, dynamic actionModel);
         void UpdateDocumentData(DocumentTable document, IDictionary<string, object> documentData);
     }
@@ -24,7 +25,7 @@ namespace RapidDoc.Models.Services
         private readonly ITripSettingsService _TripSettingsService;
         private readonly IWorkflowTrackerService _WorkflowTrackerService;
 
-        public CustomCheckDocument(IUnitOfWork uow, IAccountService accountService, IWorkflowTrackerService workflowTrackerService, IServiceIncidentService serviceIncidentService, ICompanyService companyService, ITripSettingsService tripSettingsService)
+        public CustomCheckDocument(IUnitOfWork uow, IAccountService accountService, IWorkflowTrackerService workflowTrackerService, IServiceIncidentService serviceIncidentService, ITripSettingsService tripSettingsService)
         {
             _uow = uow;
             _AccountService = accountService;
@@ -214,6 +215,14 @@ namespace RapidDoc.Models.Services
             }
 
             if (type == (new USR_REQ_UB_RequestForMovementAssets_View()).GetType())
+            {
+                if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
+                {
+                    errorList.Add("Не указан пост охраны");
+                }
+            }
+
+            if (type == (new USR_REQ_UB_RequestForExportItemFromORZ_View()).GetType())
             {
                 if (actionModel.Post1 == false && actionModel.Post2 == false && actionModel.Post3 == false && actionModel.Post4 == false && actionModel.Post5 == false && actionModel.Post6 == false)
                 {
@@ -609,6 +618,523 @@ namespace RapidDoc.Models.Services
                     errorList.Add("В строке 4 не заполнены все необходимые поля");
                 }
             }
+
+            if (type == (new USR_REQ_HY_EmergencyPurposeTRU_View()).GetType())
+            {
+                if (actionModel.ItemName1 != String.Empty && (actionModel.Unit1 == String.Empty || actionModel.Qty1 == String.Empty || actionModel.Location1 == String.Empty || actionModel.Reason1 == String.Empty))
+                {
+                    errorList.Add("В строке 1 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName2 != String.Empty && (actionModel.Unit2 == String.Empty || actionModel.Qty2 == String.Empty || actionModel.Location2 == String.Empty || actionModel.Reason2 == String.Empty))
+                {
+                    errorList.Add("В строке 2 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName3 != String.Empty && (actionModel.Unit3 == String.Empty || actionModel.Qty3 == String.Empty || actionModel.Location3 == String.Empty || actionModel.Reason3 == String.Empty))
+                {
+                    errorList.Add("В строке 3 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName4 != String.Empty && (actionModel.Unit4 == String.Empty || actionModel.Qty4 == String.Empty || actionModel.Location4 == String.Empty || actionModel.Reason4 == String.Empty))
+                {
+                    errorList.Add("В строке 4 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName5 != String.Empty && (actionModel.Unit5 == String.Empty || actionModel.Qty5 == String.Empty || actionModel.Location5 == String.Empty || actionModel.Reason5 == String.Empty))
+                {
+                    errorList.Add("В строке 5 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName6 != String.Empty && (actionModel.Unit6 == String.Empty || actionModel.Qty6 == String.Empty || actionModel.Location6 == String.Empty || actionModel.Reason6 == String.Empty))
+                {
+                    errorList.Add("В строке 6 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName7 != String.Empty && (actionModel.Unit7 == String.Empty || actionModel.Qty7 == String.Empty || actionModel.Location7 == String.Empty || actionModel.Reason7 == String.Empty))
+                {
+                    errorList.Add("В строке 7 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName8 != String.Empty && (actionModel.Unit8 == String.Empty || actionModel.Qty8 == String.Empty || actionModel.Location8 == String.Empty || actionModel.Reason8 == String.Empty))
+                {
+                    errorList.Add("В строке 8 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName9 != String.Empty && (actionModel.Unit9 == String.Empty || actionModel.Qty9 == String.Empty || actionModel.Location9 == String.Empty || actionModel.Reason9 == String.Empty))
+                {
+                    errorList.Add("В строке 9 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName10 != String.Empty && (actionModel.Unit10 == String.Empty || actionModel.Qty10 == String.Empty || actionModel.Location10 == String.Empty || actionModel.Reason10 == String.Empty))
+                {
+                    errorList.Add("В строке 10 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName11 != String.Empty && (actionModel.Unit11 == String.Empty || actionModel.Qty11 == String.Empty || actionModel.Location11 == String.Empty || actionModel.Reason11 == String.Empty))
+                {
+                    errorList.Add("В строке 11 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName12 != String.Empty && (actionModel.Unit12 == String.Empty || actionModel.Qty12 == String.Empty || actionModel.Location12 == String.Empty || actionModel.Reason12 == String.Empty))
+                {
+                    errorList.Add("В строке 12 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName13 != String.Empty && (actionModel.Unit13 == String.Empty || actionModel.Qty13 == String.Empty || actionModel.Location13 == String.Empty || actionModel.Reason13 == String.Empty))
+                {
+                    errorList.Add("В строке 13 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName14 != String.Empty && (actionModel.Unit14 == String.Empty || actionModel.Qty14 == String.Empty || actionModel.Location14 == String.Empty || actionModel.Reason14 == String.Empty))
+                {
+                    errorList.Add("В строке 14 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName15 != String.Empty && (actionModel.Unit15 == String.Empty || actionModel.Qty15 == String.Empty || actionModel.Location15 == String.Empty || actionModel.Reason15 == String.Empty))
+                {
+                    errorList.Add("В строке 15 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName16 != String.Empty && (actionModel.Unit16 == String.Empty || actionModel.Qty16 == String.Empty || actionModel.Location16 == String.Empty || actionModel.Reason16 == String.Empty))
+                {
+                    errorList.Add("В строке 16 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName17 != String.Empty && (actionModel.Unit17 == String.Empty || actionModel.Qty17 == String.Empty || actionModel.Location17 == String.Empty || actionModel.Reason17 == String.Empty))
+                {
+                    errorList.Add("В строке 17 не заполнены все необходимые поля");
+                }
+            }
+
+            if (type == (new USR_REQ_HY_RequestTRU_View()).GetType())
+            {
+                if (actionModel.ItemName1 != String.Empty && (actionModel.Unit1 == String.Empty || actionModel.Qty1 == String.Empty || actionModel.Location1 == String.Empty || actionModel.Reason1 == String.Empty))
+                {
+                    errorList.Add("В строке 1 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName2 != String.Empty && (actionModel.Unit2 == String.Empty || actionModel.Qty2 == String.Empty || actionModel.Location2 == String.Empty || actionModel.Reason2 == String.Empty))
+                {
+                    errorList.Add("В строке 2 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName3 != String.Empty && (actionModel.Unit3 == String.Empty || actionModel.Qty3 == String.Empty || actionModel.Location3 == String.Empty || actionModel.Reason3 == String.Empty))
+                {
+                    errorList.Add("В строке 3 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName4 != String.Empty && (actionModel.Unit4 == String.Empty || actionModel.Qty4 == String.Empty || actionModel.Location4 == String.Empty || actionModel.Reason4 == String.Empty))
+                {
+                    errorList.Add("В строке 4 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName5 != String.Empty && (actionModel.Unit5 == String.Empty || actionModel.Qty5 == String.Empty || actionModel.Location5 == String.Empty || actionModel.Reason5 == String.Empty))
+                {
+                    errorList.Add("В строке 5 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName6 != String.Empty && (actionModel.Unit6 == String.Empty || actionModel.Qty6 == String.Empty || actionModel.Location6 == String.Empty || actionModel.Reason6 == String.Empty))
+                {
+                    errorList.Add("В строке 6 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName7 != String.Empty && (actionModel.Unit7 == String.Empty || actionModel.Qty7 == String.Empty || actionModel.Location7 == String.Empty || actionModel.Reason7 == String.Empty))
+                {
+                    errorList.Add("В строке 7 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName8 != String.Empty && (actionModel.Unit8 == String.Empty || actionModel.Qty8 == String.Empty || actionModel.Location8 == String.Empty || actionModel.Reason8 == String.Empty))
+                {
+                    errorList.Add("В строке 8 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName9 != String.Empty && (actionModel.Unit9 == String.Empty || actionModel.Qty9 == String.Empty || actionModel.Location9 == String.Empty || actionModel.Reason9 == String.Empty))
+                {
+                    errorList.Add("В строке 9 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName10 != String.Empty && (actionModel.Unit10 == String.Empty || actionModel.Qty10 == String.Empty || actionModel.Location10 == String.Empty || actionModel.Reason10 == String.Empty))
+                {
+                    errorList.Add("В строке 10 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName11 != String.Empty && (actionModel.Unit11 == String.Empty || actionModel.Qty11 == String.Empty || actionModel.Location11 == String.Empty || actionModel.Reason11 == String.Empty))
+                {
+                    errorList.Add("В строке 11 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName12 != String.Empty && (actionModel.Unit12 == String.Empty || actionModel.Qty12 == String.Empty || actionModel.Location12 == String.Empty || actionModel.Reason12 == String.Empty))
+                {
+                    errorList.Add("В строке 12 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName13 != String.Empty && (actionModel.Unit13 == String.Empty || actionModel.Qty13 == String.Empty || actionModel.Location13 == String.Empty || actionModel.Reason13 == String.Empty))
+                {
+                    errorList.Add("В строке 13 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName14 != String.Empty && (actionModel.Unit14 == String.Empty || actionModel.Qty14 == String.Empty || actionModel.Location14 == String.Empty || actionModel.Reason14 == String.Empty))
+                {
+                    errorList.Add("В строке 14 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName15 != String.Empty && (actionModel.Unit15 == String.Empty || actionModel.Qty15 == String.Empty || actionModel.Location15 == String.Empty || actionModel.Reason15 == String.Empty))
+                {
+                    errorList.Add("В строке 15 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName16 != String.Empty && (actionModel.Unit16 == String.Empty || actionModel.Qty16 == String.Empty || actionModel.Location16 == String.Empty || actionModel.Reason16 == String.Empty))
+                {
+                    errorList.Add("В строке 16 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName17 != String.Empty && (actionModel.Unit17 == String.Empty || actionModel.Qty17 == String.Empty || actionModel.Location17 == String.Empty || actionModel.Reason17 == String.Empty))
+                {
+                    errorList.Add("В строке 17 не заполнены все необходимые поля");
+                }
+            }
+
+            if (type == (new USR_REQ_HY_EmergencyRequestTRU_View()).GetType())
+            {
+                if (actionModel.ItemName1 != String.Empty && (actionModel.Unit1 == String.Empty || actionModel.Qty1 == String.Empty || actionModel.Location1 == String.Empty || actionModel.Reason1 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 1 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName2 != String.Empty && (actionModel.Unit2 == String.Empty || actionModel.Qty2 == String.Empty || actionModel.Location2 == String.Empty || actionModel.Reason2 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 2 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName3 != String.Empty && (actionModel.Unit3 == String.Empty || actionModel.Qty3 == String.Empty || actionModel.Location3 == String.Empty || actionModel.Reason3 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 3 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName4 != String.Empty && (actionModel.Unit4 == String.Empty || actionModel.Qty4 == String.Empty || actionModel.Location4 == String.Empty || actionModel.Reason4 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 4 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName5 != String.Empty && (actionModel.Unit5 == String.Empty || actionModel.Qty5 == String.Empty || actionModel.Location5 == String.Empty || actionModel.Reason5 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 5 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName6 != String.Empty && (actionModel.Unit6 == String.Empty || actionModel.Qty6 == String.Empty || actionModel.Location6 == String.Empty || actionModel.Reason6 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 6 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName7 != String.Empty && (actionModel.Unit7 == String.Empty || actionModel.Qty7 == String.Empty || actionModel.Location7 == String.Empty || actionModel.Reason7 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 7 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName8 != String.Empty && (actionModel.Unit8 == String.Empty || actionModel.Qty8 == String.Empty || actionModel.Location8 == String.Empty || actionModel.Reason8 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 8 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName9 != String.Empty && (actionModel.Unit9 == String.Empty || actionModel.Qty9 == String.Empty || actionModel.Location9 == String.Empty || actionModel.Reason9 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 9 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName10 != String.Empty && (actionModel.Unit10 == String.Empty || actionModel.Qty10 == String.Empty || actionModel.Location10 == String.Empty || actionModel.Reason10 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 10 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName11 != String.Empty && (actionModel.Unit11 == String.Empty || actionModel.Qty11 == String.Empty || actionModel.Location11 == String.Empty || actionModel.Reason11 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 11 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName12 != String.Empty && (actionModel.Unit12 == String.Empty || actionModel.Qty12 == String.Empty || actionModel.Location12 == String.Empty || actionModel.Reason12 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 12 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName13 != String.Empty && (actionModel.Unit13 == String.Empty || actionModel.Qty13 == String.Empty || actionModel.Location13 == String.Empty || actionModel.Reason13 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 13 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName14 != String.Empty && (actionModel.Unit14 == String.Empty || actionModel.Qty14 == String.Empty || actionModel.Location14 == String.Empty || actionModel.Reason14 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 14 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName15 != String.Empty && (actionModel.Unit15 == String.Empty || actionModel.Qty15 == String.Empty || actionModel.Location15 == String.Empty || actionModel.Reason15 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 15 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName16 != String.Empty && (actionModel.Unit16 == String.Empty || actionModel.Qty16 == String.Empty || actionModel.Location16 == String.Empty || actionModel.Reason16 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 16 не заполнены все необходимые поля");
+                }
+
+                if (actionModel.ItemName17 != String.Empty && (actionModel.Unit17 == String.Empty || actionModel.Qty17 == String.Empty || actionModel.Location17 == String.Empty || actionModel.Reason17 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                {
+                    errorList.Add("В строке 17 не заполнены все необходимые поля");
+                }
+            }
+            return errorList;
+        }
+
+        public List<string> CheckCustomPostDocument(Type type, dynamic actionModel, DocumentTable documentTable, bool isSign)
+        {
+            List<string> errorList = new List<string>();
+
+            if (type == (new USR_REQ_HY_EmergencyPurposeTRU_View()).GetType())
+            {
+                if ((documentTable.ActivityName == "СХО" || documentTable.ActivityName == "Начальник СХО") && isSign == true)
+                {
+                    if (actionModel.ItemName1 != String.Empty && ((actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                    {
+                        errorList.Add("В строке 1 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName2 != String.Empty && ((actionModel.Price2 == String.Empty && actionModel.Amount2 == String.Empty) || actionModel.AccountBZ2 == String.Empty))
+                    {
+                        errorList.Add("В строке 2 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName3 != String.Empty && ((actionModel.Price3 == String.Empty && actionModel.Amount3 == String.Empty) || actionModel.AccountBZ3 == String.Empty))
+                    {
+                        errorList.Add("В строке 3 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName4 != String.Empty && ((actionModel.Price4 == String.Empty && actionModel.Amount4 == String.Empty) || actionModel.AccountBZ4 == String.Empty))
+                    {
+                        errorList.Add("В строке 4 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName5 != String.Empty && ((actionModel.Price5 == String.Empty && actionModel.Amount5 == String.Empty) || actionModel.AccountBZ5 == String.Empty))
+                    {
+                        errorList.Add("В строке 5 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName6 != String.Empty && ((actionModel.Price6 == String.Empty && actionModel.Amount6 == String.Empty) || actionModel.AccountBZ6 == String.Empty))
+                    {
+                        errorList.Add("В строке 6 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName7 != String.Empty && ((actionModel.Price7 == String.Empty && actionModel.Amount7 == String.Empty) || actionModel.AccountBZ7 == String.Empty))
+                    {
+                        errorList.Add("В строке 7 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName8 != String.Empty && ((actionModel.Price8 == String.Empty && actionModel.Amount8 == String.Empty) || actionModel.AccountBZ8 == String.Empty))
+                    {
+                        errorList.Add("В строке 8 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName9 != String.Empty && ((actionModel.Price9 == String.Empty && actionModel.Amount9 == String.Empty) || actionModel.AccountBZ9 == String.Empty))
+                    {
+                        errorList.Add("В строке 9 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName10 != String.Empty && ((actionModel.Price10 == String.Empty && actionModel.Amount10 == String.Empty) || actionModel.AccountBZ10 == String.Empty))
+                    {
+                        errorList.Add("В строке 10 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName11 != String.Empty && ((actionModel.Price11 == String.Empty && actionModel.Amount11 == String.Empty) || actionModel.AccountBZ11 == String.Empty))
+                    {
+                        errorList.Add("В строке 11 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName12 != String.Empty && ((actionModel.Price12 == String.Empty && actionModel.Amount12 == String.Empty) || actionModel.AccountBZ12 == String.Empty))
+                    {
+                        errorList.Add("В строке 12 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName13 != String.Empty && ((actionModel.Price13 == String.Empty && actionModel.Amount13 == String.Empty) || actionModel.AccountBZ13 == String.Empty))
+                    {
+                        errorList.Add("В строке 13 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName14 != String.Empty && ((actionModel.Price14 == String.Empty && actionModel.Amount14 == String.Empty) || actionModel.AccountBZ14 == String.Empty))
+                    {
+                        errorList.Add("В строке 14 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName15 != String.Empty && ((actionModel.Price15 == String.Empty && actionModel.Amount15 == String.Empty) || actionModel.AccountBZ15 == String.Empty))
+                    {
+                        errorList.Add("В строке 15 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName16 != String.Empty && ((actionModel.Price16 == String.Empty && actionModel.Amount16 == String.Empty) || actionModel.AccountBZ16 == String.Empty))
+                    {
+                        errorList.Add("В строке 16 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName17 != String.Empty && ((actionModel.Price17 == String.Empty && actionModel.Amount17 == String.Empty) || actionModel.AccountBZ17 == String.Empty))
+                    {
+                        errorList.Add("В строке 17 не заполнены все необходимые поля");
+                    }
+                }
+
+                if (documentTable.ActivityName == "Начальник СХО" && isSign == true)
+                {
+                    if (String.IsNullOrEmpty(actionModel.UserChooseManual2))
+                    {
+                        errorList.Add("Нужно заполнить поле Исполнитель");
+                    }
+                }
+            }
+
+            if (type == (new USR_REQ_HY_RequestTRU_View()).GetType())
+            {
+                if ((documentTable.ActivityName == "СХО" || documentTable.ActivityName == "Начальник СХО") && isSign == true)
+                {
+                    if (actionModel.ItemName1 != String.Empty && ((actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                    {
+                        errorList.Add("В строке 1 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName2 != String.Empty && ((actionModel.Price2 == String.Empty && actionModel.Amount2 == String.Empty) || actionModel.AccountBZ2 == String.Empty))
+                    {
+                        errorList.Add("В строке 2 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName3 != String.Empty && ((actionModel.Price3 == String.Empty && actionModel.Amount3 == String.Empty) || actionModel.AccountBZ3 == String.Empty))
+                    {
+                        errorList.Add("В строке 3 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName4 != String.Empty && ((actionModel.Price4 == String.Empty && actionModel.Amount4 == String.Empty) || actionModel.AccountBZ4 == String.Empty))
+                    {
+                        errorList.Add("В строке 4 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName5 != String.Empty && ((actionModel.Price5 == String.Empty && actionModel.Amount5 == String.Empty) || actionModel.AccountBZ5 == String.Empty))
+                    {
+                        errorList.Add("В строке 5 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName6 != String.Empty && ((actionModel.Price6 == String.Empty && actionModel.Amount6 == String.Empty) || actionModel.AccountBZ6 == String.Empty))
+                    {
+                        errorList.Add("В строке 6 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName7 != String.Empty && ((actionModel.Price7 == String.Empty && actionModel.Amount7 == String.Empty) || actionModel.AccountBZ7 == String.Empty))
+                    {
+                        errorList.Add("В строке 7 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName8 != String.Empty && ((actionModel.Price8 == String.Empty && actionModel.Amount8 == String.Empty) || actionModel.AccountBZ8 == String.Empty))
+                    {
+                        errorList.Add("В строке 8 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName9 != String.Empty && ((actionModel.Price9 == String.Empty && actionModel.Amount9 == String.Empty) || actionModel.AccountBZ9 == String.Empty))
+                    {
+                        errorList.Add("В строке 9 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName10 != String.Empty && ((actionModel.Price10 == String.Empty && actionModel.Amount10 == String.Empty) || actionModel.AccountBZ10 == String.Empty))
+                    {
+                        errorList.Add("В строке 10 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName11 != String.Empty && ((actionModel.Price11 == String.Empty && actionModel.Amount11 == String.Empty) || actionModel.AccountBZ11 == String.Empty))
+                    {
+                        errorList.Add("В строке 11 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName12 != String.Empty && ((actionModel.Price12 == String.Empty && actionModel.Amount12 == String.Empty) || actionModel.AccountBZ12 == String.Empty))
+                    {
+                        errorList.Add("В строке 12 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName13 != String.Empty && ((actionModel.Price13 == String.Empty && actionModel.Amount13 == String.Empty) || actionModel.AccountBZ13 == String.Empty))
+                    {
+                        errorList.Add("В строке 13 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName14 != String.Empty && ((actionModel.Price14 == String.Empty && actionModel.Amount14 == String.Empty) || actionModel.AccountBZ14 == String.Empty))
+                    {
+                        errorList.Add("В строке 14 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName15 != String.Empty && ((actionModel.Price15 == String.Empty && actionModel.Amount15 == String.Empty) || actionModel.AccountBZ15 == String.Empty))
+                    {
+                        errorList.Add("В строке 15 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName16 != String.Empty && ((actionModel.Price16 == String.Empty && actionModel.Amount16 == String.Empty) || actionModel.AccountBZ16 == String.Empty))
+                    {
+                        errorList.Add("В строке 16 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName17 != String.Empty && ((actionModel.Price17 == String.Empty && actionModel.Amount17 == String.Empty) || actionModel.AccountBZ17 == String.Empty))
+                    {
+                        errorList.Add("В строке 17 не заполнены все необходимые поля");
+                    }
+                }
+
+                if (documentTable.ActivityName == "Начальник СХО" && isSign == true)
+                {
+                    if (String.IsNullOrEmpty(actionModel.UserChooseManual2))
+                    {
+                        errorList.Add("Нужно заполнить поле Исполнитель");
+                    }
+                }
+            }
+
+            if (type == (new USR_REQ_HY_EmergencyRequestTRU_View()).GetType())
+            {
+                if ((documentTable.ActivityName == "Начальник СХО") && isSign == true)
+                {
+                    if (actionModel.ItemName1 != String.Empty && ((actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
+                    {
+                        errorList.Add("В строке 1 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName2 != String.Empty && ((actionModel.Price2 == String.Empty && actionModel.Amount2 == String.Empty) || actionModel.AccountBZ2 == String.Empty))
+                    {
+                        errorList.Add("В строке 2 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName3 != String.Empty && ((actionModel.Price3 == String.Empty && actionModel.Amount3 == String.Empty) || actionModel.AccountBZ3 == String.Empty))
+                    {
+                        errorList.Add("В строке 3 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName4 != String.Empty && ((actionModel.Price4 == String.Empty && actionModel.Amount4 == String.Empty) || actionModel.AccountBZ4 == String.Empty))
+                    {
+                        errorList.Add("В строке 4 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName5 != String.Empty && ((actionModel.Price5 == String.Empty && actionModel.Amount5 == String.Empty) || actionModel.AccountBZ5 == String.Empty))
+                    {
+                        errorList.Add("В строке 5 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName6 != String.Empty && ((actionModel.Price6 == String.Empty && actionModel.Amount6 == String.Empty) || actionModel.AccountBZ6 == String.Empty))
+                    {
+                        errorList.Add("В строке 6 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName7 != String.Empty && ((actionModel.Price7 == String.Empty && actionModel.Amount7 == String.Empty) || actionModel.AccountBZ7 == String.Empty))
+                    {
+                        errorList.Add("В строке 7 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName8 != String.Empty && ((actionModel.Price8 == String.Empty && actionModel.Amount8 == String.Empty) || actionModel.AccountBZ8 == String.Empty))
+                    {
+                        errorList.Add("В строке 8 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName9 != String.Empty && ((actionModel.Price9 == String.Empty && actionModel.Amount9 == String.Empty) || actionModel.AccountBZ9 == String.Empty))
+                    {
+                        errorList.Add("В строке 9 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName10 != String.Empty && ((actionModel.Price10 == String.Empty && actionModel.Amount10 == String.Empty) || actionModel.AccountBZ10 == String.Empty))
+                    {
+                        errorList.Add("В строке 10 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName11 != String.Empty && ((actionModel.Price11 == String.Empty && actionModel.Amount11 == String.Empty) || actionModel.AccountBZ11 == String.Empty))
+                    {
+                        errorList.Add("В строке 11 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName12 != String.Empty && ((actionModel.Price12 == String.Empty && actionModel.Amount12 == String.Empty) || actionModel.AccountBZ12 == String.Empty))
+                    {
+                        errorList.Add("В строке 12 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName13 != String.Empty && ((actionModel.Price13 == String.Empty && actionModel.Amount13 == String.Empty) || actionModel.AccountBZ13 == String.Empty))
+                    {
+                        errorList.Add("В строке 13 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName14 != String.Empty && ((actionModel.Price14 == String.Empty && actionModel.Amount14 == String.Empty) || actionModel.AccountBZ14 == String.Empty))
+                    {
+                        errorList.Add("В строке 14 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName15 != String.Empty && ((actionModel.Price15 == String.Empty && actionModel.Amount15 == String.Empty) || actionModel.AccountBZ15 == String.Empty))
+                    {
+                        errorList.Add("В строке 15 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName16 != String.Empty && ((actionModel.Price16 == String.Empty && actionModel.Amount16 == String.Empty) || actionModel.AccountBZ16 == String.Empty))
+                    {
+                        errorList.Add("В строке 16 не заполнены все необходимые поля");
+                    }
+                    if (actionModel.ItemName17 != String.Empty && ((actionModel.Price17 == String.Empty && actionModel.Amount17 == String.Empty) || actionModel.AccountBZ17 == String.Empty))
+                    {
+                        errorList.Add("В строке 17 не заполнены все необходимые поля");
+                    }
+
+                    if (String.IsNullOrEmpty(actionModel.UserChooseManual2))
+                    {
+                        errorList.Add("Нужно заполнить поле Исполнитель");
+                    }
+                }
+            }
+
             return errorList;
         }
 

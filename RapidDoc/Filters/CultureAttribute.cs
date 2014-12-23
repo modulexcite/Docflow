@@ -13,34 +13,37 @@ namespace RapidDoc.Filters
     {
         public void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            string cultureName = null;
-            // Получаем куки из контекста, которые могут содержать установленную культуру
-            HttpCookie cultureCookie = filterContext.HttpContext.Request.Cookies["lang"];
-            if (cultureCookie != null)
-                cultureName = cultureCookie.Value;
-            else
+            if (filterContext.IsChildAction == false)
             {
-                var userLanguages = HttpContext.Current.Request.UserLanguages;
-                if (userLanguages[0] != null)
-                {
-                    cultureName = userLanguages[0];
-                }
+                string cultureName = null;
+                // Получаем куки из контекста, которые могут содержать установленную культуру
+                HttpCookie cultureCookie = filterContext.HttpContext.Request.Cookies["lang"];
+                if (cultureCookie != null)
+                    cultureName = cultureCookie.Value;
                 else
+                {
+                    var userLanguages = HttpContext.Current.Request.UserLanguages;
+                    if (userLanguages[0] != null)
+                    {
+                        cultureName = userLanguages[0];
+                    }
+                    else
+                    {
+                        cultureName = Lang.DefaultLang();
+                    }
+                }
+
+                // Список культур
+                List<string> cultures = Lang.GetISOCodes();
+                if (!cultures.Contains(cultureName))
                 {
                     cultureName = Lang.DefaultLang();
                 }
-            }
 
-            // Список культур
-            List<string> cultures = Lang.GetISOCodes();
-            if (!cultures.Contains(cultureName))
-            {
-                cultureName = Lang.DefaultLang();
+                CultureInfo ci = CultureInfo.GetCultureInfo(cultureName);
+                Thread.CurrentThread.CurrentCulture = ci;
+                Thread.CurrentThread.CurrentUICulture = ci;
             }
-
-            CultureInfo ci = CultureInfo.GetCultureInfo(cultureName);
-            Thread.CurrentThread.CurrentCulture = ci;
-            Thread.CurrentThread.CurrentUICulture = ci;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext)

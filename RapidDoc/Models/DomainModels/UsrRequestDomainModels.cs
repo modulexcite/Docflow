@@ -4445,6 +4445,8 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Flight { get; set; }
 
+        public string Terms { get; set; }
+
         public string NumberCar { get; set; }
 
         public string NameDriverCar { get; set; }
@@ -4742,9 +4744,6 @@ namespace RapidDoc.Models.DomainModels
 
         [Required]
         public string Users { get; set; }
-
-        [Required]
-        public string Title { get; set; }
 
         [Required]
         public string EmplName { get; set; }
