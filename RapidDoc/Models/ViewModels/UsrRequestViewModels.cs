@@ -5658,10 +5658,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -5710,10 +5712,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -5761,10 +5765,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Пункт предоставления транспорта")]
         public string PlaceDeparture { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -5803,10 +5809,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Пункт предоставления транспорта")]
         public string PlaceDeparture { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -5842,10 +5850,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Ответственное лицо из числа ИТР за погрузочно-разгрузочные работы")]
         public string EmplName { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -5869,6 +5879,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Заказчик (ФИО, подразделение)")]
         public string Client { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
         public DateTime? StartDate { get; set; }
@@ -5897,10 +5908,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Заказчик (ФИО, подразделение)")]
         public string Client { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Display(Name = "Время")]
         public TimeSpan StartWorkTime { get; set; }
 
@@ -5932,6 +5945,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
         public DateTime? StartDate { get; set; }
@@ -5959,6 +5973,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Данные рейса (номер, время)")]
         public string Flight { get; set; }
 
+        [Display(Name = "Срок командирования")]
+        public string Terms { get; set; }
+
         [Display(Name = "Марка, номер автотранспорта")]
         public string NumberCar { get; set; }
 
@@ -5979,10 +5996,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6030,10 +6049,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6075,10 +6096,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6114,10 +6137,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public PurposeTrip PurposeTrip { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6182,10 +6207,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public PurposeTrip PurposeTrip { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6243,10 +6270,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6282,10 +6311,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель, количество пассажиров")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6317,10 +6348,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6351,10 +6384,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6362,10 +6397,6 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Сотрудник")]
         public string Users { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Должность")]
-        public string Title { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "ФИО сотрудника, которого необходимо встретить\\сопровождать")]
@@ -6406,10 +6437,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public PurposeTrip PurposeTrip { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6471,10 +6504,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public PurposeTrip PurposeTrip { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6532,10 +6567,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6563,10 +6600,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата по")]
         public DateTime? EndDate { get; set; }
@@ -6606,6 +6645,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Цель, количество пассажиров")]
         public string Purpose { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
         public DateTime? DateCorporate { get; set; }

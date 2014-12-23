@@ -783,6 +783,12 @@ namespace RapidDoc.Controllers
 
             if (files == null)
             {
+                if (documentId != null)
+                {
+                    DocumentTable docuTable = _DocumentService.Find(GuidNull2Guid(documentId));
+                    CheckCustomDocument(typeActionModel, actionModel, docuTable, _DocumentService.isSignDocument(docuTable.Id, docuTable.ProcessTableId));
+                }
+
                 CheckCustomDocument(typeActionModel, actionModel);
                 CheckAttachedFiles(processId, fileId, documentId);
                 _CustomCheckDocument.PreUpdateViewModel(typeActionModel, actionModel);
@@ -819,9 +825,14 @@ namespace RapidDoc.Controllers
             }
         }
 
-        private void CheckCustomDocument(Type type, dynamic actionModel)
+        public void CheckCustomDocument(Type type, dynamic actionModel, DocumentTable documentTable = null, bool isSign = false)
         {
-            List<string> errorList =  _CustomCheckDocument.CheckCustomDocument(type, actionModel);
+            List<string> errorList = new List<string>();
+
+            if (documentTable == null)
+                errorList.AddRange(_CustomCheckDocument.CheckCustomDocument(type, actionModel));
+            else
+                errorList.AddRange(_CustomCheckDocument.CheckCustomPostDocument(type, actionModel, documentTable, isSign));
 
             foreach(var error in errorList)
             {

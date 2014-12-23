@@ -1057,6 +1057,63 @@ namespace RapidDoc.Controllers
         }
         //<--УТ
 
+        public ActionResult GetRequestEmergencyPurposeTRU(RapidDoc.Models.ViewModels.USR_REQ_HY_EmergencyPurposeTRU_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "СХО" || x.ActivityName == "Начальник СХО"))
+                    {
+                        return PartialView("USR_REQ_HY_EmergencyPurposeTRU_Edit_CXO", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_HY_EmergencyPurposeTRU_View_Full", model);
+        }
+
+        public ActionResult GetRequestTRU(RapidDoc.Models.ViewModels.USR_REQ_HY_RequestTRU_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "СХО" || x.ActivityName == "Начальник СХО"))
+                    {
+                        return PartialView("USR_REQ_HY_RequestTRU_Edit_CXO", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_HY_RequestTRU_View_Full", model);
+        }
+
+        public ActionResult GetEmergencyRequestTRU(RapidDoc.Models.ViewModels.USR_REQ_HY_EmergencyRequestTRU_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник СХО"))
+                    {
+                        return PartialView("USR_REQ_HY_EmergencyRequestTRU_Edit_CXO", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_HY_EmergencyRequestTRU_View_Full", model);
+        }
+
         [HttpPost]
         public ActionResult UpdateCalcBTripPPTRIP(byte EmplTripType, byte TripDirection, int Day, int DayLive, int TicketSum)
         {

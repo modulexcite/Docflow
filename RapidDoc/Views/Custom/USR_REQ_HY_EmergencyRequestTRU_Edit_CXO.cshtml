@@ -1,0 +1,83 @@
+﻿@model RapidDoc.Models.ViewModels.USR_REQ_HY_EmergencyRequestTRU_View
+@using RapidDoc.Extensions;
+
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.DocumentTableId)
+
+<h4 class="text-info">Прошу приобрести следующие ТМЦ:</h4>
+@Html.Partial("_DocumentViewFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Department" } })
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.UserChooseManual1)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.UserChooseManual1, new { @class = "form-control", @data_role = "tagsinputEmpl", @size = 256, @maxlength = 256, placeholder = "Представитель ФЭУ" })
+</div>
+
+<hr />
+<div class="table-responsivelarge" style="font-size:smaller;">
+    <table class="table table-condensed table-bordered table-bordered-bold">
+        <thead>
+            <tr>
+                <th>№ п/п</th>
+                <th>Наименование материалов, марка, ГОСТ</th>
+                <th style="min-width: 10em">Ед.изм.</th>
+                <th style="min-width: 10em">Кол-во</th>
+                <th><label class="label-required">Цена за ед-цу, тг.</label><span class="required">*</span></th>
+                <th><label class="label-required">Стоимость тг.</label><span class="required">*</span></th>
+                <th style="min-width: 20em">Склад***</th>
+                <th><label class="label-required">Месяц поставки</label><span class="required">*</span></th>
+                <th>Обоснование (статья бюджета)</th>
+                <th><label class="label-required">За счет какой статьи БЗ(№, наименование подр.)</label><span class="required">*</span></th>
+                <th style="min-width: 20em">Примечание</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 1; i < 18; i++)
+            {
+                if (!String.IsNullOrEmpty(Html.Value("ItemName" + i.ToString()).ToString()))
+                {
+                    <tr>
+                        <td>@i.ToString()</td>
+                        <td>
+                            @Html.DisplayText("ItemName" + i.ToString())
+                            @Html.Hidden("ItemName" + i.ToString())
+                        </td>
+                        <td>
+                            @Html.DisplayText("Unit" + i.ToString())
+                            @Html.Hidden("Unit" + i.ToString())
+                        </td>
+                        <td>
+                            @Html.DisplayText("Qty" + i.ToString())
+                            @Html.Hidden("Qty" + i.ToString())
+                        </td>
+                        <td>
+                            @Html.TextArea("Price" + i.ToString(), new { @class = "form-control", @maxlength = 256 })
+                        </td>
+                        <td>
+                            @Html.TextArea("Amount" + i.ToString(), new { @class = "form-control", @maxlength = 256 })
+                        </td>
+                        <td>
+                            @Html.DisplayText("Location" + i.ToString())
+                            @Html.Hidden("Location" + i.ToString())
+                        </td>
+                        <td>
+                            @Html.EnumDropDownList("RapidDoc.Models.Repository.Months", "Month" + i.ToString())
+                        </td>
+                        <td>
+                            @Html.DisplayText("Reason" + i.ToString())
+                            @Html.Hidden("Reason" + i.ToString())
+                        </td>
+                        <td>
+                            @Html.TextArea("AccountBZ" + i.ToString(), new { @class = "form-control", @maxlength = 256 })
+                        </td>
+                        <td>
+                            @Html.DisplayText("Description" + i.ToString())
+                            @Html.Hidden("Description" + i.ToString())
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
