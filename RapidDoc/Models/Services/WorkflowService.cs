@@ -414,8 +414,6 @@ namespace RapidDoc.Models.Services
                     }
                 }
 
-                //if (!(((DocumentState)outputParameters["outputStep"] == DocumentState.Agreement) && (_trackerType == TrackerType.Cancelled)))
-                //    _DocumentService.SaveSignData(bookmarks, _trackerType);
                 DocumentTable documentTable = _DocumentService.Find(_documentId);
                 documentTable.WWFInstanceId = application.Id;
                 documentTable.DocumentState = (DocumentState)outputParameters["outputStep"];

@@ -12,6 +12,7 @@ namespace RapidDoc.Models.Services
     public interface ICustomCheckDocument
     {
         List<string> CheckCustomDocument(Type type, dynamic actionModel);
+        List<string> CheckCustomDocumentHY(Type type, dynamic actionModel);
         List<string> CheckCustomPostDocument(Type type, dynamic actionModel, DocumentTable documentTable, bool isSign);
         dynamic PreUpdateViewModel(Type type, dynamic actionModel);
         void UpdateDocumentData(DocumentTable document, IDictionary<string, object> documentData);
@@ -20,15 +21,13 @@ namespace RapidDoc.Models.Services
     public class CustomCheckDocument : ICustomCheckDocument
     {
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
         private readonly IServiceIncidentService _ServiceIncidentService;
         private readonly ITripSettingsService _TripSettingsService;
         private readonly IWorkflowTrackerService _WorkflowTrackerService;
 
-        public CustomCheckDocument(IUnitOfWork uow, IAccountService accountService, IWorkflowTrackerService workflowTrackerService, IServiceIncidentService serviceIncidentService, ITripSettingsService tripSettingsService)
+        public CustomCheckDocument(IUnitOfWork uow, IWorkflowTrackerService workflowTrackerService, IServiceIncidentService serviceIncidentService, ITripSettingsService tripSettingsService)
         {
             _uow = uow;
-            _AccountService = accountService;
             _WorkflowTrackerService = workflowTrackerService;
 
             //Custom
@@ -619,6 +618,13 @@ namespace RapidDoc.Models.Services
                 }
             }
 
+            return errorList;
+        }
+
+        public List<string> CheckCustomDocumentHY(Type type, dynamic actionModel)
+        {
+            List<string> errorList = new List<string>();
+
             if (type == (new USR_REQ_HY_EmergencyPurposeTRU_View()).GetType())
             {
                 if (actionModel.ItemName1 != String.Empty && (actionModel.Unit1 == String.Empty || actionModel.Qty1 == String.Empty || actionModel.Location1 == String.Empty || actionModel.Reason1 == String.Empty))
@@ -882,6 +888,7 @@ namespace RapidDoc.Models.Services
                     errorList.Add("В строке 17 не заполнены все необходимые поля");
                 }
             }
+
             return errorList;
         }
 
