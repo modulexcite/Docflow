@@ -1057,6 +1057,63 @@ namespace RapidDoc.Controllers
         }
         //<--УТ
 
+        public ActionResult GetRequestBookingRoom(RapidDoc.Models.ViewModels.USR_REQ_HY_BookingRoom_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник ХУ"))
+                    {
+                        return PartialView("USR_REQ_HY_BookingRoom_Edit_HY", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetRequestFindApartment(RapidDoc.Models.ViewModels.USR_REQ_HY_FindApartment_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник ХУ"))
+                    {
+                        return PartialView("USR_REQ_HY_FindApartment_Edit_HY", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetRequestRequestRepair(RapidDoc.Models.ViewModels.USR_REQ_HY_RequestRepair_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник ХУ"))
+                    {
+                        return PartialView("USR_REQ_HY_RequestRepair_Edit_HY", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
         public ActionResult GetRequestEmergencyPurposeTRU(RapidDoc.Models.ViewModels.USR_REQ_HY_EmergencyPurposeTRU_View model)
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
