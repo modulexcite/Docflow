@@ -896,6 +896,39 @@ namespace RapidDoc.Models.Services
         {
             List<string> errorList = new List<string>();
 
+            if (type == (new USR_REQ_HY_BookingRoom_View()).GetType())
+            {
+                if (documentTable.ActivityName == "Начальник ХУ" && isSign == true)
+                {
+                    if (actionModel.UserChooseManual1 == String.Empty)
+                    {
+                        errorList.Add("Необходимо указать Исполнителя");
+                    }
+                }
+            }
+
+            if (type == (new USR_REQ_HY_FindApartment_View()).GetType())
+            {
+                if (documentTable.ActivityName == "Начальник ХУ" && isSign == true)
+                {
+                    if (actionModel.UserChooseManual1 == String.Empty)
+                    {
+                        errorList.Add("Необходимо указать Исполнителя");
+                    }
+                }
+            }
+
+            if (type == (new USR_REQ_HY_RequestRepair_View()).GetType())
+            {
+                if (documentTable.ActivityName == "Начальник ХУ" && isSign == true)
+                {
+                    if (actionModel.UserChooseManual1 == String.Empty)
+                    {
+                        errorList.Add("Необходимо указать Исполнителя");
+                    }
+                }
+            }
+
             if (type == (new USR_REQ_HY_EmergencyPurposeTRU_View()).GetType())
             {
                 if ((documentTable.ActivityName == "СХО" || documentTable.ActivityName == "Начальник СХО") && isSign == true)
@@ -1135,7 +1168,7 @@ namespace RapidDoc.Models.Services
                         errorList.Add("В строке 17 не заполнены все необходимые поля");
                     }
 
-                    if (String.IsNullOrEmpty(actionModel.UserChooseManual2))
+                    if (String.IsNullOrEmpty(actionModel.UserChooseManual1))
                     {
                         errorList.Add("Нужно заполнить поле Исполнитель");
                     }

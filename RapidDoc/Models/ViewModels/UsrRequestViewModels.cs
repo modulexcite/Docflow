@@ -6875,14 +6875,17 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Номер мобильного телефона")]
         public string Phone { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Планируемый срок приезда")]
         public DateTime? DateArrival { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "с")]
         public DateTime? DateStart { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "по")]
         public DateTime? DateEnd { get; set; }
@@ -6938,6 +6941,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Кол-во детей, возраст")]
         public string KidsNumber { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Планируемый срок приезда")]
         public DateTime? DateArrival { get; set; }
@@ -6948,6 +6952,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Исполнитель")]
         public string UserChooseManual1 { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата возникновения поломки/неисправности")]
         public DateTime? DateIncident { get; set; }
@@ -7365,10 +7370,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Вид командировки")]
         public TypeTrip TypeTrip { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "по")]
         public DateTime? EndDate { get; set; }
@@ -7418,10 +7425,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Вид командировки")]
         public TypeTrip TypeTrip { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "по")]
         public DateTime? EndDate { get; set; }
@@ -7440,39 +7449,88 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Примечание")]
         public string Description { get; set; }
 
+        [Display(Name = "ФИО")]
         public string FIO1 { get; set; }
+
+        [Display(Name = "ФИО")]
         public string FIO2 { get; set; }
+
+        [Display(Name = "ФИО")]
         public string FIO3 { get; set; }
+
+        [Display(Name = "ФИО")]
         public string FIO4 { get; set; }
 
+        [Display(Name = "Категория сотрудника")]
         public EmplTripType EmplTripType1 { get; set; }
+
+        [Display(Name = "Категория сотрудника")]
         public EmplTripType EmplTripType2 { get; set; }
+
+        [Display(Name = "Категория сотрудника")]
         public EmplTripType EmplTripType3 { get; set; }
+
+        [Display(Name = "Категория сотрудника")]
         public EmplTripType EmplTripType4 { get; set; }
 
+        [Display(Name = "Направление")]
         public TripDirection TripDirection1 { get; set; }
+
+        [Display(Name = "Направление")]
         public TripDirection TripDirection2 { get; set; }
+
+        [Display(Name = "Направление")]
         public TripDirection TripDirection3 { get; set; }
+
+        [Display(Name = "Направление")]
         public TripDirection TripDirection4 { get; set; }
 
+        [Display(Name = "Количество суток")]
         public int Day1 { get; set; }
+
+        [Display(Name = "Количество суток")]
         public int Day2 { get; set; }
+
+        [Display(Name = "Количество суток")]
         public int Day3 { get; set; }
+
+        [Display(Name = "Количество суток")]
         public int Day4 { get; set; }
 
+        [Display(Name = "Количество суток проживания")]
         public int DayLive1 { get; set; }
+
+        [Display(Name = "Количество суток проживания")]
         public int DayLive2 { get; set; }
+
+        [Display(Name = "Количество суток проживания")]
         public int DayLive3 { get; set; }
+
+        [Display(Name = "Количество суток проживания")]
         public int DayLive4 { get; set; }
 
+        [Display(Name = "Проезд")]
         public TripPassage TripPassage1 { get; set; }
+
+        [Display(Name = "Проезд")]
         public TripPassage TripPassage2 { get; set; }
+
+        [Display(Name = "Проезд")]
         public TripPassage TripPassage3 { get; set; }
+
+        [Display(Name = "Проезд")]
         public TripPassage TripPassage4 { get; set; }
 
+        [Display(Name = "Сумма проезда")]
         public int TicketSum1 { get; set; }
+
+        [Display(Name = "Сумма проезда")]
         public int TicketSum2 { get; set; }
+
+        [Display(Name = "Сумма проезда")]
         public int TicketSum3 { get; set; }
+
+        [Display(Name = "Сумма проезда")]
         public int TicketSum4 { get; set; }
 
         public int DayRate1 { get; set; }
@@ -7501,10 +7559,12 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Вид командировки")]
         public TypeTrip TypeTrip { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "с")]
         public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "по")]
         public DateTime? EndDate { get; set; }
@@ -7523,39 +7583,88 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Примечание")]
         public string Description { get; set; }
 
+        [Display(Name = "ФИО")]
         public string FIO1 { get; set; }
+
+        [Display(Name = "ФИО")]
         public string FIO2 { get; set; }
+
+        [Display(Name = "ФИО")]
         public string FIO3 { get; set; }
+
+        [Display(Name = "ФИО")]
         public string FIO4 { get; set; }
 
+        [Display(Name = "Категория сотрудника")]
         public EmplTripType EmplTripType1 { get; set; }
+
+        [Display(Name = "Категория сотрудника")]
         public EmplTripType EmplTripType2 { get; set; }
+
+        [Display(Name = "Категория сотрудника")]
         public EmplTripType EmplTripType3 { get; set; }
+
+        [Display(Name = "Категория сотрудника")]
         public EmplTripType EmplTripType4 { get; set; }
 
+        [Display(Name = "Направление")]
         public TripDirection TripDirection1 { get; set; }
+
+        [Display(Name = "Направление")]
         public TripDirection TripDirection2 { get; set; }
+
+        [Display(Name = "Направление")]
         public TripDirection TripDirection3 { get; set; }
+
+        [Display(Name = "Направление")]
         public TripDirection TripDirection4 { get; set; }
 
+        [Display(Name = "Количество суток")]
         public int Day1 { get; set; }
+
+        [Display(Name = "Количество суток")]
         public int Day2 { get; set; }
+
+        [Display(Name = "Количество суток")]
         public int Day3 { get; set; }
+
+        [Display(Name = "Количество суток")]
         public int Day4 { get; set; }
 
+        [Display(Name = "Количество суток проживания")]
         public int DayLive1 { get; set; }
+
+        [Display(Name = "Количество суток проживания")]
         public int DayLive2 { get; set; }
+
+        [Display(Name = "Количество суток проживания")]
         public int DayLive3 { get; set; }
+
+        [Display(Name = "Количество суток проживания")]
         public int DayLive4 { get; set; }
 
+        [Display(Name = "Проезд")]
         public TripPassage TripPassage1 { get; set; }
+
+        [Display(Name = "Проезд")]
         public TripPassage TripPassage2 { get; set; }
+
+        [Display(Name = "Проезд")]
         public TripPassage TripPassage3 { get; set; }
+
+        [Display(Name = "Проезд")]
         public TripPassage TripPassage4 { get; set; }
 
+        [Display(Name = "Сумма проезда")]
         public int TicketSum1 { get; set; }
+
+        [Display(Name = "Сумма проезда")]
         public int TicketSum2 { get; set; }
+
+        [Display(Name = "Сумма проезда")]
         public int TicketSum3 { get; set; }
+
+        [Display(Name = "Сумма проезда")]
         public int TicketSum4 { get; set; }
 
         public int DayRate1 { get; set; }
