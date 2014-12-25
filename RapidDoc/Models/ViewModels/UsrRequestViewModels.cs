@@ -4528,7 +4528,6 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "ИД Блока")]
         public string UserChooseManual1 { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Исполнители")]
         public string UserChooseManual2 { get; set; }
     }

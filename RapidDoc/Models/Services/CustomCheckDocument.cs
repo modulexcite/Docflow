@@ -1175,6 +1175,17 @@ namespace RapidDoc.Models.Services
                 }
             }
 
+            if (type == (new USR_REQ_URP_RequestForProvisionGraphVac_View()).GetType())
+            {
+                if ((documentTable.ActivityName == "Исполнитель") && isSign == true)
+                {
+                    if (String.IsNullOrEmpty(actionModel.UserChooseManual2))
+                    {
+                        errorList.Add("Нужно заполнить поле Исполнители");
+                    }
+                }
+            }
+
             return errorList;
         }
 

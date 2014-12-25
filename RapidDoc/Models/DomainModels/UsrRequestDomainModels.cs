@@ -3340,7 +3340,6 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string UserChooseManual1 { get; set; }
 
-        [Required]
         public string UserChooseManual2 { get; set; }
     }
 

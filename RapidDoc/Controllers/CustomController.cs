@@ -635,6 +635,25 @@ namespace RapidDoc.Controllers
 
             return PartialView("_Empty");
         }
+
+        public ActionResult GetRequestForProvisionGraphVac(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForProvisionGraphVac_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Исполнитель"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForProvisionGraphVac_Edit_Exec", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
         //<--Запрос на рекруткарты
 
         //УТ-->
