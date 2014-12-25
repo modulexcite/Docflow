@@ -3919,10 +3919,6 @@ namespace RapidDoc.Models.ViewModels
         public string UsersOff { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Должность")]
-        public string PositionOff { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Управление/служба(отдел)")]
         public string DepartmentOff { get; set; }
 
@@ -3933,10 +3929,6 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "ФИО")]
         public string UsersOn { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Должность")]
-        public string PositionOn { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Управление/служба(отдел)")]
@@ -3975,10 +3967,6 @@ namespace RapidDoc.Models.ViewModels
         public string UsersOff { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Должность")]
-        public string PositionOff { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Управление/служба(отдел)")]
         public string DepartmentOff { get; set; }
 
@@ -3989,10 +3977,6 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "ФИО")]
         public string UsersOn { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Должность")]
-        public string PositionOn { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Управление/служба(отдел)")]
@@ -4029,7 +4013,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "ФИО сотрудника")]
-        public string Users { get; set; }
+        public string FIO { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Должность")]
@@ -4131,7 +4115,7 @@ namespace RapidDoc.Models.ViewModels
         public DateTime? DocDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Тематика обучения")]
+        [Display(Name = "Место проведения обучения")]
         public string Place { get; set; }
 
         [Display(Name = "Компания-организатор")]
@@ -5471,18 +5455,6 @@ namespace RapidDoc.Models.ViewModels
         public DateTime? EndDate8 { get; set; }
         public DateTime? EndDate9 { get; set; }
         public DateTime? EndDate10 { get; set; }
-
-        public string Agreement1 { get; set; }
-        public string Agreement2 { get; set; }
-        public string Agreement3 { get; set; }
-        public string Agreement4 { get; set; }
-        public string Agreement5 { get; set; }
-        public string Agreement6 { get; set; }
-        public string Agreement7 { get; set; }
-        public string Agreement8 { get; set; }
-        public string Agreement9 { get; set; }
-        public string Agreement10 { get; set; }
-
     }
 
     public class USR_REQ_URP_RequestForHRChGraphConst_View : BasicDocumentView
@@ -5590,18 +5562,6 @@ namespace RapidDoc.Models.ViewModels
         public DateTime? StartDate8 { get; set; }
         public DateTime? StartDate9 { get; set; }
         public DateTime? StartDate10 { get; set; }
-
-        public string Agreement1 { get; set; }
-        public string Agreement2 { get; set; }
-        public string Agreement3 { get; set; }
-        public string Agreement4 { get; set; }
-        public string Agreement5 { get; set; }
-        public string Agreement6 { get; set; }
-        public string Agreement7 { get; set; }
-        public string Agreement8 { get; set; }
-        public string Agreement9 { get; set; }
-        public string Agreement10 { get; set; }
-
     }
 
     public class USR_REQ_URP_RequestForPaymentFirstDay_View : BasicDocumentView
