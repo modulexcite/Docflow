@@ -803,7 +803,7 @@ namespace RapidDoc.Controllers
             ProcessTable process = _ProcessService.Find(processId);
             var files = _DocumentService.GetAllFilesDocument(fileId).ToList();
 
-            if ((process.MandatoryNumberFiles > 0) && ((documentId != null && process.MandatoryDocDate <= _DocumentService.Find(documentId).CreatedDate) || (process.MandatoryDocDate <= DateTime.Now && documentId == null)))
+            if ((process.MandatoryNumberFiles > 0) && ((documentId != null && process.MandatoryDocDate <= _DocumentService.Find(documentId).CreatedDate) || (process.MandatoryDocDate <= DateTime.Now && documentId == null) || (process.MandatoryDocDate == null)))
             {              
                 if(files.Count < process.MandatoryNumberFiles)
                 {
