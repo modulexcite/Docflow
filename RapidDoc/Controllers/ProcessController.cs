@@ -333,6 +333,8 @@ namespace RapidDoc.Controllers
                     string contentType = fileWF.ContentType.ToString().ToUpper();
                     BinaryReader binaryReader = new BinaryReader(fileWF.InputStream);
                     byte[] data = binaryReader.ReadBytes(fileWF.ContentLength);
+                    
+                    string currentVersion = _DocumentService.GetAllXAMLDocument(id).OrderByDescending(x => x.Version).First().Version;
 
                     FileTable doc = new FileTable();
                     doc.DocumentFileId = id;
@@ -340,8 +342,8 @@ namespace RapidDoc.Controllers
                     doc.ContentType = contentType;
                     doc.ContentLength = fileWF.ContentLength;
                     doc.Data = data;
-                    doc.Version = "1";
-                    doc.VersionName = "Version 1";
+                    doc.Version = Convert.ToString(Convert.ToInt32(currentVersion) + 1);
+                    doc.VersionName = "Version " + Convert.ToString(Convert.ToInt32(currentVersion) + 1);
                     _DocumentService.SaveFile(doc);
 
                     return DownloadFileWF(id);
