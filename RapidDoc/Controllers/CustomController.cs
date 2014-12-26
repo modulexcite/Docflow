@@ -569,7 +569,7 @@ namespace RapidDoc.Controllers
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
                 {
-                    if (current.Any(x => x.ActivityName == "Начальник управление"))
+                    if (current.Any(x => x.ActivityName == "Начальник управления"))
                     {
                         return PartialView("USR_REQ_URP_RequestForHRCardWork_Edit_Manual2", model);
                     }

@@ -108,6 +108,7 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public Guid? CompanyTableId { get; set; }
 
+        [Display(Name = "DomainName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public Guid? DomainTableId { get; set; }
 
         [Display(Name = "Login", ResourceType = typeof(FieldNameRes.FieldNameResource))]

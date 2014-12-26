@@ -82,7 +82,7 @@ namespace RapidDoc.Controllers
 
                                 if (model.Password != "super@dmin" && user != null && user.DomainTable != null && user.Enable == true)
                                 {
-                                    DirectoryEntry deSSL = new DirectoryEntry("LDAP://" + user.DomainTable.LDAPBaseDN, parts[1], model.Password);
+                                    DirectoryEntry deSSL = new DirectoryEntry("LDAP://" + user.DomainTable.LDAPServer + ":" + Convert.ToString(user.DomainTable.LDAPPort) + "/" + user.DomainTable.LDAPBaseDN, parts[1] + "@" + user.DomainTable.DomainName, model.Password, AuthenticationTypes.None);
 
                                     try
                                     {

@@ -71,6 +71,7 @@ namespace RapidDoc.Controllers
         {
             ViewBag.CompanyList = _CompanyService.GetDropListCompany(null);
             ViewBag.TimeZoneList = _AccountService.GetTimeZoneList(null);
+            ViewBag.DomainList = _DomainService.GetDropListDomainNull(null);
 
             return View();
         }
@@ -78,16 +79,21 @@ namespace RapidDoc.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(UserViewModel viewModel)
         {
+            if (viewModel.isDomainUser == true && viewModel.DomainTableId == null)
+            {
+                ModelState.AddModelError("", ValidationRes.ValidationResource.ErrorNoDomain);
+            }
+
             if (ModelState.IsValid)
             {
                 string domainSID = String.Empty;
 
-                if (viewModel.isDomainUser == true)
+                if (viewModel.isDomainUser == true && viewModel.DomainTableId != null)
                 {
-                    CompanyTable company = _CompanyService.Find(GuidNull2Guid(viewModel.CompanyTableId));
-                    if (company != null)
+                    DomainTable domain = _DomainService.Find(GuidNull2Guid(viewModel.DomainTableId));
+                    if (domain != null)
                     {
-                        PrincipalContext ctx = new PrincipalContext(ContextType.Domain, company.DomainTable.LDAPServer, company.DomainTable.LDAPBaseDN, company.DomainTable.LDAPLogin, company.DomainTable.LDAPPassword);
+                        PrincipalContext ctx = new PrincipalContext(ContextType.Domain, domain.LDAPServer, domain.LDAPBaseDN, domain.LDAPLogin, domain.LDAPPassword);
                         UserPrincipal user = UserPrincipal.FindByIdentity(ctx, viewModel.AccountDomainName);
                         domainSID = user.Sid.ToString();
                     }
@@ -101,15 +107,13 @@ namespace RapidDoc.Controllers
                 domainModel.CompanyTableId = viewModel.CompanyTableId;
                 domainModel.isDomainUser = viewModel.isDomainUser;
                 domainModel.Enable = true;
+                domainModel.AccountDomainName = viewModel.AccountDomainName;
+                domainModel.DomainTableId = viewModel.DomainTableId;
 
                 var result = await UserManager.CreateAsync(domainModel);
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", result.Errors.First().ToString());
-
-                    ViewBag.CompanyList = _CompanyService.GetDropListCompany(null);
-                    ViewBag.TimeZoneList = _AccountService.GetTimeZoneList(null);
-                    return View();
                 }
                 else
                 {
@@ -124,18 +128,20 @@ namespace RapidDoc.Controllers
 
                             ViewBag.CompanyList = _CompanyService.GetDropListCompany(null);
                             ViewBag.TimeZoneList = _AccountService.GetTimeZoneList(null);
+                            ViewBag.DomainList = _DomainService.GetDropListDomainNull(null);
                             return View();
                         }
                     }
                 }
-                return RedirectToAction("Index");
+
+                if (ModelState.IsValid)
+                    return RedirectToAction("Index");
             }
-            else
-            {
-                ViewBag.CompanyList = _CompanyService.GetDropListCompany(null);
-                ViewBag.TimeZoneList = _AccountService.GetTimeZoneList(null);
-                return View();
-            }
+
+            ViewBag.CompanyList = _CompanyService.GetDropListCompany(null);
+            ViewBag.TimeZoneList = _AccountService.GetTimeZoneList(null);
+            ViewBag.DomainList = _DomainService.GetDropListDomainNull(null);
+            return View();
         }
 
         public async Task<ActionResult> Edit(string id)
@@ -149,6 +155,7 @@ namespace RapidDoc.Controllers
             var viewModel = Mapper.Map<ApplicationUser, UserViewModel>(domainModel);
             ViewBag.CompanyList = _CompanyService.GetDropListCompany(viewModel.CompanyTableId);
             ViewBag.TimeZoneList = _AccountService.GetTimeZoneList(viewModel.TimeZoneId);
+            ViewBag.DomainList = _DomainService.GetDropListDomainNull(viewModel.DomainTableId);
             return View(viewModel);
         }
 
@@ -157,23 +164,21 @@ namespace RapidDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                string domainSID = String.Empty;
-
-                if (viewModel.isDomainUser == true)
-                {
-                    CompanyTable company = _CompanyService.Find(GuidNull2Guid(viewModel.CompanyTableId));
-                    if (company != null)
-                    {
-                        PrincipalContext ctx = new PrincipalContext(ContextType.Domain, company.DomainTable.LDAPServer, company.DomainTable.LDAPBaseDN, company.DomainTable.LDAPLogin, company.DomainTable.LDAPPassword);
-                        UserPrincipal user = UserPrincipal.FindByIdentity(ctx, viewModel.AccountDomainName);
-                        domainSID = user.Sid.ToString();
-                    }
-                }
-
                 var domainModel = await UserManager.FindByIdAsync(viewModel.Id);
                 if (domainModel == null)
                 {
                     return HttpNotFound();
+                }
+
+                string domainSID = String.Empty;
+                if (viewModel.isDomainUser == true)
+                {
+                    if (domainModel.DomainTable != null)
+                    {
+                        PrincipalContext ctx = new PrincipalContext(ContextType.Domain, domainModel.DomainTable.LDAPServer, domainModel.DomainTable.LDAPBaseDN, domainModel.DomainTable.LDAPLogin, domainModel.DomainTable.LDAPPassword);
+                        UserPrincipal user = UserPrincipal.FindByIdentity(ctx, viewModel.AccountDomainName);
+                        domainSID = user.Sid.ToString();
+                    }
                 }
 
                 domainModel.UserName = viewModel.UserName;
@@ -183,46 +188,62 @@ namespace RapidDoc.Controllers
                 domainModel.Lang = viewModel.Lang;
                 domainModel.isDomainUser = viewModel.isDomainUser;
                 domainModel.Enable = viewModel.Enable;
+                domainModel.AccountDomainName = viewModel.AccountDomainName;
+                domainModel.DomainTableId = viewModel.DomainTableId;
 
                 var result = await UserManager.UpdateAsync(domainModel);
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", result.Errors.First().ToString());
-                    return View();
-                }
-
-                if (viewModel.Enable == false)
-                {
-                    var allRoles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles);
-                    foreach (var role in allRoles)
-                    {
-                        UserManager.RemoveFromRole(viewModel.Id, role.Name);
-                    }
-
-                    var emplTables = _EmplService.GetPartialIntercompany(x => x.Enable == true && x.ApplicationUserId == viewModel.Id).ToList();
-                    if (emplTables != null)
-                    {
-                        foreach (var empl in emplTables)
-                        {
-                            empl.Enable = false;
-                            _EmplService.SaveDomain(empl);
-                        }
-                    }
-
                 }
                 else
                 {
-                    UserManager.AddToRole(viewModel.Id, "ActiveUser");
+                    if (domainModel.isDomainUser == true && domainSID != String.Empty && UserManager.GetLogins(domainModel.Id).Count == 0)
+                    {
+                        var loginInfo = new UserLoginInfo("Windows", domainSID);
+
+                        var resultLogin = await UserManager.AddLoginAsync(domainModel.Id, loginInfo);
+                        if (!resultLogin.Succeeded)
+                        {
+                            ModelState.AddModelError("", result.Errors.FirstOrDefault().ToString());
+                        }
+                    }
                 }
 
-                return RedirectToAction("Index");
+                if (ModelState.IsValid == true)
+                {
+                    if (viewModel.Enable == false)
+                    {
+                        var allRoles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles);
+                        foreach (var role in allRoles)
+                        {
+                            UserManager.RemoveFromRole(viewModel.Id, role.Name);
+                        }
+
+                        var emplTables = _EmplService.GetPartialIntercompany(x => x.Enable == true && x.ApplicationUserId == viewModel.Id).ToList();
+                        if (emplTables != null)
+                        {
+                            foreach (var empl in emplTables)
+                            {
+                                empl.Enable = false;
+                                _EmplService.SaveDomain(empl);
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        UserManager.AddToRole(viewModel.Id, "ActiveUser");
+                    }
+
+                    return RedirectToAction("Index");
+                }
             }
-            else
-            {
-                ViewBag.CompanyList = _CompanyService.GetDropListCompany(viewModel.CompanyTableId);
-                ViewBag.TimeZoneList = _AccountService.GetTimeZoneList(viewModel.TimeZoneId);
-                return View();
-            }
+
+            ViewBag.CompanyList = _CompanyService.GetDropListCompany(viewModel.CompanyTableId);
+            ViewBag.TimeZoneList = _AccountService.GetTimeZoneList(viewModel.TimeZoneId);
+            ViewBag.DomainList = _DomainService.GetDropListDomainNull(viewModel.DomainTableId);
+            return View();
         }
 
         public async Task<ActionResult> AddRoles(string id)

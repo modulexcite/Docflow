@@ -13,7 +13,6 @@
     <fieldset>
         <legend></legend>
         @Html.HiddenFor(model => model.Id)
-        @Html.HiddenFor(model => model.AccountDomainName)
 
         <div class="editor-label">
             @Html.LabelForRequired(model => model.UserName)
@@ -21,6 +20,14 @@
         <div class="editor-field">
             @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @size = 255, @maxlength = 255, placeholder = "IvanIvanov", @autofocus = "required", @x_webkit_speech = "" })
             @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.AccountDomainName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.AccountDomainName, new { @class = "form-control", @size = 255, @maxlength = 255, placeholder = "IvanIvanov", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.AccountDomainName)
         </div>
 
         <div class="editor-label">
@@ -37,6 +44,14 @@
         <div class="editor-field">
             @Html.DropDownList("CompanyTableId", (IEnumerable<SelectListItem>)ViewBag.CompanyList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
             @Html.ValidationMessageFor(model => model.CompanyTableId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.DomainTableId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("DomainTableId", (IEnumerable<SelectListItem>)ViewBag.DomainList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.DomainTableId)
         </div>
 
         <div class="editor-label">
