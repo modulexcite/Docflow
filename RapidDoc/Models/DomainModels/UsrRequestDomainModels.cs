@@ -693,6 +693,15 @@ namespace RapidDoc.Models.DomainModels
         public string Reason { get; set; }
     }
 
+    public class USR_REQ_IT_CAP_AccessRightInternetBGP_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+    }
+
     public class USR_REQ_IT_CAP_DelegationDocflow_Table : BasicDocumentTable
     {
         [Required]

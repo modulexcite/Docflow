@@ -1009,6 +1009,18 @@ namespace RapidDoc.Models.ViewModels
         public string Reason { get; set; }
     }
 
+    public class USR_REQ_IT_CAP_AccessRightInternetBGP_View : BasicDocumentView
+    {
+        [Display(Name = "Пользователь")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Users { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Обоснование")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Reason { get; set; }
+    }
+
     public class USR_REQ_IT_CAP_DelegationDocflow_View : BasicDocumentView
     {
         [Display(Name = "С пользователя")]
