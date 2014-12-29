@@ -144,6 +144,12 @@ namespace RapidDoc.Controllers
             return value ?? Guid.Empty;
         }
 
+        public DateTime GetLocalTime(DateTime value, string timeZone)
+        {
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            return TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(value), timeZoneInfo);
+        }
+
         [AllowAnonymous]
         public ActionResult GetCompanyList()
         {

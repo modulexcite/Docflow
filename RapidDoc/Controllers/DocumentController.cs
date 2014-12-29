@@ -515,6 +515,7 @@ namespace RapidDoc.Controllers
             {
                 BinaryReader binaryReader = new BinaryReader(filelist.InputStream);
                 byte[] data = binaryReader.ReadBytes(filelist.ContentLength);
+                ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
 
                 var thumbnail = new byte[] { };
                 contentType = filelist.ContentType.ToString().ToUpper();
@@ -530,6 +531,17 @@ namespace RapidDoc.Controllers
                 doc.Thumbnail = thumbnail;
 
                 Guid Id = _DocumentService.SaveFile(doc);
+
+                string createdUser = String.Empty;
+                EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == doc.ApplicationUserCreatedId && x.CompanyTableId == user.CompanyTableId);
+                if (emplTable == null)
+                {
+                    createdUser = doc.ApplicationUserCreated.UserName;
+                }
+                else
+                {
+                    createdUser = emplTable.FullName;
+                }
 
                 if (thumbnail.Length == 0)
                 {
@@ -550,7 +562,9 @@ namespace RapidDoc.Controllers
                     url = @"/Document/DownloadFile/" + Id.ToString(),
                     deleteUrl = @"/Document/DeleteFile/" + Id.ToString(),
                     thumbnailUrl = @"data:image/png;base64," + Convert.ToBase64String(thumbnail),
-                    deleteType = "DELETE"
+                    deleteType = "DELETE",
+                    createdUser = createdUser,
+                    createdDate = GetLocalTime(doc.CreatedDate, user.TimeZoneId).ToString()
                 });
             }
             else
@@ -564,7 +578,9 @@ namespace RapidDoc.Controllers
                     url = "",
                     deleteUrl = "",
                     thumbnailUrl = "",
-                    deleteType = "DELETE"
+                    deleteType = "DELETE",
+                    createdUser = "",
+                    createdDate = ""
                 });
             }
             
@@ -583,7 +599,9 @@ namespace RapidDoc.Controllers
         public JsonResult GetAllFileDocument(Guid id)
         {
             var statuses = new List<ViewDataUploadFilesResult>();
-            var files = _DocumentService.GetAllFilesDocument(id);          
+            var files = _DocumentService.GetAllFilesDocument(id);
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+            DocumentTable document = _DocumentService.FirstOrDefault(x => x.FileId == id);
 
             foreach (var file in files)
             {
@@ -607,6 +625,22 @@ namespace RapidDoc.Controllers
                     thumbnail = file.Thumbnail;
                 }
 
+                string createdUser = String.Empty;
+                EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == file.ApplicationUserCreatedId && x.CompanyTableId == file.ApplicationUserCreated.CompanyTableId);
+                if(emplTable == null)
+                {
+                    createdUser = file.ApplicationUserCreated.UserName;
+                }
+                else
+                {
+                    createdUser = emplTable.FullName;
+                }
+
+                string deleteType = "DELETE";
+                if(!CheсkFileRightDelete(file, user, document))
+                {
+                    deleteType = String.Empty;
+                }
 
                 statuses.Add(new ViewDataUploadFilesResult()
                 {
@@ -615,10 +649,11 @@ namespace RapidDoc.Controllers
                     url = @"/Document/DownloadFile/" + file.Id.ToString(),
                     deleteUrl = @"/Document/DeleteFile/" + file.Id.ToString(),
                     thumbnailUrl = @"data:image/png;base64," + Convert.ToBase64String(thumbnail),
-                    deleteType = "DELETE"
+                    deleteType = deleteType,
+                    createdUser = createdUser,
+                    createdDate = GetLocalTime(file.CreatedDate, user.TimeZoneId).ToString()
                 });
             }
-
             
             var uploadedFiles = new
             {
@@ -628,6 +663,28 @@ namespace RapidDoc.Controllers
             JsonResult result = Json(uploadedFiles, JsonRequestBehavior.AllowGet);
             result.ContentType = "text/plain";
             return result;
+        }
+
+        private bool CheсkFileRightDelete(FileTable fileTable, ApplicationUser user, DocumentTable document)
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+            if(UserManager.IsInRole(user.Id, "Administrator"))
+            {
+                return true;
+            }
+
+            var steps = _DocumentService.GetCurrentSignStep(document.Id, "", user);
+            foreach (var step in steps)
+            {
+                if (step.StartDateSLA < fileTable.CreatedDate && fileTable.ApplicationUserCreatedId == user.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private byte[] GetThumbnail(byte[] fileData, string contentType)
@@ -669,8 +726,15 @@ namespace RapidDoc.Controllers
         public JsonResult DeleteFile(Guid Id)
         {
             Dictionary<string, bool> values = new Dictionary<string, bool>();
-            string fileName = _DocumentService.DeleteFile(Id);
-            values.Add(fileName, true);
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+            FileTable file = _DocumentService.GetFile(Id);
+            DocumentTable document = _DocumentService.FirstOrDefault(x => x.FileId == file.DocumentFileId);
+
+            if (CheсkFileRightDelete(file, user, document))
+            {
+                string fileName = _DocumentService.DeleteFile(Id);
+                values.Add(fileName, true);
+            }
 
             var deletedFiles = new
             {

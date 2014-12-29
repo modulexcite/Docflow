@@ -32,12 +32,37 @@
         @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "View" })
             <br class="hidden-print">
             <h3 class="hidden-print">@UIElementRes.UIElement.AttachedFiles</h3>
+            @if (!String.IsNullOrEmpty(Model.ProcessView.MandatoryFileTypes))
+            {
+                <h5 class="text-danger hidden-print">@UIElementRes.UIElement.SupportFileTypes: @Model.ProcessView.MandatoryFileTypes</h5>
+            }
+        <div class="row fileupload-buttonbar hidden-print">
+            <div class="col-lg-7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success btn-xs fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>@UIElementRes.UIElement.AddFiles</span>
+                    <input type="file" name="files" multiple>
+                </span>
+                <!-- The global file processing state -->
+                <span class="fileupload-process"></span>
+            </div>
+            <!-- The global progress state -->
+            <div class="col-lg-5 fileupload-progress fade">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+                <!-- The extended global progress state -->
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+        </div>
             <table role="presentation" class="table table-striped hidden-print"><tbody class="files"></tbody></table>
             <br>
             <h3 class="hidden-print">@UIElementRes.UIElement.ProgressWork</h3>
 
             @if (Model.WFTrackerItems.Count() > 0)
-        {
+            {
                 <div class="table-responsive">
                     <table class="table table-condensed">
                         <thead>
@@ -149,6 +174,82 @@
         }
 </fieldset>
 }
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i) { %}
+            <button class="btn btn-warning btn-xs cancel">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>@UIElementRes.UIElement.Cancel</span>
+            </button>
+            {% } %}
+        </td>
+    </tr>
+    {% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}">{%=file.name%}</a>
+                {% } else { %}
+                <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+            <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {%=file.createdUser%}
+        </td>
+        <td>
+            {%=file.createdDate%}
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+            {% if (file.deleteType != "") { %}
+            <button class="btn btn-danger btn-xs delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deletewithcredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
+                <i class="glyphicon glyphicon-trash"></i>
+                <span>@UIElementRes.UIElement.Delete</span>
+            </button>
+            {% } %}
+            {% } else { %}
+            <button class="btn btn-warning btn-xs cancel">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>@UIElementRes.UIElement.Cancel</span>
+            </button>
+            {% } %}
+        </td>
+    </tr>
+    {% } %}
+</script>
 
     <br class="hidden-print">
     <h3>@FieldNameRes.FieldNameResource.Comments</h3>
@@ -294,13 +395,13 @@
         {% } %}
     </script>
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/editentity")
-        @Scripts.Render("~/bundles/fileupload")
-    }
-    @section jsinit {
-        var urlFileUpload = "@Url.Action("GetAllFileDocument", "Document")";
-    }
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+    @Scripts.Render("~/bundles/fileupload")
+}
+@section jsinit {
+    var urlFileUpload = "@Url.Action("GetAllFileDocument", "Document")";
+}
 @section jslaunch {
 <script type="text/javascript">
     $(function () {

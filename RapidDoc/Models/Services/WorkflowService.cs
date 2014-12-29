@@ -128,7 +128,8 @@ namespace RapidDoc.Models.Services
         {
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
-            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == userName && x.Enable == true);
+            ApplicationUser userTable = _AccountService.FirstOrDefault(x => (x.UserName == userName || x.Id == userName) && x.Enable == true);
+
             if (userTable != null)
             {
                 userList.Add(new WFTrackerUsersTable { UserId = userTable.Id });

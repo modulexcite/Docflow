@@ -136,5 +136,7 @@ namespace RapidDoc.Models.ViewModels
         public string deleteUrl { get; set; }
         public string thumbnailUrl { get; set; }
         public string deleteType { get; set; }
+        public string createdUser { get; set; }
+        public string createdDate { get; set; }
     }
 }

@@ -23,6 +23,8 @@ namespace RapidDoc.Models.Services
         IQueryable<DocumentView> GetAllView();
         IQueryable<DocumentView> GetArchiveView();
         IEnumerable<DocumentTable> GetPartial(Expression<Func<DocumentTable, bool>> predicate);
+        DocumentTable FirstOrDefault(Expression<Func<DocumentTable, bool>> predicate);
+        DocumentView FirstOrDefaultView(Expression<Func<DocumentTable, bool>> predicate);
         IQueryable<DocumentView> GetAgreedDocument();
         DocumentTable Find(Guid? id);
         DocumentView FindView(Guid? id);
@@ -277,6 +279,15 @@ namespace RapidDoc.Models.Services
         public IEnumerable<DocumentTable> GetPartial(Expression<Func<DocumentTable, bool>> predicate)
         {
             return repoDocument.FindAll(predicate);
+        }
+
+        public DocumentTable FirstOrDefault(Expression<Func<DocumentTable, bool>> predicate)
+        {
+            return repoDocument.Find(predicate);
+        }
+        public DocumentView FirstOrDefaultView(Expression<Func<DocumentTable, bool>> predicate)
+        {
+            return Mapper.Map<DocumentTable, DocumentView>(FirstOrDefault(predicate));
         }
 
         public DocumentTable Find(Guid? id)
