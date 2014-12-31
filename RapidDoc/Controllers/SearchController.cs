@@ -32,12 +32,15 @@ namespace RapidDoc.Controllers
         [HttpPost]
         public ActionResult Index(SearchFormView model, string searchText)
         {
-            int blockSize = 5;
-            var documents = _Service.GetDocuments(1, blockSize, searchText);
+            if (!String.IsNullOrEmpty(searchText) && !String.IsNullOrWhiteSpace(searchText))
+            {
+                int blockSize = 5;
+                var documents = _Service.GetDocuments(1, blockSize, searchText);
 
-            ViewBag.SearchCount = _Service.GetPartialView(x => x.DocumentText.Contains(searchText)).Count() +
-                _Service.GetPartialView(x => x.DocumentTable.DocumentNum.Contains(searchText)).Count();
-            ViewBag.SearchResult = documents;
+                ViewBag.SearchCount = _Service.GetPartialView(x => x.DocumentText.Contains(searchText)).Count() +
+                    _Service.GetPartialView(x => x.DocumentTable.DocumentNum.Contains(searchText)).Count();
+                ViewBag.SearchResult = documents;
+            }
 
             return View(model);
         }
