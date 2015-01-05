@@ -131,6 +131,17 @@ namespace RapidDoc.Models.DomainModels
                 return string.Empty;
             }
         }
+
+        public string AliasCompanyName
+        {
+            get
+            {
+                if (this.CompanyTable != null)
+                    return this.CompanyTable.AliasCompanyName;
+
+                return string.Empty;
+            }
+        }
     }
 
     public class CommentTable : BasicCompanyNullTable
