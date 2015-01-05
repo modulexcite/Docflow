@@ -428,16 +428,16 @@ namespace RapidDoc.Controllers
 
                                 user.Enable = false;
                                 um.Update(user);
+                            }
 
-                                var emplTables = _EmplService.GetPartialIntercompany(x => x.Enable == true && x.ApplicationUserId == user.Id).ToList();
+                            var emplTables = _EmplService.GetPartialIntercompany(x => x.Enable == true && x.ApplicationUserId == user.Id).ToList();
 
-                                if (emplTables != null)
+                            if (emplTables != null)
+                            {
+                                foreach (var empl in emplTables)
                                 {
-                                    foreach (var empl in emplTables)
-                                    {
-                                        empl.Enable = false;
-                                        _EmplService.SaveDomain(empl);
-                                    }
+                                    empl.Enable = false;
+                                    _EmplService.SaveDomain(empl, "Admin", empl.CompanyTableId);
                                 }
                             }
                         }
@@ -456,7 +456,7 @@ namespace RapidDoc.Controllers
                                     foreach (var empl in emplTables)
                                     {
                                         empl.Enable = true;
-                                        _EmplService.SaveDomain(empl);
+                                        _EmplService.SaveDomain(empl, "Admin", empl.CompanyTableId);
                                     }
                                 }
                             }
