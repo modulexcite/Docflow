@@ -1368,6 +1368,26 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Contact { get; set; }
     }
+
+    public class USR_REQ_IT_CAP_RequestForITWeekend_View : BasicDocumentView
+    {
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Обоснование")]
+        public string Reason { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Управление/служба(отдел)")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дни выхода")]
+        public string Period { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Сотрудник (ФИО)")]
+        public string UserChooseManual1 { get; set; }
+    }
     #endregion
 
     #region Зиф

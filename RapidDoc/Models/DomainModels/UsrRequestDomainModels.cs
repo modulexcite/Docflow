@@ -956,6 +956,19 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Contact { get; set; }
     }
+    public class USR_REQ_IT_CAP_RequestForITWeekend_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+    }
     #endregion
 
     #region Зиф
