@@ -100,12 +100,19 @@ namespace RapidDoc.Models.Services
         }
         public List<SearchView> GetDocuments(int blockNumber, int blockSize, string searchText)
         {
-            int startIndex = (blockNumber - 1) * blockSize;
-            string searchString = searchText.Trim();
+            List<SearchView> result = new List<SearchView>();
+            if (!String.IsNullOrEmpty(searchText))
+            {
+                int startIndex = (blockNumber - 1) * blockSize;
+                string searchString = searchText.Trim();
 
-            var resultText = this.GetPartialView(x => x.DocumentText.Contains(searchString)).Skip(startIndex).Take(blockSize).ToList();
-            var resultNum = this.GetPartialView(x => x.DocumentTable.DocumentNum.Contains(searchString)).Skip(startIndex).Take(blockSize).ToList();
-            var result = resultNum.Concat(resultText).ToList();
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    var resultText = this.GetPartialView(x => x.DocumentText.Contains(searchString)).Skip(startIndex).Take(blockSize).ToList();
+                    var resultNum = this.GetPartialView(x => x.DocumentTable.DocumentNum.Contains(searchString)).Skip(startIndex).Take(blockSize).ToList();
+                    result = resultNum.Concat(resultText).ToList();
+                }
+            }
             return result;
         }
     }

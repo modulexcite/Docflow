@@ -82,7 +82,8 @@ function datepicker_init(lang) {
 
 function timepicker_init() {
     $('.timepicker').timepicker({
-        showMeridian: false
+        showMeridian: false,
+        showInputs: false
     });
 }
 
