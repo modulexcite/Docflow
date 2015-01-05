@@ -484,6 +484,25 @@ namespace RapidDoc.Controllers
             return PartialView("_Empty");
         }
 
+        public ActionResult GetManualRequestForITWeekend(RapidDoc.Models.ViewModels.USR_REQ_IT_CAP_RequestForITWeekend_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальники служб УИТ"))
+                    {
+                        return PartialView("USR_REQ_IT_CAP_RequestForITWeekend_Edit_Manual", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
         public ActionResult GetManualHRCardITR23(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITR2_View model)
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
