@@ -18,7 +18,7 @@ namespace RapidDoc.Models.Services
 {
     public interface IDocumentService
     {
-        Guid SaveDocument(dynamic model, string tableName, Guid processId, Guid fileId);
+        Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId, ApplicationUser user);
         IEnumerable<DocumentTable> GetAll();
         IQueryable<DocumentView> GetAllView();
         IQueryable<DocumentView> GetArchiveView();
@@ -28,16 +28,17 @@ namespace RapidDoc.Models.Services
         IQueryable<DocumentView> GetAgreedDocument();
         DocumentTable Find(Guid? id);
         DocumentView FindView(Guid? id);
-        dynamic GetDocument(Guid documentId, string tableName = "");
-        dynamic GetDocumentView(Guid documentId);
+        DocumentView Document2View(DocumentTable documentTable);
+        dynamic GetDocument(Guid refDocumentId, string tableName);
+        dynamic GetDocumentView(Guid refDocumentId, string tableName);
         dynamic RouteCustomModelView(string customModel);
         dynamic RouteCustomModelDomain(string customModel);
         dynamic RouteCustomRepository(string customModel);
         void UpdateDocument(DocumentTable domainTable, string currentUserId = "");
         void UpdateDocumentFields(dynamic viewTable, ProcessView processView);
         void SaveDocumentText(DocumentTable domainTable);
-        bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserId = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null);
-        bool isSignDocument(Guid documentId, Guid ProcessId, string currentUserId = "");
+        bool isShowDocument(DocumentTable documentTable, Guid ProcessId, ApplicationUser user, bool isAfterView = false);
+        bool isSignDocument(Guid documentId, Guid ProcessId, ApplicationUser user = null);
         IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserId = "", ApplicationUser user = null);
         SLAStatusList SLAStatus(Guid documentId, string currentUserId = "", ApplicationUser user = null);
         void SaveSignData(IEnumerable<WFTrackerTable> trackerTables, TrackerType trackerType);
@@ -92,10 +93,8 @@ namespace RapidDoc.Models.Services
             _ReviewDocLogService = reviewDocLogService;
         }
 
-        public Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId)
+        public Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId, ApplicationUser user)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
-
             var docuTable = new DocumentTable();
             docuTable.ProcessTableId = processId;
             docuTable.CreatedDate = DateTime.UtcNow;
@@ -299,30 +298,23 @@ namespace RapidDoc.Models.Services
             return Mapper.Map<DocumentTable, DocumentView>(Find(id));
         }
 
-        public dynamic GetDocument(Guid documentId, string tableName = "")
+        public DocumentView Document2View(DocumentTable documentTable)
         {
-            var documentTable = Find(documentId);
+            return Mapper.Map<DocumentTable, DocumentView>(documentTable);
+        }
 
-            if (tableName == String.Empty)
-            {
-                var processTable = repoProcess.Find(x => x.Id == documentTable.ProcessTableId);
-                tableName = processTable.TableName;
-            }
-
-            var domainModel = RouteCustomRepository(tableName).GetById(documentTable.RefDocumentId);
-
+        public dynamic GetDocument(Guid refDocumentId, string tableName)
+        {
+            var domainModel = RouteCustomRepository(tableName).GetById(refDocumentId);
             return domainModel;
         }
 
-        public dynamic GetDocumentView(Guid documentId)
+        public dynamic GetDocumentView(Guid refDocumentId, string tableName)
         {
-            var documentTable = Find(documentId);
-            var processTable = repoProcess.Find(x => x.Id == documentTable.ProcessTableId);
-
-            var viewTable = RouteCustomModelView(processTable.TableName);
-            var domainTable = GetDocument(documentId, processTable.TableName);
-            Type typeDomain = Type.GetType("RapidDoc.Models.DomainModels." + processTable.TableName + "_Table");
-            Type typeDomainView = Type.GetType("RapidDoc.Models.ViewModels." + processTable.TableName + "_View");
+            var viewTable = RouteCustomModelView(tableName);
+            var domainTable = GetDocument(refDocumentId, tableName);
+            Type typeDomain = Type.GetType("RapidDoc.Models.DomainModels." + tableName + "_Table");
+            Type typeDomainView = Type.GetType("RapidDoc.Models.ViewModels." + tableName + "_View");
             Mapper.CreateMap(typeDomain, typeDomainView);
             Mapper.Map(domainTable, viewTable, typeDomain, typeDomainView);
             return viewTable;
@@ -368,16 +360,8 @@ namespace RapidDoc.Models.Services
             _uow.Save();
         }
 
-        public bool isShowDocument(Guid documentId, Guid ProcessId, string currentUserId = "", bool isAfterView = false, ApplicationUser user = null, DocumentTable documentTable = null)
+        public bool isShowDocument(DocumentTable documentTable, Guid ProcessId, ApplicationUser user, bool isAfterView = false)
         {
-            if (user == null)
-            {
-                user = getCurrentUserId(currentUserId);
-            }
-
-            if (documentTable == null)
-                documentTable = Find(documentId);
-
             if (user.Id == documentTable.ApplicationUserCreatedId)
             {
                 return true;
@@ -387,22 +371,14 @@ namespace RapidDoc.Models.Services
 
             if (isAfterView == false)
             {
-                trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentId && x.SignUserId == null);
+                trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentTable.Id && x.SignUserId == null);
             }
             else
             {
-                trackerTables = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId);
+                trackerTables = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentTable.Id);
             }
 
             if (checkTrackUsers(trackerTables, user.Id))
-            {
-                return true;
-            }
-
-            ApplicationDbContext context = new ApplicationDbContext();
-            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-
-            if (UserManager.IsInRole(user.Id, "Administrator"))
             {
                 return true;
             }
@@ -439,19 +415,28 @@ namespace RapidDoc.Models.Services
                 }
             }
 
-            if(_DocumentReaderService.Contains(x => x.DocumentTableId == documentId && x.UserId == user.Id))
+            if (_DocumentReaderService.Contains(x => x.DocumentTableId == documentTable.Id && x.UserId == user.Id))
             {
                 return true;
             }
 
+            ApplicationDbContext context = new ApplicationDbContext();
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+            if (UserManager.IsInRole(user.Id, "Administrator"))
+            {
+                return true;
+            }
 
             return false;
         }
 
-        public bool isSignDocument(Guid documentId, Guid ProcessId, string currentUserId = "")
+        public bool isSignDocument(Guid documentId, Guid ProcessId, ApplicationUser user = null)
         {
             IEnumerable<WFTrackerTable> trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentId && x.SignUserId == null);
-            ApplicationUser user = getCurrentUserId(currentUserId);
+            
+            if (user == null)
+                user = getCurrentUserId();
 
             if(checkTrackUsers(trackerTables, user.Id))
             {
@@ -737,14 +722,12 @@ namespace RapidDoc.Models.Services
 
         public IEnumerable<FileTable> GetAllTemplatesDocument(Guid processId)
         {
-            ProcessTable process = _ProcessService.FirstOrDefault(x => x.Id == processId);
-            return repoFile.FindAll(x => x.DocumentFileId == process.Id && x.ContentType != "APPLICATION/XAML+XML");
+            return repoFile.FindAll(x => x.DocumentFileId == processId && x.ContentType != "APPLICATION/XAML+XML");
         }
 
         public IEnumerable<FileTable> GetAllXAMLDocument(Guid processId)
         {
-            ProcessTable process = _ProcessService.FirstOrDefault(x => x.Id == processId);
-            return repoFile.FindAll(x => x.DocumentFileId == process.Id && x.ContentType == "APPLICATION/XAML+XML");
+            return repoFile.FindAll(x => x.DocumentFileId == processId && x.ContentType == "APPLICATION/XAML+XML");
         }
 
         public bool FileContains(Guid documentFileId)

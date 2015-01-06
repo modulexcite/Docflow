@@ -22,7 +22,7 @@ namespace RapidDoc.Models.Services
         IEnumerable<HistoryUserView> GetPartialView(Expression<Func<HistoryUserTable, bool>> predicate);
         HistoryUserTable FirstOrDefault(Expression<Func<HistoryUserTable, bool>> predicate);
         HistoryUserView FirstOrDefaultView(Expression<Func<HistoryUserTable, bool>> predicate);
-        void SaveDomain(HistoryUserTable domainTable);
+        void SaveDomain(HistoryUserTable domainTable, string userId);
         HistoryUserTable Find(Guid id);
         HistoryUserView FindView(Guid id);
     }
@@ -120,9 +120,8 @@ namespace RapidDoc.Models.Services
             }
             return item;
         }
-        public void SaveDomain(HistoryUserTable domainTable)
+        public void SaveDomain(HistoryUserTable domainTable, string userId)
         {
-            string userId = HttpContext.Current.User.Identity.GetUserId();
             if (domainTable.Id == Guid.Empty)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;

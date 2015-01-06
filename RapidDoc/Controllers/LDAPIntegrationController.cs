@@ -86,6 +86,7 @@ namespace RapidDoc.Controllers
             ds.PropertiesToLoad.Add("sn");
             ds.PropertiesToLoad.Add("manager");
             ds.PropertiesToLoad.Add("sAMAccountName");
+            ds.PropertiesToLoad.Add("objectGUID");
 
             foreach (SearchResult result in ds.FindAll())
             {
@@ -104,6 +105,8 @@ namespace RapidDoc.Controllers
                     string userName = string.Empty;
                     string manager = string.Empty;
                     string[] emplName = new string[3];
+                    byte[] GlobalId = null;
+                    Guid GlobalGuid = Guid.Empty;
 
                     ldapData = result.Properties["description"][0].ToString();
                     mail = result.Properties["mail"][0].ToString();
@@ -130,8 +133,13 @@ namespace RapidDoc.Controllers
                     {
                         manager = result.Properties["manager"][0].ToString();
                     }
+                    if (result.Properties.Contains("objectGUID"))
+                    {
+                        GlobalId = (byte[])result.Properties["objectGUID"][0];
+                        GlobalGuid = new Guid(GlobalId);
+                    }
 
-                    if (emplName[0] != null && emplName[1] != null && !String.IsNullOrEmpty(userid))
+                    if (emplName[0] != null && emplName[1] != null && !String.IsNullOrEmpty(userid) && GlobalGuid != Guid.Empty)
                     {
                         if (afterUpdate == true)
                         {
@@ -150,7 +158,7 @@ namespace RapidDoc.Controllers
                                     var userTable = um.FindByName(ManagerUserId);
                                     manager = userTable != null ? userTable.Id : String.Empty;
 
-                                    EmplUpdateIntegration(emplName[1], emplName[0], emplName[2], _item.Id, manager);
+                                    EmplUpdateIntegration(GlobalGuid, emplName[1], emplName[0], emplName[2], _item.Id, manager);
                                 }
                             }
                             catch 
@@ -165,14 +173,14 @@ namespace RapidDoc.Controllers
                             string domainSID = user.Sid.ToString();
 
                             String ApplicationUserId = UserIntegration(userid, mail, domainSID, _item);
-                            EmplIntegration(emplName[1], emplName[0], emplName[2], telephone, mobile, ApplicationUserId, _department, titleId, _item.Id, manager);
+                            EmplIntegration(GlobalGuid, emplName[1], emplName[0], emplName[2], telephone, mobile, ApplicationUserId, _department, titleId, _item.Id, manager);
                         }
                     }
                 }
             }
         }
 
-        private void EmplUpdateIntegration(string _firstname, string _secondname, string _middlename, Guid _company, string _managerUserId)
+        private void EmplUpdateIntegration(Guid _globalId, string _firstname, string _secondname, string _middlename, Guid _company, string _managerUserId)
         {
             IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
             Guid? manageId = null;
@@ -186,14 +194,10 @@ namespace RapidDoc.Controllers
                         && x.ApplicationUserId == _managerUserId).Id;
 
                     if (_EmplService.Contains(x => x.CompanyTableId == _company
-                        && x.FirstName == _firstname
-                        && x.MiddleName == _middlename
-                        && x.SecondName == _secondname))
+                        && x.LDAPGlobalId == _globalId))
                     {
                         EmplTable empl = _EmplService.FirstOrDefault(x => x.CompanyTableId == _company
-                            && x.FirstName == _firstname
-                            && x.MiddleName == _middlename
-                            && x.SecondName == _secondname);
+                            && x.LDAPGlobalId == _globalId);
 
                         empl.ManageId = manageId;
                         _EmplService.SaveDomain(empl, "Admin", _company);
@@ -202,7 +206,7 @@ namespace RapidDoc.Controllers
             }
         }
 
-        private void EmplIntegration(string _firstname, string _secondname, string _middlename, string _workphone, string _mobilephone, string _userId, Guid _departmentId, Guid _titleId, Guid _company, string _managerUserId)
+        private void EmplIntegration(Guid _globalId, string _firstname, string _secondname, string _middlename, string _workphone, string _mobilephone, string _userId, Guid _departmentId, Guid _titleId, Guid _company, string _managerUserId)
         {
             IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
             IWorkScheduleService _WorkScheduleService = DependencyResolver.Current.GetService<IWorkScheduleService>();
@@ -218,14 +222,24 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            if (!_EmplService.Contains(x => x.CompanyTableId == _company 
-                && x.FirstName == _firstname
-                && x.MiddleName == _middlename
-                && x.SecondName == _secondname))
+            //MIGRATION CODE
+            if (_EmplService.Contains(x => x.CompanyTableId == _company
+                && x.FirstName == _firstname && x.SecondName == _secondname && x.MiddleName == _middlename))
+            {
+                EmplTable empl = _EmplService.FirstOrDefault(x => x.CompanyTableId == _company
+                    && x.FirstName == _firstname && x.SecondName == _secondname && x.MiddleName == _middlename);
+
+                empl.LDAPGlobalId = _globalId;
+                _EmplService.SaveDomain(empl, "Admin", _company);
+            }
+
+            if (!_EmplService.Contains(x => x.CompanyTableId == _company
+                && x.LDAPGlobalId == _globalId))
             {
                 _EmplService.SaveDomain(new EmplTable()
                 {
                     isIntegratedLDAP = true,
+                    LDAPGlobalId = _globalId,
                     FirstName = _firstname,
                     SecondName = _secondname,
                     MiddleName = _middlename,
@@ -241,9 +255,7 @@ namespace RapidDoc.Controllers
             else
             {
                 EmplTable empl = _EmplService.FirstOrDefault(x => x.CompanyTableId == _company
-                    && x.FirstName == _firstname
-                    && x.MiddleName == _middlename
-                    && x.SecondName == _secondname);
+                    && x.LDAPGlobalId == _globalId);
 
                 empl.FirstName = _firstname;
                 empl.SecondName = _secondname;

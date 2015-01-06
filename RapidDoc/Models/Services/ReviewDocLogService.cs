@@ -21,7 +21,7 @@ namespace RapidDoc.Models.Services
         IEnumerable<ReviewDocLogTable> GetAll();
         IEnumerable<ReviewDocLogTable> GetPartial(Expression<Func<ReviewDocLogTable, bool>> predicate);
         ReviewDocLogTable FirstOrDefault(Expression<Func<ReviewDocLogTable, bool>> predicate);
-        void SaveDomain(ReviewDocLogTable domainTable, string currentUserName = "");
+        void SaveDomain(ReviewDocLogTable domainTable, string currentUserName = "", ApplicationUser user = null);
         ReviewDocLogTable Find(Guid id);
         bool isNotReviewDocCurrentUser(Guid documentId, string currentUserName = "", ApplicationUser user = null);
         bool isArchive(Guid documentId, string currentUserName = "", ApplicationUser user = null);
@@ -52,9 +52,10 @@ namespace RapidDoc.Models.Services
         {
             return repo.Find(predicate);
         }
-        public void SaveDomain(ReviewDocLogTable domainTable, string currentUserName = "")
+        public void SaveDomain(ReviewDocLogTable domainTable, string currentUserName = "", ApplicationUser user = null)
         {
-            ApplicationUser user = getCurrentUserName(currentUserName);
+            if(user == null)
+                user = getCurrentUserName(currentUserName);
             if (repo.Contains(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == domainTable.DocumentTableId) == false)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;

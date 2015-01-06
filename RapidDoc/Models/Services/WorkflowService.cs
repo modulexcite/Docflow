@@ -35,7 +35,7 @@ namespace RapidDoc.Models.Services
         WFUserFunctionResult WFUsersDocument(Guid documentId, string currentUserId);
         WFUserFunctionResult WFChooseManual(Guid documentId, Dictionary<string, Object> documentData, string manualKey, string currentUserId);
         string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location);
-        void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData);
+        void RunWorkflow(DocumentTable documentTable, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData);
         void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUserId, string workflowId, bool useManual, int slaOffset, bool executionStep);
@@ -165,14 +165,21 @@ namespace RapidDoc.Models.Services
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
 
-            ApplicationDbContext context = new ApplicationDbContext();
-            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            var users = RoleManager.FindByName(roleName).Users;
-            foreach (IdentityUserRole user in users)
+            if (!String.IsNullOrEmpty(roleName))
             {
-                userList.Add(new WFTrackerUsersTable { UserId = user.UserId });
+                ApplicationDbContext context = new ApplicationDbContext();
+                RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+
+                if (RoleManager.RoleExists(roleName))
+                {
+                    var users = RoleManager.FindByName(roleName).Users;
+                    foreach (IdentityUserRole user in users)
+                    {
+                        userList.Add(new WFTrackerUsersTable { UserId = user.UserId });
+                    }
+                    RoleManager.Dispose();
+                }
             }
-            RoleManager.Dispose();
             return new WFUserFunctionResult { Users = userList, Skip = checkSkipStep(documentId, userList, documentTable.ApplicationUserCreatedId) };
         }
         public WFUserFunctionResult WFStaffStructure(Guid documentId, Expression<Func<EmplTable, bool>> predicate)
@@ -244,15 +251,15 @@ namespace RapidDoc.Models.Services
 
             return String.Empty;
         }
-        public void RunWorkflow(Guid documentId, string TableName, IDictionary<string, object> documentData)
+        public void RunWorkflow(DocumentTable documentTable, string TableName, IDictionary<string, object> documentData)
         {        
             SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
-            FileTable fileTableWF = GetActualFileWF(TableName, documentId);
+            FileTable fileTableWF = GetActualFileWF(TableName, documentTable);
             Activity activity = ChooseActualWorkflow(TableName, fileTableWF);
-            _WorkflowTrackerService.SaveTrackList(documentId, printActivityTree(activity));
-            StartAndPersistInstance(documentId, DocumentState.Agreement, documentData, instanceStore, activity, fileTableWF);
+            _WorkflowTrackerService.SaveTrackList(documentTable.Id, printActivityTree(activity));
+            StartAndPersistInstance(documentTable.Id, DocumentState.Agreement, documentData, instanceStore, activity, fileTableWF);
             DeleteInstanceStoreOwner(instanceStore);
-            _EmailService.SendExecutorEmail(documentId);
+            _EmailService.SendExecutorEmail(documentTable.Id);
         }
         public void AgreementWorkflowApprove(Guid documentId, string TableName, IDictionary<string, object> documentData)
         {
@@ -267,7 +274,7 @@ namespace RapidDoc.Models.Services
             this.printActivityTree(activity);
             LoadAOrCompleteInstance(documentId, DocumentState.Agreement, TrackerType.Approved, documentData, instanceStore, activity, instanceInfo);
             DeleteInstanceStoreOwner(instanceStore);
-            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.ApproveDocument });
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.ApproveDocument }, HttpContext.Current.User.Identity.GetUserId());
             _EmailService.SendExecutorEmail(documentId);
         }
         public void AgreementWorkflowReject(Guid documentId, string TableName, IDictionary<string, object> documentData)
@@ -283,7 +290,7 @@ namespace RapidDoc.Models.Services
             this.printActivityTree(activity);
             LoadAOrCompleteInstance(documentId, DocumentState.Cancelled, TrackerType.Cancelled, documentData, instanceStore, activity, instanceInfo);
             DeleteInstanceStoreOwner(instanceStore);
-            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.CancelledDocument });
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.CancelledDocument }, HttpContext.Current.User.Identity.GetUserId());
             _EmailService.SendInitiatorRejectEmail(documentId);
         }
         private SqlWorkflowInstanceStore SetupInstanceStore()
@@ -448,11 +455,9 @@ namespace RapidDoc.Models.Services
             }
         }
 
-        public FileTable GetActualFileWF(string _tableName, Guid documentId)
+        public FileTable GetActualFileWF(string _tableName, DocumentTable documentTable)
         {
-            DocumentTable documentTable = _DocumentService.Find(documentId);
             FileTable fileWF = _DocumentService.GetAllXAMLDocument(documentTable.ProcessTableId).OrderByDescending(x => x.Version).FirstOrDefault();
-
             return fileWF;
         }
         public Activity ChooseActualWorkflow(string _tableName, FileTable fileWF, bool flag = true)

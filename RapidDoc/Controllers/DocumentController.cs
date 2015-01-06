@@ -22,6 +22,7 @@ using RapidDoc.Models.Repository;
 using RapidDoc.Models.Infrastructure;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Threading.Tasks;
 
 namespace RapidDoc.Controllers
 {
@@ -139,23 +140,24 @@ namespace RapidDoc.Controllers
                         ModelState.Add(kvp.Key, kvp.Value);
             }
 
-            DocumentView docuView = _DocumentService.FindView(id);
-            ProcessView process = _ProcessService.FindView(GuidNull2Guid(docuView.ProcessTableId));
-            if (docuView == null || process == null || _DocumentService.isShowDocument(GuidNull2Guid(docuView.Id), GuidNull2Guid(process.Id), "", isAfterView) == false)
-            {
-                return RedirectToAction("PageNotFound", "Error");
-            }
-
-            _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = id });
-
+            DocumentTable documentTable = _DocumentService.Find(id);
+            DocumentView docuView = _DocumentService.Document2View(documentTable);
+            ProcessView process = _ProcessService.FindView(documentTable.ProcessTableId);
+            ApplicationUser currentUser = _AccountService.Find(User.Identity.GetUserId());
             EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuView.ApplicationUserCreatedId && x.CompanyTableId == docuView.CompanyTableId);
-            ApplicationUser userTable = _AccountService.Find(docuView.ApplicationUserCreatedId);
-            if (emplTable == null || userTable == null)
+
+            if (documentTable == null || docuView == null || process == null || currentUser == null || emplTable == null || _DocumentService.isShowDocument(documentTable, GuidNull2Guid(process.Id), currentUser, isAfterView) == false)
             {
                 return RedirectToAction("PageNotFound", "Error");
             }
 
-            object viewModel = InitialViewShowDocument(id, process, docuView, userTable, emplTable);
+            Task.Run(() =>
+            {
+                IReviewDocLogService _ReviewDocLogServiceTask = DependencyResolver.Current.GetService<IReviewDocLogService>();
+                _ReviewDocLogServiceTask.SaveDomain(new ReviewDocLogTable { DocumentTableId = id }, "", currentUser);
+            });
+
+            object viewModel = InitialViewShowDocument(documentTable, process, docuView, currentUser, emplTable);
             return View(viewModel);
         }
         
@@ -170,12 +172,12 @@ namespace RapidDoc.Controllers
                 _CommentService.SaveDomain(new CommentTable { Comment = lastComment, DocumentTableId = id });
             }
 
-            DocumentView docuView = _DocumentService.FindView(id);
+            DocumentView docuView = _DocumentService.Document2View(docuTable);
+            ApplicationUser currentUser = _AccountService.Find(User.Identity.GetUserId());
+            if (currentUser == null) return RedirectToAction("PageNotFound", "Error");
+
             if(rejectDoc != String.Empty)
             {
-                ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
-                if (userTable == null) return RedirectToAction("PageNotFound", "Error");
-
                 DateTime checkRejectDate = DateTime.UtcNow.AddMinutes(-5);
                 HistoryUserTable history = _HistoryUserService.FirstOrDefault(x => x.DocumentTableId == id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
                 if (history != null && history.CreatedDate > checkRejectDate)
@@ -183,19 +185,15 @@ namespace RapidDoc.Controllers
                     checkRejectDate = history.CreatedDate;
                 }
 
-                if (!_CommentService.Contains(x => x.ApplicationUserCreatedId == userTable.Id && x.DocumentTableId == id && x.CreatedDate >= checkRejectDate))
+                if (!_CommentService.Contains(x => x.ApplicationUserCreatedId == currentUser.Id && x.DocumentTableId == id && x.CreatedDate >= checkRejectDate))
                 {
-                    EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuTable.ApplicationUserCreatedId);
-                    object viewModel = InitialViewShowDocument(id, process, docuView, userTable, emplTable);
                     ModelState.AddModelError(string.Empty, UIElementRes.UIElement.RejectReason);
-
-                    return View("~/Views/Document/ShowDocument.cshtml", viewModel);
                 }
             }
 
             if (ModelState.IsValid)
             {
-                if (_DocumentService.isSignDocument(id, processId))
+                if (_DocumentService.isSignDocument(id, processId, currentUser))
                 {
                     if (approveDoc != String.Empty)
                     {
@@ -209,24 +207,22 @@ namespace RapidDoc.Controllers
                 return RedirectToAction("Index", "Document");
             }
 
-            ApplicationUser userResult = _AccountService.Find(User.Identity.GetUserId());
-            EmplTable emplResult = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuView.ApplicationUserCreatedId && x.CompanyTableId == userResult.CompanyTableId);
-            object viewModelResult = InitialViewShowDocument(id, process, docuView, userResult, emplResult);
-
+            EmplTable emplResult = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuView.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
+            object viewModelResult = InitialViewShowDocument(docuTable, process, docuView, currentUser, emplResult);
             return View("~/Views/Document/ShowDocument.cshtml", viewModelResult);
         }
 
-        private object InitialViewShowDocument(Guid id, ProcessView process, DocumentView docuView, ApplicationUser userTable, EmplTable emplTable)
+        private object InitialViewShowDocument(DocumentTable documentTable, ProcessView process, DocumentView docuView, ApplicationUser userTable, EmplTable emplTable)
         {
             var viewModel = new DocumentComposite();
             viewModel.ProcessView = process;
 
-            docuView.isSign = _DocumentService.isSignDocument(GuidNull2Guid(docuView.Id), GuidNull2Guid(docuView.ProcessTableId));
-            docuView.isArchive = _ReviewDocLogService.isArchive(GuidNull2Guid(docuView.Id), "", userTable);
+            docuView.isSign = _DocumentService.isSignDocument(documentTable.Id, documentTable.ProcessTableId, userTable);
+            docuView.isArchive = _ReviewDocLogService.isArchive(documentTable.Id, "", userTable);
             viewModel.DocumentView = docuView;
-            viewModel.docData = _DocumentService.GetDocumentView(id);
+            viewModel.docData = _DocumentService.GetDocumentView(documentTable.RefDocumentId, process.TableName);
             viewModel.fileId = docuView.FileId;
-            viewModel.WFTrackerItems = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id);
+            viewModel.WFTrackerItems = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == documentTable.Id);
 
             ViewBag.CreatedDate = _SystemService.ConvertDateTimeToLocal(userTable, docuView.CreatedDate);
             if (emplTable != null)
@@ -244,9 +240,9 @@ namespace RapidDoc.Controllers
                 ViewBag.CompanyName = String.Empty;
             }
 
-            ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuView.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
-            ViewBag.AddReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuView.Id && x.HistoryType == Models.Repository.HistoryType.AddReader);
-            ViewBag.RemoveReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == docuView.Id && x.HistoryType == Models.Repository.HistoryType.RemoveReader);
+            ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
+            ViewBag.AddReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.AddReader);
+            ViewBag.RemoveReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.RemoveReader);
 
             return viewModel;
         }
@@ -266,24 +262,25 @@ namespace RapidDoc.Controllers
             DateTime endTime = new DateTime(date.Year, date.Month, date.Day) + process.EndWorkTime;
             if ((startTime < date || date > endTime) && process.StartWorkTime != process.EndWorkTime) return RedirectToAction("PageNotFound", "Error");
 
-            ApplicationDbContext context = new ApplicationDbContext();
-            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             if (!String.IsNullOrEmpty(process.RoleId))
             {
+                ApplicationDbContext context = new ApplicationDbContext();
+                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+
                 string roleName = RoleManager.FindById(process.RoleId).Name;
                 if (!UserManager.IsInRole(userTable.Id, roleName))
                 {
                     return RedirectToAction("PageNotFound", "Error");
                 }
+                context.Dispose();
             }
-            context.Dispose();
 
             var viewModel = new DocumentComposite();
             viewModel.ProcessView = process;
             viewModel.docData = _DocumentService.RouteCustomModelView(process.TableName);
             viewModel.fileId = Guid.NewGuid();
-            viewModel.ProcessTemplates = _DocumentService.GetAllTemplatesDocument(process.Id.Value);
+            viewModel.ProcessTemplates = _DocumentService.GetAllTemplatesDocument(id);
 
             return View(viewModel);
         }
@@ -310,7 +307,7 @@ namespace RapidDoc.Controllers
             if (lastComment != "")
             {
                 _CommentService.SaveDomain(new CommentTable { Comment = lastComment, DocumentTableId = id });
-                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = id, HistoryType = Models.Repository.HistoryType.NewComment });
+                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = id, HistoryType = Models.Repository.HistoryType.NewComment }, User.Identity.GetUserId());
                 _EmailService.SendInitiatorCommentEmail(id, lastComment);
             }
         }
@@ -321,11 +318,20 @@ namespace RapidDoc.Controllers
             if (ModelState.IsValid)
             {
                 //Save Document
-                var documentId = _DocumentService.SaveDocument(docModel, processView.TableName, processId, fileId);
-                _ReviewDocLogService.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId });
-                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument });
-                SaveSearchData(docModel, actionModelName, documentId);
-                _WorkflowService.RunWorkflow(documentId, processView.TableName, documentData);
+                ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+                var documentId = _DocumentService.SaveDocument(docModel, processView.TableName, processId, fileId, user);
+                DocumentTable documentTable = _DocumentService.Find(documentId);
+
+                Task.Run(() =>
+                {
+                    IReviewDocLogService _ReviewDocLogServiceTask = DependencyResolver.Current.GetService<IReviewDocLogService>();
+                    IHistoryUserService _HistoryUserServiceTask = DependencyResolver.Current.GetService<IHistoryUserService>();
+                    _ReviewDocLogServiceTask.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId }, "", user);
+                    _HistoryUserServiceTask.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument }, user.Id);
+                });
+
+                SaveSearchData(docModel, actionModelName, documentTable);
+                _WorkflowService.RunWorkflow(documentTable, processView.TableName, documentData);
 
                 return RedirectToAction("Index", "Document");
             }
@@ -749,7 +755,6 @@ namespace RapidDoc.Controllers
         public ActionResult RoutePostMethod(Guid processId, dynamic docModel, int type, Guid? documentId, Guid fileId, String actionModelName, HttpPostedFileBase file, IDictionary<string, object> documentData, string approveDoc = "", string rejectDoc = "", string lastComment = "")
         {
             ActionResult view;
-            Guid localDocumentId = documentId ?? Guid.Empty;
             ProcessView processView = _ProcessService.FindView(processId);
 
             if (file != null)
@@ -764,7 +769,7 @@ namespace RapidDoc.Controllers
                     break;
                 case 2:
                     _DocumentService.UpdateDocumentFields(docModel, processView);
-                    view = ShowDocument(localDocumentId, approveDoc, rejectDoc, documentData, processView, processId, lastComment);
+                    view = ShowDocument(GuidNull2Guid(documentId), approveDoc, rejectDoc, documentData, processView, processId, lastComment);
                     break;
                 default:
                     view = View();
@@ -854,8 +859,8 @@ namespace RapidDoc.Controllers
                 }
 
                CheckCustomDocument(typeActionModel, actionModel);
-                CheckAttachedFiles(processId, fileId, documentId);
-                _CustomCheckDocument.PreUpdateViewModel(typeActionModel, actionModel);
+               CheckAttachedFiles(processId, fileId, documentId);
+               _CustomCheckDocument.PreUpdateViewModel(typeActionModel, actionModel);
             }
 
             ActionResult view = RoutePostMethod(processId, actionModel, type, documentId, fileId, actionModelName, files, documentData, approveDoc, rejectDoc, lastComment);
@@ -907,7 +912,7 @@ namespace RapidDoc.Controllers
             }
         }
 
-        private void SaveSearchData(dynamic docModel, string actionModelName, Guid documentId)
+        private void SaveSearchData(dynamic docModel, string actionModelName, DocumentTable document)
         {
             Type type = Type.GetType("RapidDoc.Models.ViewModels." + actionModelName + "_View");
             var properties = type.GetProperties();
@@ -945,11 +950,10 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            DocumentTable document = _DocumentService.Find(documentId);
             document.DocumentText = allStringData;
             _DocumentService.SaveDocumentText(document);
 
-            _SearchService.SaveDomain(new SearchTable { DocumentText = allStringData, DocumentTableId = documentId });
+            _SearchService.SaveDomain(new SearchTable { DocumentText = allStringData, DocumentTableId = document.Id });
         }
 	}
 }
