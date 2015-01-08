@@ -223,6 +223,7 @@ namespace RapidDoc.Controllers
             }
 
             //MIGRATION CODE
+            /*
             if (_EmplService.Contains(x => x.CompanyTableId == _company
                 && x.FirstName == _firstname && x.SecondName == _secondname && x.MiddleName == _middlename))
             {
@@ -232,7 +233,7 @@ namespace RapidDoc.Controllers
                 empl.LDAPGlobalId = _globalId;
                 _EmplService.SaveDomain(empl, "Admin", _company);
             }
-
+            */
             if (!_EmplService.Contains(x => x.CompanyTableId == _company
                 && x.LDAPGlobalId == _globalId))
             {
