@@ -65,6 +65,12 @@ function duallist_init(placeholder) {
                 if (data.result == 'Redirect') {
                     window.location = data.url;
                 }
+                else {
+                    $('.validation-summary-valid').append('<p class="field-validation-error">' + data.errorText + '</>').show();
+                    setTimeout(function () {
+                        $('input[type="submit"]').removeAttr('disabled');
+                    }, 1);
+                }
             }
         });
     });

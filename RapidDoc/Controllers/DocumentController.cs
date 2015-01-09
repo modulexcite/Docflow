@@ -405,7 +405,14 @@ namespace RapidDoc.Controllers
         [HttpPost]
         public ActionResult AddReader(Guid id, string[] listdata, bool? isAjax)
         {
-            if (isAjax == true)
+            string errorText = String.Empty;
+
+            if(listdata.Count() > 20)
+            {
+                errorText = ValidationRes.ValidationResource.ErrorLimitReaders;
+            }
+
+            if (isAjax == true && String.IsNullOrEmpty(errorText))
             {
                 try
                 {
@@ -414,11 +421,13 @@ namespace RapidDoc.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError(String.Empty, ex.Message);
-                    ViewBag.DocumentId = id;
-                    var empls = InitializeReaderView(id);
-                    return View(empls);
+                    errorText = ex.Message;
                 }
+            }
+
+            if (!String.IsNullOrEmpty(errorText))
+            {
+                return Json(new { result = "Error",  errorText = errorText});
             }
 
             return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id, isAfterView = true }) });

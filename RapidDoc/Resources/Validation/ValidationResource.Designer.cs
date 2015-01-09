@@ -124,6 +124,15 @@ namespace ValidationRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Можно добавить максимум 20 сотрудников.
+        /// </summary>
+        public static string ErrorLimitReaders {
+            get {
+                return ResourceManager.GetString("ErrorLimitReaders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to В документ может быть прикреплен только файл с расширение {0}, Вы добавили файл: {1}.
         /// </summary>
         public static string ErrorMandatoryFileTypes {
