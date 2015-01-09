@@ -53,14 +53,16 @@ namespace RapidDoc.Models.Services
         private readonly IAccountService _AccountService;
         private readonly IDocumentService _DocumentService;
         private readonly IEmplService _EmplService;
+        private readonly IDocumentReaderService _DocumentReaderService;
 
-        public EmailService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService)
+        public EmailService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, IDocumentReaderService documentReaderService)
         {
             _uow = uow;
             repo = uow.GetRepository<EmailParameterTable>();
             _AccountService = accountService;
             _DocumentService = documentService;
             _EmplService = emplService;
+            _DocumentReaderService = documentReaderService;
         }
 
         public EmailParameterTable FirstOrDefault(Expression<Func<EmailParameterTable, bool>> predicate)
@@ -332,13 +334,34 @@ namespace RapidDoc.Models.Services
         {
             var docuTable = _DocumentService.Find(documentId);
 
+            var currentReaders = _DocumentReaderService.GetPartial(x => x.DocumentTableId == documentId).ToList();
+            var users = _AccountService.GetPartial(x => x.Id == docuTable.ApplicationUserCreatedId).ToList();
+
+            foreach (var reader in currentReaders)
+            {
+                users.Add(_AccountService.Find(reader.UserId));
+            }
+
+            var signUsers = _DocumentService.GetSignUsers(docuTable);
+            foreach (var signUser in signUsers)
+            {
+                if (users.Any(x => x.AccountDomainName == signUser.AccountDomainName))
+                    continue;
+                else
+                    users.Add(signUser);
+            }
+
+
             if (docuTable != null)
             {
-                ApplicationUser userTable = _AccountService.Find(docuTable.ApplicationUserCreatedId);
-                if (userTable.Email != String.Empty && userTable.UserName != HttpContext.Current.User.Identity.Name)
+                //ApplicationUser userTable = _AccountService.Find(docuTable.ApplicationUserCreatedId);
+                foreach (var userTable in users)
                 {
-                    string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
-                    CreateMessange(EmailTemplateType.Comment, docuTable, userTable, @"Views\\EmailTemplate\\CommentEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorCommentEmail, String.Format("Новый комментарий в документе [{0}]", docuTable.DocumentNum), new string[] { lastComment }, new string[] { docuTable.DocumentText });
+                    if (userTable.Email != String.Empty && userTable.UserName != HttpContext.Current.User.Identity.Name)
+                    {
+                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
+                        CreateMessange(EmailTemplateType.Comment, docuTable, userTable, @"Views\\EmailTemplate\\CommentEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorCommentEmail, String.Format("Новый комментарий в документе [{0}]", docuTable.DocumentNum), new string[] { lastComment }, new string[] { docuTable.DocumentText });
+                    }
                 }
             }
         }
