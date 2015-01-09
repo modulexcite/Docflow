@@ -131,7 +131,7 @@
       <AssemblyReference>RapidDoc</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Flowchart DisplayName="Заявка на проведение конкурсных процедур(Товары)(УЗЛ)" sap2010:WorkflowViewState.IdRef="Flowchart_6">
+  <Flowchart DisplayName="Заявка на проведение конкурсных процедур(Товары для БГП)" sap2010:WorkflowViewState.IdRef="Flowchart_6">
     <Flowchart.Variables>
       <Variable x:TypeArguments="x:String" Name="bookmarkName" />
     </Flowchart.Variables>
@@ -387,39 +387,40 @@
                               <FlowStep x:Name="__ReferenceID27" sap2010:WorkflowViewState.IdRef="FlowStep_15">
                                 <Flowchart DisplayName="Начальник ОМА" sap2010:WorkflowViewState.IdRef="Flowchart_3">
                                   <Flowchart.StartNode>
-                                    <FlowStep x:Name="__ReferenceID11" sap2010:WorkflowViewState.IdRef="FlowStep_10">
-                                      <local1:WFChooseSpecificUser _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник ОМА" sap2010:WorkflowViewState.IdRef="WFChooseSpecificUser_1" inputUserName="NaPodg" useManual="False">
-                                        <local1:WFChooseSpecificUser.inputCurrentUser>
+                                    <FlowStep x:Name="__ReferenceID11">
+                                      <local1:WFChooseRoleUser _service="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник ОМА" executionStep="False" inputRoleName="ApproveKD_OMA" noneSkip="True" useManual="False">
+                                        <local1:WFChooseRoleUser.inputCurrentUser>
                                           <InArgument x:TypeArguments="x:String">
                                             <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
                                           </InArgument>
-                                        </local1:WFChooseSpecificUser.inputCurrentUser>
-                                        <local1:WFChooseSpecificUser.inputDocumentId>
+                                        </local1:WFChooseRoleUser.inputCurrentUser>
+                                        <local1:WFChooseRoleUser.inputDocumentId>
                                           <InArgument x:TypeArguments="s:Guid">
                                             <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
                                           </InArgument>
-                                        </local1:WFChooseSpecificUser.inputDocumentId>
-                                        <local1:WFChooseSpecificUser.inputStep>
+                                        </local1:WFChooseRoleUser.inputDocumentId>
+                                        <local1:WFChooseRoleUser.inputStep>
                                           <InArgument x:TypeArguments="local:DocumentState">
                                             <mca:CSharpValue x:TypeArguments="local:DocumentState">inputStep</mca:CSharpValue>
                                           </InArgument>
-                                        </local1:WFChooseSpecificUser.inputStep>
-                                        <local1:WFChooseSpecificUser.outputBookmark>
+                                        </local1:WFChooseRoleUser.inputStep>
+                                        <local1:WFChooseRoleUser.outputBookmark>
                                           <OutArgument x:TypeArguments="x:String">
                                             <mca:CSharpReference x:TypeArguments="x:String">bookmarkName</mca:CSharpReference>
                                           </OutArgument>
-                                        </local1:WFChooseSpecificUser.outputBookmark>
-                                        <local1:WFChooseSpecificUser.outputSkipStep>
+                                        </local1:WFChooseRoleUser.outputBookmark>
+                                        <local1:WFChooseRoleUser.outputSkipStep>
                                           <OutArgument x:TypeArguments="x:Boolean">
                                             <mca:CSharpReference x:TypeArguments="x:Boolean">outputSkipStep</mca:CSharpReference>
                                           </OutArgument>
-                                        </local1:WFChooseSpecificUser.outputSkipStep>
-                                        <local1:WFChooseSpecificUser.outputStep>
+                                        </local1:WFChooseRoleUser.outputSkipStep>
+                                        <local1:WFChooseRoleUser.outputStep>
                                           <OutArgument x:TypeArguments="local:DocumentState">
                                             <mca:CSharpReference x:TypeArguments="local:DocumentState">outputStep</mca:CSharpReference>
                                           </OutArgument>
-                                        </local1:WFChooseSpecificUser.outputStep>
-                                      </local1:WFChooseSpecificUser>
+                                        </local1:WFChooseRoleUser.outputStep>
+                                        <sap2010:WorkflowViewState.IdRef>WFChooseRoleUser_1</sap2010:WorkflowViewState.IdRef>
+                                      </local1:WFChooseRoleUser>
                                       <FlowStep.Next>
                                         <FlowDecision x:Name="__ReferenceID10" DisplayName="Статус текущего шага" sap2010:WorkflowViewState.IdRef="FlowDecision_4">
                                           <FlowDecision.Condition>
@@ -458,6 +459,7 @@
                                           </FlowDecision.False>
                                         </FlowDecision>
                                       </FlowStep.Next>
+                                      <sap2010:WorkflowViewState.IdRef>FlowStep_29</sap2010:WorkflowViewState.IdRef>
                                     </FlowStep>
                                   </Flowchart.StartNode>
                                   <x:Reference>__ReferenceID9</x:Reference>
@@ -793,7 +795,7 @@
     <x:Reference>__ReferenceID33</x:Reference>
     <x:Reference>__ReferenceID34</x:Reference>
     <x:Reference>__ReferenceID35</x:Reference>
-    <sads:DebugSymbol.Symbol>d3dDOlxVc2Vyc1xEbVNoa2EuQUxUWU5UQVVcRGVza3RvcFxHaXRIdWJcRG9jRmxvd1xEb2NmbG93XFJhcGlkRG9jXEFjdGl2aXRpZXNcVVNSX1JFUV9LRF9SZXF1ZXN0Rm9yQ29tcGV0aXRvblByb2NVWkwueGFtbIUBHAccZwEDAa0BAbMBAQKGAQOdBg8CAQGMAQnVARUDAesF2QEP2QFzAwHiBfcFEYIGGgMBzwXdARGmAh0DAeYEqgIXqgJ7AwHdBOMFGe4FIgMBygSuAhn8AiUDAdoDgAMfgAODAQMB0QPPBSHaBSoDAb4DhAMh0gMtAwHNAtYDJ9YDiwEDAcQCuwUpxgUyAwGxAtoDKagENQMBwAGsBC+sBJMBAwG3AacFMbIFOgMBpAGwBDH7BD0CATH/BDf/BJsBAgEokwU5ngVCAgEVgwU5jgVCAgECjwEPrgEqAwGaBrIBFbIBagMBkQa2ARfLATgDAewF/wUX/wVqAwHZBfoFF/oFcgMB0AXgARf/ATIDAZUFgwIdgwJyAwGMBYcCH5wCQAMB5wTrBR/rBXIDAdQE5gUf5gV6AwHLBLECH9UCPwMBiQTZAiXZAnoDAYAE3QIn8gJIAwHbA9cFJ9cFegMByAPSBSfSBYIBAwG/A4cDJ6YDRQMBhQOqAy2qA4IBAwH8Aq4DL8gDUAMBzgLDBS/DBYIBAwG7Ar4FL74FigEDAbIC3QMv/ANNAwH4AYAENYAEigEDAe8BhAQ3ngRYAwHBAa8FN68FigEDAa4BqgU3qgWSAQMBpQGzBDfXBFgCAWDaBDv0BFwCATKbBT+bBZ8BAgEflgU/lgWaAQIBFosFP4sFnAECAQyGBT+GBZoBAgEDnAEVnAFnAwHLBo8B/gGPAYUCAwHKBqYBFaYBagMBwQahARWhAWcDAbgGjwHvAY8B8wEDAbcGqwEVqwFwAwGuBo8B3wGPAeIBAwGtBpcBFZcBYAMBpAaSARWSAWMDAZsGvgEdvgFvAwGIBsMBHcMBcwMB/wW5AR25AWcDAfYFyAEdyAF4AwHtBe0BHe0BbwMBxgXgAYIC4AGJAgMBxQX3AR33AXIDAbwF8gEd8gFvAwGzBeAB8wHgAfcBAwGyBfwBHfwBeAMBqQXgAeMB4AHmAQMBqAXoAR3oAWgDAZ8F4wEd4wFrAwGWBY8CJY8CdwMBgwWUAiWUAnsDAfoEigIligJvAwHxBJkCJZkCgAEDAegEwwIlwwJ3AwHBBLEC7QGxAvQBAwHABM0CJc0CegMBtwTIAiXIAncDAa4E0gIl0gKAAQMBpQS5AiW5AnADAZwEtAIltAJzAwGTBL4CJb4C4AIDAYoE5QIt5QJ/AwH3A+oCLeoCgwEDAe4D4AIt4AJ3AwHlA+8CLe8CiAEDAdwDlAMtlAN/AwG1A4cDkAKHA5cCAwG0A54DLZ4DggEDAasDmQMtmQN/AwGiA6MDLaMDiAEDAZkDhwP9AYcDhQIDAZgDjwMtjwN4AwGPA4oDLYoDewMBhgO2AzW2A4cBAwHzArsDNbsDiwEDAeoCsQM1sQN/AwHhAsUDNcUDkAEDAdgCwAM1wAOhAQMBzwLqAzXqA4cBAwGoAt0DjQLdA5QCAwGnAvQDNfQDigEDAZ4C7wM17wOHAQMBlQL5AzX5A5ABAwGMAt0D+gHdA4ICAwGLAuUDNeUDgAEDAYIC4AM14AODAQMB+QGMBD2MBI8BAwHmAZEEPZEEkwEDAd0BhwQ9hwSHAQMB1AGbBD2bBJgBAwHLAZYEPZYEqQEDAcIBxQQ9xQSPAQMBmwGzBPoBswSNAgMBmgGzBKgCswSvAgMBmQHPBD3PBJIBAwGQAcoEPcoEjwEDAYcBswTkAbME6gEDAYYB1AQ91ASYAQIBfbMElwKzBJ0CAgF8wAQ9wASIAQIBc7YEPbYEiwECAWq7BD27BKEBAgFh4gRB4gSTAQIBV+cEQecElwECAU7dBEHdBIsBAgFF8QRB8QScAQIBPOwEQewErQECATM=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>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</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -959,7 +961,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WFChooseSpecificUser_1" sap:VirtualizedContainerService.HintSize="200,22">
+      <sap2010:ViewStateData Id="WFChooseRoleUser_1" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -993,23 +995,23 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_10">
+      <sap2010:ViewStateData Id="FlowStep_29">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">200,139</av:Point>
+            <av:Point x:Key="ShapeLocation">200,127.5</av:Point>
             <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">300,161 300,226.5</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">300,149.5 300,226.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flowchart_3" sap:VirtualizedContainerService.HintSize="200,51">
+      <sap2010:ViewStateData Id="Flowchart_3" sap:VirtualizedContainerService.HintSize="714,636">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
             <av:Size x:Key="ShapeSize">60,75</av:Size>
             <x:Double x:Key="Width">699.5</x:Double>
-            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,139</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,127.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -1056,7 +1058,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flowchart_4" sap:VirtualizedContainerService.HintSize="714,636">
+      <sap2010:ViewStateData Id="Flowchart_4" sap:VirtualizedContainerService.HintSize="200,51">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
