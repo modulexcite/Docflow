@@ -690,12 +690,17 @@ namespace RapidDoc.Controllers
                 return true;
             }
 
-            var steps = _DocumentService.GetCurrentSignStep(document.Id, "", user);
-            foreach (var step in steps)
+            //var steps = _DocumentService.GetCurrentSignStep(document.Id, "", user);
+            var steps = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == document.Id && x.TrackerType == TrackerType.Waiting);
+
+            if (steps != null)
             {
-                if (step.StartDateSLA < fileTable.CreatedDate && fileTable.ApplicationUserCreatedId == user.Id)
+                foreach (var step in steps)
                 {
-                    return true;
+                    if (step.StartDateSLA < fileTable.CreatedDate && fileTable.ApplicationUserCreatedId == user.Id)
+                    {
+                        return true;
+                    }
                 }
             }
 
@@ -749,6 +754,10 @@ namespace RapidDoc.Controllers
             {
                 string fileName = _DocumentService.DeleteFile(Id);
                 values.Add(fileName, true);
+            }
+            else
+            {
+                return Json(null);
             }
 
             var deletedFiles = new

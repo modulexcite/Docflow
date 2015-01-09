@@ -345,7 +345,7 @@ namespace RapidDoc.Models.Services
             var signUsers = _DocumentService.GetSignUsers(docuTable);
             foreach (var signUser in signUsers)
             {
-                if (users.Any(x => x.AccountDomainName == signUser.AccountDomainName))
+                if (users.Any(x => x.Id == signUser.Id))
                     continue;
                 else
                     users.Add(signUser);
