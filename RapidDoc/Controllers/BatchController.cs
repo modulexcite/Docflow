@@ -78,7 +78,7 @@ namespace RapidDoc.Controllers
                             || document.DocumentState == Models.Repository.DocumentState.Completed
                             || document.DocumentState == Models.Repository.DocumentState.Created)
                         {
-                            IEnumerable<ReviewDocLogTable> reviewDocuments = _ReviewDocLogService.GetPartial(x => x.DocumentTableId == document.Id).ToList();
+                            IEnumerable<ReviewDocLogTable> reviewDocuments = _ReviewDocLogService.GetPartial(x => x.DocumentTableId == document.Id && x.isArchive == false).ToList();
 
                             if (reviewDocuments != null)
                             {

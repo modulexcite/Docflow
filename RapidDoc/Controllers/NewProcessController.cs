@@ -125,7 +125,14 @@ namespace RapidDoc.Controllers
             }
             else
             {
-                return View("ChildGroup", groupChildItems);
+                List<GroupProcessView> resultListGroup = new List<GroupProcessView>();
+                foreach (var item in groupChildItems)
+                {
+                    if (_ProcessService.Contains(x => x.GroupProcessTableId == item.Id && x.isApproved == true) || _GroupProcessService.Contains(x => x.GroupProcessParentId == item.Id))
+                        resultListGroup.Add(item);
+                }
+
+                return View("ChildGroup", resultListGroup);
             }
         }
 
