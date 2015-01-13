@@ -47,7 +47,7 @@ namespace RapidDoc.Models.Services
         public IEnumerable<DelegationTable> GetAll()
         {
             ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
-            return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId);
+            return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId).OrderByDescending(x => x.CreatedDate);
         }
         public IEnumerable<DelegationView> GetAllView()
         {

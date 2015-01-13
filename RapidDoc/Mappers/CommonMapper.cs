@@ -45,6 +45,7 @@ namespace RapidDoc.Mappers
             Mapper.CreateMap<GroupProcessTable, GroupProcessView>()
                 .ForMember(x => x.GroupProcessParentName, o => o.MapFrom(m => m.GroupProcessTableParent.GroupProcessName));
             Mapper.CreateMap<GroupProcessView, GroupProcessTable>()
+                .ForMember(x => x.CompanyTableId, opt => opt.Ignore())
                 .ForMember(x => x.ApplicationUserCreatedId, opt => opt.Ignore())
                 .ForMember(x => x.ApplicationUserModifiedId, opt => opt.Ignore())
                 .ForMember(x => x.CreatedDate, opt => opt.Ignore())

@@ -145,30 +145,33 @@ namespace RapidDoc.Models.Services
         }
         public IEnumerable<WFTrackerTable> GetCurrentStep(Expression<Func<WFTrackerTable, bool>> predicate)
         {
-            WFTrackerTable endStep = repo.FindAll(predicate).OrderByDescending(x => x.LineNum).FirstOrDefault();
+            var endSteps = repo.FindAll(predicate);
 
-            if (endStep != null)
+            if (endSteps != null && endSteps.Count() > 0)
             {
-                if (endStep.ParallelID != String.Empty)
+                WFTrackerTable endStep = endSteps.OrderByDescending(x => x.LineNum).FirstOrDefault();
+
+                if (endStep != null)
                 {
-                    IEnumerable<WFTrackerTable> alltrack = repo.FindAll(x => x.DocumentTableId == endStep.DocumentTableId).Where(b => b.ParallelID == endStep.ParallelID);
-                    if (alltrack.Any(x => x.TrackerType == TrackerType.Cancelled) && endStep.DocumentTable.DocumentState != DocumentState.Agreement)
+                    if (endStep.ParallelID != String.Empty)
                     {
-                        return null;
-                    }
+                        IEnumerable<WFTrackerTable> alltrack = repo.FindAll(x => x.DocumentTableId == endStep.DocumentTableId).Where(b => b.ParallelID == endStep.ParallelID);
+                        if (alltrack.Any(x => x.TrackerType == TrackerType.Cancelled) && endStep.DocumentTable.DocumentState != DocumentState.Agreement)
+                        {
+                            return null;
+                        }
 
-                    IEnumerable<WFTrackerTable> trackers = repo.FindAll(predicate).Where(b => b.ParallelID == endStep.ParallelID).OrderByDescending(x => x.LineNum);
-                    return trackers;
-                }
-                else
-                {
-                    return repo.FindAll(predicate).Where(b => b.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum);
+                        IEnumerable<WFTrackerTable> trackers = repo.FindAll(predicate).Where(b => b.ParallelID == endStep.ParallelID).OrderByDescending(x => x.LineNum);
+                        return trackers;
+                    }
+                    else
+                    {
+                        return repo.FindAll(predicate).Where(b => b.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum);
+                    }
                 }
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
         public void SaveTrackList(Guid documentId, List<Array> allSteps)
         {

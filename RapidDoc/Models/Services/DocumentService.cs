@@ -186,7 +186,7 @@ namespace RapidDoc.Models.Services
             {
                 var items = from document in contextQuery.DocumentTable
                        where !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                       orderby document.CreatedDate descending
+                       orderby document.ModifiedDate descending
                        select document;
                 UserManager.Dispose();
                 var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
@@ -208,7 +208,7 @@ namespace RapidDoc.Models.Services
                                 )
                                 &&
                                 !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                            orderby document.CreatedDate descending
+                            orderby document.ModifiedDate descending
                             select document;
                 UserManager.Dispose();
                 var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
@@ -227,7 +227,7 @@ namespace RapidDoc.Models.Services
             {
                 var items = from document in contextQuery.DocumentTable
                        where (contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                       orderby document.CreatedDate descending
+                       orderby document.ModifiedDate descending
                        select document;
 
                 UserManager.Dispose();
@@ -249,7 +249,7 @@ namespace RapidDoc.Models.Services
                                )))
                            )
                            && (contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                       orderby document.CreatedDate descending
+                            orderby document.ModifiedDate descending
                        select document;
 
                 UserManager.Dispose();
@@ -268,7 +268,7 @@ namespace RapidDoc.Models.Services
                        (contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == user.Id && x.TrackerType == TrackerType.Approved))
                        &&
                        !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                   orderby document.CreatedDate descending
+                        orderby document.ModifiedDate descending
                    select document;
 
             var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
@@ -486,15 +486,18 @@ namespace RapidDoc.Models.Services
             {
                 IEnumerable<WFTrackerTable> trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.SignUserId == null);
 
-                foreach (var trackerTable in trackerTables)
+                if (trackerTables != null)
                 {
-                    if (trackerTable.Users != null)
+                    foreach (var trackerTable in trackerTables)
                     {
-                        foreach (var trackUser in trackerTable.Users)
+                        if (trackerTable.Users != null)
                         {
-                            ApplicationUser user = _AccountService.Find(trackUser.UserId);
-                            if (user != null)
-                                signUsers.Add(user);
+                            foreach (var trackUser in trackerTable.Users)
+                            {
+                                ApplicationUser user = _AccountService.Find(trackUser.UserId);
+                                if (user != null)
+                                    signUsers.Add(user);
+                            }
                         }
                     }
                 }

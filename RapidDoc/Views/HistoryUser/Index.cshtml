@@ -48,6 +48,13 @@
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @UIElementRes.UIElement.DocumentRemoveReaders @item.Description
                 @Html.ActionLink(item.DocumentNum.ToString() + " " + "(" + item.ProcessName.ToString() + ")" + " (" + item.ApplicationCreatedUser + ")", "ShowDocument", "Document", new { id = item.DocumentTableId, isAfterView = true }, null)</p>
         }
+        else if (item.HistoryType == RapidDoc.Models.Repository.HistoryType.DeletedFile)
+        {
+            <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @UIElementRes.UIElement.DocumentDeletedFile @item.Description
+                @Html.ActionLink(item.DocumentNum.ToString() + " " + "(" + item.ProcessName.ToString() + ")" + " (" + item.ApplicationCreatedUser + ")", "ShowDocument", "Document", new { id = item.DocumentTableId, isAfterView = true }, null)
+            </p>
+        }
     }
     <br />
 }

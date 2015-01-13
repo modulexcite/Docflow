@@ -750,10 +750,13 @@ namespace RapidDoc.Controllers
             FileTable file = _DocumentService.GetFile(Id);
             DocumentTable document = _DocumentService.FirstOrDefault(x => x.FileId == file.DocumentFileId);
 
-            if (CheсkFileRightDelete(file, user, document))
+            if (document == null || CheсkFileRightDelete(file, user, document))
             {
                 string fileName = _DocumentService.DeleteFile(Id);
                 values.Add(fileName, true);
+
+                if (document != null)
+                    _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = document.Id, Description = fileName, HistoryType = Models.Repository.HistoryType.DeletedFile }, User.Identity.GetUserId());
             }
             else
             {
