@@ -109,7 +109,7 @@ namespace RapidDoc.Models.Services
 
                 if (!String.IsNullOrEmpty(searchString))
                 {
-                    var resultText = this.GetPartialView(x => x.DocumentText.Contains(searchString)).Skip(startIndex).Take(blockSize).ToList();
+                    var resultText = this.GetPartialView(x => x.DocumentText.Contains(searchString)).OrderByDescending(x => x.CreatedDate).Skip(startIndex).Take(blockSize).ToList();
                     var resultNum = this.GetPartialView(x => x.DocumentTable.DocumentNum.Contains(searchString)).Skip(startIndex).Take(blockSize).ToList();
                     result = resultNum.Concat(resultText).ToList();
                 }
