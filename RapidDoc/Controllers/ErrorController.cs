@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using RapidDoc.Models.Infrastructure;
 using RapidDoc.Models.Services;
 
 namespace RapidDoc.Controllers
 {
     public class ErrorController : BasicController
     {
-        public ErrorController(ICompanyService companyService, IAccountService accountService)
-            : base(companyService, accountService)
+        public ErrorController(IUnitOfWork uow, ICompanyService companyService, IAccountService accountService)
+            : base(uow, companyService, accountService)
         {
         }
 

@@ -38,6 +38,11 @@ namespace RapidDoc.Models.Infrastructure
             _ctx.SaveChanges();
         }
 
+        public T GetDbContext<T>() where T : DbContext, IDbContext
+        {
+            return _ctx as T;
+        }
+
         public void Dispose()
         {
             Dispose(true);

@@ -943,6 +943,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Сохранить черновик.
+        /// </summary>
+        public static string SaveDraft {
+            get {
+                return ResourceManager.GetString("SaveDraft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поиск.
         /// </summary>
         public static string Search {

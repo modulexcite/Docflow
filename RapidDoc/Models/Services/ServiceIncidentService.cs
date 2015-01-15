@@ -116,18 +116,14 @@ namespace RapidDoc.Models.Services
         }
         public SelectList GetDropListRole(string id)
         {
-            ApplicationDbContext context = new ApplicationDbContext();
-            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
             var roles = RoleManager.Roles.ToList();
-
             return new SelectList(roles, "Id", "Name", id);
         }
         public SelectList GetDropListRoleNull(Guid? id)
         {
-            ApplicationDbContext context = new ApplicationDbContext();
-            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
             var roles = RoleManager.Roles.ToList();
-
             roles.Insert(0, new IdentityRole { Name = UIElementRes.UIElement.NoValue, Id = null });
             return new SelectList(roles, "Id", "Name", id);
         }

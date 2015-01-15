@@ -20,18 +20,13 @@ namespace RapidDoc.Controllers
 {
     public partial class AccountController : BasicController
     {
-        public AccountController(ICompanyService companyService, IAccountService accountService)
-            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())), companyService, accountService)
-        {
-        }
+        protected UserManager<ApplicationUser> UserManager { get; private set; }
 
-        public AccountController(UserManager<ApplicationUser> userManager, ICompanyService companyService, IAccountService accountService)
-            : base(companyService, accountService)
+        public AccountController(IUnitOfWork uow, ICompanyService companyService, IAccountService accountService)
+            : base(uow, companyService, accountService)
         {
-            UserManager = userManager;
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
         }
-
-        public UserManager<ApplicationUser> UserManager { get; private set; }
 
         //
         // GET: /Account/Login

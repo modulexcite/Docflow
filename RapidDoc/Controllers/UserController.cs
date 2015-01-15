@@ -20,27 +20,19 @@ namespace RapidDoc.Controllers
     [Authorize(Roles = "Administrator, SetupAdministrator")]
     public class UserController : BasicController
     {
-        public UserManager<ApplicationUser> UserManager { get; private set; }
-        public RoleManager<IdentityRole> RoleManager { get; private set; }
-        public ApplicationDbContext context { get; private set; }
         private readonly IDomainService _DomainService;
         private readonly IEmplService _EmplService;
 
-        public UserController(ICompanyService companyService, IAccountService accountService, IDomainService domainService, IEmplService emplService)
-            : base(companyService, accountService)
+        protected UserManager<ApplicationUser> UserManager { get; private set; }
+        protected RoleManager<IdentityRole> RoleManager { get; private set; }
+
+        public UserController(IUnitOfWork uow, ICompanyService companyService, IAccountService accountService, IDomainService domainService, IEmplService emplService)
+            : base(uow, companyService, accountService)
         {
             _DomainService = domainService;
             _EmplService = emplService;
-            context = new ApplicationDbContext();
-            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-        }
-
-        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ICompanyService companyService, IAccountService accountService)
-            : base(companyService, accountService)
-        {
-            UserManager = userManager;
-            RoleManager = roleManager;
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
+            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
         }
 
         public ActionResult Index()
@@ -50,14 +42,14 @@ namespace RapidDoc.Controllers
 
         public ActionResult Grid()
         {
-            var items = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(context.Users);
+            var items = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(UserManager.Users);
             var grid = new UserAjaxPagingGrid(items, 1, false);
             return PartialView("_UserGrid", grid);
         }
 
         public JsonResult GetUserList(int page)
         {
-            var items = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(context.Users);
+            var items = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(UserManager.Users);
             var grid = new UserAjaxPagingGrid(items, page, true);
 
             return Json(new
@@ -214,7 +206,7 @@ namespace RapidDoc.Controllers
                 {
                     if (viewModel.Enable == false)
                     {
-                        var allRoles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles);
+                        var allRoles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
                         foreach (var role in allRoles)
                         {
                             UserManager.RemoveFromRole(viewModel.Id, role.Name);
@@ -254,7 +246,7 @@ namespace RapidDoc.Controllers
                 return HttpNotFound();
             }
 
-            var roles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles);
+            var roles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
 
             foreach (var role in roles)
             {
@@ -281,7 +273,7 @@ namespace RapidDoc.Controllers
 
             if (isAjax == true)
             {
-                var allRoles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles);
+                var allRoles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
 
                 foreach (var role in allRoles)
                 {
@@ -386,6 +378,21 @@ namespace RapidDoc.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && UserManager != null)
+            {
+                UserManager.Dispose();
+                UserManager = null;
+            }
+            if (disposing && RoleManager != null)
+            {
+                RoleManager.Dispose();
+                RoleManager = null;
+            }
+            base.Dispose(disposing);
         }
 	}
 }

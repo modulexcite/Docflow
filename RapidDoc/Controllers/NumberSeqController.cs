@@ -19,8 +19,8 @@ namespace RapidDoc.Controllers
     {
         private readonly INumberSeqService _Service;
 
-        public NumberSeqController(INumberSeqService Service, ICompanyService companyService, IAccountService accountService)
-            : base(companyService, accountService)
+        public NumberSeqController(IUnitOfWork uow, INumberSeqService Service, ICompanyService companyService, IAccountService accountService)
+            : base(uow, companyService, accountService)
         {
             _Service = Service;
         }

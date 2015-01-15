@@ -23,12 +23,10 @@ namespace RapidDoc.Controllers
     public class TripSettingsController : BasicController
     {
         private readonly ITripSettingsService _Service;
-        public ApplicationDbContext context { get; private set; }
 
-        public TripSettingsController(ITripSettingsService Service, ICompanyService companyService, IAccountService accountService)
-            : base(companyService, accountService)
+        public TripSettingsController(IUnitOfWork uow, ITripSettingsService Service, ICompanyService companyService, IAccountService accountService)
+            : base(uow, companyService, accountService)
         {
-            context = new ApplicationDbContext();
             _Service = Service;
         }
 

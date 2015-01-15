@@ -81,4 +81,11 @@ namespace RapidDoc.Models.Repository
 
         Other = 3
     }
+
+    public enum OperationType : byte
+    {
+        ApproveDocument = 1,
+        SaveDraft = 2,
+        RejectDocument = 3
+    }
 }

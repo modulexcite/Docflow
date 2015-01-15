@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Services;
 using Microsoft.AspNet.Identity;
+using RapidDoc.Models.Infrastructure;
 
 namespace RapidDoc.Controllers
 {
@@ -13,8 +14,8 @@ namespace RapidDoc.Controllers
     {
         private readonly IHistoryUserService _HistoryUserService;
 
-        public HistoryUserController(IHistoryUserService historyUserService, ICompanyService companyService, IAccountService accountService)
-            : base(companyService, accountService)
+        public HistoryUserController(IUnitOfWork uow, IHistoryUserService historyUserService, ICompanyService companyService, IAccountService accountService)
+            : base(uow, companyService, accountService)
         {
             _HistoryUserService = historyUserService;
         }
