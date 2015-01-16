@@ -3020,6 +3020,32 @@ namespace RapidDoc.Models.DomainModels
         public string Period { get; set; }
     }
 
+    public class USR_REQ_URP_RequestForAccrualSM_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForAccrualPTU_Table : BasicDocumentTable
+    {
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string UserChooseManual1 { get; set; }
+
+        [Required]
+        public string Period { get; set; }
+    }
+
     public class USR_REQ_URP_RequestForTeaching_Table : BasicDocumentTable
     {
         [Required]
