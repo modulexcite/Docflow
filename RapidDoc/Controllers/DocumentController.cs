@@ -290,10 +290,9 @@ namespace RapidDoc.Controllers
         public ActionResult WithdrawDocument(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
             ProcessView processView = _ProcessService.FindView(processId);
-
             _WorkflowService.AgreementWorkflowWithdraw(documentId, processView.TableName);
-            
-            return null;
+            var view = ShowDraft(documentId);
+            return view;
         }
 
         [HttpPost]

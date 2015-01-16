@@ -327,6 +327,7 @@ namespace RapidDoc.Models.Services
         {
             ApplicationUser user = getCurrentUserId(currentUserId);
             domainTable.ApplicationUserModifiedId = user.Id;
+            domainTable.ModifiedDate = DateTime.UtcNow;
 
             if (domainTable.DocumentState == DocumentState.Agreement || domainTable.DocumentState == DocumentState.Execution)
             {

@@ -530,6 +530,7 @@ namespace RapidDoc.Models.Services
                 DocumentTable documentTable = _DocumentService.Find(_documentId);
                 documentTable.WWFInstanceId = Guid.Empty;
                 documentTable.DocumentState = DocumentState.Created;
+                documentTable.ActivityName = String.Empty;
 
                 int retries = 3;
                 while (retries > 0)
@@ -547,23 +548,14 @@ namespace RapidDoc.Models.Services
                     }
                 }
                 
-                IEnumerable<WFTrackerTable> wftrackers = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == _documentId && x.SignUserId != Guid.Empty.ToString());
+                IEnumerable<WFTrackerTable> wftrackers = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == _documentId).ToList();
                 foreach (var item in wftrackers)
                 {
-                    item.TrackerType = TrackerType.NonActive;
-                    item.SignDate = null;
-                    item.SignUserId = null;
                     item.Users.Clear();
-                    item.SLAOffset = 0;
-                    item.StartDateSLA = null;
-                    item.ManualExecutor = false;
                     _WorkflowTrackerService.SaveDomain(item, currentUserId);
                 }
 
                 _WorkflowTrackerService.DeleteAll(_documentId);
-
-
-              //  _EmailService.SendInitiatorClosedEmail(documentTable.Id);
             }
             catch (Exception ex)
             {
