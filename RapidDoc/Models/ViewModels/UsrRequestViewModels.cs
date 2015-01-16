@@ -4125,6 +4125,40 @@ namespace RapidDoc.Models.ViewModels
         public string Period { get; set; }
     }
 
+    public class USR_REQ_URP_RequestForAccrualSM_View : BasicDocumentView
+    {
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ИД Блока")]
+        public string UserChooseManual1 { get; set; }
+
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Период")]
+        public string Period { get; set; }
+    }
+
+    public class USR_REQ_URP_RequestForAccrualPTU_View : BasicDocumentView
+    {
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ИД Блока")]
+        public string UserChooseManual1 { get; set; }
+
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Период")]
+        public string Period { get; set; }
+    }
+
     public class USR_REQ_URP_RequestForTeaching_View : BasicDocumentView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
