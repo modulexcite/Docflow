@@ -179,11 +179,30 @@
             @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.isSign)
             {
                 <button type="submit" class="btn btn-success btn-lg hidden-print" name="action:ApproveDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Approve</button>
-                <button type="submit" class="btn btn-danger hidden-print" name="action:RejectDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Reject</button>
+                <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".bs-reject-modal-sm">@UIElementRes.UIElement.Reject</button>
             }
+            
+            <div class="modal fade bs-reject-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">@UIElementRes.UIElement.Confirmation</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>@UIElementRes.UIElement.ConfirmationReject</p>
+                            <p class="text-danger">@UIElementRes.UIElement.RejectReason</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success" id="modal-form-submit" name="action:RejectDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Yes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">@UIElementRes.UIElement.No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.CreatedBy == User.Identity.Name)
-            { 
+            {
                 <button type="submit" class="btn btn-danger hidden-print" name="action:WithdrawDocument">@UIElementRes.UIElement.Withdraw</button>
             }
 
