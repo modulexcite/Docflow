@@ -390,7 +390,7 @@ namespace RapidDoc.Controllers
 
             if (ModelState.IsValid)
             {
-                SaveSearchData(docModel, actionModelName, documentTable);
+                _SearchService.SaveSearchData(documentId, docModel, actionModelName);
 
                 if (operationType == OperationType.ApproveDocument)
                 {
@@ -475,7 +475,7 @@ namespace RapidDoc.Controllers
                     _HistoryUserServiceTask.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument }, user.Id);
                 });
 
-                SaveSearchData(docModel, actionModelName, documentTable);
+                _SearchService.SaveSearchData(documentId, docModel, actionModelName);
 
                 if (operationType == OperationType.ApproveDocument)
                     _WorkflowService.RunWorkflow(documentTable, processView.TableName, documentData);
@@ -956,10 +956,10 @@ namespace RapidDoc.Controllers
 
             foreach (var key in collection.AllKeys)
             {
-                if (actionModel.GetType().GetProperty(key) != null)
-                {
-                    System.Reflection.PropertyInfo propertyInfo = actionModel.GetType().GetProperty(key);
+                System.Reflection.PropertyInfo propertyInfo = typeActionModel.GetProperty(key);
 
+                if (propertyInfo != null)
+                {
                     if (propertyInfo.PropertyType.IsEnum)
                     {
                         var valueEnum = Enum.Parse(propertyInfo.PropertyType, collection[key].ToString(), true);
@@ -1069,57 +1069,6 @@ namespace RapidDoc.Controllers
             foreach(var error in errorList)
             {
                 ModelState.AddModelError(string.Empty, error);
-            }
-        }
-
-        private void SaveSearchData(dynamic docModel, string actionModelName, DocumentTable document)
-        {
-            Type type = Type.GetType("RapidDoc.Models.ViewModels." + actionModelName + "_View");
-            var properties = type.GetProperties();
-            string allStringData = String.Empty;
-            string regex = @"(<.+?>|&nbsp;)";
-            string regexGuid = @"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})";
-
-            foreach (PropertyInfo property in properties)
-            {
-                if (property.PropertyType == typeof(string))
-                {
-                    var value = property.GetValue(docModel, null);
-
-                    if (!String.IsNullOrEmpty(value) && !String.IsNullOrWhiteSpace(value))
-                    {
-                        string stringWithoutTags = Regex.Replace(value, regex, "").Trim();
-
-                        if (!String.IsNullOrEmpty(stringWithoutTags))
-                        {
-                            List<string> guidList = new List<string>();
-                            guidList = Regex.Matches(stringWithoutTags, regexGuid)
-                                .Cast<Match>()
-                                .Select(m => m.Groups[0].Value)
-                                .ToList();
-
-                            foreach (string guid in guidList)
-                            {
-                                stringWithoutTags = stringWithoutTags.Replace(guid + ",", "");
-                                stringWithoutTags = stringWithoutTags.Replace(guid, "");
-                            }
-
-                            allStringData = allStringData + stringWithoutTags + "|";
-                        }
-                    }
-                }
-            }
-
-            document.DocumentText = allStringData;
-            _DocumentService.SaveDocumentText(document);
-
-            if (!_SearchService.Contains(x => x.DocumentTableId == document.Id))
-                _SearchService.SaveDomain(new SearchTable { DocumentText = allStringData, DocumentTableId = document.Id });
-            else
-            {
-                SearchTable searchTable = _SearchService.FirstOrDefault(x => x.DocumentTableId == document.Id);
-                searchTable.DocumentText = allStringData;
-                _SearchService.SaveDomain(searchTable);
             }
         }
 

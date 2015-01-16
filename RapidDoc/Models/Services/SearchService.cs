@@ -12,6 +12,8 @@ using RapidDoc.Models.Repository;
 using System.Web.Mvc;
 using System.Linq.Expressions;
 using Microsoft.AspNet.Identity;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace RapidDoc.Models.Services
 {
@@ -24,6 +26,9 @@ namespace RapidDoc.Models.Services
         bool Contains(Expression<Func<SearchTable, bool>> predicate);
         void SaveDomain(SearchTable domainTable);
         List<SearchView> GetDocuments(int blockNumber, int blockSize, string searchText);
+        void SaveSearchData(Guid id, string searchString);
+        void SaveSearchData(Guid id, dynamic docModel, string actionModelName);
+        string PrepareSearchString(dynamic docModel, string actionModelName);
     }
 
     public class SearchService : ISearchService
@@ -120,6 +125,77 @@ namespace RapidDoc.Models.Services
                 }
             }
             return result;
+        }
+
+        public string PrepareSearchString(dynamic docModel, string actionModelName)
+        {
+            Type type = Type.GetType("RapidDoc.Models.ViewModels." + actionModelName + "_View");
+            var properties = type.GetProperties().Where(x => x.PropertyType == typeof(string));
+            string allStringData = String.Empty;
+            string regex = @"(<.+?>|&nbsp;)";
+            string regexGuid = @"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})";
+
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.PropertyType == typeof(string))
+                {
+                    var value = property.GetValue(docModel, null);
+
+                    if (!String.IsNullOrEmpty(value) && !String.IsNullOrWhiteSpace(value))
+                    {
+                        string stringWithoutTags = Regex.Replace(value, regex, "").Trim();
+
+                        if (!String.IsNullOrEmpty(stringWithoutTags))
+                        {
+                            List<string> guidList = new List<string>();
+                            guidList = Regex.Matches(stringWithoutTags, regexGuid)
+                                .Cast<Match>()
+                                .Select(m => m.Groups[0].Value)
+                                .ToList();
+
+                            foreach (string guid in guidList)
+                            {
+                                stringWithoutTags = stringWithoutTags.Replace(guid + ",", "");
+                                stringWithoutTags = stringWithoutTags.Replace(guid, "");
+                            }
+
+                            allStringData = allStringData + stringWithoutTags + "|";
+                        }
+                    }
+                }
+            }
+
+            return allStringData;
+        }
+
+        public void SaveSearchData(Guid id, string searchString)
+        {
+            if (String.IsNullOrEmpty(searchString))
+                return;
+
+            DocumentTable document = _DocumentService.Find(id);
+
+            if (document != null)
+                return;
+
+            document.DocumentText = searchString;
+            _DocumentService.SaveDocumentText(document);
+
+            if (!Contains(x => x.DocumentTableId == document.Id))
+                SaveDomain(new SearchTable { DocumentText = searchString, DocumentTableId = document.Id });
+            else
+            {
+                SearchTable searchTable = FirstOrDefault(x => x.DocumentTableId == document.Id);
+                searchTable.DocumentText = searchString;
+                SaveDomain(searchTable);
+            }
+        }
+
+        public void SaveSearchData(Guid id, dynamic docModel, string actionModelName)
+        {
+            string searchString = PrepareSearchString(docModel, actionModelName);
+            if (!String.IsNullOrEmpty(searchString))
+                SaveSearchData(id, searchString);
         }
     }
 }
