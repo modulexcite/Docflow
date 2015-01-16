@@ -61,7 +61,7 @@ namespace RapidDoc.Models.Services
 
                 foreach (var comment in comments)
                 {
-                    EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == comment.ApplicationUserCreatedId && x.CompanyTableId == comment.CompanyTableId);
+                    EmplTable empl = _EmplService.GetEmployer(comment.ApplicationUserCreatedId, comment.CompanyTableId);
                     if (empl != null)
                         commentsView.Add(new CommentView { Id = comment.Id, Comment = comment.Comment, CreatedDate = _SystemService.ConvertDateTimeToLocal(user, comment.CreatedDate), EmplName = empl.FullName, TitleName = empl.TitleName });
                     else

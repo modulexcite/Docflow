@@ -1186,6 +1186,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Отозвать.
+        /// </summary>
+        public static string Withdraw {
+            get {
+                return ResourceManager.GetString("Withdraw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to График работ.
         /// </summary>
         public static string WorkSchedule {

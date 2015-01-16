@@ -38,7 +38,7 @@ namespace RapidDoc.Controllers
         public ActionResult Index()
         {
             ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
-            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == user.Id && x.CompanyTableId == user.CompanyTableId );
+            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == user.Id && x.CompanyTableId == user.CompanyTableId && x.Enable == true );
             if (emplTable == null)
             {
                 ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorEmplNotFound, User.Identity.Name));

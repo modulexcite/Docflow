@@ -45,12 +45,12 @@ namespace RapidDoc.Models.Grids
                 displayedItem.isNotReview = _ReviewDocLogService.isNotReviewDocCurrentUser(displayedItem.Id ?? Guid.Empty, "", user);
                 displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id ?? Guid.Empty, "", user);
 
-                EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == displayedItem.ApplicationUserCreatedId && x.CompanyTableId == displayedItem.CompanyTableId);
+                EmplTable empl = _EmplService.GetEmployer(displayedItem.ApplicationUserCreatedId, displayedItem.CompanyTableId);
                 displayedItem.FullName = empl.FullName;
                 displayedItem.TitleName = empl.TitleName;
                 displayedItem.DepartmentName = empl.DepartmentName;
 
-                if (displayedItem.DocumentText != null && displayedItem.DocumentText.Length > 80)
+                if (!String.IsNullOrEmpty(displayedItem.DocumentText) && displayedItem.DocumentText.Length > 80)
                 {
                     displayedItem.DocumentText = displayedItem.DocumentText.Substring(0, 80) + "...";
                 }

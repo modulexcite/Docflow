@@ -35,6 +35,7 @@ namespace RapidDoc.Models.Services
         EmplView FindView(Guid id);
         SelectList GetDropListEmplNull(Guid? id);
         object GetJsonEmpl();
+        EmplTable GetEmployer(string userId, Guid? companyId);
     }
     public class EmplService : IEmplService
     {
@@ -167,6 +168,17 @@ namespace RapidDoc.Models.Services
                            }; 
 
             return jsondata;
+        }
+        public EmplTable GetEmployer(string userId, Guid? companyId)
+        {
+            var empls = GetPartialIntercompany(x => x.ApplicationUserId == userId && x.CompanyTableId == companyId);
+
+            if(empls != null)
+            {
+                return empls.OrderByDescending(x => x.Enable).FirstOrDefault();
+            }
+
+            return null;
         }
         private ApplicationUser getCurrentUserName(string currentUserName = "")
         {

@@ -52,7 +52,7 @@ namespace RapidDoc.Models.Services
 
             foreach(var item in items)
             {
-                EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
+                EmplTable empl = _EmplService.GetEmployer(item.ApplicationUserCreatedId, currentUser.CompanyTableId);
                 if (empl != null)
                 {
                     item.CreatedEmplName = empl.FullName;
@@ -80,7 +80,7 @@ namespace RapidDoc.Models.Services
             ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             foreach (var item in items)
             {
-                EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
+                EmplTable empl = _EmplService.GetEmployer(item.ApplicationUserCreatedId, currentUser.CompanyTableId);
                 if (empl != null)
                 {
                     item.CreatedEmplName = empl.FullName;
@@ -105,7 +105,7 @@ namespace RapidDoc.Models.Services
         {
             var item = Mapper.Map<HistoryUserTable, HistoryUserView>(FirstOrDefault(predicate));
             ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
-            EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
+            EmplTable empl = _EmplService.GetEmployer(item.ApplicationUserCreatedId, currentUser.CompanyTableId);
             if (empl != null)
             {
                 item.CreatedEmplName = empl.FullName;
@@ -151,7 +151,7 @@ namespace RapidDoc.Models.Services
         {
             var item = Mapper.Map<HistoryUserTable, HistoryUserView>(Find(id));
             ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
-            EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
+            EmplTable empl = _EmplService.GetEmployer(item.ApplicationUserCreatedId, currentUser.CompanyTableId);
             if (empl != null)
             {
                 item.CreatedEmplName = empl.FullName;

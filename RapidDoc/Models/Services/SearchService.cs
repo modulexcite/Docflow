@@ -175,7 +175,7 @@ namespace RapidDoc.Models.Services
 
             DocumentTable document = _DocumentService.Find(id);
 
-            if (document != null)
+            if (document == null)
                 return;
 
             document.DocumentText = searchString;

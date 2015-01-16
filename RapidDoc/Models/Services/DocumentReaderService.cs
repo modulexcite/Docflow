@@ -74,7 +74,7 @@ namespace RapidDoc.Models.Services
                     if (Contains(x => x.DocumentTableId == documentId && x.UserId == userId) == false)
                     {
                         newReader.Add(userId);
-                        var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userId && x.CompanyTableId == user.CompanyTableId);
+                        var empl = _EmplService.GetEmployer(userId, user.CompanyTableId);
                         addReadersDescription += empl.FullName + "; ";
 
                         DocumentReaderTable reader = new DocumentReaderTable();
@@ -95,14 +95,14 @@ namespace RapidDoc.Models.Services
                 {
                     if (listdata.Contains(item.UserId) == false)
                     {
-                        var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId && x.CompanyTableId == user.CompanyTableId);
+                        var empl = _EmplService.GetEmployer(item.UserId, user.CompanyTableId);
                         removeReadersDescription += empl.FullName + "; ";
                         Delete(x => x.DocumentTableId == documentId && x.UserId == item.UserId);
                     }
                 }
                 else
                 {
-                    var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId && x.CompanyTableId == user.CompanyTableId);
+                    var empl = _EmplService.GetEmployer(item.UserId, user.CompanyTableId);
                     removeReadersDescription += empl.FullName + "; ";
                 }
             }

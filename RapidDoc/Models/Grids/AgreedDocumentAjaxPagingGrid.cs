@@ -39,7 +39,7 @@ namespace RapidDoc.Models.Grids
  
             foreach (var displayedItem in _displayingItems)
             {
-                EmplTable empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == displayedItem.ApplicationUserCreatedId && x.CompanyTableId == displayedItem.CompanyTableId);
+                EmplTable empl = _EmplService.GetEmployer(displayedItem.ApplicationUserCreatedId, displayedItem.CompanyTableId);
                 displayedItem.FullName = empl.FullName;
                 displayedItem.TitleName = empl.TitleName;
                 displayedItem.DepartmentName = empl.DepartmentName;

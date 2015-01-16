@@ -155,7 +155,7 @@ namespace RapidDoc.Controllers
 
             DocumentView docuView = _DocumentService.Document2View(documentTable);
             ProcessView process = _ProcessService.FindView(documentTable.ProcessTableId);
-            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuView.ApplicationUserCreatedId && x.CompanyTableId == docuView.CompanyTableId);
+            EmplTable emplTable = _EmplService.GetEmployer(docuView.ApplicationUserCreatedId, docuView.CompanyTableId);
 
             if (documentTable == null || docuView == null || process == null || currentUser == null || emplTable == null || _DocumentService.isShowDocument(documentTable, GuidNull2Guid(process.Id), currentUser, isAfterView) == false)
             {
@@ -213,7 +213,7 @@ namespace RapidDoc.Controllers
                 return RedirectToAction("Index", "Document");
             }
 
-            EmplTable emplResult = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuView.ApplicationUserCreatedId && x.CompanyTableId == currentUser.CompanyTableId);
+            EmplTable emplResult = _EmplService.GetEmployer(docuView.ApplicationUserCreatedId, docuView.CompanyTableId);
             object viewModelResult = InitialViewShowDocument(docuTable, process, docuView, currentUser, emplResult);
             return View("~/Views/Document/ShowDocument.cshtml", viewModelResult);
         }
@@ -254,7 +254,6 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
         [MultipleButton(Name = "action", Argument = "ApproveNewDocument")]
         public ActionResult ApproveNewDocument(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName)
         {
@@ -263,7 +262,6 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
         [MultipleButton(Name = "action", Argument = "ApproveDocument")]
         public ActionResult ApproveDocument(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
@@ -272,7 +270,6 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
         [MultipleButton(Name = "action", Argument = "RejectDocument")]
         public ActionResult RejectDocument(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
@@ -281,12 +278,18 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
         [MultipleButton(Name = "action", Argument = "SaveDraft")]
         public ActionResult SaveDraft(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid? documentId)
         {
             var view = PostDocument(processId, type, OperationType.SaveDraft, documentId, fileId, collection, actionModelName);
             return view;
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "WithdrawDocument")]
+        public ActionResult WithdrawDocument(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
+        {
+            return null;
         }
 
         [HttpPost]
@@ -301,7 +304,7 @@ namespace RapidDoc.Controllers
             ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
             if (userTable == null) return RedirectToAction("PageNotFound", "Error");
 
-            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id && x.CompanyTableId == userTable.CompanyTableId);
+            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id && x.CompanyTableId == userTable.CompanyTableId && x.Enable == true);
             if (emplTable == null) return RedirectToAction("PageNotFound", "Error");
 
             ProcessView process = _ProcessService.FindView(id);
@@ -340,7 +343,7 @@ namespace RapidDoc.Controllers
             DocumentView docuView = _DocumentService.Document2View(documentTable);
             ProcessView process = _ProcessService.FindView(documentTable.ProcessTableId);
             ApplicationUser currentUser = _AccountService.Find(User.Identity.GetUserId());
-            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuView.ApplicationUserCreatedId && x.CompanyTableId == docuView.CompanyTableId);
+            EmplTable emplTable = _EmplService.GetEmployer(docuView.ApplicationUserCreatedId, docuView.CompanyTableId);
 
             if (documentTable == null || docuView == null || process == null || currentUser == null || emplTable == null || _DocumentService.isShowDocument(documentTable, GuidNull2Guid(process.Id), currentUser) == false)
             {
@@ -402,7 +405,7 @@ namespace RapidDoc.Controllers
 
             DocumentView docuView = _DocumentService.Document2View(documentTable);
             ApplicationUser currentUser = _AccountService.Find(User.Identity.GetUserId());
-            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == docuView.ApplicationUserCreatedId && x.CompanyTableId == docuView.CompanyTableId);
+            EmplTable emplTable = _EmplService.GetEmployer(docuView.ApplicationUserCreatedId, docuView.CompanyTableId);
 
             var viewModel = new DocumentComposite();
             viewModel.ProcessView = processView;
@@ -696,7 +699,7 @@ namespace RapidDoc.Controllers
                 Guid Id = _DocumentService.SaveFile(doc);
 
                 string createdUser = String.Empty;
-                EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == doc.ApplicationUserCreatedId && x.CompanyTableId == user.CompanyTableId);
+                EmplTable emplTable = _EmplService.GetEmployer(doc.ApplicationUserCreatedId, process.CompanyTableId);
                 if (emplTable == null)
                 {
                     createdUser = doc.ApplicationUserCreated.UserName;
@@ -789,7 +792,8 @@ namespace RapidDoc.Controllers
                 }
 
                 string createdUser = String.Empty;
-                EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == file.ApplicationUserCreatedId && x.CompanyTableId == file.ApplicationUserCreated.CompanyTableId);
+                EmplTable emplTable = _EmplService.GetEmployer(file.ApplicationUserCreatedId, file.ApplicationUserCreated.CompanyTableId);
+
                 if(emplTable == null)
                 {
                     createdUser = file.ApplicationUserCreated.UserName;
@@ -943,7 +947,6 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult PostDocument(Guid processId, int type, OperationType operationType, Guid? documentId, Guid fileId, FormCollection collection, string actionModelName)
         {
             IDictionary<string, object> documentData = new Dictionary<string, object>();

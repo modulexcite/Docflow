@@ -56,7 +56,8 @@ namespace RapidDoc.Controllers
             if (departmentString == "")
             {
                 ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
-                var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == user.Id && x.CompanyTableId == user.CompanyTableId);
+                var empl = _EmplService.GetEmployer(user.Id, user.CompanyTableId);
+
                 if (empl != null && empl.DepartmentTable != null)
                 {
                     departmentId = empl.DepartmentTable.Id;
