@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -73,6 +74,9 @@ namespace RapidDoc.Models.Services
         private readonly IWorkScheduleService _WorkScheduleService;
         private readonly IReviewDocLogService _ReviewDocLogService;
 
+        protected UserManager<ApplicationUser> UserManager { get; private set; }
+        protected RoleManager<IdentityRole> RoleManager { get; private set; }
+
         public DocumentService(IUnitOfWork uow, INumberSeqService numberSeqService, IProcessService processService, 
             IAccountService accountService, IEmplService emplService, IWorkflowTrackerService workflowTrackerService,
             IDelegationService delegationService, IDocumentReaderService documentReaderService, IWorkScheduleService workScheduleService,
@@ -91,6 +95,9 @@ namespace RapidDoc.Models.Services
             _DocumentReaderService = documentReaderService;
             _WorkScheduleService = workScheduleService;
             _ReviewDocLogService = reviewDocLogService;
+
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
+            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
         }
 
         public Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId, ApplicationUser user)
@@ -179,16 +186,15 @@ namespace RapidDoc.Models.Services
         {
             ApplicationUser user = getCurrentUserId();
             DateTime currentDate = DateTime.UtcNow;
-            ApplicationDbContext contextQuery = new ApplicationDbContext();
-            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(contextQuery));
+            ApplicationDbContext contextQuery = _uow.GetDbContext<ApplicationDbContext>();
 
             if (UserManager.IsInRole(user.Id, "Administrator"))
             {
                 var items = from document in contextQuery.DocumentTable
-                       where !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                       orderby document.ModifiedDate descending
-                       select document;
-                UserManager.Dispose();
+                        where !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                        orderby document.ModifiedDate descending
+                        select document;
+
                 var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
                 return itemsResult.AsQueryable();
             }
@@ -210,7 +216,7 @@ namespace RapidDoc.Models.Services
                                 !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
                             orderby document.ModifiedDate descending
                             select document;
-                UserManager.Dispose();
+
                 var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
                 return itemsResult.AsQueryable();
             }
@@ -220,8 +226,7 @@ namespace RapidDoc.Models.Services
         {
             ApplicationUser user = getCurrentUserId();
             DateTime currentDate = DateTime.UtcNow;
-            ApplicationDbContext contextQuery = new ApplicationDbContext();
-            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(contextQuery));
+            ApplicationDbContext contextQuery = _uow.GetDbContext<ApplicationDbContext>();
 
             if (UserManager.IsInRole(user.Id, "Administrator"))
             {
@@ -230,7 +235,6 @@ namespace RapidDoc.Models.Services
                        orderby document.ModifiedDate descending
                        select document;
 
-                UserManager.Dispose();
                 var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
                 return itemsResult.AsQueryable();
             }
@@ -252,7 +256,6 @@ namespace RapidDoc.Models.Services
                             orderby document.ModifiedDate descending
                        select document;
 
-                UserManager.Dispose();
                 var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
                 return itemsResult.AsQueryable();
             }
@@ -261,7 +264,7 @@ namespace RapidDoc.Models.Services
         public IQueryable<DocumentView> GetAgreedDocument() 
         {
             ApplicationUser user = getCurrentUserId();
-            ApplicationDbContext contextQuery = new ApplicationDbContext();
+            ApplicationDbContext contextQuery = _uow.GetDbContext<ApplicationDbContext>();
 
             var items = from document in contextQuery.DocumentTable
                    where
@@ -419,9 +422,6 @@ namespace RapidDoc.Models.Services
             {
                 return true;
             }
-
-            ApplicationDbContext context = new ApplicationDbContext();
-            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
             if (UserManager.IsInRole(user.Id, "Administrator"))
             {

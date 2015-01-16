@@ -1,11 +1,20 @@
 ﻿@model RapidDoc.Models.ViewModels.DocumentComposite
+@using RapidDoc.Extensions;
 @{
-    ViewBag.Title = UIElementRes.UIElement.New + " - " + Model.ProcessView.ProcessName;
+    ViewBag.Title = Model.DocumentView.DocumentNum + " - " + Model.ProcessView.ProcessName;
 }
 
-<h2><span class="fa fa-file-o"></span> @ViewBag.Title <small class="pull-right">@Html.ActionLink(UIElementRes.UIElement.Cancel, "Index", "Document")</small></h2>
+<h2 class="hidden-print">
+    @ViewBag.Title <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
+</h2>
 
-@using (Html.BeginForm("", "", new { processId = Model.ProcessView.Id, type = 1, fileId = Model.fileId, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
+<div class="pull-right hidden-sm hidden-xs">
+    <a href=@Url.Action("Index", "Document") class="btn btn-default" role="button">@UIElementRes.UIElement.Close</a>
+</div>
+<legend class="hidden-print"></legend>
+<h4 class="text-right"><small>(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h4>
+
+@using (Html.BeginForm("", "", new { processId = Model.ProcessView.Id, type = 3, fileId = Model.fileId, documentId = Model.DocumentView.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(false)
@@ -13,6 +22,7 @@
     <fieldset>
         <legend></legend>
         @Html.HiddenFor(model => model.ProcessView.Id)
+        @Html.HiddenFor(model => model.DocumentView.Id)
         @Html.HiddenFor(model => model.fileId)
         @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "Edit" })
         @if (Model.ProcessTemplates.Count() > 0)
@@ -59,9 +69,10 @@
         </div>
 
         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+
         <br>
         <p>
-            <button type="submit" class="btn btn-primary btn-lg" name="action:ApproveNewDocument">@UIElementRes.UIElement.Approve</button>
+            <button type="submit" class="btn btn-primary btn-lg" name="action:ApproveDocument">@UIElementRes.UIElement.Approve</button>
             <button type="submit" class="btn btn-default btn-sm" name="action:SaveDraft">@UIElementRes.UIElement.SaveDraft</button>
             <a href="@Url.Action("Index", "Document")" class="btn btn-default btn-sm" role="button">@UIElementRes.UIElement.Cancel</a>
         </p>

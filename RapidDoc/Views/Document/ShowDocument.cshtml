@@ -20,43 +20,42 @@
     <legend class="hidden-print"></legend>
     <h4 class="text-right"><small>(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h4>
 
-    @using (Html.BeginForm("PostDocument", "Document", new { processId = Model.ProcessView.Id, type = 2, fileId = Model.fileId, documentId = Model.DocumentView.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("", "", new { processId = Model.ProcessView.Id, type = 2, fileId = Model.fileId, documentId = Model.DocumentView.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(false)
 
-    <fieldset>
-        @Html.HiddenFor(model => model.ProcessView.Id)
-        @Html.HiddenFor(model => model.DocumentView.Id)
-        @Html.HiddenFor(model => model.fileId, new { @id = "documentFileId" })
-        @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "View" })
+        <fieldset>
+            @Html.HiddenFor(model => model.ProcessView.Id)
+            @Html.HiddenFor(model => model.fileId)
+            @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "View" })
             <br class="hidden-print">
             <h3 class="hidden-print">@UIElementRes.UIElement.AttachedFiles</h3>
             @if (!String.IsNullOrEmpty(Model.ProcessView.MandatoryFileTypes))
             {
                 <h5 class="text-danger hidden-print">@UIElementRes.UIElement.SupportFileTypes: @Model.ProcessView.MandatoryFileTypes</h5>
             }
-        <div class="row fileupload-buttonbar hidden-print">
-            <div class="col-lg-7">
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success btn-xs fileinput-button">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span>@UIElementRes.UIElement.AddFiles</span>
-                    <input type="file" name="files" multiple>
-                </span>
-                <!-- The global file processing state -->
-                <span class="fileupload-process"></span>
-            </div>
-            <!-- The global progress state -->
-            <div class="col-lg-5 fileupload-progress fade">
-                <!-- The global progress bar -->
-                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+            <div class="row fileupload-buttonbar hidden-print">
+                <div class="col-lg-7">
+                    <!-- The fileinput-button span is used to style the file input field as button -->
+                    <span class="btn btn-success btn-xs fileinput-button">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>@UIElementRes.UIElement.AddFiles</span>
+                        <input type="file" name="files" multiple>
+                    </span>
+                    <!-- The global file processing state -->
+                    <span class="fileupload-process"></span>
                 </div>
-                <!-- The extended global progress state -->
-                <div class="progress-extended">&nbsp;</div>
+                <!-- The global progress state -->
+                <div class="col-lg-5 fileupload-progress fade">
+                    <!-- The global progress bar -->
+                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                    </div>
+                    <!-- The extended global progress state -->
+                    <div class="progress-extended">&nbsp;</div>
+                </div>
             </div>
-        </div>
             <table role="presentation" class="table table-striped hidden-print"><tbody class="files"></tbody></table>
             <br>
             <h3 class="hidden-print">@UIElementRes.UIElement.ProgressWork</h3>
@@ -171,9 +170,53 @@
                         </div>
                     </div>
                 </div>
+            }
+            
+            <br class="hidden-print">
+            <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
+            @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentView.Id })
+
+            @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.isSign)
+            {
+                <button type="submit" class="btn btn-success btn-lg hidden-print" name="action:ApproveDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Approve</button>
+                <button type="submit" class="btn btn-danger hidden-print" name="action:RejectDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Reject</button>
+            }
+
+            <div class="btn-group hidden-print">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    @UIElementRes.UIElement.Create <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href=@Url.Action("AddReader", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.Reader</a></li>
+                    @if (Model.DocumentView.isArchive == false)
+                    {
+                        <li><a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.ToArchive</a></li>
+                    }
+                    else
+                    {
+                        <li><a href=@Url.Action("DocumentFromArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.FromArchive</a></li>
+                    }
+                </ul>
+            </div>
+            <a href=@Url.Action("Index", "Document") class="btn btn-default hidden-print" role="button">@UIElementRes.UIElement.Close</a>
+        </fieldset>
+    }
+
+    <p>
+        <h4 class="text-right hidden-print">@UIElementRes.UIElement.AddComment</h4>
+        @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentView.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }, new { name = "commentForm" }))
+        {
+            <div class="hidden-print">
+                @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
+                <div class="row">
+                    <div class="col-md-7 visible-lg-inline"><kbd>Ctrl + Enter</kbd></div>
+                    <div class="col-md-5"><input class="btn btn-primary btn-xs btn-block pull-right" id="saveCommentBtn" type="submit" value=@UIElementRes.UIElement.Save></div>
+                </div>
+            </div>
+            <br class="hidden-print">
         }
-</fieldset>
-}
+    </p>
+
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
     {% for (var i=0, file; file=o.files[i]; i++) { %}
@@ -250,49 +293,6 @@
     </tr>
     {% } %}
 </script>
-
-    <br class="hidden-print">
-    <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
-    @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentView.Id })
-    <p>
-        <h4 class="text-right hidden-print">@UIElementRes.UIElement.AddComment</h4>
-        @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentView.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }))
-        {
-            <div class ="hidden-print">
-                @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
-                <div class="row">
-                    <div class="col-md-7 visible-lg-inline"><kbd>Ctrl + Enter</kbd></div>
-                    <div class="col-md-5"><input class="btn btn-primary btn-xs btn-block pull-right" id="saveCommentBtn" type="submit" value=@UIElementRes.UIElement.Save></div>
-                </div>
-            </div>
-            <br class="hidden-print">
-        }
-    </p>
-             
-@if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.isSign)
-{
-    <input class="btn btn-success hidden-print" type="submit" name="approveDoc" id="approveDocId" value=@UIElementRes.UIElement.Approve />
-    <input class="btn btn-danger hidden-print" type="submit" name="rejectDoc" id="rejectDocId" value=@UIElementRes.UIElement.Reject />
-}
-
-            <div class="btn-group hidden-print">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    @UIElementRes.UIElement.Create <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href=@Url.Action("AddReader", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.Reader</a></li>
-                    @if (Model.DocumentView.isArchive == false)
-                    {
-                        <li><a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.ToArchive</a></li>
-                    }
-                    else
-                    {
-                        <li><a href=@Url.Action("DocumentFromArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.FromArchive</a></li>
-                    }
-                </ul>
-            </div>
-
-            <a href=@Url.Action("Index", "Document") class="btn btn-default hidden-print" role="button">@UIElementRes.UIElement.Close</a>
       
 <script type="text/javascript">
     function clearTextAreaComment(result) {
@@ -304,40 +304,12 @@
         }, 0);
     }
 
-    $('#approveDocId').on("click", function () {
-        var approveDoc = document.createElement("input");
-        approveDoc.type = "hidden";
-        approveDoc.name = "approveDoc";
-        approveDoc.value = "approveDoc";
-
-        var lastComment = document.createElement("input");
-        lastComment.type = "hidden";
-        lastComment.name = "lastComment";
-        lastComment.value = $('#lastComment').val();
-
-        var f = document.getElementById("ajaxUploadForm");
-        f.appendChild(approveDoc);
-        f.appendChild(lastComment);
-        f.submit();
-    });
-
-    $('#rejectDocId').on("click", function () {
-        var commentText = $('#lastComment').val();
-        var rejectDoc = document.createElement("input");
-        rejectDoc.type = "hidden";
-        rejectDoc.name = "rejectDoc";
-        rejectDoc.value = "rejectDoc";
-
-        var lastComment = document.createElement("input");
-        lastComment.type = "hidden";
-        lastComment.name = "lastComment";
-        lastComment.value = commentText;
-
-        var f = document.getElementById("ajaxUploadForm");
-        f.appendChild(rejectDoc);
-        f.appendChild(lastComment);
-        f.submit();
-    });
+    function saveLastComment() {
+        var lastComment = $('#lastComment').val();
+        if (lastComment) {
+            document.getElementById('saveCommentBtn').click();
+        }
+    }
 </script>
     <br class="hidden-print">
     <br class="hidden-print">
@@ -400,7 +372,8 @@
     @Scripts.Render("~/bundles/fileupload")
 }
 @section jsinit {
-    var urlFileUpload = "@Url.Action("GetAllFileDocument", "Document")";
+    var urlFileDownload = "@Url.Action("GetAllFileDocument", "Document", new { id = Model.fileId })";
+    var urlFileUpload = "@Url.Action("UploadFile", "Document", new { processId = Model.ProcessView.Id, fileId = Model.fileId })";
 }
 @section jslaunch {
 <script type="text/javascript">

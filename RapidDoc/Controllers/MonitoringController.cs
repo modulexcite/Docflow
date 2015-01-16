@@ -17,8 +17,8 @@ namespace RapidDoc.Controllers
         private readonly IDepartmentService _DepartmentService;
         private readonly IEmplService       _EmplService;
 
-        public MonitoringController(IDocumentService documentService, IDepartmentService departmentService, IEmplService emplService, ICompanyService companyService, IAccountService accountService)
-            : base(companyService, accountService)
+        public MonitoringController(IUnitOfWork uow, IDocumentService documentService, IDepartmentService departmentService, IEmplService emplService, ICompanyService companyService, IAccountService accountService)
+            : base(uow, companyService, accountService)
         {
             _DocumentService = documentService;
             _DepartmentService = departmentService;
@@ -74,7 +74,7 @@ namespace RapidDoc.Controllers
             List<DepartmentTable> departmentTableList = _DepartmentService.GetPartial(x => x.Id == departmentId).ToList();
             listdepartmentId = this.GetParentListDepartment(departmentTableList);
 
-            ApplicationDbContext context = new ApplicationDbContext();
+            ApplicationDbContext context = _uow.GetDbContext<ApplicationDbContext>();
             DateTime startDate = DateTime.Now.AddDays(-30);
             DateTime endDate = DateTime.Now.AddDays(1);
 

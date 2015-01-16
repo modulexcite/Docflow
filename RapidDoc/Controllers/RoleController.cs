@@ -21,21 +21,12 @@ namespace RapidDoc.Controllers
     {
         public UserManager<ApplicationUser> UserManager { get; private set; }
         public RoleManager<IdentityRole> RoleManager { get; private set; }
-        public ApplicationDbContext context { get; private set; }
 
-        public RoleController(ICompanyService companyService, IAccountService accountService)
-            : base(companyService, accountService)
+        public RoleController(IUnitOfWork uow, ICompanyService companyService, IAccountService accountService)
+            : base(uow, companyService, accountService)
         {
-            context = new ApplicationDbContext();
-            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-        }
-
-        public RoleController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ICompanyService companyService, IAccountService accountService)
-            : base(companyService, accountService)
-        {
-            UserManager = userManager;
-            RoleManager = roleManager;
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
+            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
         }
 
         public ActionResult Index()
@@ -45,14 +36,14 @@ namespace RapidDoc.Controllers
 
         public ActionResult Grid()
         {
-            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles);
+            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
             var grid = new RoleAjaxPagingGrid(items, 1, false);
             return PartialView("_RoleGrid", grid);
         }
 
         public JsonResult GetRoleList(int page)
         {
-            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(context.Roles);
+            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
             var grid = new RoleAjaxPagingGrid(items, page, true);
 
             return Json(new
@@ -137,7 +128,7 @@ namespace RapidDoc.Controllers
                 return HttpNotFound();
             }
 
-            var users = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(context.Users);
+            var users = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(UserManager.Users);
 
             foreach (var user in users)
             {
@@ -165,7 +156,7 @@ namespace RapidDoc.Controllers
 
             if (isAjax == true)
             {
-                var allUsers = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(context.Users);
+                var allUsers = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(UserManager.Users);
 
                 foreach (var user in allUsers)
                 {
@@ -188,6 +179,21 @@ namespace RapidDoc.Controllers
             }
 
             return Json(new { result = "Redirect", url = Url.Action("Index") });
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && UserManager != null)
+            {
+                UserManager.Dispose();
+                UserManager = null;
+            }
+            if (disposing && RoleManager != null)
+            {
+                RoleManager.Dispose();
+                RoleManager = null;
+            }
+            base.Dispose(disposing);
         }
 	}
 }

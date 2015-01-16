@@ -21,6 +21,7 @@ namespace RapidDoc.Models.Services
         IEnumerable<SearchView> GetPartialView(Expression<Func<SearchTable, bool>> predicate);
         SearchTable FirstOrDefault(Expression<Func<SearchTable, bool>> predicate);
         SearchView FirstOrDefaultView(Expression<Func<SearchTable, bool>> predicate);
+        bool Contains(Expression<Func<SearchTable, bool>> predicate);
         void SaveDomain(SearchTable domainTable);
         List<SearchView> GetDocuments(int blockNumber, int blockSize, string searchText);
     }
@@ -79,6 +80,10 @@ namespace RapidDoc.Models.Services
             item.isShow = _DocumentService.isShowDocument(docuTable, docuTable.ProcessTableId, currentUser, true);
 
             return item;
+        }
+        public bool Contains(Expression<Func<SearchTable, bool>> predicate)
+        {
+            return repo.Contains(predicate);
         }
         public void SaveDomain(SearchTable domainTable)
         {

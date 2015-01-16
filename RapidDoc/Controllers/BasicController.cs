@@ -14,18 +14,22 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using RapidDoc.Models.DomainModels;
 using Microsoft.AspNet.Identity;
+using RapidDoc.Models.Infrastructure;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Controllers
 {
     [Authorize(Roles = "ActiveUser")]
     [Culture]
-    public class BasicController : Controller
+    public class BasicController : AsyncController
     {
         protected readonly ICompanyService _CompanyService;
         protected readonly IAccountService _AccountService;
+        protected readonly IUnitOfWork _uow;
 
-        public BasicController(ICompanyService companyService, IAccountService accountService)
+        public BasicController(IUnitOfWork uow, ICompanyService companyService, IAccountService accountService)
         {
+            _uow = uow;
             _CompanyService = companyService;
             _AccountService = accountService;
         }
@@ -40,23 +44,30 @@ namespace RapidDoc.Controllers
             if (filterContext.RouteData.Values.Any(x => x.Key == "company"))
             {
                 var companyId = filterContext.RouteData.Values["company"].ToString();
-                if (!String.IsNullOrEmpty(companyId))
+                if (filterContext.RouteData.RouteHandler != null && !String.IsNullOrEmpty(companyId))
                 {
                     ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
                     if (user != null)
                     {
                         if (user.AliasCompanyName != companyId)
                         {
-                            var companyList = _CompanyService.GetAll().ToList();
-                            if (companyList != null)
+                            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
+
+                            if (UserManager.IsInRole(user.Id, "ChangeCompany") || UserManager.IsInRole(user.Id, "Administrator"))
                             {
-                                var company = companyList.FirstOrDefault(x => x.AliasCompanyName == companyId);
-                                if (company != null)
+                                var companyList = _CompanyService.GetAll().ToList();
+                                if (companyList != null)
                                 {
-                                    user.CompanyTableId = company.Id;
-                                    _AccountService.SaveDomain(user);
+                                    var company = companyList.FirstOrDefault(x => x.AliasCompanyName == companyId);
+                                    if (company != null)
+                                    {
+                                        user.CompanyTableId = company.Id;
+                                        _AccountService.SaveDomain(user);
+                                    }
                                 }
                             }
+                            UserManager.Dispose();
+                            UserManager = null;
                         }
                     }
                 }
@@ -93,15 +104,11 @@ namespace RapidDoc.Controllers
         {
             var company = _CompanyService.FirstOrDefault(x => x.AliasCompanyName == companyId);
             if (company == null)
-            {
                 return HttpNotFound();
-            }
 
             ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             if (user == null)
-            {
                 return HttpNotFound();
-            }
 
             user.CompanyTableId = company.Id;
             _AccountService.SaveDomain(user);

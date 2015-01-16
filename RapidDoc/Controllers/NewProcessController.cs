@@ -20,13 +20,19 @@ namespace RapidDoc.Controllers
         private readonly IEmplService _EmplService;
         private readonly IDocumentService _DocumentService;
 
-        public NewProcessController(IProcessService processService, IGroupProcessService groupProcessService, IEmplService emplService, IDocumentService documentService, IAccountService accountService, ICompanyService companyService)
-            : base(companyService, accountService)
+        protected UserManager<ApplicationUser> UserManager { get; private set; }
+        protected RoleManager<IdentityRole> RoleManager { get; private set; }
+
+        public NewProcessController(IUnitOfWork uow, IProcessService processService, IGroupProcessService groupProcessService, IEmplService emplService, IDocumentService documentService, IAccountService accountService, ICompanyService companyService)
+            : base(uow, companyService, accountService)
         {
             _ProcessService = processService;
             _GroupProcessService = groupProcessService;
             _EmplService = emplService;
             _DocumentService = documentService;
+
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
+            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
         }
 
         public ActionResult Index()
@@ -78,17 +84,11 @@ namespace RapidDoc.Controllers
 
             if (!String.IsNullOrEmpty(process.RoleId))
             {
-                ApplicationDbContext context = new ApplicationDbContext();
-                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-
                 string roleName = RoleManager.FindById(process.RoleId).Name;
                 if (!UserManager.IsInRole(UserId, roleName))
                 {
-                    context.Dispose();
                     return false;
                 }
-                context.Dispose();
             }
 
             return true;
@@ -107,10 +107,6 @@ namespace RapidDoc.Controllers
             if(groupChildItems.Count() == 0)
             {
                 var model = _ProcessService.GetPartialView(x => x.GroupProcessTableId == groupProcessId && x.isApproved == true).OrderBy(x => x.ProcessName);
-
-                ApplicationDbContext context = new ApplicationDbContext();
-                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
                 List<ProcessView> result = new List<ProcessView>();
 
                 foreach (var item in model)
@@ -156,10 +152,6 @@ namespace RapidDoc.Controllers
             if (searchString.Length >= 1)
             {
                 var model = _ProcessService.GetPartialView(x => x.ProcessName.Contains(searchString));
-                
-                ApplicationDbContext context = new ApplicationDbContext();
-                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
                 List<ProcessView> result = new List<ProcessView>();
 
                 ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
@@ -178,6 +170,21 @@ namespace RapidDoc.Controllers
             }
 
             return null;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && UserManager != null)
+            {
+                UserManager.Dispose();
+                UserManager = null;
+            }
+            if (disposing && RoleManager != null)
+            {
+                RoleManager.Dispose();
+                RoleManager = null;
+            }
+            base.Dispose(disposing);
         }
 	}
 }
