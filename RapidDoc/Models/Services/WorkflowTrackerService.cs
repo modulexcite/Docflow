@@ -23,6 +23,7 @@ namespace RapidDoc.Models.Services
         void SaveTrackList(Guid documentId, List<Array> allSteps);
         WFTrackerTable Find(Guid id);
         IEnumerable<WFTrackerTable> GetCurrentStep(Expression<Func<WFTrackerTable, bool>> predicate);
+        void DeleteAll(Guid documentId);
     }
 
     public class WorkflowTrackerService : IWorkflowTrackerService
@@ -219,6 +220,11 @@ namespace RapidDoc.Models.Services
             {
                 return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             }
+        }
+        public void DeleteAll(Guid documentId)
+        {
+            repo.Delete(a => a.DocumentTableId == documentId);
+            _uow.Save();
         }
     }
 }

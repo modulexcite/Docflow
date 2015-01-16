@@ -68,7 +68,8 @@ namespace RapidDoc.Models.Repository
         NewComment = 3,
         AddReader = 4,
         RemoveReader = 5,
-        DeletedFile = 6
+        DeletedFile = 6,
+        Withdraw = 7
     }
 
     public enum FilterType : byte
