@@ -1222,6 +1222,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Отозван документ.
+        /// </summary>
+        public static string WithdrawHistory {
+            get {
+                return ResourceManager.GetString("WithdrawHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to График работ.
         /// </summary>
         public static string WorkSchedule {

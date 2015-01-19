@@ -18,7 +18,7 @@
     <p><strong class="">@group.Key</strong></p>
     foreach (var item in group.OrderByDescending(x => x.CreatedDate))
     {
-        if(item.HistoryType == RapidDoc.Models.Repository.HistoryType.NewDocument)
+        if (item.HistoryType == RapidDoc.Models.Repository.HistoryType.NewDocument)
         {
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @UIElementRes.UIElement.NewDocument 
                 @Html.ActionLink(item.DocumentNum.ToString() + " " + "(" + item.ProcessName.ToString() + ")" + " ("+ item.ApplicationCreatedUser + ")", "ShowDocument", "Document", new { id = item.DocumentTableId, isAfterView = true }, null)</p>
@@ -52,6 +52,13 @@
         {
             <p>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @UIElementRes.UIElement.DocumentDeletedFile @item.Description
+                @Html.ActionLink(item.DocumentNum.ToString() + " " + "(" + item.ProcessName.ToString() + ")" + " (" + item.ApplicationCreatedUser + ")", "ShowDocument", "Document", new { id = item.DocumentTableId, isAfterView = true }, null)
+            </p>
+        }
+        else if (item.HistoryType == RapidDoc.Models.Repository.HistoryType.Withdraw)
+        {
+            <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @UIElementRes.UIElement.WithdrawHistory
                 @Html.ActionLink(item.DocumentNum.ToString() + " " + "(" + item.ProcessName.ToString() + ")" + " (" + item.ApplicationCreatedUser + ")", "ShowDocument", "Document", new { id = item.DocumentTableId, isAfterView = true }, null)
             </p>
         }
