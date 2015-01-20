@@ -124,18 +124,13 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ProcessView model, HttpPostedFileBase files, Guid documentFileId)
+        public ActionResult Edit(ProcessView model)
         {
             ActionResult view;
 
-            var filesXaml = _DocumentService.GetAllXAMLDocument(documentFileId).FirstOrDefault();
+            var filesXaml = _DocumentService.GetAllXAMLDocument(GuidNull2Guid(model.Id)).FirstOrDefault();
             if (filesXaml == null && model.isApproved == true)
                 ModelState.AddModelError(string.Empty,  ValidationRes.ValidationResource.ErrorProcessXAML);
-            
-            if (files != null)
-            {
-                return view = AjaxUpload(files, documentFileId);
-            }
 
             if (ModelState.IsValid)
             {
@@ -254,14 +249,16 @@ namespace RapidDoc.Controllers
             return result;
         }
 
-        public JsonResult AjaxUpload(HttpPostedFileBase files, Guid documentFileId)
+        [HttpPost]
+        [ValidateInput(false)]
+        public JsonResult AjaxUpload(HttpPostedFileBase files, Guid documentId)
         {
             var statuses = new List<ViewDataUploadFilesResult>();
             System.IO.FileStream inFile;
             byte[] binaryData;
             string contentType;
 
-            if (files != null && !string.IsNullOrEmpty(files.FileName) && documentFileId != Guid.Empty)
+            if (files != null && !string.IsNullOrEmpty(files.FileName) && documentId != Guid.Empty)
             {
                 BinaryReader binaryReader = new BinaryReader(files.InputStream);
                 byte[] data = binaryReader.ReadBytes(files.ContentLength);
@@ -272,7 +269,7 @@ namespace RapidDoc.Controllers
 
                 // here you can save your file to the database...
                 FileTable doc = new FileTable();
-                doc.DocumentFileId = documentFileId;
+                doc.DocumentFileId = documentId;
                 doc.FileName = files.FileName;
                 doc.ContentType = contentType;
                 doc.ContentLength = files.ContentLength;

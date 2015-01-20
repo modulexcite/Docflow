@@ -30,6 +30,10 @@ namespace RapidDoc.Models.Services
         void Delete(Guid id);
         DelegationTable Find(Guid id);
         DelegationView FindView(Guid id);
+        List<WFTrackerTable> GetDelegationUsers(DocumentTable document, ApplicationUser currentUser, ProcessTable process, IEnumerable<WFTrackerTable> trackerTables);
+        bool CheckDelegation(DocumentTable document, ApplicationUser user, ProcessTable process, IEnumerable<WFTrackerTable> trackerTables);
+        bool CheckTrackerUsers(IEnumerable<WFTrackerTable> trackerTables, string userId);
+        bool CheckTrackerUsers(WFTrackerTable trackerTable, string userId);
     }
 
     public class DelegationService : IDelegationService
@@ -129,6 +133,121 @@ namespace RapidDoc.Models.Services
         public DelegationView FindView(Guid id)
         {
             return Mapper.Map<DelegationTable, DelegationView>(Find(id));
+        }
+
+        public List<WFTrackerTable> GetDelegationUsers(DocumentTable document, ApplicationUser user, ProcessTable process, IEnumerable<WFTrackerTable> trackerTables)
+        {
+            List<WFTrackerTable> result = new List<WFTrackerTable>();
+
+            var delegationItems = GetPartial(x => x.EmplTableTo.ApplicationUserId == user.Id
+                && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
+                && x.isArchive == false && x.CompanyTableId == user.CompanyTableId);
+
+            foreach (var delegationItem in delegationItems)
+            {
+                if (delegationItem.GroupProcessTableId != null || delegationItem.ProcessTableId != null)
+                {
+                    if (delegationItem.ProcessTableId == document.ProcessTableId)
+                    {
+                        foreach (var trackerTable in trackerTables)
+                        {
+                            if (CheckTrackerUsers(trackerTable, delegationItem.EmplTableFrom.ApplicationUserId))
+                            {
+                                result.Add(trackerTable);
+                            }
+                        }
+                    }
+                    else if (process.GroupProcessTableId == delegationItem.GroupProcessTableId)
+                    {
+                        foreach (var trackerTable in trackerTables)
+                        {
+                            if (CheckTrackerUsers(trackerTable, delegationItem.EmplTableFrom.ApplicationUserId))
+                            {
+                                result.Add(trackerTable);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var trackerTable in trackerTables)
+                    {
+                        if (CheckTrackerUsers(trackerTable, delegationItem.EmplTableFrom.ApplicationUserId))
+                        {
+                            result.Add(trackerTable);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public bool CheckDelegation(DocumentTable document, ApplicationUser user, ProcessTable process, IEnumerable<WFTrackerTable> trackerTables)
+        {
+            var delegationItems = GetPartial(x => x.EmplTableTo.ApplicationUserId == user.Id
+                && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
+                && x.isArchive == false && x.CompanyTableId == user.CompanyTableId);
+
+            foreach (var delegationItem in delegationItems)
+            {
+                if (delegationItem.GroupProcessTableId != null || delegationItem.ProcessTableId != null)
+                {
+                    if (delegationItem.ProcessTableId == process.Id)
+                    {
+                        if (CheckTrackerUsers(trackerTables, delegationItem.EmplTableFrom.ApplicationUserId))
+                        {
+                            return true;
+                        }
+                    }
+                    else if (process.GroupProcessTableId == delegationItem.GroupProcessTableId)
+                    {
+                        if (CheckTrackerUsers(trackerTables, delegationItem.EmplTableFrom.ApplicationUserId))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (CheckTrackerUsers(trackerTables, delegationItem.EmplTableFrom.ApplicationUserId))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public bool CheckTrackerUsers(IEnumerable<WFTrackerTable> trackerTables, string userId)
+        {
+            if (trackerTables != null)
+            {
+                foreach (var trackerTable in trackerTables)
+                {
+                    if (trackerTable.Users != null)
+                    {
+                        if (trackerTable.Users.Exists(x => x.UserId == userId))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public bool CheckTrackerUsers(WFTrackerTable trackerTable, string userId)
+        {
+            if (trackerTable.Users != null)
+            {
+                if (trackerTable.Users.Exists(x => x.UserId == userId))
+                    return true;
+            }
+
+            return false;
         }
     }
 }

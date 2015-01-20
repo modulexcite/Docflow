@@ -1231,6 +1231,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Документ отозван инициатором.
+        /// </summary>
+        public static string Withdrawn {
+            get {
+                return ResourceManager.GetString("Withdrawn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to График работ.
         /// </summary>
         public static string WorkSchedule {

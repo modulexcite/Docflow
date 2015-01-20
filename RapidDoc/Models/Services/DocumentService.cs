@@ -204,7 +204,7 @@ namespace RapidDoc.Models.Services
                             where
                                 (document.ApplicationUserCreatedId == user.Id ||
                                     contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id)) ||
-                                    contextQuery.DocumentReaderTable.Any(r => r.DocumentTableId == document.Id && r.UserId == user.Id) ||
+                                    (contextQuery.DocumentReaderTable.Any(r => r.DocumentTableId == document.Id && r.UserId == user.Id) && document.DocumentState != DocumentState.Created) ||
                                     (contextQuery.DelegationTable.Any(d => d.EmplTableTo.ApplicationUserId == user.Id && d.DateFrom <= currentDate && d.DateTo >= currentDate && d.isArchive == false
                                     && d.CompanyTableId == user.CompanyTableId
                                     && (d.GroupProcessTableId == document.ProcessTable.Id || d.GroupProcessTableId == null)

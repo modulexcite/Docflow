@@ -70,6 +70,45 @@
 
         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
 
+        <br class="hidden-print">
+        <div class="hidden-print">
+            @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0)
+            {
+                <ul>
+                    @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)
+                    {
+                        <li>@UIElementRes.UIElement.DocumentReject <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr> @Html.DateTimeLocal(history.CreatedDate)</li>
+                    }
+                </ul>
+            }
+            <div class="row">
+                <div class="col-md-6">
+                    @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders).Count() > 0)
+                    {
+                        <ul>
+                            @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders)
+                            {
+                                <li>@UIElementRes.UIElement.DocumentAddReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr></li>
+                            }
+                        </ul>
+                    }
+                </div>
+                <div class="col-md-6">
+                    @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders).Count() > 0)
+                    {
+                        <ul>
+                            @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders)
+                            {
+                                <li>@UIElementRes.UIElement.DocumentRemoveReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr></li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
+        @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentView.Id })
         <br>
         <p>
             <button type="submit" class="btn btn-primary btn-lg" name="action:ApproveDocument">@UIElementRes.UIElement.Approve</button>

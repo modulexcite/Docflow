@@ -142,8 +142,13 @@ namespace RapidDoc.Controllers
             DocumentTable documentTable = _DocumentService.Find(id);
             ApplicationUser currentUser = _AccountService.Find(User.Identity.GetUserId());
 
-            if(documentTable.DocumentState == DocumentState.Created && documentTable.ApplicationUserCreatedId == currentUser.Id)
-                return RedirectToAction("ShowDraft", "Document", new { id = id });
+            if (documentTable.DocumentState == DocumentState.Created)
+            {
+                if(documentTable.ApplicationUserCreatedId == currentUser.Id)
+                    return RedirectToAction("ShowDraft", "Document", new { id = id });
+                else
+                    return RedirectToAction("WithDrawnDocument", "Error");
+            }
 
             var previousModelState = TempData["ModelState"] as ModelStateDictionary;
             if (previousModelState != null)
@@ -289,6 +294,12 @@ namespace RapidDoc.Controllers
         [MultipleButton(Name = "action", Argument = "WithdrawDocument")]
         public ActionResult WithdrawDocument(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
+            DocumentTable documentTable = _DocumentService.Find(documentId);
+            if (documentTable.ApplicationUserCreatedId != User.Identity.GetUserId())
+            {
+                return RedirectToAction("PageNotFound", "Error");
+            }
+
             ProcessView processView = _ProcessService.FindView(processId);
             _WorkflowService.AgreementWorkflowWithdraw(documentId, processView.TableName);
             var view = ShowDraft(documentId);
@@ -338,11 +349,6 @@ namespace RapidDoc.Controllers
         public ActionResult ShowDraft(Guid id)
         {
             DocumentTable documentTable = _DocumentService.Find(id);
-            if (documentTable.DocumentState != DocumentState.Created)
-            {
-                return RedirectToAction("PageNotFound", "Error");
-            }
-
             DocumentView docuView = _DocumentService.Document2View(documentTable);
             ProcessView process = _ProcessService.FindView(documentTable.ProcessTableId);
             ApplicationUser currentUser = _AccountService.Find(User.Identity.GetUserId());
@@ -381,6 +387,10 @@ namespace RapidDoc.Controllers
                 ViewBag.DepartmentName = String.Empty;
                 ViewBag.CompanyName = String.Empty;
             }
+
+            ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
+            ViewBag.AddReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.AddReader);
+            ViewBag.RemoveReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.RemoveReader);
 
             return View("ShowDraft", viewModel);
         }
@@ -432,6 +442,10 @@ namespace RapidDoc.Controllers
                 ViewBag.DepartmentName = String.Empty;
                 ViewBag.CompanyName = String.Empty;
             }
+
+            ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
+            ViewBag.AddReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.AddReader);
+            ViewBag.RemoveReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.RemoveReader);
 
             return View("ShowDraft", viewModel);
         }
@@ -560,7 +574,7 @@ namespace RapidDoc.Controllers
         {
             string errorText = String.Empty;
 
-            if(listdata.Count() > 20)
+            if(listdata != null && listdata.Count() > 20)
             {
                 errorText = ValidationRes.ValidationResource.ErrorLimitReaders;
             }

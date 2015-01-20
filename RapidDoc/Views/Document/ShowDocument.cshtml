@@ -14,11 +14,11 @@
 </h2>
 
 <h5 class="visible-print-block">@ViewBag.Title</h5>
-    <div class="pull-right hidden-sm hidden-xs">
+    <div class="pull-right hidden-sm hidden-xs hidden-print">
         <a href=@Url.Action("Index", "Document") class="btn btn-default" role="button">@UIElementRes.UIElement.Close</a>
     </div>
     <legend class="hidden-print"></legend>
-    <h4 class="text-right"><small>(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h4>
+    <h4 class="text-right"><small class="hidden-print">(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h4>
 
     @using (Html.BeginForm("", "", new { processId = Model.ProcessView.Id, type = 2, fileId = Model.fileId, documentId = Model.DocumentView.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
     {
@@ -181,6 +181,11 @@
                 <button type="submit" class="btn btn-success btn-lg hidden-print" name="action:ApproveDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Approve</button>
                 <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".bs-reject-modal-sm">@UIElementRes.UIElement.Reject</button>
             }
+
+            @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.CreatedBy == User.Identity.Name)
+            {
+                <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".bs-withdraw-modal-sm">@UIElementRes.UIElement.Withdraw</button>
+            }
             
             <div class="modal fade bs-reject-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
@@ -194,17 +199,30 @@
                             <p class="text-danger">@UIElementRes.UIElement.RejectReason</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success" id="modal-form-submit" name="action:RejectDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Yes</button>
+                            <button type="submit" class="btn btn-success" name="action:RejectDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Yes</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">@UIElementRes.UIElement.No</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.CreatedBy == User.Identity.Name)
-            {
-                <button type="submit" class="btn btn-danger hidden-print" name="action:WithdrawDocument">@UIElementRes.UIElement.Withdraw</button>
-            }
+            <div class="modal fade bs-withdraw-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">@UIElementRes.UIElement.Confirmation</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>@UIElementRes.UIElement.WithdrawHistory?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success" name="action:WithdrawDocument">@UIElementRes.UIElement.Yes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">@UIElementRes.UIElement.No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="btn-group hidden-print">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

@@ -257,7 +257,7 @@ namespace RapidDoc.Controllers
                             if (RoleManager.RoleExists(endText))
                             {
                                 var names = RoleManager.FindByName(endText).Users;
-                                if (names != null)
+                                if (names != null && names.Count() > 0)
                                 {
                                     foreach (IdentityUserRole name in names)
                                     {

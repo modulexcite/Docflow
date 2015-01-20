@@ -20,6 +20,11 @@ namespace RapidDoc.Controllers
             return View();
         }
 
+        public ActionResult WithdrawnDocument()
+        {
+            return View();
+        }
+
         public ActionResult Exception()
         {
             var exception = Session["application_error"] as Exception;
