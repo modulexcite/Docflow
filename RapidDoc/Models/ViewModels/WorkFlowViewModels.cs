@@ -203,4 +203,10 @@ namespace RapidDoc.Models.ViewModels
         public string HTMLString { get; set; }
         public bool NoMoreData { get; set; }
     }
+
+    public class WFUserFunctionResult
+    {
+        public List<WFTrackerUsersTable> Users { get; set; }
+        public bool Skip { get; set; }
+    }
 }

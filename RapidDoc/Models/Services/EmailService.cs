@@ -469,7 +469,11 @@ namespace RapidDoc.Models.Services
                     num++;
                     documentUrls.Add("http://" + HttpContext.Current.Request.Url.Authority + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id + "?isAfterView=true");
                     documentNums.Add(document.DocumentNum + " - " + document.ProcessName);
-                    documentText.Add(document.DocumentText);
+
+                    if (!String.IsNullOrEmpty(document.DocumentText) && document.DocumentText.Length > 80)
+                        documentText.Add(document.DocumentText.Substring(0, 80) + "...");
+                    else
+                        documentText.Add(document.DocumentText);
                 }
 
                 CreateMessange(EmailTemplateType.SLAStatus, null, userTable, @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml", null, "У вас на подписи находятся следующие документы", String.Format("Документы на подписи"), documentUrls.ToArray(), documentNums.ToArray(), documentText.ToArray());

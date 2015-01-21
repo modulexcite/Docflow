@@ -47,6 +47,13 @@ function selectpickerfull_init() {
     });
 }
 
+function popover_init() {
+    $('.popover-link').popover({
+        trigger: 'hover',
+        placement: 'auto'
+    });
+}
+
 function duallist_init(placeholder) {
     $('.duallist').bootstrapDualListbox({
         infoText: false,

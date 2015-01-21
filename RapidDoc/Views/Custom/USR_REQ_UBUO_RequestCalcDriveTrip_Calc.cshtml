@@ -1,11 +1,14 @@
 ﻿@model RapidDoc.Models.ViewModels.USR_REQ_UBUO_RequestCalcDriveTripCals_View
 @{
-    int daySum = Model.Day * Model.DayRate;
+    int daySum = Model.Day == 1 ? 0 : Model.Day * Model.DayRate;
     int residenceSum = Model.DayLive * Model.ResidenceRate;
     int totalSum = daySum + residenceSum + Model.TicketSum;  
 }
-
 <hr />
+@if (Model.Day == 1)
+{
+    <p class="text-danger">Суточные не выплачиваются, если командировка 1 сутки</p>
+}
 <p>Суточные норма: <em>@Model.DayRate тг.</em></p>
 <p>Сумма: <em>@Model.Day * @Model.DayRate тг. = @daySum тг.</em></p>
 <p>Проживание норма: <em>@Model.ResidenceRate тг.</em></p>

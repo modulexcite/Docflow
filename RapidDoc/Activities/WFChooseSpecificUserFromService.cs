@@ -10,6 +10,7 @@ using System.Activities.Tracking;
 using Ninject;
 using System.Web.Mvc;
 using RapidDoc.Models.Repository;
+using RapidDoc.Models.ViewModels;
 
 namespace RapidDoc.Activities
 {

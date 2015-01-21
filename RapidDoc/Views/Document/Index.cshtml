@@ -1,7 +1,7 @@
-﻿@{
+﻿@using GridMvc.Html;
+@{
     ViewBag.Title = UIElementRes.UIElement.Dashboard;
 }
-@using GridMvc.Html;
 
 <br class="hidden-print">
 <ul class="nav nav-tabs" role="tablist">
@@ -22,15 +22,12 @@
 @section jslaunch {
 <script type="text/javascript">
 $(function () {
-    grid_init("@Url.Action("GetDocumentList", "Document")")
+    grid_init("@Url.Action("GetDocumentList", "Document")");
+    popover_init();
 
     pageGrids.ordersGrid.onRowSelect(function (e) {
         window.location.href = '/' + e.row.AliasCompanyName + '/' + 'Document/ShowDocument/' + e.row.Id;
     });
-
-    $('.popover-link').popover({
-        trigger: 'hover'
-    })
 });
 </script>
 }

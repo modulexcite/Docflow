@@ -126,8 +126,6 @@ namespace RapidDoc.Controllers
         [HttpPost]
         public ActionResult Edit(ProcessView model)
         {
-            ActionResult view;
-
             var filesXaml = _DocumentService.GetAllXAMLDocument(GuidNull2Guid(model.Id)).FirstOrDefault();
             if (filesXaml == null && model.isApproved == true)
                 ModelState.AddModelError(string.Empty,  ValidationRes.ValidationResource.ErrorProcessXAML);

@@ -38,8 +38,8 @@ namespace RapidDoc.Models.Services
         void UpdateDocument(DocumentTable domainTable, string currentUserId = "");
         void UpdateDocumentFields(dynamic viewTable, ProcessView processView);
         void SaveDocumentText(DocumentTable domainTable);
-        bool isShowDocument(DocumentTable documentTable, Guid ProcessId, ApplicationUser user, bool isAfterView = false);
-        bool isSignDocument(Guid documentId, Guid ProcessId, ApplicationUser user = null);
+        bool isShowDocument(DocumentTable documentTable, ApplicationUser user, bool isAfterView = false);
+        bool isSignDocument(Guid documentId, ApplicationUser user = null);
         IEnumerable<WFTrackerTable> GetCurrentSignStep(Guid documentId, string currentUserId = "", ApplicationUser user = null);
         SLAStatusList SLAStatus(Guid documentId, string currentUserId = "", ApplicationUser user = null);
         void SaveSignData(IEnumerable<WFTrackerTable> trackerTables, TrackerType trackerType);
@@ -52,7 +52,6 @@ namespace RapidDoc.Models.Services
         List<ApplicationUser> GetSignUsers(DocumentTable docuTable);
         List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status);
         DateTime? GetSLAPerformDate(Guid DocumentId, DateTime? CreatedDate, double SLAOffset);
-        List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable);
         IEnumerable<FileTable> GetAllTemplatesDocument(Guid processId);
         IEnumerable<FileTable> GetAllXAMLDocument(Guid processId);
         void DeleteFiles(Guid documentId);
@@ -364,7 +363,7 @@ namespace RapidDoc.Models.Services
             _uow.Save();
         }
 
-        public bool isShowDocument(DocumentTable documentTable, Guid ProcessId, ApplicationUser user, bool isAfterView = false)
+        public bool isShowDocument(DocumentTable documentTable, ApplicationUser user, bool isAfterView = false)
         {
             if (user.Id == documentTable.ApplicationUserCreatedId)
             {
@@ -387,36 +386,9 @@ namespace RapidDoc.Models.Services
                 return true;
             }
 
-            var delegationItems = _DelegationService.GetPartial(x => x.EmplTableTo.ApplicationUserId == user.Id
-                && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
-                && x.isArchive == false && x.CompanyTableId == user.CompanyTableId);
-
-            foreach (var delegationItem in delegationItems)
+            if (_DelegationService.CheckDelegation(documentTable, user, documentTable.ProcessTable, trackerTables) == true)
             {
-                if (delegationItem.GroupProcessTableId != null || delegationItem.ProcessTableId != null)
-                {
-                    if (delegationItem.ProcessTableId == ProcessId)
-                    {
-                        if (checkTrackUsers(trackerTables, delegationItem.EmplTableFrom.ApplicationUserId))
-                        {
-                            return true;
-                        }
-                    }
-                    else if (_ProcessService.Find(ProcessId).GroupProcessTableId == delegationItem.GroupProcessTableId)
-                    {
-                        if (checkTrackUsers(trackerTables, delegationItem.EmplTableFrom.ApplicationUserId))
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (checkTrackUsers(trackerTables, delegationItem.EmplTableFrom.ApplicationUserId))
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
 
             if (_DocumentReaderService.Contains(x => x.DocumentTableId == documentTable.Id && x.UserId == user.Id))
@@ -432,10 +404,11 @@ namespace RapidDoc.Models.Services
             return false;
         }
 
-        public bool isSignDocument(Guid documentId, Guid ProcessId, ApplicationUser user = null)
+        public bool isSignDocument(Guid documentId, ApplicationUser user = null)
         {
             IEnumerable<WFTrackerTable> trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentId && x.SignUserId == null);
-            
+            DocumentTable documentTable = Find(documentId);
+
             if (user == null)
                 user = getCurrentUserId();
 
@@ -444,36 +417,9 @@ namespace RapidDoc.Models.Services
                 return true;
             }
 
-            var delegationItems = _DelegationService.GetPartial(x => x.EmplTableTo.ApplicationUserId == user.Id 
-                && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
-                && x.isArchive == false && x.CompanyTableId == user.CompanyTableId);
-
-            foreach (var delegationItem in delegationItems)
+            if (_DelegationService.CheckDelegation(documentTable, user, documentTable.ProcessTable, trackerTables) == true)
             {
-                if (delegationItem.GroupProcessTableId != null || delegationItem.ProcessTableId != null)
-                {
-                    if (delegationItem.ProcessTableId == ProcessId)
-                    {
-                        if (checkTrackUsers(trackerTables, delegationItem.EmplTableFrom.ApplicationUserId))
-                        {
-                            return true;
-                        }
-                    }
-                    else if (_ProcessService.Find(ProcessId).GroupProcessTableId == delegationItem.GroupProcessTableId)
-                    {
-                        if (checkTrackUsers(trackerTables, delegationItem.EmplTableFrom.ApplicationUserId))
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (checkTrackUsers(trackerTables, delegationItem.EmplTableFrom.ApplicationUserId))
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
 
             return false;
@@ -485,7 +431,7 @@ namespace RapidDoc.Models.Services
 
             if(docuTable != null)
             {
-                IEnumerable<WFTrackerTable> trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.SignUserId == null);
+                IEnumerable<WFTrackerTable> trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting);
 
                 if (trackerTables != null)
                 {
@@ -504,32 +450,7 @@ namespace RapidDoc.Models.Services
                 }
 
                 List<ApplicationUser> delegationUserCheck = signUsers.ToList();
-
-                foreach (var user in delegationUserCheck)
-                {
-                    var delegationItems = _DelegationService.GetPartial(x => x.EmplTableFrom.ApplicationUserId == user.Id
-                        && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
-                        && x.isArchive == false && x.CompanyTableId == user.CompanyTableId);
-
-                    foreach (var delegationItem in delegationItems)
-                    {
-                        if (delegationItem.GroupProcessTableId != null || delegationItem.ProcessTableId != null)
-                        {
-                            if (delegationItem.ProcessTableId == docuTable.ProcessTableId)
-                            {
-                                signUsers.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
-                            }
-                            else if (_ProcessService.Find(docuTable.ProcessTableId).GroupProcessTableId == delegationItem.GroupProcessTableId)
-                            {
-                                signUsers.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
-                            }
-                        }
-                        else
-                        {
-                            signUsers.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
-                        }
-                    }
-                }
+                signUsers.AddRange(_DelegationService.GetDelegationUsers(docuTable, delegationUserCheck));
             }
 
             return signUsers;
@@ -594,72 +515,21 @@ namespace RapidDoc.Models.Services
             }
             IEnumerable<WFTrackerTable> trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Waiting);
             DocumentTable document = Find(documentId);
+            ProcessTable process = _ProcessService.Find(document.ProcessTableId);
             List<WFTrackerTable> signStep = new List<WFTrackerTable>();
 
             if (trackerTables != null)
             {
                 foreach (var trackerTable in trackerTables)
                 {
-                    if (trackerTable.Users != null)
+                    if (_DelegationService.CheckTrackerUsers(trackerTable, user.Id))
                     {
-                        if (trackerTable.Users.Exists(x => x.UserId == user.Id))
-                        {
-                            signStep.Add(trackerTable);
-                        }
+                        signStep.Add(trackerTable);
                     }
                 }
             }
 
-            var delegationItems = _DelegationService.GetPartial(x => x.EmplTableTo.ApplicationUserId == user.Id
-                && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
-                && x.isArchive == false && x.CompanyTableId == user.CompanyTableId);
-
-            foreach (var delegationItem in delegationItems)
-            {
-                if (delegationItem.GroupProcessTableId != null || delegationItem.ProcessTableId != null)
-                {
-                    if (delegationItem.ProcessTableId == document.ProcessTableId)
-                    {
-                        foreach (var trackerTable in trackerTables)
-                        {
-                            if (trackerTable.Users != null)
-                            {
-                                if (trackerTable.Users.Exists(x => x.UserId == delegationItem.EmplTableFrom.ApplicationUserId))
-                                {
-                                    signStep.Add(trackerTable);
-                                }
-                            }
-                        }
-                    }
-                    else if (_ProcessService.Find(document.ProcessTableId).GroupProcessTableId == delegationItem.GroupProcessTableId)
-                    {
-                        foreach (var trackerTable in trackerTables)
-                        {
-                            if (trackerTable.Users != null)
-                            {
-                                if (trackerTable.Users.Exists(x => x.UserId == delegationItem.EmplTableFrom.ApplicationUserId))
-                                {
-                                    signStep.Add(trackerTable);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var trackerTable in trackerTables)
-                    {
-                        if (trackerTable.Users != null)
-                        {
-                            if (trackerTable.Users.Exists(x => x.UserId == delegationItem.EmplTableFrom.ApplicationUserId))
-                            {
-                                signStep.Add(trackerTable);
-                            }
-                        }
-                    }
-                }
-            }
-
+            signStep.AddRange(_DelegationService.GetDelegationUsers(document, user, trackerTables));
             return signStep;
         }
 
@@ -777,22 +647,6 @@ namespace RapidDoc.Models.Services
                             users.AddRange(item.Users);
                         }
                     }
-                }
-            }
-
-            return users;
-        }
-
-        public List<WFTrackerUsersTable> GetAllUserCurrentStep(DocumentTable docuTable)
-        {
-            List<WFTrackerUsersTable> users = new List<WFTrackerUsersTable>();
-            IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting);
-
-            if (items != null)
-            {
-                foreach (var item in items)
-                {
-                    users.AddRange(item.Users);
                 }
             }
 

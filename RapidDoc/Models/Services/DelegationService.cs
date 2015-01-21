@@ -30,7 +30,8 @@ namespace RapidDoc.Models.Services
         void Delete(Guid id);
         DelegationTable Find(Guid id);
         DelegationView FindView(Guid id);
-        List<WFTrackerTable> GetDelegationUsers(DocumentTable document, ApplicationUser currentUser, ProcessTable process, IEnumerable<WFTrackerTable> trackerTables);
+        List<WFTrackerTable> GetDelegationUsers(DocumentTable document, ApplicationUser currentUser, IEnumerable<WFTrackerTable> trackerTables);
+        List<ApplicationUser> GetDelegationUsers(DocumentTable document, List<ApplicationUser> users);
         bool CheckDelegation(DocumentTable document, ApplicationUser user, ProcessTable process, IEnumerable<WFTrackerTable> trackerTables);
         bool CheckTrackerUsers(IEnumerable<WFTrackerTable> trackerTables, string userId);
         bool CheckTrackerUsers(WFTrackerTable trackerTable, string userId);
@@ -135,7 +136,7 @@ namespace RapidDoc.Models.Services
             return Mapper.Map<DelegationTable, DelegationView>(Find(id));
         }
 
-        public List<WFTrackerTable> GetDelegationUsers(DocumentTable document, ApplicationUser user, ProcessTable process, IEnumerable<WFTrackerTable> trackerTables)
+        public List<WFTrackerTable> GetDelegationUsers(DocumentTable document, ApplicationUser user, IEnumerable<WFTrackerTable> trackerTables)
         {
             List<WFTrackerTable> result = new List<WFTrackerTable>();
 
@@ -157,7 +158,7 @@ namespace RapidDoc.Models.Services
                             }
                         }
                     }
-                    else if (process.GroupProcessTableId == delegationItem.GroupProcessTableId)
+                    else if (document.ProcessTable.GroupProcessTableId == delegationItem.GroupProcessTableId)
                     {
                         foreach (var trackerTable in trackerTables)
                         {
@@ -176,6 +177,39 @@ namespace RapidDoc.Models.Services
                         {
                             result.Add(trackerTable);
                         }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public List<ApplicationUser> GetDelegationUsers(DocumentTable document, List<ApplicationUser> users)
+        {
+            List<ApplicationUser> result = new List<ApplicationUser>();
+
+            foreach (var user in users)
+            {
+                var delegationItems = GetPartial(x => x.EmplTableFrom.ApplicationUserId == user.Id
+                    && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
+                    && x.isArchive == false && x.CompanyTableId == user.CompanyTableId);
+
+                foreach (var delegationItem in delegationItems)
+                {
+                    if (delegationItem.GroupProcessTableId != null || delegationItem.ProcessTableId != null)
+                    {
+                        if (delegationItem.ProcessTableId == document.ProcessTableId)
+                        {
+                            result.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
+                        }
+                        else if (document.ProcessTable.GroupProcessTableId == delegationItem.GroupProcessTableId)
+                        {
+                            result.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
+                        }
+                    }
+                    else
+                    {
+                        result.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
                     }
                 }
             }
