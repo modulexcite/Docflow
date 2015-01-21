@@ -6,7 +6,6 @@ using System.Web;
 using System.Web.Security;
 using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Infrastructure;
-using RapidDoc.Models.Repository;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Activities;
@@ -22,6 +21,8 @@ using System.Configuration;
 using System.Text.RegularExpressions;
 using System.Activities.XamlIntegration;
 using System.Activities.Expressions;
+using RapidDoc.Models.ViewModels;
+using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Models.Services
 {

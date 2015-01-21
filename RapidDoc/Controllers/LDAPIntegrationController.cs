@@ -188,10 +188,10 @@ namespace RapidDoc.Controllers
             if (_managerUserId != String.Empty)
             {
                 if (_EmplService.Contains(x => x.CompanyTableId == _company
-                    && x.ApplicationUserId == _managerUserId))
+                    && x.ApplicationUserId == _managerUserId && x.Enable == true))
                 {
                     manageId = _EmplService.FirstOrDefault(x => x.CompanyTableId == _company
-                        && x.ApplicationUserId == _managerUserId).Id;
+                        && x.ApplicationUserId == _managerUserId && x.Enable == true).Id;
 
                     if (_EmplService.Contains(x => x.CompanyTableId == _company
                         && x.LDAPGlobalId == _globalId))
@@ -215,10 +215,10 @@ namespace RapidDoc.Controllers
             if(_managerUserId != String.Empty)
             {
                 if (_EmplService.Contains(x => x.CompanyTableId == _company
-                    && x.ApplicationUserId == _managerUserId))
+                    && x.ApplicationUserId == _managerUserId && x.Enable == true))
                 {
                     manageId = _EmplService.FirstOrDefault(x => x.CompanyTableId == _company
-                        && x.ApplicationUserId == _managerUserId).Id;
+                        && x.ApplicationUserId == _managerUserId && x.Enable == true).Id;
                 }
             }
 

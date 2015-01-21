@@ -162,7 +162,7 @@ namespace RapidDoc.Controllers
             ProcessView process = _ProcessService.FindView(documentTable.ProcessTableId);
             EmplTable emplTable = _EmplService.GetEmployer(docuView.ApplicationUserCreatedId, docuView.CompanyTableId);
 
-            if (documentTable == null || docuView == null || process == null || currentUser == null || emplTable == null || _DocumentService.isShowDocument(documentTable, GuidNull2Guid(process.Id), currentUser, isAfterView) == false)
+            if (documentTable == null || docuView == null || process == null || currentUser == null || emplTable == null || _DocumentService.isShowDocument(documentTable, currentUser, isAfterView) == false)
             {
                 return RedirectToAction("PageNotFound", "Error");
             }
@@ -204,7 +204,7 @@ namespace RapidDoc.Controllers
 
             if (ModelState.IsValid)
             {
-                if (_DocumentService.isSignDocument(id, processId, currentUser))
+                if (_DocumentService.isSignDocument(id, currentUser))
                 {
                     if (operationType == OperationType.ApproveDocument)
                     {
@@ -228,7 +228,7 @@ namespace RapidDoc.Controllers
             var viewModel = new DocumentComposite();
             viewModel.ProcessView = process;
 
-            docuView.isSign = _DocumentService.isSignDocument(documentTable.Id, documentTable.ProcessTableId, userTable);
+            docuView.isSign = _DocumentService.isSignDocument(documentTable.Id, userTable);
             docuView.isArchive = _ReviewDocLogService.isArchive(documentTable.Id, "", userTable);
             viewModel.DocumentView = docuView;
             viewModel.docData = _DocumentService.GetDocumentView(documentTable.RefDocumentId, process.TableName);
@@ -306,13 +306,6 @@ namespace RapidDoc.Controllers
             return view;
         }
 
-        [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult UploadFile(Guid processId, Guid fileId, HttpPostedFileBase files)
-        {
-            return AjaxUpload(files, fileId, processId);
-        }
-
         public ActionResult Create(Guid id)
         {
             ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
@@ -354,7 +347,7 @@ namespace RapidDoc.Controllers
             ApplicationUser currentUser = _AccountService.Find(User.Identity.GetUserId());
             EmplTable emplTable = _EmplService.GetEmployer(docuView.ApplicationUserCreatedId, docuView.CompanyTableId);
 
-            if (documentTable == null || docuView == null || process == null || currentUser == null || emplTable == null || _DocumentService.isShowDocument(documentTable, GuidNull2Guid(process.Id), currentUser) == false)
+            if (documentTable == null || docuView == null || process == null || currentUser == null || emplTable == null || _DocumentService.isShowDocument(documentTable, currentUser) == false)
             {
                 return RedirectToAction("PageNotFound", "Error");
             }
@@ -564,9 +557,10 @@ namespace RapidDoc.Controllers
 
         public ActionResult AddReader(Guid id)
         {
-            ViewBag.DocumentId = id;
-            var empls = InitializeReaderView(id);
-            return View(empls);
+            DualListView model = new DualListView();
+            model.EmplList = InitializeReaderView(id).ToList();
+            model.DocumentId = id;
+            return View(model);
         }
 
         [HttpPost]
@@ -600,43 +594,43 @@ namespace RapidDoc.Controllers
             return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id, isAfterView = true }) });
         }
 
-        private IEnumerable<EmplView> InitializeReaderView(Guid id)
+        private IEnumerable<EmplDualListView> InitializeReaderView(Guid id)
         {
-            var empls = _EmplService.GetPartialIntercompanyView(x => x.ApplicationUserId != null);
+            List<EmplDualListView> result = new List<EmplDualListView>();
+            var emplList = _EmplService.GetPartialIntercompany(x => x.ApplicationUserId != null && x.Enable == true);
 
-            foreach (var empl in empls)
+            result = emplList.Select(m => new EmplDualListView
             {
-                if (_DocumentReaderService.Contains(x => x.DocumentTableId == id && x.UserId == empl.ApplicationUserId))
-                {
-                    empl.isActiveDualList = true;
-                }
-            }
+                AliasCompanyName = m.AliasCompanyName,
+                FullName = m.FullName,
+                ApplicationUserId = m.ApplicationUserId,
+                isActiveDualList = _DocumentReaderService.Contains(x => x.DocumentTableId == id && x.UserId == m.ApplicationUserId)
+            }).ToList();
 
-            return empls;
+            return result;
         }
 
         public ActionResult AddExecutor(Guid id, string activityId)
         {
-            ViewBag.DocumentId = id;
-            var empls = _EmplService.GetPartialIntercompanyView(x => x.ApplicationUserId != null);
+            List<EmplDualListView> result = new List<EmplDualListView>();
+            var emplList = _EmplService.GetPartialIntercompany(x => x.ApplicationUserId != null && x.Enable == true);
+            WFTrackerTable tracker = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == id && x.TrackerType == TrackerType.Waiting);
 
-            WFTrackerTable tracker = _WorkflowTrackerService.FirstOrDefault(x => x.ActivityID == activityId && x.DocumentTableId == id);
-
-            if (tracker.Users != null)
+            if (tracker != null && tracker.Users != null)
             {
-                foreach (var empl in empls)
+                result = emplList.Select(m => new EmplDualListView
                 {
-                    foreach (var user in tracker.Users)
-                    {
-                        if(empl.ApplicationUserId == user.UserId)
-                        {
-                            empl.isActiveDualList = true;
-                        }
-                    }
-                }
+                    AliasCompanyName = m.AliasCompanyName,
+                    FullName = m.FullName,
+                    ApplicationUserId = m.ApplicationUserId,
+                    isActiveDualList = tracker.Users.Any(x => x.UserId == m.ApplicationUserId)
+                }).ToList();
             }
 
-            return View(empls);
+            DualListView model = new DualListView();
+            model.EmplList = result;
+            model.DocumentId = id;
+            return View(model);
         }
 
         [HttpPost]
@@ -678,7 +672,9 @@ namespace RapidDoc.Controllers
             return Json(new { result = "Redirect", url = Url.Action("ShowDocument", new { id = id, isAfterView = true }) });
         }
 
-        public JsonResult AjaxUpload(HttpPostedFileBase file, Guid fileId, Guid processId)
+        [HttpPost]
+        [ValidateInput(false)]
+        public JsonResult AjaxUpload(Guid processId, Guid fileId, HttpPostedFileBase files)
         {
             ProcessTable process = _ProcessService.Find(processId);
             var statuses = new List<ViewDataUploadFilesResult>();
@@ -686,7 +682,7 @@ namespace RapidDoc.Controllers
 
             if (process.DocSize > 0)
             {
-                if (((file.ContentLength / 1024f) / 1024f) > process.DocSize)
+                if (((files.ContentLength / 1024f) / 1024f) > process.DocSize)
                     error = true;
             }
 
@@ -694,22 +690,22 @@ namespace RapidDoc.Controllers
             byte[] binaryData;
             string contentType;
 
-            if (file != null && !string.IsNullOrEmpty(file.FileName) && fileId != Guid.Empty && error != true)
+            if (files != null && !string.IsNullOrEmpty(files.FileName) && fileId != Guid.Empty && error != true)
             {
-                BinaryReader binaryReader = new BinaryReader(file.InputStream);
-                byte[] data = binaryReader.ReadBytes(file.ContentLength);
+                BinaryReader binaryReader = new BinaryReader(files.InputStream);
+                byte[] data = binaryReader.ReadBytes(files.ContentLength);
                 ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
 
                 var thumbnail = new byte[] { };
-                contentType = file.ContentType.ToString().ToUpper();
+                contentType = files.ContentType.ToString().ToUpper();
                 thumbnail = GetThumbnail(data, contentType);
 
                 // here you can save your file to the database...
                 FileTable doc = new FileTable();
                 doc.DocumentFileId = fileId;
-                doc.FileName = file.FileName;
+                doc.FileName = files.FileName;
                 doc.ContentType = contentType;
-                doc.ContentLength = file.ContentLength;
+                doc.ContentLength = files.ContentLength;
                 doc.Data = data;
                 doc.Thumbnail = thumbnail;
 
@@ -755,9 +751,9 @@ namespace RapidDoc.Controllers
                 statuses.Add(new ViewDataUploadFilesResult()
                 {
 
-                    name = file.FileName,
-                    error = String.Format(ValidationRes.ValidationResource.ErrorDocSize, process.DocSize, Math.Round(((file.ContentLength / 1024f) / 1024f), 2), file.ContentLength),
-                    size = file.ContentLength,
+                    name = files.FileName,
+                    error = String.Format(ValidationRes.ValidationResource.ErrorDocSize, process.DocSize, Math.Round(((files.ContentLength / 1024f) / 1024f), 2), files.ContentLength),
+                    size = files.ContentLength,
                     url = "",
                     deleteUrl = "",
                     thumbnailUrl = "",
@@ -1037,7 +1033,7 @@ namespace RapidDoc.Controllers
             if (documentId != null)
             {
                 DocumentTable docuTable = _DocumentService.Find(GuidNull2Guid(documentId));
-                CheckCustomDocument(typeActionModel, actionModel, docuTable, _DocumentService.isSignDocument(docuTable.Id, docuTable.ProcessTableId));
+                CheckCustomDocument(typeActionModel, actionModel, docuTable, _DocumentService.isSignDocument(docuTable.Id));
             }
 
             CheckCustomDocument(typeActionModel, actionModel);

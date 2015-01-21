@@ -42,7 +42,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if(current != null)
@@ -71,7 +71,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -90,7 +90,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -109,7 +109,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -128,7 +128,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -147,7 +147,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -173,7 +173,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -192,7 +192,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -211,7 +211,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -230,7 +230,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -252,7 +252,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -274,7 +274,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -297,7 +297,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -317,7 +317,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -356,7 +356,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -375,7 +375,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -394,7 +394,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -413,7 +413,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -432,7 +432,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -451,7 +451,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -470,7 +470,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -489,7 +489,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -508,7 +508,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -527,7 +527,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -546,7 +546,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -565,7 +565,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -584,7 +584,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -603,7 +603,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -622,7 +622,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -641,7 +641,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -660,7 +660,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -681,7 +681,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -700,7 +700,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -719,7 +719,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -738,7 +738,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -757,7 +757,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -776,7 +776,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -795,7 +795,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -814,7 +814,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -833,7 +833,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -852,7 +852,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -871,7 +871,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -890,7 +890,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -909,7 +909,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -928,7 +928,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -947,7 +947,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -966,7 +966,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -985,7 +985,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1004,7 +1004,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1023,7 +1023,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1042,7 +1042,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1061,7 +1061,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1080,7 +1080,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1100,7 +1100,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1119,7 +1119,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1138,7 +1138,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1157,7 +1157,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1176,7 +1176,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
@@ -1195,7 +1195,7 @@ namespace RapidDoc.Controllers
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
 
-            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id, document.ProcessTableId))
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
             {
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)

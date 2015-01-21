@@ -98,20 +98,20 @@ namespace RapidDoc.Controllers
                     if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
                     {
                         var users = _AccountService.GetPartial(x => x.Email != null);
-                        List<CheckSLAStatus> checkData = new List<CheckSLAStatus>();
+                        List<ReminderUsers> checkData = new List<ReminderUsers>();
 
                         foreach (var document in allDocument)
                         {
                             if (document.DocumentState == Models.Repository.DocumentState.Agreement || document.DocumentState == Models.Repository.DocumentState.Execution)
                             {
-                                var checkUser = _Documentservice.GetAllUserCurrentStep(document);
-                                checkData.Add(new CheckSLAStatus(document, checkUser));
+                                var usersReminder = _Documentservice.GetSignUsers(document);
+                                checkData.Add(new ReminderUsers(document, usersReminder));
                             }
                         }
 
                         foreach (var user in users)
                         {
-                            var userDocuments = checkData.Where(x => x.TrackerUsers.Any(a => a.UserId == user.Id)).GroupBy(b => b.DocumentTable).Select(group => group.Key).ToList();
+                            var userDocuments = checkData.Where(x => x.Users.Any(a => a.Id == user.Id)).GroupBy(b => b.DocumentTable).Select(group => group.Key).ToList();
                             if (userDocuments.Count() > 0)
                                 _Emailservice.SendReminderEmail(user.Id, userDocuments);
                         }
@@ -120,7 +120,6 @@ namespace RapidDoc.Controllers
             }
         }
     }
-
     public class CheckSLAStatus
     {
         public CheckSLAStatus(DocumentTable documentTable, IEnumerable<WFTrackerUsersTable> trackerUsers)
@@ -131,5 +130,17 @@ namespace RapidDoc.Controllers
 
         public DocumentTable DocumentTable { get; set; }
         public IEnumerable<WFTrackerUsersTable> TrackerUsers { get; set; }
+    }
+
+    public class ReminderUsers
+    {
+        public ReminderUsers(DocumentTable documentTable, List<ApplicationUser> users)
+        {
+            DocumentTable = documentTable;
+            Users = users;
+        }
+
+        public DocumentTable DocumentTable { get; set; }
+        public List<ApplicationUser> Users { get; set; }
     }
 }

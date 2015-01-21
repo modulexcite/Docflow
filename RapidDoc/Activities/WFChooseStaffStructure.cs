@@ -9,6 +9,7 @@ using RapidDoc.Models.Repository;
 using Ninject;
 using RapidDoc.Models.Services;
 using System.Web.Mvc;
+using RapidDoc.Models.ViewModels;
 
 namespace RapidDoc.Activities
 {

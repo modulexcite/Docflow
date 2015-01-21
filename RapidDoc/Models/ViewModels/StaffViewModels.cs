@@ -91,8 +91,6 @@ namespace RapidDoc.Models.ViewModels
                 return (SecondName + " " + FirstName + " " + MiddleName);
             }
         }
-
-        public bool isActiveDualList { get; set; }
     }
 
     public class DelegationView : BasicCompanyNullView
@@ -122,5 +120,19 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "ProcessName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public Guid? ProcessTableId { get; set; }
         public string ProcessName { get; set; }
+    }
+
+    public class DualListView
+    {
+        public Guid DocumentId { get; set; }
+        public List<RapidDoc.Models.ViewModels.EmplDualListView> EmplList { get; set; }
+    }
+
+    public class EmplDualListView
+    {
+        public string AliasCompanyName { get; set; }
+        public string FullName { get; set; }
+        public string ApplicationUserId { get; set; }
+        public bool isActiveDualList { get; set; }
     }
 }

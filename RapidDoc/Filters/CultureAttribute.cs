@@ -16,7 +16,6 @@ namespace RapidDoc.Filters
             if (filterContext.IsChildAction == false)
             {
                 string cultureName = null;
-                // Получаем куки из контекста, которые могут содержать установленную культуру
                 HttpCookie cultureCookie = filterContext.HttpContext.Request.Cookies["lang"];
                 if (cultureCookie != null)
                     cultureName = cultureCookie.Value;
@@ -24,21 +23,14 @@ namespace RapidDoc.Filters
                 {
                     var userLanguages = HttpContext.Current.Request.UserLanguages;
                     if (userLanguages[0] != null)
-                    {
                         cultureName = userLanguages[0];
-                    }
                     else
-                    {
                         cultureName = Lang.DefaultLang();
-                    }
                 }
 
-                // Список культур
                 List<string> cultures = Lang.GetISOCodes();
                 if (!cultures.Contains(cultureName))
-                {
                     cultureName = Lang.DefaultLang();
-                }
 
                 CultureInfo ci = CultureInfo.GetCultureInfo(cultureName);
                 Thread.CurrentThread.CurrentCulture = ci;

@@ -415,7 +415,7 @@
 }
 @section jsinit {
     var urlFileDownload = "@Url.Action("GetAllFileDocument", "Document", new { id = Model.fileId })";
-    var urlFileUpload = "@Url.Action("UploadFile", "Document", new { processId = Model.ProcessView.Id, fileId = Model.fileId })";
+    var urlFileUpload = "@Url.Action("AjaxUpload", "Document", new { processId = Model.ProcessView.Id, fileId = Model.fileId })";
 }
 @section jslaunch {
 <script type="text/javascript">
@@ -427,6 +427,7 @@
         custom_tagsinputEmpl2_init("@Url.Action("JsonEmpl", "Custom")");
         custom_tagsinputEmpl3_init("@Url.Action("JsonEmpl", "Custom")");
         custom_tagsinputEmpl4_init("@Url.Action("JsonEmpl", "Custom")");
+        popover_init();
         qrcode_init();
 
         $('#lastComment').keydown(function (e) {
@@ -436,11 +437,6 @@
                 document.getElementById('saveCommentBtn').click();
             }
         });
-
-        $('.popover-link').popover({
-            trigger: 'hover',
-            placement: 'auto'
-        })
     });
 </script>
 }

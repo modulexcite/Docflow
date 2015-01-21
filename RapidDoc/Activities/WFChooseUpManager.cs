@@ -14,6 +14,7 @@ using RapidDoc.Models.Infrastructure;
 using System.Runtime.CompilerServices;
 using System.Web.Mvc;
 using RapidDoc.Models.Repository;
+using RapidDoc.Models.ViewModels;
 
 namespace RapidDoc.Activities
 {
