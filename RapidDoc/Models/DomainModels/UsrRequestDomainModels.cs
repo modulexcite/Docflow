@@ -1693,7 +1693,7 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
@@ -1727,7 +1727,7 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
@@ -1761,7 +1761,7 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
@@ -1795,7 +1795,7 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
@@ -1881,10 +1881,10 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         [Required]
-        public DateTime DateReturnOC { get; set; }
+        public string DateReturnOC { get; set; }
 
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
@@ -1913,7 +1913,7 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
@@ -1948,7 +1948,7 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
@@ -1996,10 +1996,10 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         [Required]
-        public DateTime DateReturnOC { get; set; }
+        public string DateReturnOC { get; set; }
         
         public bool Post1 { get; set; }  
         public bool Post2 { get; set; }
@@ -2043,10 +2043,10 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         [Required]
-        public DateTime DateReturnOC { get; set; }
+        public string DateReturnOC { get; set; }
 
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
@@ -2092,10 +2092,10 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         [Required]
-        public DateTime DateReturnOC { get; set; }
+        public string DateReturnOC { get; set; }
 
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
@@ -2138,10 +2138,10 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         [Required]
-        public DateTime DateReturnOC { get; set; }
+        public string DateReturnOC { get; set; }
 
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
@@ -2224,7 +2224,7 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
 
         public bool Post1 { get; set; }
@@ -2261,7 +2261,7 @@ namespace RapidDoc.Models.DomainModels
         public string Aim { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
 
         public bool Post1 { get; set; }

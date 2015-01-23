@@ -237,35 +237,41 @@ namespace RapidDoc.Controllers
             if (!_EmplService.Contains(x => x.CompanyTableId == _company
                 && x.LDAPGlobalId == _globalId))
             {
-                _EmplService.SaveDomain(new EmplTable()
+                if (_titleId != Guid.Empty && _departmentId != Guid.Empty)
                 {
-                    isIntegratedLDAP = true,
-                    LDAPGlobalId = _globalId,
-                    FirstName = _firstname,
-                    SecondName = _secondname,
-                    MiddleName = _middlename,
-                    ApplicationUserId = _userId,
-                    DepartmentTableId = _departmentId,
-                    TitleTableId = _titleId,
-                    CompanyTableId = _company,
-                    WorkScheduleTableId = _WorkScheduleService.FirstOrDefault(x => x.Id != null).Id,
-                    ManageId = manageId,
-                    Enable = true
-                }, "Admin", _company);
+                    _EmplService.SaveDomain(new EmplTable()
+                    {
+                        isIntegratedLDAP = true,
+                        LDAPGlobalId = _globalId,
+                        FirstName = _firstname,
+                        SecondName = _secondname,
+                        MiddleName = _middlename,
+                        ApplicationUserId = _userId,
+                        DepartmentTableId = _departmentId,
+                        TitleTableId = _titleId,
+                        CompanyTableId = _company,
+                        WorkScheduleTableId = _WorkScheduleService.FirstOrDefault(x => x.Id != null).Id,
+                        ManageId = manageId,
+                        Enable = true
+                    }, "Admin", _company);
+                }
             }
             else
             {
-                EmplTable empl = _EmplService.FirstOrDefault(x => x.CompanyTableId == _company
-                    && x.LDAPGlobalId == _globalId);
+                if (_titleId != Guid.Empty && _departmentId != Guid.Empty)
+                {
+                    EmplTable empl = _EmplService.FirstOrDefault(x => x.CompanyTableId == _company
+                        && x.LDAPGlobalId == _globalId);
 
-                empl.FirstName = _firstname;
-                empl.SecondName = _secondname;
-                empl.MiddleName = _middlename;
-                empl.DepartmentTableId = _departmentId;
-                empl.TitleTableId = _titleId;
-                empl.isIntegratedLDAP = true;
-                empl.ManageId = manageId;
-                _EmplService.SaveDomain(empl, "Admin", _company);
+                    empl.FirstName = _firstname;
+                    empl.SecondName = _secondname;
+                    empl.MiddleName = _middlename;
+                    empl.DepartmentTableId = _departmentId;
+                    empl.TitleTableId = _titleId;
+                    empl.isIntegratedLDAP = true;
+                    empl.ManageId = manageId;
+                    _EmplService.SaveDomain(empl, "Admin", _company);
+                }
             }
         }
 

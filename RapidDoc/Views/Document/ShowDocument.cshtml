@@ -64,12 +64,12 @@
             {
                 <div class="table-responsive">
                     <table class="table table-condensed">
-                        <thead>
+                        <thead class="">
                             <tr>
                                 <th class="actionField">
                                     #
                                 </th>
-                                <td class="actionField"></td>
+                                <td class="actionField hidden-print"></td>
                                 <th>
                                     @Html.DisplayNameFor(model => Model.WFTrackerItems.First().ActivityName)
                                 </th>
@@ -93,9 +93,9 @@
                                         <span class="label label-primary rowNum cellAligmentMiddle">@Html.DisplayFor(modelItem => trackerItem.RowNum)</span>
                                     </td>
                                     <td class="hidden-print">
-                                        @if ((trackerItem.ManualExecutor == true && Model.DocumentView.isSign) || (User.IsInRole("Administrator") && trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting))
+                                    @if ((trackerItem.ManualExecutor == true && Model.DocumentView.isSign) || (User.IsInRole("Administrator") && trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting))
                                     {
-                                            <a href=@Url.Action("AddExecutor", new { id = Model.DocumentView.Id, activityId = trackerItem.ActivityID })><span class="fa fa-users fa-lg"></span></a>
+                                        <a href=@Url.Action("AddExecutor", new { id = Model.DocumentView.Id, activityId = trackerItem.ActivityID }) class="hidden-print"><span class="fa fa-users fa-lg"></span></a>
                                     }
                                     </td>
                                     <td>
@@ -105,29 +105,32 @@
                                         @Html.DisplayFor(modelItem => trackerItem.Executors)
                                     </td>
                                     <td class="hidden-print">
-                                        @if (trackerItem.PerformToDate != null)
+                                    @if (trackerItem.PerformToDate != null)
                                     {
-                                            @Html.DateTimeLocalFor(modelItem => trackerItem.PerformToDate)
+                                        @Html.DateTimeLocalFor(modelItem => trackerItem.PerformToDate)
                                     }
                                     </td>
                                     <td>
-                                        @if (trackerItem.SignDate != null)
+                                    @if (trackerItem.SignDate != null)
                                     {
-                                            @Html.DateTimeLocalFor(modelItem => trackerItem.SignDate)
+                                        @Html.DateTimeLocalFor(modelItem => trackerItem.SignDate)
                                     }
                                     </td>
                                     <th>
-                                        @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting)
+                                    @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting)
                                     {
-                                            <span class="fa fa-spinner fa-spin fa-2x text-primary"></span>
+                                        <span class="fa fa-spinner fa-spin fa-2x text-primary hidden-print"></span>
+                                        <p class="visible-print-inline">@UIElementRes.UIElement.No</p>
                                     }
-                                        @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Approved)
+                                    @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Approved)
                                     {
-                                            <span class="fa fa-check fa-2x text-primary"></span>
+                                        <span class="fa fa-check fa-2x text-primary hidden-print"></span>
+                                        <p class="visible-print-inline">@UIElementRes.UIElement.Yes</p>
                                     }
-                                        @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Cancelled)
+                                    @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Cancelled)
                                     {
-                                            <span class="fa fa-times fa-2x text-primary"></span>
+                                        <span class="fa fa-times fa-2x text-primary hidden-print"></span>
+                                        <p class="visible-print-inline">@UIElementRes.UIElement.No</p>
                                     }
                                     </th>
                                 </tr>
@@ -214,7 +217,7 @@
                             <h4 class="modal-title">@UIElementRes.UIElement.Confirmation</h4>
                         </div>
                         <div class="modal-body">
-                            <p>@UIElementRes.UIElement.WithdrawHistory?</p>
+                            <p>@UIElementRes.UIElement.WithdrawQuestion</p>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success" name="action:WithdrawDocument">@UIElementRes.UIElement.Yes</button>

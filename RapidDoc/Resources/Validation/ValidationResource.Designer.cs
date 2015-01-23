@@ -61,7 +61,7 @@ namespace ValidationRes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Максиально допустимый размер файла {0} МБ, Вы добавили файл: {1} МБ.
+        ///   Looks up a localized string similar to Максимально допустимый размер файла {0} МБ, Вы добавили файл: {1} МБ.
         /// </summary>
         public static string ErrorDocSize {
             get {

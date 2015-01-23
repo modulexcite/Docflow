@@ -484,7 +484,7 @@ namespace UIElementRes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Удален файл.
+        ///   Looks up a localized string similar to Файл удален.
         /// </summary>
         public static string DocumentDeletedFile {
             get {
@@ -655,7 +655,7 @@ namespace UIElementRes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В документе нужно прикрепить {0} файл(-а).
+        ///   Looks up a localized string similar to В документе нужно прикрепить {0} файл(-ов).
         /// </summary>
         public static string MustAttachedFiles {
             get {
@@ -1236,6 +1236,15 @@ namespace UIElementRes {
         public static string Withdrawn {
             get {
                 return ResourceManager.GetString("Withdrawn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Отозвать документ?.
+        /// </summary>
+        public static string WithdrawQuestion {
+            get {
+                return ResourceManager.GetString("WithdrawQuestion", resourceCulture);
             }
         }
         

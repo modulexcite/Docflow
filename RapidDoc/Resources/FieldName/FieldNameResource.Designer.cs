@@ -439,7 +439,7 @@ namespace FieldNameRes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Дата обязательного вложение.
+        ///   Looks up a localized string similar to Дата обязательного вложения файлов.
         /// </summary>
         public static string MandatoryDocDate {
             get {

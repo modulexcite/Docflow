@@ -83,6 +83,9 @@ namespace RapidDoc
             bundles.Add(new ScriptBundle("~/bundles/textareaResize").Include(
                         "~/Scripts/jquery.autosize.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/labelauty").Include(
+                        "~/Scripts/jquery-labelauty.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/oldBrowsers").Include(
                         "~/Scripts/html5shiv.js",
                         "~/Scripts/respond.min.js"));
