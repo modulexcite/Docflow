@@ -460,6 +460,7 @@ namespace RapidDoc.Controllers
                                 }
                             }
                         }
+                        /*
                         else
                         {
                             if (user.Enable == false)
@@ -480,6 +481,7 @@ namespace RapidDoc.Controllers
                                 }
                             }
                         }
+                        */
                     }
                     ds.Dispose();
                     entry.Dispose();

@@ -75,7 +75,7 @@ namespace RapidDoc.Models.Services
         }
         public IEnumerable<HistoryUserView> GetPartialView(Expression<Func<HistoryUserTable, bool>> predicate)
         {
-            var items = Mapper.Map<IEnumerable<HistoryUserTable>, IEnumerable<HistoryUserView>>(GetPartial(predicate));
+            var items = Mapper.Map<IEnumerable<HistoryUserTable>, IEnumerable<HistoryUserView>>(GetPartial(predicate).Where(x => x.CreatedDate >= DateTime.UtcNow.AddDays(-60)));
 
             ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             foreach (var item in items)

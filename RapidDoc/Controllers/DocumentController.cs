@@ -144,7 +144,7 @@ namespace RapidDoc.Controllers
 
             if (documentTable.DocumentState == DocumentState.Created)
             {
-                if(documentTable.ApplicationUserCreatedId == currentUser.Id)
+                if (documentTable.ApplicationUserCreatedId == currentUser.Id || UserManager.IsInRole(currentUser.Id, "Administrator"))
                     return RedirectToAction("ShowDraft", "Document", new { id = id });
                 else
                     return RedirectToAction("WithDrawnDocument", "Error");

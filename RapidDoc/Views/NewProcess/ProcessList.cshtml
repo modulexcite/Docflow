@@ -13,16 +13,39 @@
     }
 </ol>
 
-@foreach (var item in Model)
+@if (Model.Count() > 12)
 {
-    <div class="col-md-4">
-        <a href=@Url.Action("Create", "Document", new { id=item.Id }) class="thumbnail tile">
-            <h4>@item.ProcessName</h4>
-            <p class="tile-description"><em>@item.Description</em></p>
-            @if (item.StartWorkTime != item.EndWorkTime && ViewBag.CurrentTimeZoneOffset != null)
-            {
-                <p>@item.StartWorkTime.Add((TimeSpan)ViewBag.CurrentTimeZoneOffset) - @item.EndWorkTime.Add((TimeSpan)ViewBag.CurrentTimeZoneOffset)</p>
-            }
-        </a>
-    </div>
+    foreach (var item in Model)
+    {
+        <table class="table table-condensed table-bordered">
+            <tr>
+                <th>
+                    <a href=@Url.Action("Create", "Document", new { id=item.Id }) class="thumbnaillist text-primary">
+                        <h5>@item.ProcessName</h5>
+                        <p class="tile-description"><em><small>@item.Description</small></em></p>
+                        @if (item.StartWorkTime != item.EndWorkTime && ViewBag.CurrentTimeZoneOffset != null)
+                        {
+                            <p>@item.StartWorkTime.Add((TimeSpan)ViewBag.CurrentTimeZoneOffset) - @item.EndWorkTime.Add((TimeSpan)ViewBag.CurrentTimeZoneOffset)</p>
+                        }
+                    </a>
+                </th>
+            </tr>
+        </table>
+    }
+}
+else
+{
+    foreach (var item in Model)
+    {
+        <div class="col-md-4">
+            <a href=@Url.Action("Create", "Document", new { id=item.Id }) class="thumbnail tile">
+                <h4>@item.ProcessName</h4>
+                <p class="tile-description"><em>@item.Description</em></p>
+                @if (item.StartWorkTime != item.EndWorkTime && ViewBag.CurrentTimeZoneOffset != null)
+                {
+                    <p>@item.StartWorkTime.Add((TimeSpan)ViewBag.CurrentTimeZoneOffset) - @item.EndWorkTime.Add((TimeSpan)ViewBag.CurrentTimeZoneOffset)</p>
+                }
+            </a>
+        </div>
+    }
 }
