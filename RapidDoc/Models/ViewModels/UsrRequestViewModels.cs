@@ -4911,7 +4911,6 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Причины")]
         public string Reason4 { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Условия")]
         public string Circumstances { get; set; }
 
@@ -5042,7 +5041,6 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Причины")]
         public string Reason4 { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Условия")]
         public string Circumstances { get; set; }
 
@@ -5283,7 +5281,6 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Причины")]
         public string Reason4 { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Условия")]
         public string Circumstances { get; set; }
 
@@ -5393,7 +5390,6 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Причины")]
         public string Reason3 { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Условия")]
         public string Circumstances { get; set; }
 
