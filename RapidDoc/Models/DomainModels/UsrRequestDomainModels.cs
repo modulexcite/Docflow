@@ -3577,8 +3577,7 @@ namespace RapidDoc.Models.DomainModels
 
         [Required]
         public string UserChooseManual1 { get; set; }
-
-        [Required]
+    
         public string Tutor { get; set; }
 
         [Required]
@@ -3659,7 +3658,6 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string UserChooseManual1 { get; set; }
 
-        [Required]
         public string Tutor { get; set; }
 
         [Required]
@@ -3743,8 +3741,7 @@ namespace RapidDoc.Models.DomainModels
 
         [Required]
         public string UserChooseManual1 { get; set; }
-
-        [Required]
+       
         public string Tutor { get; set; }
 
         [Required]
@@ -3817,7 +3814,6 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string UserChooseManual1 { get; set; }
 
-        [Required]
         public string Tutor { get; set; }
 
         [Required]
@@ -3904,7 +3900,6 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string UserChooseManual1 { get; set; }
 
-        [Required]
         public string Tutor { get; set; }
 
         [Required]
