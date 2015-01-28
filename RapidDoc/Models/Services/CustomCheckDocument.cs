@@ -496,17 +496,17 @@ namespace RapidDoc.Models.Services
                     errorList.Add("В строке 1 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name2 != String.Empty && (actionModel.Position2 == String.Empty || actionModel.Department2 == String.Empty || actionModel.Reason2 == String.Empty || actionModel.StartDate2 == null || actionModel.EdnDate2 == null))
+                if (actionModel.Name2 != String.Empty && (actionModel.Position2 == String.Empty || actionModel.Department2 == String.Empty || actionModel.Reason2 == String.Empty || actionModel.StartDate2 == null || actionModel.EndDate2 == null))
                 {
                     errorList.Add("В строке 2 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name3 != String.Empty && (actionModel.Position3 == String.Empty || actionModel.Department3 == String.Empty || actionModel.Reason3 == String.Empty || actionModel.StartDate3 == null || actionModel.EdnDate3 == null))
+                if (actionModel.Name3 != String.Empty && (actionModel.Position3 == String.Empty || actionModel.Department3 == String.Empty || actionModel.Reason3 == String.Empty || actionModel.StartDate3 == null || actionModel.EndDate3 == null))
                 {
                     errorList.Add("В строке 3 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name4 != String.Empty && (actionModel.Position4 == String.Empty || actionModel.Department4 == String.Empty || actionModel.Reason4 == String.Empty || actionModel.StartDate4 == null || actionModel.EdnDate4 == null))
+                if (actionModel.Name4 != String.Empty && (actionModel.Position4 == String.Empty || actionModel.Department4 == String.Empty || actionModel.Reason4 == String.Empty || actionModel.StartDate4 == null || actionModel.EndDate4 == null))
                 {
                     errorList.Add("В строке 4 не заполнены все необходимые поля");
                 }

@@ -308,7 +308,7 @@ namespace RapidDoc.Models.Services
                     ApplicationUser userTable = _AccountService.Find(userId);
                     if (userTable.Email != String.Empty)
                     {
-                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
+                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                         CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorRejectEmail, String.Format("Ваш документ [{0}] был отменен", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                     }
                 }
@@ -324,7 +324,7 @@ namespace RapidDoc.Models.Services
                 ApplicationUser userTable = _AccountService.Find(docuTable.ApplicationUserCreatedId);
                 if (userTable.Email != String.Empty)
                 {
-                    string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
+                    string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                     CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorClosedEmail, String.Format("Ваш документ [{0}] закрыт", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                 }
             }
@@ -359,7 +359,7 @@ namespace RapidDoc.Models.Services
                 {
                     if (userTable.Email != String.Empty && userTable.UserName != HttpContext.Current.User.Identity.Name)
                     {
-                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
+                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                         CreateMessange(EmailTemplateType.Comment, docuTable, userTable, @"Views\\EmailTemplate\\CommentEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorCommentEmail, String.Format("Новый комментарий в документе [{0}]", docuTable.DocumentNum), new string[] { lastComment }, new string[] { docuTable.DocumentText });
                     }
                 }
@@ -392,7 +392,7 @@ namespace RapidDoc.Models.Services
 
                 if (userTable.Email != String.Empty)
                 {
-                    string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
+                    string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                     CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendReaderEmail, String.Format("Вас добавили читателем, документ [{0}]", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                 }
             }
@@ -405,7 +405,7 @@ namespace RapidDoc.Models.Services
 
             if (userTable.Email != String.Empty)
             {
-                string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id;
+                string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                 CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendExecutorEmail, String.Format("Требуется ваша подпись, документ [{0}]", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
             }
         }

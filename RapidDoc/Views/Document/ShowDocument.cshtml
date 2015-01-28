@@ -5,48 +5,21 @@
 }
 
 <div class="row">
-    <div class="col-md-4">
-        <table class="table table-bordered table-condensed">
-            <tbody>
-                <tr>
-                    <td>
-                        <h3>
-                            @if (Model.DocumentView.isArchive == true)
-                            {
-                                <span class="fa fa-archive"></span>
-                            }
+    <div class="col-xs-6">
+        <h4>
+            @if (Model.DocumentView.isArchive == true)
+            {
+                <span class="fa fa-archive"></span>
+            }
 
-                            @ViewBag.Title <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
-                        </h3>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            @ViewBag.Title <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
+        </h4>
     </div>
-    <div class="col-md-8">
+    <div class="col-xs-6">
         <h4 class="text-right"><small class="hidden-print">(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h4>
-        <div class="pull-right hidden-sm hidden-xs hidden-print">
-            <a href=@Url.Action("Index", "Document") class="btn btn-default" role="button">@UIElementRes.UIElement.Close</a>
-        </div>
     </div>
 </div>
-<br />
-<h2 class="hidden-print">
-    @if (Model.DocumentView.isArchive == true)
-    {
-        <span class="fa fa-archive"></span>
-    }
-
-    @ViewBag.Title <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
-</h2>
-
-<h5 class="visible-print-block">@ViewBag.Title</h5>
-    <div class="pull-right hidden-sm hidden-xs hidden-print">
-        <a href=@Url.Action("Index", "Document") class="btn btn-default" role="button">@UIElementRes.UIElement.Close</a>
-    </div>
-    <legend class="hidden-print"></legend>
-    <h4 class="text-right"><small class="hidden-print">(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h4>
-
+<hr />
     @using (Html.BeginForm("", "", new { processId = Model.ProcessView.Id, type = 2, fileId = Model.fileId, documentId = Model.DocumentView.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
