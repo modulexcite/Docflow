@@ -80,7 +80,8 @@ namespace RapidDoc.Controllers
             DateTime date = DateTime.UtcNow;
             DateTime startTime = new DateTime(date.Year, date.Month, date.Day) + process.StartWorkTime;
             DateTime endTime = new DateTime(date.Year, date.Month, date.Day) + process.EndWorkTime;
-            if ((startTime < date || date > endTime) && process.StartWorkTime != process.EndWorkTime) return false;
+            if ((startTime < date || date > endTime) && process.StartWorkTime != process.EndWorkTime) 
+                return false;
 
             if (!String.IsNullOrEmpty(process.RoleId))
             {

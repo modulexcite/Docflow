@@ -25,6 +25,7 @@ namespace RapidDoc.Models.Services
         void SaveDomain(HistoryUserTable domainTable, string userId);
         HistoryUserTable Find(Guid id);
         HistoryUserView FindView(Guid id);
+        void DeleteAll(Guid documenId);
     }
 
     public class HistoryUserService : IHistoryUserService
@@ -166,6 +167,11 @@ namespace RapidDoc.Models.Services
             }
 
             return item;
+        }
+        public void DeleteAll(Guid documentId)
+        {
+            repo.Delete(x => x.DocumentTableId == documentId);
+            _uow.Save();
         }
     }
 }

@@ -291,6 +291,30 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
+        [MultipleButton(Name = "action", Argument = "DeleteDraft")]
+        public ActionResult DeleteDraft(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
+        {
+            ProcessView processView = _ProcessService.FindView(processId);
+            DocumentTable documentTable = _DocumentService.FirstOrDefault(x => x.Id == documentId);
+            SearchTable searchTable = _SearchService.FirstOrDefault(x => x.DocumentTableId == documentId);
+
+            if (documentTable.CreatedBy == User.Identity.Name)
+            {
+                _DocumentService.DeleteFiles(documentId);
+                if (searchTable != null)
+                    _SearchService.Delete(searchTable.Id);
+                _CommentService.DeleteAll(documentId);
+                _DocumentService.DeleteDocumentDraft(documentId, processView.TableName, documentTable.RefDocumentId);
+                _ReviewDocLogService.DeleteAll(documentId);
+                _HistoryUserService.DeleteAll(documentId);
+                _DocumentService.Delete(documentId);
+                return RedirectToAction("Index", "Document");
+            }
+            else
+                return RedirectToAction("PageNotFound", "Error");
+        }
+
+        [HttpPost]
         [MultipleButton(Name = "action", Argument = "WithdrawDocument")]
         public ActionResult WithdrawDocument(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
