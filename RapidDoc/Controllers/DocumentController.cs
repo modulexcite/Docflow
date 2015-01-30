@@ -319,7 +319,7 @@ namespace RapidDoc.Controllers
             DateTime date = DateTime.UtcNow;
             DateTime startTime = new DateTime(date.Year, date.Month, date.Day) + process.StartWorkTime;
             DateTime endTime = new DateTime(date.Year, date.Month, date.Day) + process.EndWorkTime;
-            if ((startTime < date || date > endTime) && process.StartWorkTime != process.EndWorkTime) return RedirectToAction("PageNotFound", "Error");
+            if ((startTime > date || date > endTime) && process.StartWorkTime != process.EndWorkTime) return RedirectToAction("PageNotFound", "Error");
 
             if (!String.IsNullOrEmpty(process.RoleId))
             {
@@ -817,7 +817,7 @@ namespace RapidDoc.Controllers
                 }
 
                 string deleteType = "DELETE";
-                if(!CheсkFileRightDelete(file, user, document))
+                if (document.DocumentState != DocumentState.Created && !CheсkFileRightDelete(file, user, document))
                 {
                     deleteType = String.Empty;
                 }
@@ -911,7 +911,7 @@ namespace RapidDoc.Controllers
             FileTable file = _DocumentService.GetFile(Id);
             DocumentTable document = _DocumentService.FirstOrDefault(x => x.FileId == file.DocumentFileId);
 
-            if (document == null || CheсkFileRightDelete(file, user, document))
+            if (document == null || document.DocumentState == DocumentState.Created || CheсkFileRightDelete(file, user, document))
             {
                 string fileName = _DocumentService.DeleteFile(Id);
                 values.Add(fileName, true);
@@ -990,7 +990,17 @@ namespace RapidDoc.Controllers
                     }
                     else if (propertyInfo.PropertyType == typeof(DateTime?))
                     {
-                        DateTime? valueDate = collection[key] == "" ? null : (DateTime?)DateTime.Parse(collection[key]);
+                        HttpCookie cultureCookie = HttpContext.Request.Cookies["lang"];
+                        DateTime? valueDate = null;
+                        if (cultureCookie != null)
+                        {
+                            System.Globalization.CultureInfo cultureinfo = new System.Globalization.CultureInfo(cultureCookie.Value);
+                            valueDate = collection[key] == "" ? null : (DateTime?)DateTime.Parse(collection[key], cultureinfo);
+                        }
+                        else
+                        {
+                            valueDate = collection[key] == "" ? null : (DateTime?)DateTime.Parse(collection[key]);
+                        }
                         propertyInfo.SetValue(actionModel, valueDate, null);
                         documentData.Add(key, valueDate);
                     }

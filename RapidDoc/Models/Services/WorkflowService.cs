@@ -640,7 +640,8 @@ namespace RapidDoc.Models.Services
                     item.TrackerType = TrackerType.NonActive;
                     item.SignDate = null;
                     item.SignUserId = null;
-                    item.Users.Clear();
+                    if (item.Users != null)
+                        item.Users.Clear();
                     item.SLAOffset = 0;
                     item.StartDateSLA = null;
                     item.ManualExecutor = false;

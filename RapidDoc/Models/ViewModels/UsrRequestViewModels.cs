@@ -1084,7 +1084,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Действует до")]
         public DateTime? ToDate { get; set; }
 
-        [Display(Name = "Сотовый и внутренний номер")]
+        [Display(Name = "Сотовый номер")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         public string Contact { get; set; }
 
