@@ -55,6 +55,8 @@ namespace RapidDoc.Models.Services
         IEnumerable<FileTable> GetAllTemplatesDocument(Guid processId);
         IEnumerable<FileTable> GetAllXAMLDocument(Guid processId);
         void DeleteFiles(Guid documentId);
+        void DeleteDocumentDraft(Guid documentId, string tableName, Guid refDocumentId);
+        void Delete(Guid Id);
     }
 
     public class DocumentService : IDocumentService
@@ -72,6 +74,7 @@ namespace RapidDoc.Models.Services
         private readonly IDocumentReaderService _DocumentReaderService;
         private readonly IWorkScheduleService _WorkScheduleService;
         private readonly IReviewDocLogService _ReviewDocLogService;
+        private readonly IHistoryUserService _HistoryUserService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected RoleManager<IdentityRole> RoleManager { get; private set; }
@@ -79,7 +82,7 @@ namespace RapidDoc.Models.Services
         public DocumentService(IUnitOfWork uow, INumberSeqService numberSeqService, IProcessService processService, 
             IAccountService accountService, IEmplService emplService, IWorkflowTrackerService workflowTrackerService,
             IDelegationService delegationService, IDocumentReaderService documentReaderService, IWorkScheduleService workScheduleService,
-            IReviewDocLogService reviewDocLogService)
+            IReviewDocLogService reviewDocLogService, IHistoryUserService historyUserService)
         {
             _uow = uow;
             repoProcess = uow.GetRepository<ProcessTable>();
@@ -94,6 +97,7 @@ namespace RapidDoc.Models.Services
             _DocumentReaderService = documentReaderService;
             _WorkScheduleService = workScheduleService;
             _ReviewDocLogService = reviewDocLogService;
+            _HistoryUserService = historyUserService;
 
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
             RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
@@ -363,6 +367,7 @@ namespace RapidDoc.Models.Services
             _uow.Save();
         }
 
+        
         public bool isShowDocument(DocumentTable documentTable, ApplicationUser user, bool isAfterView = false)
         {
             if (user.Id == documentTable.ApplicationUserCreatedId)
@@ -621,6 +626,18 @@ namespace RapidDoc.Models.Services
         {
 
             repoFile.Delete(a => a.DocumentFileId == documentId);
+            _uow.Save();
+        }
+        public void DeleteDocumentDraft(Guid documentId, string tableName, Guid refDocumentId)
+        {
+             var domainTable = GetDocument(refDocumentId, tableName);
+             RouteCustomRepository(tableName).Delete(domainTable);
+          
+             _uow.Save();
+        }
+        public void Delete(Guid Id)
+        {
+            repoDocument.Delete(x => x.Id == Id);
             _uow.Save();
         }
 

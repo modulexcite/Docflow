@@ -29,6 +29,7 @@ namespace RapidDoc.Models.Services
         void SaveSearchData(Guid id, string searchString);
         void SaveSearchData(Guid id, dynamic docModel, string actionModelName);
         string PrepareSearchString(dynamic docModel, string actionModelName);
+        void Delete(Guid Id);
     }
 
     public class SearchService : ISearchService
@@ -196,6 +197,11 @@ namespace RapidDoc.Models.Services
             string searchString = PrepareSearchString(docModel, actionModelName);
             if (!String.IsNullOrEmpty(searchString))
                 SaveSearchData(id, searchString);
+        }
+        public void Delete(Guid Id)
+        {
+            repo.Delete(x => x.Id == Id);
+            _uow.Save();
         }
     }
 }

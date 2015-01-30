@@ -24,6 +24,7 @@ namespace RapidDoc.Models.Services
         void SaveDomain(CommentTable domainTable);
         void Delete(Guid Id);
         CommentTable Find(Guid id);
+        void DeleteAll(Guid documenId);
     }
 
     public class CommentService : ICommentService
@@ -93,6 +94,11 @@ namespace RapidDoc.Models.Services
         public void Delete(Guid Id)
         {
             repo.Delete(x => x.Id == Id);
+            _uow.Save();
+        }
+        public void DeleteAll(Guid documentId)
+        {
+            repo.Delete(x => x.DocumentTableId == documentId);
             _uow.Save();
         }
         public CommentTable Find(Guid id)
