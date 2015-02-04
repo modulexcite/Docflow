@@ -984,6 +984,31 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Department { get; set; }
     }
+
+    public class USR_REQ_ZIF_RequestForItems_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+    }
+
+    public class USR_REQ_ZIF_RequestForItemsMech_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+    }
+
+    public class USR_REQ_ZIF_RequestForItemsEnerg_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+    }
+
+    public class USR_REQ_ZIF_RequestForItemsASYTP_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+    }
+
     #endregion
 
     #region ОКС

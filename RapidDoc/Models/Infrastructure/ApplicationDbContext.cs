@@ -249,6 +249,11 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_IT_CAP_RequestForITWeekend_Table> USR_REQ_IT_CAP_RequestForITWeekend_Table { get; set; }
         public DbSet<USR_REQ_URP_RequestForAccrualSM_Table> USR_REQ_URP_RequestForAccrualSM_Table { get; set; }
         public DbSet<USR_REQ_URP_RequestForAccrualPTU_Table> USR_REQ_URP_RequestForAccrualPTU_Table { get; set; }
+        public DbSet<USR_REQ_ZIF_RequestForItems_Table> USR_REQ_ZIF_RequestForItems_Table { get; set; }
+        public DbSet<USR_REQ_ZIF_RequestForItemsMech_Table> USR_REQ_ZIF_RequestForItemsMech_Table { get; set; }
+        public DbSet<USR_REQ_ZIF_RequestForItemsEnerg_Table> USR_REQ_ZIF_RequestForItemsEnerg_Table { get; set; }
+        public DbSet<USR_REQ_ZIF_RequestForItemsASYTP_Table> USR_REQ_ZIF_RequestForItemsASYTP_Table { get; set; }
+
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
