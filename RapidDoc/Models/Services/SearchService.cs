@@ -35,19 +35,19 @@ namespace RapidDoc.Models.Services
     public class SearchService : ISearchService
     {
         private IRepository<SearchTable> repo;
+        private IRepository<ApplicationUser> repoUser;
+        private IRepository<EmplTable> repoEmpl;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
         private readonly IDocumentService _DocumentService;
-        private readonly IEmplService _EmplService;
         private readonly ISystemService _SystemService;
 
-        public SearchService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, ISystemService systemService)
+        public SearchService(IUnitOfWork uow, IDocumentService documentService,  ISystemService systemService)
         {
             _uow = uow;
             repo = uow.GetRepository<SearchTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
+            repoEmpl = uow.GetRepository<EmplTable>();
             _DocumentService = documentService;
-            _EmplService = emplService;
             _SystemService = systemService;
         }
         public IEnumerable<SearchTable> GetPartial(Expression<Func<SearchTable, bool>> predicate)
@@ -57,15 +57,15 @@ namespace RapidDoc.Models.Services
         public IEnumerable<SearchView> GetPartialView(Expression<Func<SearchTable, bool>> predicate)
         {
             var items = Mapper.Map<IEnumerable<SearchTable>, IEnumerable<SearchView>>(GetPartial(predicate));
-            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser currentUser = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
 
             foreach (var item in items)
             {
                 DocumentTable docuTable = _DocumentService.Find(item.DocumentTableId);
                 item.isShow = _DocumentService.isShowDocument(docuTable, currentUser, true);
 
-                ApplicationUser user = _AccountService.Find(item.ApplicationUserCreatedId);
-                EmplView empl = _EmplService.FirstOrDefaultView(x => x.ApplicationUserId == user.Id && x.CompanyTableId == user.CompanyTableId);
+                ApplicationUser user = repoUser.GetById(item.ApplicationUserCreatedId);
+                EmplTable empl = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.CompanyTableId == user.CompanyTableId);
                 if (empl != null)
                     item.CreatedUserName = "(" + empl.AliasCompanyName + ") " + empl.FullName + " " + empl.TitleName + " " + empl.DepartmentName + " "+ _SystemService.ConvertDateTimeToLocal(currentUser, item.CreatedDate);
                 else
@@ -82,7 +82,7 @@ namespace RapidDoc.Models.Services
         {
             var item = Mapper.Map<SearchTable, SearchView>(FirstOrDefault(predicate));
             DocumentTable docuTable = _DocumentService.Find(item.DocumentTableId);
-            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser currentUser = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             item.isShow = _DocumentService.isShowDocument(docuTable, currentUser, true);
 
             return item;

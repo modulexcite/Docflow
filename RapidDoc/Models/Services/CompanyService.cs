@@ -35,13 +35,11 @@ namespace RapidDoc.Models.Services
     {
         private IRepository<CompanyTable> repo;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public CompanyService(IUnitOfWork uow, IAccountService accountService)
+        public CompanyService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<CompanyTable>();
-            _AccountService = accountService;
         }
         public IEnumerable<CompanyTable> GetAll()
         {

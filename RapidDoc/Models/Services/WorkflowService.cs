@@ -23,6 +23,9 @@ using System.Activities.XamlIntegration;
 using System.Activities.Expressions;
 using RapidDoc.Models.ViewModels;
 using RapidDoc.Models.Repository;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Core.Objects;
 
 namespace RapidDoc.Models.Services
 {
@@ -46,8 +49,9 @@ namespace RapidDoc.Models.Services
 
     public class WorkflowService : IWorkflowService
     {
+        private IRepository<ApplicationUser> repoUser;
+        private IRepository<ServiceIncidentTable> repoIncident;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
         private readonly IDocumentService _DocumentService;
         private readonly IEmplService _EmplService;
         private readonly IWorkflowTrackerService _WorkflowTrackerService;
@@ -55,17 +59,17 @@ namespace RapidDoc.Models.Services
         private readonly IHistoryUserService _HistoryUserService;
         private readonly IReviewDocLogService _ReviewDocLogService;
         private readonly ICustomCheckDocument _CustomCheckDocument;
-        private readonly IServiceIncidentService _ServiceIncidentService;
         
         IDictionary<string, object> outputParameters;
         private List<Array> allSteps = new List<Array>();
 
-        public WorkflowService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, 
+        public WorkflowService(IUnitOfWork uow, IDocumentService documentService, IEmplService emplService, 
             IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService,
-            IServiceIncidentService serviceIncidentService, IReviewDocLogService reviewDocLogService, ICustomCheckDocument customCheckDocument)
+            IReviewDocLogService reviewDocLogService, ICustomCheckDocument customCheckDocument)
         {
+            repoUser = uow.GetRepository<ApplicationUser>();
+            repoIncident = uow.GetRepository<ServiceIncidentTable>();
             _uow = uow;
-            _AccountService = accountService;
             _DocumentService = documentService;
             _EmplService = emplService;
             _WorkflowTrackerService = workflowTrackerService;
@@ -73,7 +77,6 @@ namespace RapidDoc.Models.Services
             _HistoryUserService = historyUserService;
             _ReviewDocLogService = reviewDocLogService;
             _CustomCheckDocument = customCheckDocument;
-            _ServiceIncidentService = serviceIncidentService;
         }
 
         public WFUserFunctionResult WFMatchingUpManager(Guid documentId, string currentUserId, int level = 1, string profileName = "")
@@ -130,7 +133,7 @@ namespace RapidDoc.Models.Services
         {
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
-            ApplicationUser userTable = _AccountService.FirstOrDefault(x => (x.UserName == userName || x.Id == userName) && x.Enable == true);
+            ApplicationUser userTable = repoUser.Find(x => (x.UserName == userName || x.Id == userName) && x.Enable == true);
 
             if (userTable != null)
             {
@@ -200,7 +203,8 @@ namespace RapidDoc.Models.Services
         {
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
-            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.Id == documentTable.ApplicationUserCreatedId && x.Enable == true);
+
+            ApplicationUser userTable = repoUser.Find(x => x.Id == documentTable.ApplicationUserCreatedId && x.Enable == true);
 
             if (userTable != null)
                 userList.Add(new WFTrackerUsersTable { UserId = userTable.Id });
@@ -241,7 +245,7 @@ namespace RapidDoc.Models.Services
         public string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location)
         {
             var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
-            ServiceIncidentTable incidentTable = _ServiceIncidentService.FirstOrDefault(x => x.ServiceName == serviceName && x.ServiceIncidientLevel == level && x.ServiceIncidientPriority == priority && x.ServiceIncidientLocation == location);
+            ServiceIncidentTable incidentTable = repoIncident.Find(x => x.ServiceName == serviceName && x.ServiceIncidientLevel == level && x.ServiceIncidientPriority == priority && x.ServiceIncidientLocation == location);
 
             if (incidentTable != null)
             {
@@ -452,13 +456,13 @@ namespace RapidDoc.Models.Services
                     {
                         retries = retries - 1;
                         if (retries <= 0) throw;
-                            Thread.Sleep(1000);
+                        Thread.Sleep(1000);
                     }
                 }
 
                 _CustomCheckDocument.UpdateDocumentData(documentTable, documentData);
 
-                if(documentTable.DocumentState == DocumentState.Closed)
+                if (documentTable.DocumentState == DocumentState.Closed)
                 {
                     _EmailService.SendInitiatorClosedEmail(documentTable.Id);
                 }

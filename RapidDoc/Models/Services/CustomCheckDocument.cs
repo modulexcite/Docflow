@@ -1246,12 +1246,20 @@ namespace RapidDoc.Models.Services
                     var serviceIncident = _ServiceIncidentService.GetAll().ToList().FirstOrDefault(x => x.ServiceName == ((string)documentData["ServiceName"]) && x.ServiceIncidientPriority == priority && x.ServiceIncidientLevel == level && x.ServiceIncidientLocation == location);
                     if (serviceIncident != null)
                     {
-                        var items = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == document.Id && x.ActivityName == document.ActivityName).ToList();
-
-                        foreach (var item in items)
+                        using(ApplicationDbContext dbContext = new ApplicationDbContext())
                         {
-                            item.SLAOffset = serviceIncident.SLAIncident;
-                            _WorkflowTrackerService.SaveDomain(item);
+                            var items = dbContext.WFTrackerTable.Where(x => x.DocumentTableId == document.Id && x.ActivityName == document.ActivityName).ToList();
+
+                            foreach (var item in items)
+                            {
+                                item.SLAOffset = serviceIncident.SLAIncident;
+                                System.Data.Entity.IDbSet<WFTrackerTable> dbset = dbContext.Set<WFTrackerTable>();
+                                var entry = dbContext.Entry(item);
+                                dbset.Attach(item);
+                                entry.State = System.Data.Entity.EntityState.Modified;
+                                dbContext.SaveChanges();
+                                //_WorkflowTrackerService.SaveDomain(item);
+                            }
                         }
                     }
                 }

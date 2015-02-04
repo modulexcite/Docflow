@@ -40,13 +40,11 @@ namespace RapidDoc.Models.Services
     {
         private IRepository<NumberSeriesTable> repo;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public NumberSeqService(IUnitOfWork uow, IAccountService accountService)
+        public NumberSeqService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<NumberSeriesTable>();
-            _AccountService = accountService;
         }
         public IEnumerable<NumberSeriesTable> GetAll()
         {

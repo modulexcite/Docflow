@@ -40,14 +40,12 @@ namespace RapidDoc.Models.Services
         private IRepository<WorkScheduleTable> repo;
         private IRepository<СalendarTable> repoCalendar;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public WorkScheduleService(IUnitOfWork uow, IAccountService accountService)
+        public WorkScheduleService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<WorkScheduleTable>();
             repoCalendar = uow.GetRepository<СalendarTable>();
-            _AccountService = accountService;
         }
         public IEnumerable<WorkScheduleTable> GetAll()
         {

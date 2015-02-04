@@ -60,7 +60,7 @@ namespace RapidDoc.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IUnitOfWork>().To<UnitOfWork<ApplicationDbContext>>();
+            kernel.Bind<IUnitOfWork>().To<UnitOfWork<ApplicationDbContext>>().InRequestScope();
             kernel.Bind<IDomainService>().To<DomainService>();
             kernel.Bind<ICompanyService>().To<CompanyService>();
             kernel.Bind<IProfileService>().To<ProfileService>();

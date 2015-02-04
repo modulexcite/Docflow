@@ -37,15 +37,11 @@ namespace RapidDoc.Models.Services
     {
         private IRepository<DomainTable> repo;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
-        private readonly ICompanyService _CompanyService;
 
-        public DomainService(IUnitOfWork uow, IAccountService accountService, ICompanyService companyService)
+        public DomainService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<DomainTable>();
-            _AccountService = accountService;
-            _CompanyService = companyService;
         }
         public IEnumerable<DomainTable> GetAll()
         {

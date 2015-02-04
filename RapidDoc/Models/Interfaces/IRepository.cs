@@ -11,6 +11,7 @@ namespace RapidDoc.Models.Repository
     {
         //Search Operations
         T GetById(Guid Id);
+        T GetById(string id);
         IEnumerable<T> All();
         T Find(Expression<Func<T, bool>> predicate);
         IEnumerable<T> FindAll(Expression<Func<T, bool>> predicate);

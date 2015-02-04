@@ -31,15 +31,15 @@ namespace RapidDoc.Models.Services
     public class HistoryUserService : IHistoryUserService
     {
         private IRepository<HistoryUserTable> repo;
+        private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
         private readonly IEmplService _EmplService;
 
-        public HistoryUserService(IUnitOfWork uow, IAccountService accountService, IEmplService emplService)
+        public HistoryUserService(IUnitOfWork uow, IEmplService emplService)
         {
             _uow = uow;
             repo = uow.GetRepository<HistoryUserTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
             _EmplService = emplService;
         }
         public IEnumerable<HistoryUserTable> GetAll()
@@ -49,7 +49,7 @@ namespace RapidDoc.Models.Services
         public IEnumerable<HistoryUserView> GetAllView()
         {
             var items = Mapper.Map<IEnumerable<HistoryUserTable>, IEnumerable<HistoryUserView>>(GetAll());
-            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser currentUser = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
 
             foreach(var item in items)
             {
@@ -78,7 +78,8 @@ namespace RapidDoc.Models.Services
         {
             var items = Mapper.Map<IEnumerable<HistoryUserTable>, IEnumerable<HistoryUserView>>(GetPartial(predicate).Where(x => x.CreatedDate >= DateTime.UtcNow.AddDays(-60)));
 
-            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser currentUser = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
+
             foreach (var item in items)
             {
                 EmplTable empl = _EmplService.GetEmployer(item.ApplicationUserCreatedId, currentUser.CompanyTableId);
@@ -105,7 +106,7 @@ namespace RapidDoc.Models.Services
         public HistoryUserView FirstOrDefaultView(Expression<Func<HistoryUserTable, bool>> predicate)
         {
             var item = Mapper.Map<HistoryUserTable, HistoryUserView>(FirstOrDefault(predicate));
-            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser currentUser = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             EmplTable empl = _EmplService.GetEmployer(item.ApplicationUserCreatedId, currentUser.CompanyTableId);
             if (empl != null)
             {
@@ -151,7 +152,7 @@ namespace RapidDoc.Models.Services
         public HistoryUserView FindView(Guid id)
         {
             var item = Mapper.Map<HistoryUserTable, HistoryUserView>(Find(id));
-            ApplicationUser currentUser = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser currentUser = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             EmplTable empl = _EmplService.GetEmployer(item.ApplicationUserCreatedId, currentUser.CompanyTableId);
             if (empl != null)
             {

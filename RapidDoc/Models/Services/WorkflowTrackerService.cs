@@ -22,25 +22,25 @@ namespace RapidDoc.Models.Services
         void SaveDomain(WFTrackerTable domainTable, string currentUserId = "");
         void SaveTrackList(Guid documentId, List<Array> allSteps);
         WFTrackerTable Find(Guid id);
-        IEnumerable<WFTrackerTable> GetCurrentStep(Expression<Func<WFTrackerTable, bool>> predicate);
+        List<WFTrackerTable> GetCurrentStep(Expression<Func<WFTrackerTable, bool>> predicate);
         void DeleteAll(Guid documentId);
     }
 
     public class WorkflowTrackerService : IWorkflowTrackerService
     {
         private IRepository<WFTrackerTable> repo;
+        private IRepository<ApplicationUser> repoUser;
+        private IRepository<EmplTable> repoEmpl;
+        private IRepository<DelegationTable> repoDelegation;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
-        private readonly IEmplService _EmplService;
-        private readonly IDelegationService _DelegationService;
 
-        public WorkflowTrackerService(IUnitOfWork uow, IAccountService accountService, IEmplService emplService, IDelegationService delegationService)
+        public WorkflowTrackerService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<WFTrackerTable>();
-            _AccountService = accountService;
-            _EmplService = emplService;
-            _DelegationService = delegationService;
+            repoUser = uow.GetRepository<ApplicationUser>();
+            repoEmpl = uow.GetRepository<EmplTable>();
+            repoDelegation = uow.GetRepository<DelegationTable>();
         }
         public IEnumerable<WFTrackerTable> GetAll()
         {
@@ -65,7 +65,7 @@ namespace RapidDoc.Models.Services
                
                 foreach(var userItem in item.Users)
                 {
-                    var empl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userItem.UserId);
+                    var empl = repoEmpl.Find(x => x.ApplicationUserId == userItem.UserId);
 
                     if (workers != String.Empty)
                     {
@@ -74,7 +74,7 @@ namespace RapidDoc.Models.Services
                     
                     workers += string.Format("({0}) {1} - {2}", empl.CompanyTable.AliasCompanyName, empl.FullName, empl.TitleTable.TitleName);
 
-                    var delegationItems = _DelegationService.GetPartial(x => x.EmplTableFromId == empl.Id
+                    var delegationItems = repoDelegation.FindAll(x => x.EmplTableFromId == empl.Id
                         && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
                         && x.isArchive == false && x.CompanyTableId == empl.CompanyTable.Id);
 
@@ -125,7 +125,7 @@ namespace RapidDoc.Models.Services
 
                 if (item.SignDate != null)
                 {
-                    var signEmpl = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.SignUserId);
+                    var signEmpl = repoEmpl.Find(x => x.ApplicationUserId == item.SignUserId);
                     trackerViewItems.Add(new WFTrackerListView { ActivityName = item.ActivityName, RowNum = tmpNum, Executors = signEmpl.FullName, SignDate = item.SignDate, TrackerType = item.TrackerType, ActivityID = item.ActivityID, SLAOffset = item.SLAOffset, CreatedDate = item.CreatedDate, PerformToDate = item.PerformToDate() });
                 }
                 else
@@ -144,7 +144,7 @@ namespace RapidDoc.Models.Services
         {
             return repo.Contains(predicate);
         }
-        public IEnumerable<WFTrackerTable> GetCurrentStep(Expression<Func<WFTrackerTable, bool>> predicate)
+        public List<WFTrackerTable> GetCurrentStep(Expression<Func<WFTrackerTable, bool>> predicate)
         {
             var endSteps = repo.FindAll(predicate);
 
@@ -156,22 +156,21 @@ namespace RapidDoc.Models.Services
                 {
                     if (endStep.ParallelID != String.Empty)
                     {
-                        IEnumerable<WFTrackerTable> alltrack = repo.FindAll(x => x.DocumentTableId == endStep.DocumentTableId).Where(b => b.ParallelID == endStep.ParallelID);
+                        List<WFTrackerTable> alltrack = repo.FindAll(x => x.DocumentTableId == endStep.DocumentTableId).Where(b => b.ParallelID == endStep.ParallelID).ToList();
                         if (alltrack.Any(x => x.TrackerType == TrackerType.Cancelled) && endStep.DocumentTable.DocumentState != DocumentState.Agreement)
                         {
                             return null;
                         }
 
-                        IEnumerable<WFTrackerTable> trackers = repo.FindAll(predicate).Where(b => b.ParallelID == endStep.ParallelID).OrderByDescending(x => x.LineNum);
+                        List<WFTrackerTable> trackers = repo.FindAll(predicate).Where(b => b.ParallelID == endStep.ParallelID).OrderByDescending(x => x.LineNum).ToList();
                         return trackers;
                     }
                     else
                     {
-                        return repo.FindAll(predicate).Where(b => b.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum);
+                        return repo.FindAll(predicate).Where(b => b.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum).ToList();
                     }
                 }
             }
-
             return null;
         }
         public void SaveTrackList(Guid documentId, List<Array> allSteps)
@@ -214,11 +213,11 @@ namespace RapidDoc.Models.Services
         {
             if (currentUserId != string.Empty)
             {
-                return _AccountService.Find(currentUserId);
+                return repoUser.GetById(currentUserId);
             }
             else
             {
-                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+                return repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             }
         }
         public void DeleteAll(Guid documentId)

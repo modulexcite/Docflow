@@ -35,13 +35,11 @@ namespace RapidDoc.Models.Services
     {
         private IRepository<ProfileTable> repo;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public ProfileService(IUnitOfWork uow, IAccountService accountService)
+        public ProfileService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<ProfileTable>();
-            _AccountService = accountService;
         }
         public IEnumerable<ProfileTable> GetAll()
         {
