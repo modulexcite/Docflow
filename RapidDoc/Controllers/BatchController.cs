@@ -104,7 +104,7 @@ namespace RapidDoc.Controllers
                         {
                             if (document.DocumentState == Models.Repository.DocumentState.Agreement || document.DocumentState == Models.Repository.DocumentState.Execution)
                             {
-                                var usersReminder = _Documentservice.GetSignUsers(document);
+                                var usersReminder = _Documentservice.GetSignUsersDirect(document);
                                 checkData.Add(new ReminderUsers(document, usersReminder));
                             }
                         }

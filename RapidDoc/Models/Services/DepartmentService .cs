@@ -38,18 +38,18 @@ namespace RapidDoc.Models.Services
     public class DepartmentService : IDepartmentService
     {
         private IRepository<DepartmentTable> repo;
+        private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public DepartmentService(IUnitOfWork uow, IAccountService accountService)
+        public DepartmentService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<DepartmentTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
         }
         public IEnumerable<DepartmentTable> GetAll()
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<DepartmentView> GetAllView()
@@ -59,7 +59,7 @@ namespace RapidDoc.Models.Services
         }
         public IEnumerable<DepartmentTable> GetPartial(Expression<Func<DepartmentTable, bool>> predicate)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(predicate).Where(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<DepartmentView> GetPartialView(Expression<Func<DepartmentTable, bool>> predicate)
@@ -130,7 +130,7 @@ namespace RapidDoc.Models.Services
         }
         public DepartmentTable Find(Guid id)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.Find(a => a.Id == id && a.CompanyTableId == user.CompanyTableId);
         }
         public DepartmentView FindView(Guid id)
@@ -152,11 +152,11 @@ namespace RapidDoc.Models.Services
         {
             if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
             {
-                return _AccountService.FirstOrDefault(x => x.UserName == currentUserName);
+                return repoUser.Find(x => x.UserName == currentUserName);
             }
             else
             {
-                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+                return repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             }
         }
     }

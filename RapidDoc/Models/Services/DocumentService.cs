@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -50,6 +51,7 @@ namespace RapidDoc.Models.Services
         IEnumerable<FileTable> GetAllFilesDocument(Guid documentFileId);
         string DeleteFile(Guid Id);
         List<ApplicationUser> GetSignUsers(DocumentTable docuTable);
+        List<ApplicationUser> GetSignUsersDirect(DocumentTable docuTable);
         List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status);
         DateTime? GetSLAPerformDate(Guid DocumentId, DateTime? CreatedDate, double SLAOffset);
         IEnumerable<FileTable> GetAllTemplatesDocument(Guid processId);
@@ -64,40 +66,36 @@ namespace RapidDoc.Models.Services
         private IRepository<ProcessTable> repoProcess;
         private IRepository<DocumentTable> repoDocument;
         private IRepository<FileTable> repoFile;
+        private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
         private readonly INumberSeqService _NumberSeqService;
         private readonly IProcessService _ProcessService;
-        private readonly IAccountService _AccountService;
-        private readonly IEmplService _EmplService;
         private readonly IWorkflowTrackerService _WorkflowTrackerService;
         private readonly IDelegationService _DelegationService;
         private readonly IDocumentReaderService _DocumentReaderService;
         private readonly IWorkScheduleService _WorkScheduleService;
         private readonly IReviewDocLogService _ReviewDocLogService;
-        private readonly IHistoryUserService _HistoryUserService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected RoleManager<IdentityRole> RoleManager { get; private set; }
 
         public DocumentService(IUnitOfWork uow, INumberSeqService numberSeqService, IProcessService processService, 
-            IAccountService accountService, IEmplService emplService, IWorkflowTrackerService workflowTrackerService,
+            IWorkflowTrackerService workflowTrackerService,
             IDelegationService delegationService, IDocumentReaderService documentReaderService, IWorkScheduleService workScheduleService,
-            IReviewDocLogService reviewDocLogService, IHistoryUserService historyUserService)
+            IReviewDocLogService reviewDocLogService)
         {
             _uow = uow;
             repoProcess = uow.GetRepository<ProcessTable>();
             repoDocument = uow.GetRepository<DocumentTable>();
             repoFile = uow.GetRepository<FileTable>();
+            repoUser = uow.GetRepository<ApplicationUser>();
             _NumberSeqService = numberSeqService;
             _ProcessService = processService;
-            _AccountService = accountService;
-            _EmplService = emplService;
             _WorkflowTrackerService = workflowTrackerService;
             _DelegationService = delegationService;
             _DocumentReaderService = documentReaderService;
             _WorkScheduleService = workScheduleService;
             _ReviewDocLogService = reviewDocLogService;
-            _HistoryUserService = historyUserService;
 
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
             RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
@@ -211,9 +209,9 @@ namespace RapidDoc.Models.Services
                                     (contextQuery.DelegationTable.Any(d => d.EmplTableTo.ApplicationUserId == user.Id && d.DateFrom <= currentDate && d.DateTo >= currentDate && d.isArchive == false
                                     && d.CompanyTableId == user.CompanyTableId
                                     && (d.GroupProcessTableId == document.ProcessTable.Id || d.GroupProcessTableId == null)
-                                    && (d.ProcessTableId == document.ProcessTableId || d.ProcessTableId == null
+                                    && (d.ProcessTableId == document.ProcessTableId || d.ProcessTableId == null)
                                     && contextQuery.WFTrackerTable.Any(w => w.DocumentTableId == document.Id && w.SignUserId == null && w.TrackerType == TrackerType.Waiting && w.Users.Any(b => b.UserId == d.EmplTableFrom.ApplicationUserId))
-                                    )))
+                                    ))
                                 )
                                 &&
                                 !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
@@ -247,13 +245,14 @@ namespace RapidDoc.Models.Services
                        where
                            (document.ApplicationUserCreatedId == user.Id ||
                                contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id)) ||
+                               contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == user.Id && (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled)) ||
                                contextQuery.DocumentReaderTable.Any(r => r.DocumentTableId == document.Id && r.UserId == user.Id) ||
                                (contextQuery.DelegationTable.Any(d => d.EmplTableTo.ApplicationUserId == user.Id && d.DateFrom <= currentDate && d.DateTo >= currentDate && d.isArchive == false
                                && d.CompanyTableId == user.CompanyTableId
                                && (d.GroupProcessTableId == document.ProcessTable.Id || d.GroupProcessTableId == null)
-                               && (d.ProcessTableId == document.ProcessTableId || d.ProcessTableId == null
+                               && (d.ProcessTableId == document.ProcessTableId || d.ProcessTableId == null)
                                && contextQuery.WFTrackerTable.Any(w => w.DocumentTableId == document.Id && w.SignUserId == null && w.TrackerType == TrackerType.Waiting && w.Users.Any(b => b.UserId == d.EmplTableFrom.ApplicationUserId))
-                               )))
+                               ))
                            )
                            && (contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
                             orderby document.ModifiedDate descending
@@ -334,7 +333,10 @@ namespace RapidDoc.Models.Services
 
             if (domainTable.DocumentState == DocumentState.Agreement || domainTable.DocumentState == DocumentState.Execution)
             {
-                IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == domainTable.Id && x.TrackerType == TrackerType.Waiting);
+                //IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == domainTable.Id && x.TrackerType == TrackerType.Waiting);
+                ApplicationDbContext dbContext = new ApplicationDbContext();
+                List<WFTrackerTable> items = dbContext.WFTrackerTable.Where(x => x.DocumentTableId == domainTable.Id && x.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum).ToList();
+                dbContext.Dispose();
                 string currentName = String.Empty;
 
                 if (items != null)
@@ -446,16 +448,48 @@ namespace RapidDoc.Models.Services
                         {
                             foreach (var trackUser in trackerTable.Users)
                             {
-                                ApplicationUser user = _AccountService.Find(trackUser.UserId);
+                                ApplicationUser user = repoUser.GetById(trackUser.UserId);
                                 if (user != null)
                                     signUsers.Add(user);
                             }
                         }
                     }
                 }
-
                 List<ApplicationUser> delegationUserCheck = signUsers.ToList();
                 signUsers.AddRange(_DelegationService.GetDelegationUsers(docuTable, delegationUserCheck));
+            }
+
+            return signUsers;
+        }
+
+        public List<ApplicationUser> GetSignUsersDirect(DocumentTable docuTable)
+        {
+            List<ApplicationUser> signUsers = new List<ApplicationUser>();
+
+            if (docuTable != null)
+            {
+                //IEnumerable<WFTrackerTable> trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting);
+                ApplicationDbContext dbContext = new ApplicationDbContext();
+                List<WFTrackerTable> trackerTables = dbContext.WFTrackerTable.Where(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum).ToList();
+                
+                if (trackerTables != null)
+                {
+                    foreach (var trackerTable in trackerTables)
+                    {
+                        if (trackerTable.Users != null)
+                        {
+                            foreach (var trackUser in trackerTable.Users)
+                            {
+                                ApplicationUser user = repoUser.GetById(trackUser.UserId);
+                                if (user != null)
+                                    signUsers.Add(user);
+                            }
+                        }
+                    }
+                }
+                List<ApplicationUser> delegationUserCheck = signUsers.ToList();
+                signUsers.AddRange(_DelegationService.GetDelegationUsers(docuTable, delegationUserCheck));
+                dbContext.Dispose();
             }
 
             return signUsers;
@@ -533,7 +567,6 @@ namespace RapidDoc.Models.Services
                     }
                 }
             }
-
             signStep.AddRange(_DelegationService.GetDelegationUsers(document, user, trackerTables));
             return signStep;
         }
@@ -744,11 +777,11 @@ namespace RapidDoc.Models.Services
         {
             if (currentUserId != string.Empty)
             {
-                return _AccountService.Find(currentUserId);
+                return repoUser.GetById(currentUserId);
             }
             else
             {
-                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+                return repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             }
         }
 

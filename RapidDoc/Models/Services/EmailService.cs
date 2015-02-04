@@ -49,19 +49,19 @@ namespace RapidDoc.Models.Services
     public class EmailService : IEmailService
     {
         private IRepository<EmailParameterTable> repo;
+        private IRepository<ApplicationUser> repoUser;
+        private IRepository<EmplTable> repoEmpl;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
         private readonly IDocumentService _DocumentService;
-        private readonly IEmplService _EmplService;
         private readonly IDocumentReaderService _DocumentReaderService;
 
-        public EmailService(IUnitOfWork uow, IAccountService accountService, IDocumentService documentService, IEmplService emplService, IDocumentReaderService documentReaderService)
+        public EmailService(IUnitOfWork uow, IDocumentService documentService, IDocumentReaderService documentReaderService)
         {
             _uow = uow;
             repo = uow.GetRepository<EmailParameterTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
+            repoEmpl = uow.GetRepository<EmplTable>();
             _DocumentService = documentService;
-            _EmplService = emplService;
             _DocumentReaderService = documentReaderService;
         }
 
@@ -187,7 +187,7 @@ namespace RapidDoc.Models.Services
 
         private void CreateMessange(EmailTemplateType type, DocumentTable docuTable, ApplicationUser userTable, string templateName, string documentUri, string bodyText, string subject, string[] parameters, string[] parameters2 = null, string[] parameters3 = null)
         {
-            var emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id);
+            var emplTable = repoEmpl.Find(x => x.ApplicationUserId == userTable.Id);
 
             if (emplTable == null)
                 return;
@@ -243,7 +243,7 @@ namespace RapidDoc.Models.Services
 
             if (docuTable != null)
             {
-                ApplicationUser userTable = _AccountService.Find(docuTable.ApplicationUserCreatedId);
+                ApplicationUser userTable = repoUser.GetById(docuTable.ApplicationUserCreatedId);
                 if (userTable.Email != String.Empty)
                 {
                     string documentUri = HttpContext.Current.Request.UrlReferrer.AbsoluteUri.Replace("Create", "ShowDocument");
@@ -261,7 +261,7 @@ namespace RapidDoc.Models.Services
 
             if(docuTable != null && docuTable.DocumentState == DocumentState.Agreement)
             {
-                var userList = _DocumentService.GetSignUsers(docuTable);
+                var userList = _DocumentService.GetSignUsersDirect(docuTable);
 
                 foreach(var user in userList)
                 {
@@ -294,7 +294,7 @@ namespace RapidDoc.Models.Services
                         foreach (var item in result)
                         {
                             Guid emplId = Guid.Parse(item);
-                            EmplTable empl = _EmplService.Find(emplId);
+                            EmplTable empl = repoEmpl.GetById(emplId);
                             if (empl != null && empl.ApplicationUserId != null && empl.ApplicationUserId != docuTable.ApplicationUserCreatedId)
                             {
                                 userList.Add(empl.ApplicationUserId);
@@ -305,7 +305,7 @@ namespace RapidDoc.Models.Services
 
                 foreach (var userId in userList)
                 {
-                    ApplicationUser userTable = _AccountService.Find(userId);
+                    ApplicationUser userTable = repoUser.GetById(userId);
                     if (userTable.Email != String.Empty)
                     {
                         string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
@@ -321,7 +321,7 @@ namespace RapidDoc.Models.Services
 
             if (docuTable != null)
             {
-                ApplicationUser userTable = _AccountService.Find(docuTable.ApplicationUserCreatedId);
+                ApplicationUser userTable = repoUser.GetById(docuTable.ApplicationUserCreatedId);
                 if (userTable.Email != String.Empty)
                 {
                     string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
@@ -335,14 +335,14 @@ namespace RapidDoc.Models.Services
             var docuTable = _DocumentService.Find(documentId);
 
             var currentReaders = _DocumentReaderService.GetPartial(x => x.DocumentTableId == documentId).ToList();
-            var users = _AccountService.GetPartial(x => x.Id == docuTable.ApplicationUserCreatedId).ToList();
+            var users = repoUser.FindAll(x => x.Id == docuTable.ApplicationUserCreatedId).ToList();
 
             foreach (var reader in currentReaders)
             {
-                users.Add(_AccountService.Find(reader.UserId));
+                users.Add(repoUser.GetById(reader.UserId));
             }
 
-            var signUsers = _DocumentService.GetSignUsers(docuTable);
+            var signUsers = _DocumentService.GetSignUsersDirect(docuTable);
             foreach (var signUser in signUsers)
             {
                 if (users.Any(x => x.Id == signUser.Id))
@@ -370,9 +370,9 @@ namespace RapidDoc.Models.Services
         {
             if (delegationView != null)
             {
-                var emplTableFrom = _EmplService.Find(delegationView.EmplTableFromId);
-                var emplTableTo = _EmplService.Find(delegationView.EmplTableToId);
-                ApplicationUser userTable = _AccountService.Find(emplTableTo.ApplicationUserId);
+                var emplTableFrom = repoEmpl.GetById(delegationView.EmplTableFromId);
+                var emplTableTo = repoEmpl.GetById(delegationView.EmplTableToId);
+                ApplicationUser userTable = repoUser.GetById(emplTableTo.ApplicationUserId);
 
                 if (userTable.Email != String.Empty)
                 {
@@ -388,7 +388,7 @@ namespace RapidDoc.Models.Services
 
             foreach (var userId in newReader)
             {
-                ApplicationUser userTable = _AccountService.Find(userId);
+                ApplicationUser userTable = repoUser.GetById(userId);
 
                 if (userTable.Email != String.Empty)
                 {
@@ -401,7 +401,7 @@ namespace RapidDoc.Models.Services
         public void SendNewExecutorEmail(Guid documentId, string userId)
         {
             var docuTable = _DocumentService.Find(documentId);
-            ApplicationUser userTable = _AccountService.Find(userId);
+            ApplicationUser userTable = repoUser.GetById(userId);
 
             if (userTable.Email != String.Empty)
             {
@@ -412,7 +412,7 @@ namespace RapidDoc.Models.Services
 
         public void SendSLAWarningEmail(string userId, IEnumerable<DocumentTable> documents)
         {
-            ApplicationUser userTable = _AccountService.Find(userId);
+            ApplicationUser userTable = repoUser.GetById(userId);
             List<string> documentUrls = new List<string>();
             List<string> documentNums = new List<string>();
             List<string> documentText = new List<string>();
@@ -434,7 +434,7 @@ namespace RapidDoc.Models.Services
 
         public void SendSLADisturbanceEmail(string userId, IEnumerable<DocumentTable> documents)
         {
-            ApplicationUser userTable = _AccountService.Find(userId);
+            ApplicationUser userTable = repoUser.GetById(userId);
             List<string> documentUrls = new List<string>();
             List<string> documentNums = new List<string>();
             List<string> documentText = new List<string>();
@@ -456,7 +456,7 @@ namespace RapidDoc.Models.Services
 
         public void SendReminderEmail(string userId, IEnumerable<DocumentTable> documents)
         {
-            ApplicationUser userTable = _AccountService.Find(userId);
+            ApplicationUser userTable = repoUser.GetById(userId);
             List<string> documentUrls = new List<string>();
             List<string> documentNums = new List<string>();
             List<string> documentText = new List<string>();

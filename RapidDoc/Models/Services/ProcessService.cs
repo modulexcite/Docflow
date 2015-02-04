@@ -38,23 +38,23 @@ namespace RapidDoc.Models.Services
     public class ProcessService : IProcessService
     {
         private IRepository<ProcessTable> repo;
+        private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public ProcessService(IUnitOfWork uow, IAccountService accountService)
+        public ProcessService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<ProcessTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
         }
         public IEnumerable<ProcessTable> GetAll()
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<ProcessTable> GetPartial(Expression<Func<ProcessTable, bool>> predicate)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(predicate).Where(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<ProcessView> GetPartialView(Expression<Func<ProcessTable, bool>> predicate)
@@ -105,7 +105,7 @@ namespace RapidDoc.Models.Services
         }
         public void SaveDomain(ProcessTable domainTable)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             if (domainTable.Id == Guid.Empty)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;
@@ -130,7 +130,7 @@ namespace RapidDoc.Models.Services
         }
         public ProcessTable Find(Guid id)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.Find(a => a.Id == id && a.CompanyTableId == user.CompanyTableId);
         }
         public ProcessView FindView(Guid id)

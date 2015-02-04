@@ -40,18 +40,18 @@ namespace RapidDoc.Models.Services
     public class EmplService : IEmplService
     {
         private IRepository<EmplTable> repo;
+        private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public EmplService(IUnitOfWork uow, IAccountService accountService)
+        public EmplService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<EmplTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
         }
         public IEnumerable<EmplTable> GetAll()
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<EmplView> GetAllView()
@@ -70,7 +70,7 @@ namespace RapidDoc.Models.Services
         }
         public IEnumerable<EmplTable> GetPartial(Expression<Func<EmplTable, bool>> predicate)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(predicate).Where(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<EmplView> GetPartialView(Expression<Func<EmplTable, bool>> predicate)
@@ -184,22 +184,22 @@ namespace RapidDoc.Models.Services
         {
             if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
             {
-                return _AccountService.FirstOrDefault(x => x.UserName == currentUserName);
+                return repoUser.Find(x => x.UserName == currentUserName);
             }
             else
             {
-                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+                return repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             }
         }
         private ApplicationUser getCurrentUserId(string currentUserId = "")
         {
             if (currentUserId != string.Empty)
             {
-                return _AccountService.Find(currentUserId);
+                return repoUser.GetById(currentUserId);
             }
             else
             {
-                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+                return repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             }
         }
     }

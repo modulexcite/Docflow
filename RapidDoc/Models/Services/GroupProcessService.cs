@@ -35,18 +35,18 @@ namespace RapidDoc.Models.Services
     public class GroupProcessService : IGroupProcessService
     {
         private IRepository<GroupProcessTable> repo;
+        private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public GroupProcessService(IUnitOfWork uow, IAccountService accountService)
+        public GroupProcessService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<GroupProcessTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
         }
         public IEnumerable<GroupProcessTable> GetAll()
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<GroupProcessView> GetAllView()
@@ -56,7 +56,7 @@ namespace RapidDoc.Models.Services
         }
         public IEnumerable<GroupProcessTable> GetPartial(Expression<Func<GroupProcessTable, bool>> predicate)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(predicate).Where(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<GroupProcessView> GetPartialView(Expression<Func<GroupProcessTable, bool>> predicate)
@@ -93,7 +93,7 @@ namespace RapidDoc.Models.Services
         }
         public void SaveDomain(GroupProcessTable domainTable)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             if (domainTable.Id == Guid.Empty)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;
@@ -118,7 +118,7 @@ namespace RapidDoc.Models.Services
         }
         public GroupProcessTable Find(Guid id)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.Find(a => a.Id == id && a.CompanyTableId == user.CompanyTableId);
         }
         public GroupProcessView FindView(Guid id)

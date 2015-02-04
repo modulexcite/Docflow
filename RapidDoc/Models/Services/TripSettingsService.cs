@@ -34,13 +34,11 @@ namespace RapidDoc.Models.Services
     {
         private IRepository<TripSettingsTable> repo;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public TripSettingsService(IUnitOfWork uow, IAccountService accountService)
+        public TripSettingsService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<TripSettingsTable>();
-            _AccountService = accountService;
         }
         public IEnumerable<TripSettingsTable> GetAll()
         {

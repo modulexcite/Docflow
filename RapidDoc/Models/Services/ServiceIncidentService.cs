@@ -37,13 +37,11 @@ namespace RapidDoc.Models.Services
     {
         private IRepository<ServiceIncidentTable> repo;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public ServiceIncidentService(IUnitOfWork uow, IAccountService accountService)
+        public ServiceIncidentService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<ServiceIncidentTable>();
-            _AccountService = accountService;
         }
         public IEnumerable<ServiceIncidentTable> GetAll()
         {

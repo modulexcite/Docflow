@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Models.Services
 {
     public interface ISystemService
     {
-        DateTime ConvertDateTimeToLocal(string UserId, DateTime value);
         DateTime ConvertDateTimeToLocal(ApplicationUser userTable, DateTime value);
         bool IsGUID(string expression);
     }
@@ -18,18 +18,10 @@ namespace RapidDoc.Models.Services
     public class SystemService : ISystemService
     {
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public SystemService(IUnitOfWork uow, IAccountService accountService)
+        public SystemService(IUnitOfWork uow)
         {
             _uow = uow;
-            _AccountService = accountService;
-        }
-        public DateTime ConvertDateTimeToLocal(string UserId, DateTime value)
-        {
-            ApplicationUser userTable = _AccountService.Find(UserId);
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(userTable.TimeZoneId);
-            return TimeZoneInfo.ConvertTimeFromUtc(value, timeZoneInfo);
         }
         public DateTime ConvertDateTimeToLocal(ApplicationUser userTable, DateTime value)
         {

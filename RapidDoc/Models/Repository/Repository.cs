@@ -63,6 +63,11 @@ namespace RapidDoc.Models.Repository
             return _dbset.Find(id);
         }
 
+        public virtual T GetById(string id)
+        {
+            return _dbset.Find(id);
+        }
+
         public virtual IEnumerable<T> All()
         {
             return _dbset;

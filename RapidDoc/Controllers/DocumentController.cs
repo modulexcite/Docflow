@@ -298,7 +298,7 @@ namespace RapidDoc.Controllers
             DocumentTable documentTable = _DocumentService.FirstOrDefault(x => x.Id == documentId);
             SearchTable searchTable = _SearchService.FirstOrDefault(x => x.DocumentTableId == documentId);
 
-            if (documentTable.CreatedBy == User.Identity.Name)
+            if (documentTable.ApplicationUserCreatedId == User.Identity.GetUserId() && documentTable.DocumentState == DocumentState.Created)
             {
                 _DocumentService.DeleteFiles(documentId);
                 if (searchTable != null)

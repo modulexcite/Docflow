@@ -30,16 +30,16 @@ namespace RapidDoc.Models.Services
     public class CommentService : ICommentService
     {
         private IRepository<CommentTable> repo;
+        private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
         private readonly IEmplService _EmplService;
         private readonly ISystemService _SystemService;
 
-        public CommentService(IUnitOfWork uow, IAccountService accountService, IEmplService emplService, ISystemService systemService)
+        public CommentService(IUnitOfWork uow, IEmplService emplService, ISystemService systemService)
         {
             _uow = uow;
             repo = uow.GetRepository<CommentTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
             _EmplService = emplService;
             _SystemService = systemService;
         }
@@ -58,7 +58,7 @@ namespace RapidDoc.Models.Services
 
             if (comments != null)
             {
-                ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+                ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
 
                 foreach (var comment in comments)
                 {
@@ -82,7 +82,7 @@ namespace RapidDoc.Models.Services
         }
         public void SaveDomain(CommentTable domainTable)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             domainTable.CreatedDate = DateTime.UtcNow;
             domainTable.ModifiedDate = domainTable.CreatedDate;
             domainTable.ApplicationUserCreatedId = user.Id;

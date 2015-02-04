@@ -31,16 +31,16 @@ namespace RapidDoc.Models.Services
     public class DocumentReaderService : IDocumentReaderService
     {
         private IRepository<DocumentReaderTable> repo;
+        private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
         private readonly IEmplService _EmplService;
         private readonly IHistoryUserService _HistoryUserService;
 
-        public DocumentReaderService(IUnitOfWork uow, IAccountService accountService, IEmplService emplService, IHistoryUserService historyUserService)
+        public DocumentReaderService(IUnitOfWork uow, IEmplService emplService, IHistoryUserService historyUserService)
         {
             _uow = uow;
             repo = uow.GetRepository<DocumentReaderTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
             _EmplService = emplService;
             _HistoryUserService = historyUserService;
         }
@@ -65,7 +65,7 @@ namespace RapidDoc.Models.Services
             List<string> newReader = new List<string>();
             string addReadersDescription = String.Empty;
             string removeReadersDescription = String.Empty;
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
 
             if (listdata != null)
             {

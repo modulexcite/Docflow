@@ -39,14 +39,14 @@ namespace RapidDoc.Models.Services
     public class TitleService : ITitleService
     {
         private IRepository<TitleTable> repo;
+        private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public TitleService(IUnitOfWork uow, IAccountService accountService)
+        public TitleService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<TitleTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
         }
         public IEnumerable<TitleTable> GetAll()
         {
@@ -149,11 +149,11 @@ namespace RapidDoc.Models.Services
         {
             if ((HttpContext.Current == null || HttpContext.Current.User.Identity.Name == String.Empty) && currentUserName != string.Empty)
             {
-                return _AccountService.FirstOrDefault(x => x.UserName == currentUserName);
+                return repoUser.Find(x => x.UserName == currentUserName);
             }
             else
             {
-                return _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+                return repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             }
         }
     }

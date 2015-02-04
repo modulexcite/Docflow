@@ -40,18 +40,18 @@ namespace RapidDoc.Models.Services
     public class DelegationService : IDelegationService
     {
         private IRepository<DelegationTable> repo;
+        private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
-        private readonly IAccountService _AccountService;
 
-        public DelegationService(IUnitOfWork uow, IAccountService accountService)
+        public DelegationService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<DelegationTable>();
-            _AccountService = accountService;
+            repoUser = uow.GetRepository<ApplicationUser>();
         }
         public IEnumerable<DelegationTable> GetAll()
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(x => x.CompanyTableId == user.CompanyTableId).OrderByDescending(x => x.CreatedDate);
         }
         public IEnumerable<DelegationView> GetAllView()
@@ -61,7 +61,7 @@ namespace RapidDoc.Models.Services
         }
         public IEnumerable<DelegationTable> GetPartial(Expression<Func<DelegationTable, bool>> predicate)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.FindAll(predicate).Where(x => x.CompanyTableId == user.CompanyTableId);
         }
         public IEnumerable<DelegationView> GetPartialView(Expression<Func<DelegationTable, bool>> predicate)
@@ -103,7 +103,7 @@ namespace RapidDoc.Models.Services
         }
         public void SaveDomain(DelegationTable domainTable)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             if (domainTable.Id == Guid.Empty)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;
@@ -128,7 +128,7 @@ namespace RapidDoc.Models.Services
         }
         public DelegationTable Find(Guid id)
         {
-            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
             return repo.Find(a => a.Id == id && a.CompanyTableId == user.CompanyTableId);
         }
         public DelegationView FindView(Guid id)
@@ -190,7 +190,7 @@ namespace RapidDoc.Models.Services
 
             foreach (var user in users)
             {
-                var delegationItems = GetPartial(x => x.EmplTableFrom.ApplicationUserId == user.Id
+                var delegationItems = GetPartialIntercompany(x => x.EmplTableFrom.ApplicationUserId == user.Id
                     && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
                     && x.isArchive == false && x.CompanyTableId == user.CompanyTableId);
 
@@ -200,16 +200,16 @@ namespace RapidDoc.Models.Services
                     {
                         if (delegationItem.ProcessTableId == document.ProcessTableId)
                         {
-                            result.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
+                            result.Add(repoUser.GetById(delegationItem.EmplTableTo.ApplicationUserId));
                         }
                         else if (document.ProcessTable.GroupProcessTableId == delegationItem.GroupProcessTableId)
                         {
-                            result.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
+                            result.Add(repoUser.GetById(delegationItem.EmplTableTo.ApplicationUserId));
                         }
                     }
                     else
                     {
-                        result.Add(_AccountService.Find(delegationItem.EmplTableTo.ApplicationUserId));
+                        result.Add(repoUser.GetById(delegationItem.EmplTableTo.ApplicationUserId));
                     }
                 }
             }
