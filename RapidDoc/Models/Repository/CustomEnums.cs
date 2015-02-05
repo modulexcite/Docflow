@@ -1016,5 +1016,13 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Ликвидацией аварии")]
         Element3 = 2
     }
+    public enum PayType : byte
+    {
+        [Display(Name = "Самостоятельно")]
+        Element1 = 0,
+
+        [Display(Name = "За счет компании")]
+        Element2 = 1
+    }
     
 }

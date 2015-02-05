@@ -253,6 +253,18 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_ZIF_RequestForItemsMech_Table> USR_REQ_ZIF_RequestForItemsMech_Table { get; set; }
         public DbSet<USR_REQ_ZIF_RequestForItemsEnerg_Table> USR_REQ_ZIF_RequestForItemsEnerg_Table { get; set; }
         public DbSet<USR_REQ_ZIF_RequestForItemsASYTP_Table> USR_REQ_ZIF_RequestForItemsASYTP_Table { get; set; }
+        public DbSet<USR_REQ_OKS_RequestForTicketPermission_Table> USR_REQ_OKS_RequestForTicketPermission_Table { get; set; }
+        public DbSet<USR_REQ_OKS_RequestForTicket_Table> USR_REQ_OKS_RequestForTicket_Table { get; set; }
+        public DbSet<USR_REQ_YT_RequestForEmergAuxiliaryTransportZIF_Table> USR_REQ_YT_RequestForEmergAuxiliaryTransportZIF_Table { get; set; }
+        public DbSet<USR_REQ_YT_RequestForAuxiliaryTransportDayOffZIF_Table> USR_REQ_YT_RequestForAuxiliaryTransportDayOffZIF_Table { get; set; }
+        public DbSet<USR_REQ_YT_RequestForAuxiliaryTransportWorkDaysZIF_Table> USR_REQ_YT_RequestForAuxiliaryTransportWorkDaysZIF_Table { get; set; }
+        public DbSet<USR_REQ_YT_RequestForStandbyTransportZIF_Table> USR_REQ_YT_RequestForStandbyTransportZIF_Table { get; set; }
+        public DbSet<USR_REQ_YT_RequestForLightTransportTripManageZIF_Table> USR_REQ_YT_RequestForLightTransportTripManageZIF_Table { get; set; }
+        public DbSet<USR_REQ_YT_RequestForLightTransportTripDayOffZIF_Table> USR_REQ_YT_RequestForLightTransportTripDayOffZIF_Table { get; set; }
+        public DbSet<USR_REQ_YT_RequestForPassangerTransportZIF_Table> USR_REQ_YT_RequestForPassangerTransportZIF_Table { get; set; }
+        public DbSet<USR_REQ_YT_RequestForPassangerTransportTripZIF_Table> USR_REQ_YT_RequestForPassangerTransportTripZIF_Table { get; set; }
+        public DbSet<USR_REQ_YT_RequestForStandbyTransportUZL_Table> USR_REQ_YT_RequestForStandbyTransportUZL_Table { get; set; }
+
 
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {

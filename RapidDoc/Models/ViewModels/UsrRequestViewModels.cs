@@ -1548,7 +1548,90 @@ namespace RapidDoc.Models.ViewModels
         public DateTime? ToDate { get; set; }
 
     }
-
+    public class USR_REQ_OKS_RequestForTicket_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Фамилия, Имя (на русском)")]
+        public string NameRus { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Фамилия, Имя (на английском)")]
+        public string NameEng { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Должность")]
+        public string Title { get; set; }
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата рождения")]
+        public DateTime? DateBirth { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "№уд.личности/паспорта")]
+        public string PassportNumber { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Срок действия документа")]
+        public string Validity { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Маршрут")]
+        public string Route { get; set; }
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+        [DataType(DataType.Time)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Время вылета")]
+        public TimeSpan TimeDeparture { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Класс")]
+        public string Category { get; set; }
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель поездки")]
+        public string Reason { get; set; }
+        [Display(Name = "Оплата")]
+        public PayType PayType { get; set; }
+    }
+    public class USR_REQ_OKS_RequestForTicketPermission_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Фамилия, Имя (на русском)")]
+        public string NameRus { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Фамилия, Имя (на английском)")]
+        public string NameEng { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Должность")]
+        public string Title { get; set; }
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата рождения")]
+        public DateTime? DateBirth { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "№уд.личности/паспорта")]
+        public string PassportNumber { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Срок действия документа")]
+        public string Validity { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Маршрут")]
+        public string Route { get; set; }
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? Date { get; set; }
+        [DataType(DataType.Time)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Время вылета")]
+        public TimeSpan TimeDeparture { get; set; }
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Класс")]
+        public string Category { get; set; }
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Причина")]
+        public string Reason { get; set; }
+        [Display(Name = "Оплата")]
+        public PayType PayType { get; set; }
+    }
     #endregion
 
     #region РОГР
@@ -6799,6 +6882,376 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "ФИО водителя автотранспорта")]
         public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForEmergAuxiliaryTransportZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Вспомогательная техника")]
+        public string Transport { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Выполнение работ")]
+        public string ExecutionWork { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Ответственное лицо из числа ИТР за работы (ФИО, контакты)")]
+        public string EmplName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт предоставления транспорта")]
+        public string PlaceDeparture { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата с")]
+        public DateTime? StartDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата по")]
+        public DateTime? EndDate { get; set; }
+
+        [Display(Name = "Время с")]
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Display(Name = "Время по")]
+        public TimeSpan EndWorkTime { get; set; }
+
+        [Display(Name = "Модель и номер авто")]
+        public string NumberCar { get; set; }
+
+        [Display(Name = "ФИО водителя")]
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForAuxiliaryTransportDayOffZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Вспомогательная техника")]
+        public string Transport { get; set; }
+
+        [Display(Name = "В связи с")]
+        public PurposeAuxiliaryTransportTrip PurposeAuxiliaryTransportTrip { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Выполнение работ")]
+        public string ExecutionWork { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Ответственное лицо из числа ИТР за погрузочно-разгрузочные работы")]
+        public string EmplName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт предоставления транспорта")]
+        public string PlaceDeparture { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата с")]
+        public DateTime? StartDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата по")]
+        public DateTime? EndDate { get; set; }
+
+        [Display(Name = "Время с")]
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Display(Name = "Время по")]
+        public TimeSpan EndWorkTime { get; set; }
+
+        [Display(Name = "Марка, номер автотранспорта")]
+        public string NumberCar { get; set; }
+
+        [Display(Name = "ФИО водителя автотранспорта")]
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForAuxiliaryTransportWorkDaysZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Вспомогательная техника")]
+        public string Transport { get; set; }
+
+        [Display(Name = "В связи с")]
+        public PurposeAuxiliaryTransportTrip PurposeAuxiliaryTransportTrip { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Выполнение работ")]
+        public string ExecutionWork { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Ответственное лицо из числа ИТР за погрузочно-разгрузочные работы")]
+        public string EmplName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт предоставления транспорта")]
+        public string PlaceDeparture { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата с")]
+        public DateTime? StartDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата по")]
+        public DateTime? EndDate { get; set; }
+
+        [Display(Name = "Время с")]
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Display(Name = "Время по")]
+        public TimeSpan EndWorkTime { get; set; }
+
+        [Display(Name = "Марка, номер автотранспорта")]
+        public string NumberCar { get; set; }
+
+        [Display(Name = "ФИО водителя автотранспорта")]
+        public string NameDriverCar { get; set; }    
+    }
+
+    public class USR_REQ_YT_RequestForStandbyTransportZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Заказчик (ФИО, подразделение)")]
+        public string Client { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? StartDate { get; set; }
+
+        [Display(Name = "Время")]
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Маршрут")]
+        public string Route { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель поездки")]
+        public string Purpose { get; set; }
+
+        [Display(Name = "Марка, номер автотранспорта")]
+        public string NumberCar { get; set; }
+
+        [Display(Name = "ФИО водителя автотранспорта")]
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForLightTransportTripManageZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string Place { get; set; }
+
+        [Display(Name = "Цель")]
+        public PurposeTrip PurposeTrip { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Purpose { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? StartDate { get; set; }
+
+        [Display(Name = "Сотрудник")]
+        public EmplTrip EmplTrip { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО сотрудника, которого необходимо встетить\\отвезти")]
+        public string EmplName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Контактные телефоны сотрудника, которого необходимо встретить\\отвезти")]
+        public string Phone { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Откуда забрать")]
+        public string PlaceDeparture { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Время (во сколько нужно быть в пункте назначения)")]
+        public TimeSpan TimeDeparture { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Данные рейса (номер, время)")]
+        public string Flight { get; set; }
+
+        [Display(Name = "Срок командирования")]
+        public string Terms { get; set; }
+
+        [Display(Name = "Марка, номер автотранспорта")]
+        public string NumberCar { get; set; }
+
+        [Display(Name = "ФИО водителя автотранспорта")]
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForLightTransportTripDayOffZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string Place { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Purpose { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата с")]
+        public DateTime? StartDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата по")]
+        public DateTime? EndDate { get; set; }
+
+        [Display(Name = "Время с")]
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Display(Name = "Время по")]
+        public TimeSpan EndWorkTime { get; set; }
+
+        [Display(Name = "Марка, номер автотранспорта")]
+        public string NumberCar { get; set; }
+
+        [Display(Name = "ФИО водителя автотранспорта")]
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForPassangerTransportZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Заказчик")]
+        public string Users { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Контактный телефон")]
+        public string Phone { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель, количество пассажиров")]
+        public string Purpose { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата с")]
+        public DateTime? StartDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата по")]
+        public DateTime? EndDate { get; set; }
+
+        [Display(Name = "Время с")]
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Display(Name = "Время по")]
+        public TimeSpan EndWorkTime { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Маршрут")]
+        public string Route { get; set; }
+
+        [Display(Name = "Марка, номер автотранспорта")]
+        public string NumberCar { get; set; }
+
+        [Display(Name = "ФИО водителя автотранспорта")]
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForPassangerTransportTripZIF_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Пункт назначения")]
+        public string Place { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Purpose { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата с")]
+        public DateTime? StartDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата по")]
+        public DateTime? EndDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Сотрудник")]
+        public string Users { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО сотрудника, которого необходимо встретить\\сопровождать")]
+        public string EmplName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Контактные телефоны сотрудника, которого необходимо встретить\\сопровождать")]
+        public string Phone { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Откуда забрать")]
+        public string PlaceDeparture { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Время (во сколько нужно быть в пункте назначения)")]
+        public TimeSpan TimeArrive { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Данные рейса (номер, время)")]
+        public string Flight { get; set; }
+
+        [Display(Name = "Срок командирования")]
+        public string Terms { get; set; }
+
+        [Display(Name = "Марка, номер автотранспорта")]
+        public string NumberCar { get; set; }
+
+        [Display(Name = "ФИО водителя автотранспорта")]
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForStandbyTransportUZL_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Заказчик (ФИО, подразделение)")]
+        public string Client { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата")]
+        public DateTime? StartDate { get; set; }
+
+        [Display(Name = "Время")]
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Маршрут")]
+        public string Route { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель поездки")]
+        public string Purpose { get; set; }
+
+        [Display(Name = "Марка, номер автотранспорта")]
+        public string NumberCar { get; set; }
+
+        [Display(Name = "ФИО водителя автотранспорта")]
+        public string NameDriverCar { get; set; }      
     }
     #endregion
 

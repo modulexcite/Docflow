@@ -1083,6 +1083,60 @@ namespace RapidDoc.Models.DomainModels
         public DateTime ToDate { get; set; }
     }
 
+    public class USR_REQ_OKS_RequestForTicket_Table : BasicDocumentTable
+    {
+        [Required]
+        public string NameRus { get; set; }
+        [Required]
+        public string NameEng { get; set; }
+        [Required]
+        public string Title { get; set; }
+        [Required]
+        public DateTime DateBirth { get; set; }
+        [Required]
+        public string PassportNumber { get; set; }
+        [Required]
+        public string Validity { get; set; }
+        [Required]
+        public string Route { get; set; }
+        [Required]
+        public DateTime Date { get; set; }
+        [Required]
+        public TimeSpan TimeDeparture { get; set; }
+        [Required]
+        public string Category { get; set; }
+        [Required]
+        public string Reason { get; set; }
+        [Required]
+        public PayType PayType { get; set; }
+    }
+    public class USR_REQ_OKS_RequestForTicketPermission_Table : BasicDocumentTable
+    {
+        [Required]
+        public string NameRus { get; set; }
+        [Required]
+        public string NameEng { get; set; }
+        [Required]
+        public string Title { get; set; }
+        [Required]
+        public DateTime DateBirth { get; set; }
+        [Required]
+        public string PassportNumber { get; set; }
+        [Required]
+        public string Validity { get; set; }
+        [Required]
+        public string Route { get; set; }
+        [Required]
+        public DateTime Date { get; set; }
+        [Required]
+        public TimeSpan TimeDeparture { get; set; }
+        [Required]
+        public string Category { get; set; }
+        [Required]
+        public string Reason { get; set; }
+        [Required]
+        public PayType PayType { get; set; }
+    }
     #endregion
 
     #region РОГР
@@ -4968,6 +5022,270 @@ namespace RapidDoc.Models.DomainModels
         public string NumberCar { get; set; }
 
         public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForEmergAuxiliaryTransportZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Transport { get; set; }
+
+        [Required]
+        public string ExecutionWork { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForAuxiliaryTransportDayOffZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Transport { get; set; }
+
+        public PurposeAuxiliaryTransportTrip PurposeAuxiliaryTransportTrip { get; set; }
+
+        [Required]
+        public string ExecutionWork { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForAuxiliaryTransportWorkDaysZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Transport { get; set; }
+
+        public PurposeAuxiliaryTransportTrip PurposeAuxiliaryTransportTrip { get; set; }
+
+        [Required]
+        public string ExecutionWork { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForStandbyTransportZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Client { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Required]
+        public string Route { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }
+    }
+
+    public class USR_REQ_YT_RequestForLightTransportTripManageZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        public PurposeTrip PurposeTrip { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        public EmplTrip EmplTrip { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public TimeSpan TimeDeparture { get; set; }
+
+        [Required]
+        public string Flight { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }        
+    }
+
+    public class USR_REQ_YT_RequestForLightTransportTripDayOffZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }            
+    }
+
+    public class USR_REQ_YT_RequestForPassangerTransportZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        public TimeSpan EndWorkTime { get; set; }
+
+        [Required]
+        public string Route { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }    
+    }
+
+    public class USR_REQ_YT_RequestForPassangerTransportTripZIF_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string Users { get; set; }
+
+        [Required]
+        public string EmplName { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
+
+        [Required]
+        public string PlaceDeparture { get; set; }
+
+        [Required]
+        public TimeSpan TimeArrive { get; set; }
+
+        [Required]
+        public string Flight { get; set; }
+
+        public string Terms { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }    
+    }
+
+    public class USR_REQ_YT_RequestForStandbyTransportUZL_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Client { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        public TimeSpan StartWorkTime { get; set; }
+
+        [Required]
+        public string Route { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        public string NumberCar { get; set; }
+
+        public string NameDriverCar { get; set; }    
     }
     #endregion
 
