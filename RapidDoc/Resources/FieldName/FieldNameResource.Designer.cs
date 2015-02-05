@@ -70,6 +70,15 @@ namespace FieldNameRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Роль (Добавление читателей при закрытии).
+        /// </summary>
+        public static string AfterEndRoleName {
+            get {
+                return ResourceManager.GetString("AfterEndRoleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Код компании.
         /// </summary>
         public static string AliasCompanyName {
@@ -610,7 +619,7 @@ namespace FieldNameRes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Роль пользователя.
+        ///   Looks up a localized string similar to Роль (Доступ).
         /// </summary>
         public static string RoleName {
             get {
@@ -660,6 +669,15 @@ namespace FieldNameRes {
         public static string StartDate {
             get {
                 return ResourceManager.GetString("StartDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Роль (Добавление читателей при создании).
+        /// </summary>
+        public static string StartReaderRoleName {
+            get {
+                return ResourceManager.GetString("StartReaderRoleName", resourceCulture);
             }
         }
         

@@ -209,6 +209,21 @@ namespace RapidDoc.Controllers
                     if (operationType == OperationType.ApproveDocument)
                     {
                         _WorkflowService.AgreementWorkflowApprove(id, process.TableName, documentData);
+
+                        DocumentTable documentTable = _DocumentService.Find(id);
+                        if (documentTable != null && documentTable.ProcessTable != null && documentTable.DocumentState == DocumentState.Closed && !String.IsNullOrEmpty(documentTable.ProcessTable.AfterEndReaderRoleId))
+                        {
+                            try
+                            {
+                                var role = RoleManager.FindById(documentTable.ProcessTable.AfterEndReaderRoleId);
+                                if (role != null && role.Users != null && role.Users.Count > 0)
+                                {
+                                    List<string> newReader = _DocumentReaderService.AddReader(documentTable.Id, role.Users.ToList());
+                                    _EmailService.SendReaderEmail(documentTable.Id, newReader);
+                                }
+                            }
+                            catch { }
+                        }
                     }
                     else if (operationType == OperationType.RejectDocument)
                     {
@@ -427,6 +442,19 @@ namespace RapidDoc.Controllers
 
                 if (operationType == OperationType.ApproveDocument)
                 {
+                    if(documentTable.ProcessTable != null && !String.IsNullOrEmpty(documentTable.ProcessTable.StartReaderRoleId))
+                    {
+                        try
+                        {
+                            var role = RoleManager.FindById(documentTable.ProcessTable.StartReaderRoleId);
+                            if (role != null && role.Users != null && role.Users.Count > 0)
+                            {
+                                List<string> newReader = _DocumentReaderService.AddReader(documentTable.Id, role.Users.ToList());
+                                _EmailService.SendReaderEmail(documentTable.Id, newReader);
+                            }
+                        }
+                        catch {}
+                    }
                     _WorkflowService.RunWorkflow(documentTable, processView.TableName, documentData);
                 }
 
@@ -515,7 +543,22 @@ namespace RapidDoc.Controllers
                 _SearchService.SaveSearchData(documentId, docModel, actionModelName);
 
                 if (operationType == OperationType.ApproveDocument)
+                {
+                    if (documentTable.ProcessTable != null && !String.IsNullOrEmpty(documentTable.ProcessTable.StartReaderRoleId))
+                    {
+                        try
+                        {
+                            var role = RoleManager.FindById(documentTable.ProcessTable.StartReaderRoleId);
+                            if (role != null && role.Users != null && role.Users.Count > 0)
+                            {
+                                List<string> newReader = _DocumentReaderService.AddReader(documentTable.Id, role.Users.ToList());
+                                _EmailService.SendReaderEmail(documentTable.Id, newReader);
+                            }
+                        }
+                        catch { }
+                    }
                     _WorkflowService.RunWorkflow(documentTable, processView.TableName, documentData);
+                }
 
                 return RedirectToAction("Index", "Document");
             }

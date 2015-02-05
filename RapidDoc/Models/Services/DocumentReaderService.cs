@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using System.Linq.Expressions;
 using System.Transactions;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Models.Services
 {
@@ -22,6 +23,7 @@ namespace RapidDoc.Models.Services
         DocumentReaderTable FirstOrDefault(Expression<Func<DocumentReaderTable, bool>> predicate);
         bool Contains(Expression<Func<DocumentReaderTable, bool>> predicate);
         List<string> SaveReader(Guid documentId, string[] listdata);
+        List<string> AddReader(Guid documentId, List<IdentityUserRole> listdata);
         void SaveDomain(DocumentReaderTable domainTable);
         void Delete(Guid documentId);
         void Delete(Expression<Func<DocumentReaderTable, bool>> predicate);
@@ -114,6 +116,38 @@ namespace RapidDoc.Models.Services
             if (removeReadersDescription.Length > 0)
             {
                 _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.RemoveReader, Description = removeReadersDescription }, user.Id);
+            }
+
+            return newReader;
+        }
+        public List<string> AddReader(Guid documentId, List<IdentityUserRole> listdata)
+        {
+            List<string> newReader = new List<string>();
+            string addReadersDescription = String.Empty;
+            string removeReadersDescription = String.Empty;
+            ApplicationUser currentUser = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
+
+            if (listdata != null)
+            {
+                foreach (var user in listdata)
+                {
+                    if (Contains(x => x.DocumentTableId == documentId && x.UserId == user.UserId) == false)
+                    {
+                        newReader.Add(user.UserId);
+                        var empl = _EmplService.GetEmployer(user.UserId, currentUser.CompanyTableId);
+                        addReadersDescription += empl.FullName + "; ";
+
+                        DocumentReaderTable reader = new DocumentReaderTable();
+                        reader.DocumentTableId = documentId;
+                        reader.UserId = user.UserId;
+                        SaveDomain(reader);
+                    }
+                }
+            }
+
+            if (addReadersDescription.Length > 0)
+            {
+                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = HistoryType.AddReader, Description = addReadersDescription }, currentUser.Id);
             }
 
             return newReader;
