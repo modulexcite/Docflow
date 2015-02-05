@@ -42,6 +42,8 @@ namespace RapidDoc.Models.ViewModels
         public string TableName { get; set; }
 
         public string RoleId { get; set; }
+        public string StartReaderRoleId { get; set; }
+        public string AfterEndReaderRoleId { get; set; }
         public Guid? GroupProcessTableId { get; set; }
         public Guid? WorkScheduleTableId { get; set; }
 
@@ -56,6 +58,12 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "RoleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string RoleName { get; set; }
+
+        [Display(Name = "StartReaderRoleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string StartReaderRoleName { get; set; }
+
+        [Display(Name = "AfterEndRoleName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string AfterEndRoleName { get; set; }
 
         [Display(Name = "MandatoryNumberFiles", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public int MandatoryNumberFiles { get; set; }

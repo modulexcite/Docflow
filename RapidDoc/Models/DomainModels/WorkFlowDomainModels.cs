@@ -56,6 +56,12 @@ namespace RapidDoc.Models.DomainModels
         public string RoleId { get; set; }
         public virtual IdentityRole IdentityRole { get; set; }
 
+        public string StartReaderRoleId { get; set; }
+        public virtual IdentityRole StartReaderIdentityRole { get; set; }
+
+        public string AfterEndReaderRoleId { get; set; }
+        public virtual IdentityRole AfterEndReaderIdentityRole { get; set; }
+
         public int MandatoryNumberFiles { get; set; }
         public string MandatoryFileTypes { get; set; }
 
