@@ -1175,7 +1175,7 @@ namespace RapidDoc.Models.ViewModels
     {
         [Display(Name = "Имя пользователя")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        public string Users { get; set; }
+        public string Name { get; set; }
 
         [Display(Name = "Электронная почта")]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -3215,6 +3215,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Дата оформления доверености")]
         public DateTime? LetterDate { get; set; }
 
+        [Display(Name = "Сумма доверенности с учетом НДС/без НДС")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Amount { get; set; }
     }
 
     public class USR_REQ_UBUO_RequestForReferenceTax_View : BasicDocumentView

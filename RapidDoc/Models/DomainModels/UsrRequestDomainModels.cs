@@ -811,7 +811,7 @@ namespace RapidDoc.Models.DomainModels
     public class USR_REQ_IT_CAP_CreateUserExchange_Table : BasicDocumentTable
     {
         [Required]
-        public string Users { get; set; }
+        public string Name { get; set; }
 
         [Required]
         public string Email { get; set; }
@@ -2338,6 +2338,8 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public DateTime LetterDate { get; set; }
 
+        [Required]
+        public string Amount { get; set; }
     }
 
     public class USR_REQ_UBUO_RequestForReferenceTax_Table : BasicDocumentTable

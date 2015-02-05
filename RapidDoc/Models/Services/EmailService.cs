@@ -21,6 +21,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using Microsoft.AspNet.Identity;
+using System.Configuration;
 
 namespace RapidDoc.Models.Services
 {
@@ -267,7 +268,7 @@ namespace RapidDoc.Models.Services
                 {
                     if (user.Email != String.Empty)
                     {
-                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
+                        string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                         CreateMessange(EmailTemplateType.Default, docuTable, user, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendExecutorEmail, String.Format("Требуется ваша подпись, документ [{0}]", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                     }
                 }
@@ -308,7 +309,7 @@ namespace RapidDoc.Models.Services
                     ApplicationUser userTable = repoUser.GetById(userId);
                     if (userTable.Email != String.Empty)
                     {
-                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
+                        string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                         CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorRejectEmail, String.Format("Ваш документ [{0}] был отменен", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                     }
                 }
@@ -324,7 +325,7 @@ namespace RapidDoc.Models.Services
                 ApplicationUser userTable = repoUser.GetById(docuTable.ApplicationUserCreatedId);
                 if (userTable.Email != String.Empty)
                 {
-                    string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
+                    string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                     CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorClosedEmail, String.Format("Ваш документ [{0}] закрыт", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                 }
             }
@@ -359,7 +360,7 @@ namespace RapidDoc.Models.Services
                 {
                     if (userTable.Email != String.Empty && userTable.UserName != HttpContext.Current.User.Identity.Name)
                     {
-                        string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
+                        string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                         CreateMessange(EmailTemplateType.Comment, docuTable, userTable, @"Views\\EmailTemplate\\CommentEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendInitiatorCommentEmail, String.Format("Новый комментарий в документе [{0}]", docuTable.DocumentNum), new string[] { lastComment }, new string[] { docuTable.DocumentText });
                     }
                 }
@@ -376,7 +377,7 @@ namespace RapidDoc.Models.Services
 
                 if (userTable.Email != String.Empty)
                 {
-                    string documentUri = "http://" + HttpContext.Current.Request.Url.Authority;
+                    string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString();
                     CreateMessange(EmailTemplateType.Delegation, null, userTable, @"Views\\EmailTemplate\\DelegationEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendDelegationEmplEmail, "На вас настроенно делегирование", new string[] { emplTableTo.FullName, emplTableFrom.FullName });
                 }
             }
@@ -392,7 +393,7 @@ namespace RapidDoc.Models.Services
 
                 if (userTable.Email != String.Empty)
                 {
-                    string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
+                    string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                     CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendReaderEmail, String.Format("Вас добавили читателем, документ [{0}]", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
                 }
             }
@@ -405,7 +406,7 @@ namespace RapidDoc.Models.Services
 
             if (userTable.Email != String.Empty)
             {
-                string documentUri = "http://" + HttpContext.Current.Request.Url.Authority + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
+                string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + docuTable.Id + "?isAfterView=true";
                 CreateMessange(EmailTemplateType.Default, docuTable, userTable, @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml", documentUri, UIElementRes.UIElement.SendExecutorEmail, String.Format("Требуется ваша подпись, документ [{0}]", docuTable.DocumentNum), new string[] { }, new string[] { docuTable.DocumentText });
             }
         }
@@ -423,7 +424,7 @@ namespace RapidDoc.Models.Services
                 foreach (var document in documents)
                 {
                     num++;
-                    documentUrls.Add("http://" + HttpContext.Current.Request.Url.Authority + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id + "?isAfterView=true");
+                    documentUrls.Add("http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id + "?isAfterView=true");
                     documentNums.Add(document.DocumentNum + " - " + document.ProcessName);
                     documentText.Add(document.DocumentText);
                 }
@@ -445,7 +446,7 @@ namespace RapidDoc.Models.Services
                 foreach (var document in documents)
                 {
                     num++;
-                    documentUrls.Add("http://" + HttpContext.Current.Request.Url.Authority + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id + "?isAfterView=true");
+                    documentUrls.Add("http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id + "?isAfterView=true");
                     documentNums.Add(document.DocumentNum + " - " + document.ProcessName);
                     documentText.Add(document.DocumentText);
                 }
@@ -467,7 +468,7 @@ namespace RapidDoc.Models.Services
                 foreach (var document in documents)
                 {
                     num++;
-                    documentUrls.Add("http://" + HttpContext.Current.Request.Url.Authority + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id + "?isAfterView=true");
+                    documentUrls.Add("http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + document.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + document.Id + "?isAfterView=true");
                     documentNums.Add(document.DocumentNum + " - " + document.ProcessName);
 
                     if (!String.IsNullOrEmpty(document.DocumentText) && document.DocumentText.Length > 80)

@@ -84,7 +84,7 @@ namespace RapidDoc.Models.Services
             bool skip = false;
             var documentTable = _DocumentService.Find(documentId);
             List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
-            EmplTable currentEmplUser = _EmplService.FirstOrDefault(x => x.ApplicationUserId == documentTable.ApplicationUserCreatedId);
+            EmplTable currentEmplUser = _EmplService.FirstOrDefault(x => x.ApplicationUserId == documentTable.ApplicationUserCreatedId && x.Enable == true);
             EmplTable manager = WFMatchingUpManagerFinder(currentEmplUser, level, currentUserId, profileName);
 
             if (manager != null)
