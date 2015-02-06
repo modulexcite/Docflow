@@ -1002,7 +1002,10 @@ namespace RapidDoc.Models.Repository
         Element4 = 3,
 
         [Display(Name = "Приглашенные спец.\\подрядчики")]
-        Element5 = 4
+        Element5 = 4,
+
+        [Display(Name = "Altyntau Kokshetau")]
+        Element6 = 5
     }
 
     public enum PurposeAuxiliaryTransportTrip : byte
