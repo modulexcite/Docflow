@@ -1059,6 +1059,11 @@ namespace RapidDoc.Controllers
                     {
                         HttpCookie cultureCookie = HttpContext.Request.Cookies["lang"];
                         DateTime? valueDate = null;
+
+                        bool isRequired = propertyInfo
+                                .GetCustomAttributes(typeof(RequiredAttribute), false)
+                                .Length == 1;
+
                         if (cultureCookie != null)
                         {
                             System.Globalization.CultureInfo cultureinfo = new System.Globalization.CultureInfo(cultureCookie.Value);
@@ -1068,8 +1073,14 @@ namespace RapidDoc.Controllers
                         {
                             valueDate = collection[key] == "" ? null : (DateTime?)DateTime.Parse(collection[key]);
                         }
-                        propertyInfo.SetValue(actionModel, valueDate, null);
-                        documentData.Add(key, valueDate);
+
+                        if ((isRequired == true && valueDate != null) || (isRequired == false))
+                        {
+                            propertyInfo.SetValue(actionModel, valueDate, null);
+                            documentData.Add(key, valueDate);
+                        }
+                        else
+                            ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorFieldisNull, GetAttributeDisplayName(propertyInfo)));
                     }
                     else if (propertyInfo.PropertyType == typeof(Guid?))
                     {

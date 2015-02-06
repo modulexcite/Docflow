@@ -97,7 +97,7 @@ namespace RapidDoc.Controllers
                 case 4:
                     if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
                     {
-                        var users = _AccountService.GetPartial(x => x.Email != null);
+                        var users = _AccountService.GetPartial(x => x.Email != null && x.Enable == true).ToList();
                         List<ReminderUsers> checkData = new List<ReminderUsers>();
 
                         foreach (var document in allDocument)
@@ -113,7 +113,7 @@ namespace RapidDoc.Controllers
                         {
                             var userDocuments = checkData.Where(x => x.Users.Any(a => a.Id == user.Id)).GroupBy(b => b.DocumentTable).Select(group => group.Key).ToList();
                             if (userDocuments.Count() > 0)
-                                _Emailservice.SendReminderEmail(user.Id, userDocuments);
+                                _Emailservice.SendReminderEmail(user, userDocuments);
                         }
                     }
                     break;

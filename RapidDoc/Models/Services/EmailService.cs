@@ -44,7 +44,7 @@ namespace RapidDoc.Models.Services
         void SendNewExecutorEmail(Guid documentId, string userId);
         void SendSLAWarningEmail(string userId, IEnumerable<DocumentTable> documents);
         void SendSLADisturbanceEmail(string userId, IEnumerable<DocumentTable> documents);
-        void SendReminderEmail(string userId, IEnumerable<DocumentTable> documents);
+        void SendReminderEmail(ApplicationUser userTable, List<DocumentTable> documents);
     }
 
     public class EmailService : IEmailService
@@ -188,7 +188,7 @@ namespace RapidDoc.Models.Services
 
         private void CreateMessange(EmailTemplateType type, DocumentTable docuTable, ApplicationUser userTable, string templateName, string documentUri, string bodyText, string subject, string[] parameters, string[] parameters2 = null, string[] parameters3 = null)
         {
-            var emplTable = repoEmpl.Find(x => x.ApplicationUserId == userTable.Id);
+            var emplTable = repoEmpl.Find(x => x.ApplicationUserId == userTable.Id && x.Enable == true);
 
             if (emplTable == null)
                 return;
@@ -455,9 +455,8 @@ namespace RapidDoc.Models.Services
             }
         }
 
-        public void SendReminderEmail(string userId, IEnumerable<DocumentTable> documents)
+        public void SendReminderEmail(ApplicationUser userTable, List<DocumentTable> documents)
         {
-            ApplicationUser userTable = repoUser.GetById(userId);
             List<string> documentUrls = new List<string>();
             List<string> documentNums = new List<string>();
             List<string> documentText = new List<string>();
