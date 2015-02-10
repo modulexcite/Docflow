@@ -95,7 +95,7 @@ namespace RapidDoc.Controllers
                     }
                     break;
                 case 4:
-                    if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
+                    if (!_WorkScheduleService.CheckDayType(_WorkScheduleService.FirstOrDefault(x => x.WorkScheduleName == "System").Id, DateTime.UtcNow))
                     {
                         var users = _AccountService.GetPartial(x => x.Email != null && x.Enable == true).ToList();
                         List<ReminderUsers> checkData = new List<ReminderUsers>();
