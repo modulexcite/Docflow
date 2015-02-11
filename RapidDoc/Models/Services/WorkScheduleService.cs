@@ -105,12 +105,12 @@ namespace RapidDoc.Models.Services
                 domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
-            _uow.Save();
+            _uow.Commit();
         }
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
-            _uow.Save();
+            _uow.Commit();
         }
         public WorkScheduleTable Find(Guid id)
         {
@@ -167,7 +167,7 @@ namespace RapidDoc.Models.Services
                 _uow.GetRepository<СalendarTable>().Add(calendar);
             }
 
-            _uow.Save();
+            _uow.Commit();
         }
         public bool CheckDayType(Guid workScheduleId, DateTime date)
         {

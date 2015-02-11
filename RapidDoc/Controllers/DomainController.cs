@@ -18,8 +18,8 @@ namespace RapidDoc.Controllers
     public class DomainController : BasicController
     {
         private readonly IDomainService _Service;
-        public DomainController(IUnitOfWork uow, IDomainService Service, ICompanyService companyService, IAccountService accountService)
-            : base(uow, companyService, accountService)
+        public DomainController(IDomainService Service, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _Service = Service;
         }

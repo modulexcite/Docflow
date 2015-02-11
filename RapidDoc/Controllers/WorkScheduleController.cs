@@ -20,8 +20,8 @@ namespace RapidDoc.Controllers
     {
         private readonly IWorkScheduleService _Service;
 
-        public WorkScheduleController(IUnitOfWork uow, IWorkScheduleService Service, ICompanyService companyService, IAccountService accountService)
-            : base(uow, companyService, accountService)
+        public WorkScheduleController(IWorkScheduleService Service, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _Service = Service;
         }

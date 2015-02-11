@@ -46,12 +46,12 @@ namespace RapidDoc.Controllers
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected RoleManager<IdentityRole> RoleManager { get; private set; }
 
-        public DocumentController(IUnitOfWork uow, IDocumentService documentService, IProcessService processService, 
+        public DocumentController(IDocumentService documentService, IProcessService processService, 
             IWorkflowService workflowService, IEmplService emplService, IAccountService accountService, ISystemService systemService,
             IWorkflowTrackerService workflowTrackerService, IReviewDocLogService reviewDocLogService,
             IDocumentReaderService documentReaderService, ICommentService commentService, IEmailService emailService,
             IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument)
-            : base(uow, companyService, accountService)
+            : base(companyService, accountService)
         {
             _DocumentService = documentService;
             _ProcessService = processService;
@@ -67,8 +67,9 @@ namespace RapidDoc.Controllers
             _SearchService = searchService;
             _CustomCheckDocument = customCheckDocument;
 
-            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
+            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(dbContext));
         }
 
         public ActionResult Index()

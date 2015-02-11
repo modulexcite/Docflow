@@ -119,12 +119,12 @@ namespace RapidDoc.Models.Services
                 domainTable.ApplicationUserModifiedId = user.Id;
                 repo.Update(domainTable);
             }
-            _uow.Save();
+            _uow.Commit();
         }
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
-            _uow.Save();
+            _uow.Commit();
         }
         public TitleTable Find(Guid id)
         {

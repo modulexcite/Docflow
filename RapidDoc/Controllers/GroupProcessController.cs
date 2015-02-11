@@ -20,8 +20,8 @@ namespace RapidDoc.Controllers
         private readonly IGroupProcessService _Service;
         private readonly INumberSeqService _NumberSeqService;
 
-        public GroupProcessController(IUnitOfWork uow, IGroupProcessService Service, INumberSeqService NumberSeqService, ICompanyService companyService, IAccountService accountService)
-            : base(uow, companyService, accountService)
+        public GroupProcessController(IGroupProcessService Service, INumberSeqService NumberSeqService, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _Service = Service;
             _NumberSeqService = NumberSeqService;

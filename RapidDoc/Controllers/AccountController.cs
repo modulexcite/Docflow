@@ -22,10 +22,10 @@ namespace RapidDoc.Controllers
     {
         protected UserManager<ApplicationUser> UserManager { get; private set; }
 
-        public AccountController(IUnitOfWork uow, ICompanyService companyService, IAccountService accountService)
-            : base(uow, companyService, accountService)
+        public AccountController(ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
-            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
         }
 
         //

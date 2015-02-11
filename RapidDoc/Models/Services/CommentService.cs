@@ -89,17 +89,17 @@ namespace RapidDoc.Models.Services
             domainTable.ApplicationUserModifiedId = user.Id;
             domainTable.CompanyTableId = user.CompanyTableId;
             repo.Add(domainTable);
-            _uow.Save();
+            _uow.Commit();
         }
         public void Delete(Guid Id)
         {
             repo.Delete(x => x.Id == Id);
-            _uow.Save();
+            _uow.Commit();
         }
         public void DeleteAll(Guid documentId)
         {
             repo.Delete(x => x.DocumentTableId == documentId);
-            _uow.Save();
+            _uow.Commit();
         }
         public CommentTable Find(Guid id)
         {

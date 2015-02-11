@@ -23,16 +23,17 @@ namespace RapidDoc.Controllers
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected RoleManager<IdentityRole> RoleManager { get; private set; }
 
-        public NewProcessController(IUnitOfWork uow, IProcessService processService, IGroupProcessService groupProcessService, IEmplService emplService, IDocumentService documentService, IAccountService accountService, ICompanyService companyService)
-            : base(uow, companyService, accountService)
+        public NewProcessController(IProcessService processService, IGroupProcessService groupProcessService, IEmplService emplService, IDocumentService documentService, IAccountService accountService, ICompanyService companyService)
+            : base(companyService, accountService)
         {
             _ProcessService = processService;
             _GroupProcessService = groupProcessService;
             _EmplService = emplService;
             _DocumentService = documentService;
 
-            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
+            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(dbContext));
         }
 
         public ActionResult Index()

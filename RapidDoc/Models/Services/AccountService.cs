@@ -82,7 +82,7 @@ namespace RapidDoc.Models.Services
         public void SaveDomain(ApplicationUser domainTable)
         {
             repo.Update(domainTable);
-            _uow.Save();
+            _uow.Commit();
         }
         public SelectList GetDropListUserNull(string id)
         {

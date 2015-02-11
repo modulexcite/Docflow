@@ -121,12 +121,12 @@ namespace RapidDoc.Models.Services
                 domainTable.ModifiedDate = DateTime.UtcNow;
                 repo.Update(domainTable);
             }
-            _uow.Save();
+            _uow.Commit();
         }
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
-            _uow.Save();
+            _uow.Commit();
         }
         public DepartmentTable Find(Guid id)
         {

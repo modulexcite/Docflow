@@ -203,7 +203,7 @@ namespace RapidDoc.Models.Services
                 domainTable.ApplicationUserModifiedId = user.Id;
                 repo.Update(domainTable);
             }
-            _uow.Save();
+            _uow.Commit();
         }
         public WFTrackerTable Find(Guid id)
         {
@@ -223,7 +223,7 @@ namespace RapidDoc.Models.Services
         public void DeleteAll(Guid documentId)
         {
             repo.Delete(a => a.DocumentTableId == documentId);
-            _uow.Save();
+            _uow.Commit();
         }
     }
 }

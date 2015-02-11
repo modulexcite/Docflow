@@ -122,7 +122,7 @@ namespace RapidDoc.Models.Services
             }
 
             _uow.GetRepository<DocumentTable>().Add(docuTable);
-            _uow.Save();
+            _uow.Commit();
 
             var domainTable = RouteCustomModelDomain(tableName);
 
@@ -138,11 +138,11 @@ namespace RapidDoc.Models.Services
             domainTable.CreatedDate = DateTime.UtcNow;
             domainTable.ModifiedDate = domainTable.CreatedDate;
             RouteCustomRepository(tableName).Add(domainTable);
-            _uow.Save();
+            _uow.Commit();
 
             docuTable.RefDocumentId = domainTable.Id;
             _uow.GetRepository<DocumentTable>().Update(docuTable);
-            _uow.Save();
+            _uow.Commit();
 
             return docuTable.Id;
         }
@@ -168,7 +168,7 @@ namespace RapidDoc.Models.Services
 
                         domainTable.ModifiedDate = DateTime.UtcNow;
                         RouteCustomRepository(process.TableName).Update(domainTable);
-                        _uow.Save();
+                        _uow.Commit();
                     }
                 }
             }
@@ -360,13 +360,13 @@ namespace RapidDoc.Models.Services
             }
 
             _uow.GetRepository<DocumentTable>().Update(domainTable);
-            _uow.Save();
+            _uow.Commit();
         }
 
         public void SaveDocumentText(DocumentTable domainTable)
         {
             _uow.GetRepository<DocumentTable>().Update(domainTable);
-            _uow.Save();
+            _uow.Commit();
         }
 
         
@@ -607,7 +607,7 @@ namespace RapidDoc.Models.Services
             file.ModifiedDate = file.CreatedDate;
 
             _uow.GetRepository<FileTable>().Add(file);
-            _uow.Save();
+            _uow.Commit();
 
             return file.Id;
         }
@@ -619,7 +619,7 @@ namespace RapidDoc.Models.Services
             file.ModifiedDate = DateTime.UtcNow;
 
             _uow.GetRepository<FileTable>().Update(file);
-            _uow.Save();
+            _uow.Commit();
         }
 
         public FileTable GetFile(Guid Id)
@@ -651,7 +651,7 @@ namespace RapidDoc.Models.Services
         {
             string fileName = repoFile.GetById(Id).FileName;
             repoFile.Delete(a => a.Id == Id);
-            _uow.Save();
+            _uow.Commit();
 
             return fileName;
         }
@@ -659,19 +659,19 @@ namespace RapidDoc.Models.Services
         {
 
             repoFile.Delete(a => a.DocumentFileId == documentId);
-            _uow.Save();
+            _uow.Commit();
         }
         public void DeleteDocumentDraft(Guid documentId, string tableName, Guid refDocumentId)
         {
              var domainTable = GetDocument(refDocumentId, tableName);
              RouteCustomRepository(tableName).Delete(domainTable);
-          
-             _uow.Save();
+
+             _uow.Commit();
         }
         public void Delete(Guid Id)
         {
             repoDocument.Delete(x => x.Id == Id);
-            _uow.Save();
+            _uow.Commit();
         }
 
         public List<WFTrackerUsersTable> GetUsersSLAStatus(DocumentTable docuTable, SLAStatusList status)

@@ -22,9 +22,9 @@ namespace RapidDoc.Controllers
         private readonly IEmplService _EmplService;
         private readonly IEmailService _EmailService;
 
-        public DelegationController(IUnitOfWork uow, IDelegationService service, ICompanyService companyService,
+        public DelegationController(IDelegationService service, ICompanyService companyService,
             IGroupProcessService groupProcessService, IProcessService processService, IEmplService emplService, IEmailService emailService, IAccountService accountService)
-            : base(uow, companyService, accountService)
+            : base(companyService, accountService)
         {
             _Service = service;
             _GroupProcessService = groupProcessService;

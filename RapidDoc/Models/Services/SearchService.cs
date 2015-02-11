@@ -108,7 +108,7 @@ namespace RapidDoc.Models.Services
                 domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
-            _uow.Save();
+            _uow.Commit();
         }
         public List<SearchView> GetDocuments(int blockNumber, int blockSize, string searchText)
         {
@@ -201,7 +201,7 @@ namespace RapidDoc.Models.Services
         public void Delete(Guid Id)
         {
             repo.Delete(x => x.Id == Id);
-            _uow.Save();
+            _uow.Commit();
         }
     }
 }

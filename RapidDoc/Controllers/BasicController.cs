@@ -25,11 +25,9 @@ namespace RapidDoc.Controllers
     {
         protected readonly ICompanyService _CompanyService;
         protected readonly IAccountService _AccountService;
-        protected readonly IUnitOfWork _uow;
 
-        public BasicController(IUnitOfWork uow, ICompanyService companyService, IAccountService accountService)
+        public BasicController(ICompanyService companyService, IAccountService accountService)
         {
-            _uow = uow;
             _CompanyService = companyService;
             _AccountService = accountService;
         }
@@ -51,23 +49,26 @@ namespace RapidDoc.Controllers
                     {
                         if (user.AliasCompanyName != companyId)
                         {
-                            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
-
-                            if (UserManager.IsInRole(user.Id, "ChangeCompany") || UserManager.IsInRole(user.Id, "Administrator"))
+                            using (ApplicationDbContext dbContext = new ApplicationDbContext())
                             {
-                                var companyList = _CompanyService.GetAll().ToList();
-                                if (companyList != null)
+                                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
+
+                                if (UserManager.IsInRole(user.Id, "ChangeCompany") || UserManager.IsInRole(user.Id, "Administrator"))
                                 {
-                                    var company = companyList.FirstOrDefault(x => x.AliasCompanyName == companyId);
-                                    if (company != null)
+                                    var companyList = _CompanyService.GetAll().ToList();
+                                    if (companyList != null)
                                     {
-                                        user.CompanyTableId = company.Id;
-                                        _AccountService.SaveDomain(user);
+                                        var company = companyList.FirstOrDefault(x => x.AliasCompanyName == companyId);
+                                        if (company != null)
+                                        {
+                                            user.CompanyTableId = company.Id;
+                                            _AccountService.SaveDomain(user);
+                                        }
                                     }
                                 }
+                                UserManager.Dispose();
+                                UserManager = null;
                             }
-                            UserManager.Dispose();
-                            UserManager = null;
                         }
                     }
                 }

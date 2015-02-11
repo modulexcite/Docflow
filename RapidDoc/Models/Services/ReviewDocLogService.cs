@@ -65,14 +65,14 @@ namespace RapidDoc.Models.Services
                 domainTable.ApplicationUserCreatedId = user.Id;
                 domainTable.ApplicationUserModifiedId = user.Id;
                 repo.Add(domainTable);
-                _uow.Save();
+                _uow.Commit();
             }
             else if (domainTable.Id != Guid.Empty)
             {
                 domainTable.ModifiedDate = DateTime.UtcNow;
                 domainTable.ApplicationUserModifiedId = user.Id;
                 repo.Update(domainTable);
-                _uow.Save();
+                _uow.Commit();
             }
         }
         public ReviewDocLogTable Find(Guid id)
@@ -100,12 +100,12 @@ namespace RapidDoc.Models.Services
         public void Delete(Guid documentId, string userId)
         {
             repo.Delete(x => x.DocumentTableId == documentId && x.ApplicationUserCreatedId == userId);
-            _uow.Save();
+            _uow.Commit();
         }
         public void DeleteAll(Guid documentId)
         {
             repo.Delete(x => x.DocumentTableId == documentId);
-            _uow.Save();
+            _uow.Commit();
         }
 
         private ApplicationUser getCurrentUserName(string currentUserName = "")

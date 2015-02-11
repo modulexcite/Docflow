@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Transactions;
 using System.Web;
@@ -33,9 +35,32 @@ namespace RapidDoc.Models.Infrastructure
             return repository;
         }
 
-        public void Save()
+        public ICollection<ValidationResult> Commit()
         {
-            _ctx.SaveChanges();
+            var validationResults = new List<ValidationResult>();
+
+            try
+            {
+                _ctx.SaveChanges();
+            }
+            catch (DbEntityValidationException dbe)
+            {
+                foreach (DbEntityValidationResult validation in dbe.EntityValidationErrors)
+                {
+                    IEnumerable<ValidationResult> validations = validation.ValidationErrors.Select(
+                        error => new ValidationResult(
+                                     error.ErrorMessage,
+                                     new[]
+                                         {
+                                             error.PropertyName
+                                         }));
+
+                    validationResults.AddRange(validations);
+
+                    return validationResults;
+                }
+            }
+            return validationResults;
         }
 
         public T GetDbContext<T>() where T : DbContext, IDbContext

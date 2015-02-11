@@ -24,8 +24,8 @@ namespace RapidDoc.Controllers
     {
         private readonly IServiceIncidentService _Service;
 
-        public ServiceIncidentController(IUnitOfWork uow, IServiceIncidentService Service, ICompanyService companyService, IAccountService accountService)
-            : base(uow, companyService, accountService)
+        public ServiceIncidentController(IServiceIncidentService Service, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _Service = Service;
         }

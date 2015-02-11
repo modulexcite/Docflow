@@ -14,8 +14,8 @@ namespace RapidDoc.Controllers
     {
         private readonly IHistoryUserService _HistoryUserService;
 
-        public HistoryUserController(IUnitOfWork uow, IHistoryUserService historyUserService, ICompanyService companyService, IAccountService accountService)
-            : base(uow, companyService, accountService)
+        public HistoryUserController(IHistoryUserService historyUserService, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _HistoryUserService = historyUserService;
         }

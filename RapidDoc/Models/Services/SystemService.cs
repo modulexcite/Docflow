@@ -17,11 +17,8 @@ namespace RapidDoc.Models.Services
 
     public class SystemService : ISystemService
     {
-        private IUnitOfWork _uow;
-
-        public SystemService(IUnitOfWork uow)
+        public SystemService()
         {
-            _uow = uow;
         }
         public DateTime ConvertDateTimeToLocal(ApplicationUser userTable, DateTime value)
         {

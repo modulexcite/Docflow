@@ -21,13 +21,24 @@ namespace RapidDoc.Controllers
 {
     public class LDAPIntegrationController : ApiController
     {
-        public HttpResponseMessage Get()
-        {
-            
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
+        protected readonly ICompanyService _CompanyService;
+        protected readonly IEmplService _EmplService;
+        protected readonly IWorkScheduleService _WorkScheduleService;
+        protected readonly ITitleService _TitleService;
+        protected readonly IDepartmentService _DepartmentService;
 
-            ICompanyService _Companyservice = DependencyResolver.Current.GetService<ICompanyService>();
-            var companies = _Companyservice.GetAll();
+        public LDAPIntegrationController(ICompanyService companyService, IEmplService emplService, IWorkScheduleService workScheduleService, ITitleService titleService, IDepartmentService departmentService)
+        {
+            _CompanyService = companyService;
+            _EmplService = emplService;
+            _WorkScheduleService = workScheduleService;
+            _TitleService = titleService;
+            _DepartmentService = departmentService;
+        }
+
+        public void Get()
+        {
+            var companies = _CompanyService.GetAll().ToList();
             foreach (var company in companies)
             {
                 BuildTreeLDAP(company, company.DomainTable.LDAPBaseDN, "");
@@ -37,8 +48,6 @@ namespace RapidDoc.Controllers
 
             DeleteNotUsedTitle();
             DeleteNotUsedDepartment();
-
-            return response;
         }
 
         private void BuildTreeLDAP(CompanyTable _item, string _LDAPpath, string _parentDepartmentName = "", bool afterUpdate = false)
@@ -110,7 +119,6 @@ namespace RapidDoc.Controllers
 
                     ldapData = result.Properties["description"][0].ToString();
                     mail = result.Properties["mail"][0].ToString();
-
                     emplName = DecodeLDAPNameUsers(ldapData, 0);
 
                     if (result.Properties.Contains("telephonenumber"))
@@ -182,7 +190,6 @@ namespace RapidDoc.Controllers
 
         private void EmplUpdateIntegration(Guid _globalId, string _firstname, string _secondname, string _middlename, Guid _company, string _managerUserId)
         {
-            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
             Guid? manageId = null;
 
             if (_managerUserId != String.Empty)
@@ -208,8 +215,6 @@ namespace RapidDoc.Controllers
 
         private void EmplIntegration(Guid _globalId, string _firstname, string _secondname, string _middlename, string _workphone, string _mobilephone, string _userId, Guid _departmentId, Guid _titleId, Guid _company, string _managerUserId)
         {
-            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
-            IWorkScheduleService _WorkScheduleService = DependencyResolver.Current.GetService<IWorkScheduleService>();
             Guid? manageId = null;
 
             if(_managerUserId != String.Empty)
@@ -350,14 +355,12 @@ namespace RapidDoc.Controllers
 
         private Guid TitleIntegration(string _title)
         {
-            ITitleService _Titleservice = DependencyResolver.Current.GetService<ITitleService>();
-
-            if (!_Titleservice.Contains(x => x.TitleName == _title))
+            if (!_TitleService.Contains(x => x.TitleName == _title))
             {
-                _Titleservice.SaveDomain(new TitleTable() { TitleName = _title, isIntegratedLDAP = true }, "Admin");
+                _TitleService.SaveDomain(new TitleTable() { TitleName = _title, isIntegratedLDAP = true }, "Admin");
             }
 
-            TitleTable titleTable = _Titleservice.FirstOrDefault(x => x.TitleName == _title);
+            TitleTable titleTable = _TitleService.FirstOrDefault(x => x.TitleName == _title);
             return titleTable == null ? Guid.Empty : titleTable.Id;
         }
 
@@ -366,13 +369,12 @@ namespace RapidDoc.Controllers
             Guid? guid = null;
             _department = _department.Trim();
 
-            IDepartmentService _DepartmentService = DependencyResolver.Current.GetService<IDepartmentService>();
-
             if (!_DepartmentService.Contains(x => x.DepartmentName == _department && x.CompanyTableId == _companyId))
             {
                 if (_parentDepartmentName != string.Empty)
                 {
-                    guid = _DepartmentService.FirstOrDefault(x => x.CompanyTableId == _companyId && x.DepartmentName == _parentDepartmentName).Id;
+                    if (_DepartmentService.Contains(x => x.CompanyTableId == _companyId && x.DepartmentName == _parentDepartmentName))
+                        guid = _DepartmentService.FirstOrDefault(x => x.CompanyTableId == _companyId && x.DepartmentName == _parentDepartmentName).Id;
                 }
 
                 _DepartmentService.SaveDomain(new DepartmentTable() { DepartmentName = _department, ParentDepartmentId = guid, CompanyTableId = _companyId }, "Admin", _companyId);
@@ -418,7 +420,6 @@ namespace RapidDoc.Controllers
         {
             ApplicationDbContext context = new ApplicationDbContext();
             var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
 
             foreach (ApplicationUser user in um.Users.Where(x => x.isDomainUser == true).ToList())
             {
@@ -495,30 +496,24 @@ namespace RapidDoc.Controllers
 
         private void DeleteNotUsedTitle()
         {
-            ITitleService _Titleservice = DependencyResolver.Current.GetService<ITitleService>();
-            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
-
-            var titles = _Titleservice.GetPartialIntercompany(x => x.isIntegratedLDAP == true).ToList();
+            var titles = _TitleService.GetPartialIntercompany(x => x.isIntegratedLDAP == true).ToList();
 
             foreach (var title in titles)
             {
                 if (!_EmplService.Contains(x => x.TitleTableId == title.Id))
                 {
-                    _Titleservice.Delete(title.Id);
+                    _TitleService.Delete(title.Id);
                 }
             }
         }
 
         private void DeleteNotUsedDepartment()
         {
-            IDepartmentService _DepartmentService = DependencyResolver.Current.GetService<IDepartmentService>();
-            IEmplService _EmplService = DependencyResolver.Current.GetService<IEmplService>();
-
             var departments = _DepartmentService.GetPartialIntercompany(x => x.DepartmentName != null).ToList();
 
             foreach (var department in departments)
             {
-                if (!_EmplService.Contains(x => x.DepartmentTableId == department.Id))
+                if (department.ParentDepartmentId == null && !_EmplService.Contains(x => x.DepartmentTableId == department.Id))
                 {
                     _DepartmentService.Delete(department.Id);
                 }

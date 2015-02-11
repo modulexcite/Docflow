@@ -28,8 +28,8 @@ namespace RapidDoc.Controllers
         private readonly IProcessService _ProcessService;
         private readonly IEmplService _EmplService;
 
-        public ReportController(IUnitOfWork uow, IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService, ICompanyService companyService, IAccountService accountService, IProcessService processService, IEmplService emplService)
-            : base(uow, companyService, accountService)
+        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService, ICompanyService companyService, IAccountService accountService, IProcessService processService, IEmplService emplService)
+            : base(companyService, accountService)
         {
             _WorkflowTrackerService = workflowTrackerService;
             _DocumentService = documentService;
@@ -69,7 +69,8 @@ namespace RapidDoc.Controllers
 
             List<DepartmentTable> departmentTableList = _DepartmentService.GetPartial(x => x.Id == model.DepartmentTableId).ToList();
             listdepartmentId = this.GetParentListDepartment(departmentTableList);
-            ApplicationDbContext context = _uow.GetDbContext<ApplicationDbContext>();
+
+            ApplicationDbContext context = new ApplicationDbContext();
 
             Excel.Application excelAppl;
             Excel.Workbook excelWorkbook;
@@ -173,7 +174,7 @@ namespace RapidDoc.Controllers
             var rows = new List<ProcessReportModel>();
             string stageName = "", endText = "", users = "";
             FilterType filterType = FilterType.Other;
-            ApplicationDbContext contextDb = _uow.GetDbContext<ApplicationDbContext>();
+            ApplicationDbContext contextDb = new ApplicationDbContext();
             System.Drawing.Color color = System.Drawing.Color.LightGreen;
 
             if (activity.GetType() == typeof(WFChooseUpManager) ||

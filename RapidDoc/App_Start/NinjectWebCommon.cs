@@ -1,16 +1,14 @@
-[assembly: WebActivator.PreApplicationStartMethod(typeof(RapidDoc.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(RapidDoc.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(RapidDoc.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(RapidDoc.App_Start.NinjectWebCommon), "Stop")]
 
 namespace RapidDoc.App_Start
 {
     using System;
     using System.Web;
     using System.Web.Http;
-    using System.Web.Mvc;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
     using Ninject;
     using Ninject.Web.Common;
-    using Ninject.Web.Mvc;
     using RapidDoc.Mappers;
     using RapidDoc.Models.Infrastructure;
     using RapidDoc.Models.Services;
@@ -44,14 +42,20 @@ namespace RapidDoc.App_Start
         private static IKernel CreateKernel()
         {
             var kernel = new StandardKernel();
-            kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
-            kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-            kernel.Bind<IMapper>().To<CommonMapper>().InSingletonScope();
+            try
+            {
+                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+                kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
-            RegisterServices(kernel);
-
-            GlobalConfiguration.Configuration.DependencyResolver = new RapidDoc.Models.Infrastructure.NinjectDependencyResolver(kernel);
-            return kernel;
+                RegisterServices(kernel);
+                //GlobalConfiguration.Configuration.DependencyResolver = new RapidDoc.Models.Infrastructure.NinjectDependencyResolver(kernel);
+                return kernel;
+            }
+            catch
+            {
+                kernel.Dispose();
+                throw;
+            }
         }
 
         /// <summary>
@@ -60,6 +64,7 @@ namespace RapidDoc.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            kernel.Bind<IMapper>().To<CommonMapper>().InSingletonScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork<ApplicationDbContext>>().InRequestScope();
             kernel.Bind<IDomainService>().To<DomainService>();
             kernel.Bind<ICompanyService>().To<CompanyService>();

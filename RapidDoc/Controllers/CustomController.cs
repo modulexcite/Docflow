@@ -20,8 +20,8 @@ namespace RapidDoc.Controllers
         private readonly IServiceIncidentService _ServiceIncidentService;
         private readonly ITripSettingsService _TripSettingsService;
 
-        public CustomController(IUnitOfWork uow, IEmplService emplService, ISystemService systemService, IDocumentService documentService, IServiceIncidentService serviceIncidentService, ICompanyService companyService, IAccountService accountService, ITripSettingsService tripSettingsService)
-            : base(uow, companyService, accountService)
+        public CustomController(IEmplService emplService, ISystemService systemService, IDocumentService documentService, IServiceIncidentService serviceIncidentService, ICompanyService companyService, IAccountService accountService, ITripSettingsService tripSettingsService)
+            : base(companyService, accountService)
         {
             _EmplService = emplService;
             _SystemService = systemService;

@@ -29,14 +29,14 @@ namespace RapidDoc.Controllers
 
         protected RoleManager<IdentityRole> RoleManager { get; private set; }
 
-        public ProcessController(IUnitOfWork uow, IProcessService service, IGroupProcessService groupProcessService, IWorkScheduleService workScheduleService, ICompanyService companyService, IAccountService accountService, IDocumentService documentService)
-            : base(uow, companyService, accountService)
+        public ProcessController(IProcessService service, IGroupProcessService groupProcessService, IWorkScheduleService workScheduleService, ICompanyService companyService, IAccountService accountService, IDocumentService documentService)
+            : base(companyService, accountService)
         {
             _Service = service;
             _GroupProcessService = groupProcessService;
             _WorkScheduleService = workScheduleService;
             _DocumentService = documentService;
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
+            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
         }
 
         public ActionResult Index()
@@ -63,13 +63,16 @@ namespace RapidDoc.Controllers
 
         public ActionResult Create()
         {
-            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(_uow.GetDbContext<ApplicationDbContext>().Roles).ToList();
-            items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
-            ViewBag.RolesList = new SelectList(items, "Id", "Name", null);
-            ViewBag.StartReaderRolesList = new SelectList(items, "Id", "Name", null);
-            ViewBag.AfterEndRolesList = new SelectList(items, "Id", "Name", null);
-            ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(null);
-            ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(null);
+            using(ApplicationDbContext dbContext = new ApplicationDbContext())
+            {
+                var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(dbContext.Roles).ToList();
+                items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
+                ViewBag.RolesList = new SelectList(items, "Id", "Name", null);
+                ViewBag.StartReaderRolesList = new SelectList(items, "Id", "Name", null);
+                ViewBag.AfterEndRolesList = new SelectList(items, "Id", "Name", null);
+                ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(null);
+                ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(null);
+            }
             return View();
         }
 
@@ -92,13 +95,16 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(_uow.GetDbContext<ApplicationDbContext>().Roles).ToList();
-            items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
-            ViewBag.RolesList = new SelectList(items, "Id", "Name", null);
-            ViewBag.StartReaderRolesList = new SelectList(items, "Id", "Name", null);
-            ViewBag.AfterEndRolesList = new SelectList(items, "Id", "Name", null);
-            ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(null);
-            ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(null);
+            using (ApplicationDbContext dbContext = new ApplicationDbContext())
+            {
+                var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(dbContext.Roles).ToList();
+                items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
+                ViewBag.RolesList = new SelectList(items, "Id", "Name", null);
+                ViewBag.StartReaderRolesList = new SelectList(items, "Id", "Name", null);
+                ViewBag.AfterEndRolesList = new SelectList(items, "Id", "Name", null);
+                ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(null);
+                ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(null);
+            }
             return View(model);
         }
 
@@ -111,14 +117,18 @@ namespace RapidDoc.Controllers
                 return HttpNotFound();
             }
 
-            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
-            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles).ToList();
-            items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
-            ViewBag.RolesList = new SelectList(items, "Id", "Name", model.RoleId);
-            ViewBag.StartReaderRolesList = new SelectList(items, "Id", "Name", model.StartReaderRoleId);
-            ViewBag.AfterEndRolesList = new SelectList(items, "Id", "Name", model.AfterEndReaderRoleId);
-            ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(model.GroupProcessTableId);
-            ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(model.WorkScheduleTableId);
+            using (ApplicationDbContext dbContext = new ApplicationDbContext())
+            {
+                RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(dbContext));
+                var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles).ToList();
+                items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
+                ViewBag.RolesList = new SelectList(items, "Id", "Name", model.RoleId);
+                ViewBag.StartReaderRolesList = new SelectList(items, "Id", "Name", model.StartReaderRoleId);
+                ViewBag.AfterEndRolesList = new SelectList(items, "Id", "Name", model.AfterEndReaderRoleId);
+                ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(model.GroupProcessTableId);
+                ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(model.WorkScheduleTableId);
+            }
+
             return View(model);
         }
 
@@ -151,13 +161,17 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(_uow.GetDbContext<ApplicationDbContext>().Roles).ToList();
-            items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
-            ViewBag.RolesList = new SelectList(items, "Id", "Name", model.RoleId);
-            ViewBag.StartReaderRolesList = new SelectList(items, "Id", "Name", model.StartReaderRoleId);
-            ViewBag.AfterEndRolesList = new SelectList(items, "Id", "Name", model.AfterEndReaderRoleId);
-            ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(model.GroupProcessTableId);
-            ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(model.WorkScheduleTableId);
+            using (ApplicationDbContext dbContext = new ApplicationDbContext())
+            {
+                var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(dbContext.Roles).ToList();
+                items.Insert(0, new RoleViewModel { Name = UIElementRes.UIElement.NoValue, Id = String.Empty });
+                ViewBag.RolesList = new SelectList(items, "Id", "Name", model.RoleId);
+                ViewBag.StartReaderRolesList = new SelectList(items, "Id", "Name", model.StartReaderRoleId);
+                ViewBag.AfterEndRolesList = new SelectList(items, "Id", "Name", model.AfterEndReaderRoleId);
+                ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcess(model.GroupProcessTableId);
+                ViewBag.WorkScheduleList = _WorkScheduleService.GetDropListWorkSchedule(model.WorkScheduleTableId);
+            }
+
             return View(model);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
@@ -13,6 +14,6 @@ namespace RapidDoc.Models.Infrastructure
     {
         TContext GetDbContext<TContext>() where TContext : DbContext, IDbContext;
         IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
-        void Save();
+        ICollection<ValidationResult> Commit();
     }
 }

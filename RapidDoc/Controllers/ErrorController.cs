@@ -10,8 +10,8 @@ namespace RapidDoc.Controllers
 {
     public class ErrorController : BasicController
     {
-        public ErrorController(IUnitOfWork uow, ICompanyService companyService, IAccountService accountService)
-            : base(uow, companyService, accountService)
+        public ErrorController(ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
         }
 

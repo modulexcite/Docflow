@@ -160,17 +160,17 @@ namespace RapidDoc.Models.Services
             domainTable.ApplicationUserCreatedId = userId;
             domainTable.ApplicationUserModifiedId = userId;
             repo.Add(domainTable);
-            _uow.Save();
+            _uow.Commit();
         }
         public void Delete(Guid documentId)
         {
             repo.Delete(x => x.DocumentTableId == documentId);
-            _uow.Save();
+            _uow.Commit();
         }
         public void Delete(Expression<Func<DocumentReaderTable, bool>> predicate)
         {
             repo.Delete(predicate);
-            _uow.Save();
+            _uow.Commit();
         }
         public DocumentReaderTable Find(Guid id)
         {

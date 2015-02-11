@@ -20,14 +20,12 @@ namespace RapidDoc.Models.Services
 
     public class CustomCheckDocument : ICustomCheckDocument
     {
-        private IUnitOfWork _uow;
         private readonly IServiceIncidentService _ServiceIncidentService;
         private readonly ITripSettingsService _TripSettingsService;
         private readonly IWorkflowTrackerService _WorkflowTrackerService;
 
-        public CustomCheckDocument(IUnitOfWork uow, IWorkflowTrackerService workflowTrackerService, IServiceIncidentService serviceIncidentService, ITripSettingsService tripSettingsService)
+        public CustomCheckDocument(IWorkflowTrackerService workflowTrackerService, IServiceIncidentService serviceIncidentService, ITripSettingsService tripSettingsService)
         {
-            _uow = uow;
             _WorkflowTrackerService = workflowTrackerService;
 
             //Custom

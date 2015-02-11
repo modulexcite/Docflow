@@ -15,15 +15,29 @@ namespace RapidDoc.Controllers
 {
     public class BatchController : ApiController
     {
+        protected readonly IEmplService _EmplService;
+        protected readonly IWorkScheduleService _WorkScheduleService;
+        protected readonly IEmailService _Emailservice;
+        protected readonly IDocumentService _Documentservice;
+        protected readonly IReviewDocLogService _ReviewDocLogService;
+        protected readonly IAccountService _AccountService;
+
+        public BatchController(IEmplService emplService, IWorkScheduleService workScheduleService,
+            IEmailService emailservice, IDocumentService documentservice, IReviewDocLogService reviewDocLogService,
+            IAccountService accountService)
+        {
+            _EmplService = emplService;
+            _WorkScheduleService = workScheduleService;
+            _Emailservice = emailservice;
+            _Documentservice = documentservice;
+            _ReviewDocLogService = reviewDocLogService;
+            _AccountService = accountService;
+        }
+
         // GET api/<controller>
         public void Get(int id, string companyId)
         {
-            IEmailService _Emailservice = DependencyResolver.Current.GetService<IEmailService>();
-            IDocumentService _Documentservice = DependencyResolver.Current.GetService<IDocumentService>();
-            IReviewDocLogService _ReviewDocLogService = DependencyResolver.Current.GetService<IReviewDocLogService>();
-            IWorkScheduleService _WorkScheduleService = DependencyResolver.Current.GetService<IWorkScheduleService>();
-            IAccountService _AccountService = DependencyResolver.Current.GetService<IAccountService>();
-            var allDocument = _Documentservice.GetPartial(x => x.CompanyTable.AliasCompanyName == companyId);
+            var allDocument = _Documentservice.GetPartial(x => x.CompanyTable.AliasCompanyName == companyId).ToList();
 
             if (allDocument == null)
                 return;
@@ -33,12 +47,12 @@ namespace RapidDoc.Controllers
                 case 1:
                     if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
                     {
-                        var users = _AccountService.GetPartial(x => x.Email != null);
+                        var users = _AccountService.GetPartial(x => x.Email != null).ToList();
                         List<CheckSLAStatus> checkData = new List<CheckSLAStatus>();
 
                         foreach (var document in allDocument)
                         {
-                            var checkUser = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Warning);
+                            var checkUser = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Warning).ToList();
                             checkData.Add(new CheckSLAStatus(document, checkUser));
                         }
 
@@ -53,12 +67,12 @@ namespace RapidDoc.Controllers
                 case 2:
                     if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
                     {
-                        var users = _AccountService.GetPartial(x => x.Email != null);
+                        var users = _AccountService.GetPartial(x => x.Email != null).ToList();
                         List<CheckSLAStatus> checkData = new List<CheckSLAStatus>();
 
                         foreach (var document in allDocument)
                         {
-                            var checkUser = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Disturbance);
+                            var checkUser = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Disturbance).ToList();
                             checkData.Add(new CheckSLAStatus(document, checkUser));
                         }
 
@@ -71,31 +85,28 @@ namespace RapidDoc.Controllers
                     }
                     break;
                 case 3:
-                    foreach (var document in allDocument)
+                    foreach (var document in allDocument.Where(x => x.DocumentState == Models.Repository.DocumentState.Closed
+                        || x.DocumentState == Models.Repository.DocumentState.Cancelled
+                        || x.DocumentState == Models.Repository.DocumentState.Completed
+                        || x.DocumentState == Models.Repository.DocumentState.Created).ToList())
                     {
-                        if (document.DocumentState == Models.Repository.DocumentState.Closed
-                            || document.DocumentState == Models.Repository.DocumentState.Cancelled
-                            || document.DocumentState == Models.Repository.DocumentState.Completed
-                            || document.DocumentState == Models.Repository.DocumentState.Created)
-                        {
-                            IEnumerable<ReviewDocLogTable> reviewDocuments = _ReviewDocLogService.GetPartial(x => x.DocumentTableId == document.Id && x.isArchive == false).ToList();
+                        IEnumerable<ReviewDocLogTable> reviewDocuments = _ReviewDocLogService.GetPartial(x => x.DocumentTableId == document.Id && x.isArchive == false).ToList();
 
-                            if (reviewDocuments != null)
+                        if (reviewDocuments != null)
+                        {
+                            foreach (var reviewTable in reviewDocuments)
                             {
-                                foreach (var reviewTable in reviewDocuments)
+                                if (reviewTable.CreatedDate <= DateTime.UtcNow.AddDays(-10))
                                 {
-                                    if (reviewTable.CreatedDate <= DateTime.UtcNow.AddDays(-10))
-                                    {
-                                        reviewTable.isArchive = true;
-                                        _ReviewDocLogService.SaveDomain(reviewTable, "Admin");
-                                    }
+                                    reviewTable.isArchive = true;
+                                    _ReviewDocLogService.SaveDomain(reviewTable, "Admin");
                                 }
                             }
                         }
                     }
                     break;
                 case 4:
-                    if (!_WorkScheduleService.CheckDayType(_WorkScheduleService.FirstOrDefault(x => x.WorkScheduleName == "System").Id, DateTime.UtcNow))
+                    if (!_WorkScheduleService.CheckDayType(_WorkScheduleService.FirstOrDefault(x => x.WorkScheduleName == "8x5").Id, DateTime.UtcNow))
                     {
                         var users = _AccountService.GetPartial(x => x.Email != null && x.Enable == true).ToList();
                         List<ReminderUsers> checkData = new List<ReminderUsers>();
@@ -104,7 +115,7 @@ namespace RapidDoc.Controllers
                         {
                             if (document.DocumentState == Models.Repository.DocumentState.Agreement || document.DocumentState == Models.Repository.DocumentState.Execution)
                             {
-                                var usersReminder = _Documentservice.GetSignUsersDirect(document);
+                                var usersReminder = _Documentservice.GetSignUsersDirect(document).ToList();
                                 checkData.Add(new ReminderUsers(document, usersReminder));
                             }
                         }

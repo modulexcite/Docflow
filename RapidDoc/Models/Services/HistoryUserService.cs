@@ -138,12 +138,12 @@ namespace RapidDoc.Models.Services
                 domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
-            _uow.Save();
+            _uow.Commit();
         }
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
-            _uow.Save();
+            _uow.Commit();
         }
         public HistoryUserTable Find(Guid id)
         {
@@ -172,7 +172,7 @@ namespace RapidDoc.Models.Services
         public void DeleteAll(Guid documentId)
         {
             repo.Delete(x => x.DocumentTableId == documentId);
-            _uow.Save();
+            _uow.Commit();
         }
     }
 }

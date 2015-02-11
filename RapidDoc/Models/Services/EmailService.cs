@@ -109,7 +109,7 @@ namespace RapidDoc.Models.Services
                 domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
-            _uow.Save();
+            _uow.Commit();
         }
 
         public EmailParameterTable Find(Guid id)

@@ -19,8 +19,8 @@ namespace RapidDoc.Controllers
     {
         private readonly IEmailService _Service;
 
-        public EmailController(IUnitOfWork uow, IEmailService Service, ICompanyService companyService, IAccountService accountService)
-            : base(uow, companyService, accountService)
+        public EmailController(IEmailService Service, ICompanyService companyService, IAccountService accountService)
+            : base(companyService, accountService)
         {
             _Service = Service;
         }

@@ -99,7 +99,7 @@ namespace RapidDoc.Models.Services
                 domainTable.ApplicationUserModifiedId = userId;
                 repo.Update(domainTable);
             }
-            _uow.Save();
+            _uow.Commit();
         }
         public TripSettingsTable Find(Guid id)
         {
@@ -113,7 +113,7 @@ namespace RapidDoc.Models.Services
         public void Delete(Guid id)
         {
             repo.Delete(a => a.Id == id);
-            _uow.Save();
+            _uow.Commit();
         }
     }
 }
