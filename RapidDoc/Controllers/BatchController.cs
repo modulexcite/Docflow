@@ -7,9 +7,12 @@ using System.Net.Mail;
 using System.Text;
 using System.Web.Http;
 using System.Web.Mvc;
+using System.Drawing;
+using RapidDoc.Activities;
 using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Repository;
 using RapidDoc.Models.Services;
+using RapidDoc.Models.ViewModels;
 
 namespace RapidDoc.Controllers
 {
@@ -21,10 +24,12 @@ namespace RapidDoc.Controllers
         protected readonly IDocumentService _Documentservice;
         protected readonly IReviewDocLogService _ReviewDocLogService;
         protected readonly IAccountService _AccountService;
+        protected readonly IProcessService _ProcessService;
+        protected readonly IReportService _ReportService;
 
         public BatchController(IEmplService emplService, IWorkScheduleService workScheduleService,
             IEmailService emailservice, IDocumentService documentservice, IReviewDocLogService reviewDocLogService,
-            IAccountService accountService)
+            IAccountService accountService, IProcessService processService, IReportService reportService)
         {
             _EmplService = emplService;
             _WorkScheduleService = workScheduleService;
@@ -32,6 +37,8 @@ namespace RapidDoc.Controllers
             _Documentservice = documentservice;
             _ReviewDocLogService = reviewDocLogService;
             _AccountService = accountService;
+            _ProcessService = processService;
+            _ReportService = reportService;
         }
 
         // GET api/<controller>
@@ -126,6 +133,28 @@ namespace RapidDoc.Controllers
                             if (userDocuments.Count() > 0)
                                 _Emailservice.SendReminderEmail(user, userDocuments);
                         }
+                    }
+                    break;
+                case 5:
+                    List<ReportProcessesView> listProcesses = new List<ReportProcessesView>();
+                    Dictionary<Type, int> typeActivities = new Dictionary<Type, int>
+                    {
+                        {typeof(WFChooseStaffStructure),1},
+                        {typeof(WFChooseSpecificUser),3},
+                        {typeof(WFChooseRoleUser),4}
+                    };
+
+
+                    List<ProcessTable> processList = _ProcessService.GetPartial(x => x.isApproved == true).ToList();
+
+                    foreach (var process in processList)
+                    {
+                        listProcesses = listProcesses.Concat(_ReportService.GetActivityStages(typeActivities, _ReportService.GetActivity(process), process)).ToList();
+                    }
+
+                    if (listProcesses.Where(x => x.Color == Color.LightPink).Count() > 0)
+                    {
+                        _Emailservice.SendFailedRoutesAdministrator(listProcesses.Where(x => x.Color == Color.LightPink).ToList());
                     }
                     break;
             }

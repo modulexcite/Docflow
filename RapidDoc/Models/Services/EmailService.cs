@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using Microsoft.AspNet.Identity;
 using System.Configuration;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Models.Services
 {
@@ -45,6 +46,7 @@ namespace RapidDoc.Models.Services
         void SendSLAWarningEmail(string userId, IEnumerable<DocumentTable> documents);
         void SendSLADisturbanceEmail(string userId, IEnumerable<DocumentTable> documents);
         void SendReminderEmail(ApplicationUser userTable, List<DocumentTable> documents);
+        void SendFailedRoutesAdministrator(List<ReportProcessesView> listProcesses);
     }
 
     public class EmailService : IEmailService
@@ -227,6 +229,9 @@ namespace RapidDoc.Models.Services
                         break;
 
                     case EmailTemplateType.SLAStatus:
+                        body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = parameters, DocumentNums = parameters2, documentText = parameters3, EmplName = emplTable.FullName, BodyText = bodyText });
+                        break;
+                    case EmailTemplateType.Routes:
                         body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = parameters, DocumentNums = parameters2, documentText = parameters3, EmplName = emplTable.FullName, BodyText = bodyText });
                         break;
                 }
@@ -479,5 +484,39 @@ namespace RapidDoc.Models.Services
                 CreateMessange(EmailTemplateType.SLAStatus, null, userTable, @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml", null, "У вас на подписи находятся следующие документы", String.Format("Документы на подписи"), documentUrls.ToArray(), documentNums.ToArray(), documentText.ToArray());
             }
         }
+
+        public void SendFailedRoutesAdministrator(List<ReportProcessesView> listProcesses)
+        {
+            List<string> processUrls = new List<string>();
+            List<string> stageNames = new List<string>();
+            List<string> filterTexts = new List<string>();
+            
+            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
+
+            foreach (ReportProcessesView reportProcess in listProcesses)
+            {
+                processUrls.Add("http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + reportProcess.Process.CompanyTable.AliasCompanyName + "/Process/Edit/" + reportProcess.Process.Id);
+                stageNames.Add(reportProcess.StageName + " - " + reportProcess.Process.TableName);
+                filterTexts.Add(reportProcess.FilterText);
+            }
+
+            if (RoleManager.RoleExists("Administrator"))
+            {
+                var names = RoleManager.FindByName("Administrator").Users;
+                if (names != null && names.Count() > 0)
+                {
+                    foreach (IdentityUserRole name in names)
+                    {
+                        ApplicationUser userTable = repoUser.Find(x => (x.UserName == name.UserId || x.Id == name.UserId) && x.Enable == true);
+                        if (userTable.Email != String.Empty)
+                        {
+
+                            CreateMessange(EmailTemplateType.Routes, null, userTable, @"Views\\EmailTemplate\\RoutEmailTemplate.cshtml", null, "У вас несколько ошибочных маршрутов", String.Format("Маршруты процессов на исправление"), processUrls.ToArray(), stageNames.ToArray(), filterTexts.ToArray());
+                        }   
+                    }
+                }              
+            }
+        }
+
     }
 }

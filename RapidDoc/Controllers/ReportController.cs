@@ -27,8 +27,9 @@ namespace RapidDoc.Controllers
         private readonly IDepartmentService _DepartmentService;
         private readonly IProcessService _ProcessService;
         private readonly IEmplService _EmplService;
+        private readonly IReportService _ReportService;
 
-        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService, ICompanyService companyService, IAccountService accountService, IProcessService processService, IEmplService emplService)
+        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService, ICompanyService companyService, IAccountService accountService, IProcessService processService, IEmplService emplService, IReportService reportService)
             : base(companyService, accountService)
         {
             _WorkflowTrackerService = workflowTrackerService;
@@ -36,28 +37,13 @@ namespace RapidDoc.Controllers
             _DepartmentService = departmentService;
             _ProcessService = processService;
             _EmplService = emplService;
+            _ReportService = reportService;
         }
 
         public ActionResult PerformanceDepartment()
         {
             ViewBag.DepartmentList = _DepartmentService.GetDropListDepartmentNull(null);
             return View();
-        }
-
-        public List<string> GetParentListDepartment(List<DepartmentTable> departmentList)
-        {
-            List<string> listdepartmentId = new List<string>();
-            List<string> listdepartmentBufId = new List<string>();
-
-            foreach (DepartmentTable depId in departmentList)
-            {
-                listdepartmentId.Add(depId.DepartmentName);
-                List<DepartmentTable> departmentTable = _DepartmentService.GetPartial(x => x.ParentDepartmentId == depId.Id).ToList();
-                listdepartmentBufId = this.GetParentListDepartment(departmentTable);
-                listdepartmentId = listdepartmentId.Concat(listdepartmentBufId).Distinct().OrderBy(x => x).ToList();
-            }
-
-            return listdepartmentId;
         }
 
         [HttpPost]
@@ -68,7 +54,7 @@ namespace RapidDoc.Controllers
             contextImpersonation.Enter();
 
             List<DepartmentTable> departmentTableList = _DepartmentService.GetPartial(x => x.Id == model.DepartmentTableId).ToList();
-            listdepartmentId = this.GetParentListDepartment(departmentTableList);
+            listdepartmentId = _ReportService.GetParentListDepartment(departmentTableList);
 
             ApplicationDbContext context = new ApplicationDbContext();
 
@@ -169,141 +155,10 @@ namespace RapidDoc.Controllers
             return File(buff, "application/vnd.ms-excel", "ReportDepartment.xls");
         }
 
-        public List<ProcessReportModel> printActivityTree(Dictionary<Type, int> dict, Activity activity, ProcessTable processTable)
-        {
-            var rows = new List<ProcessReportModel>();
-            string stageName = "", endText = "", users = "";
-            FilterType filterType = FilterType.Other;
-            ApplicationDbContext contextDb = new ApplicationDbContext();
-            System.Drawing.Color color = System.Drawing.Color.LightGreen;
-
-            if (activity.GetType() == typeof(WFChooseUpManager) ||
-                activity.GetType() == typeof(WFChooseStaffStructure) ||
-                activity.GetType() == typeof(WFChooseSpecificUserFromService) ||
-                activity.GetType() == typeof(WFChooseSpecificUser) ||
-                activity.GetType() == typeof(WFChooseRoleUser) ||
-                activity.GetType() == typeof(WFChooseManualExecution) ||
-                activity.GetType() == typeof(WFChooseDocUsers) ||
-                activity.GetType() == typeof(WFChooseCreatedUser))
-            {               
-                switch (dict[activity.GetType()])
-                {
-                    case 0:
-                    case 2:
-                    case 5:
-                    case 6:
-                    case 7:
-                        stageName = activity.DisplayName;
-                        endText = "";
-                        filterType = FilterType.Other;
-                    break;
-                    case 1:
-                       var activityStaffStructure = activity as WFChooseStaffStructure;
-                       var activityExpressionStaff = activityStaffStructure.inputPredicate.Expression as Microsoft.CSharp.Activities.CSharpValue<Expression<Func<EmplTable, bool>>>;
-                       if (activityExpressionStaff != null)
-                       {                          
-                           stageName = activity.DisplayName;
-                           endText = activityExpressionStaff.ExpressionText;                     
-                           filterType = FilterType.Predicate;
-
-                           System.Linq.Expressions.Expression expressionTree = activityExpressionStaff.GetExpressionTree();
-                           dynamic dynamicExpression = expressionTree;
-                           Expression<Func<EmplTable, bool>> expressionEmpl = dynamicExpression.Body.Operand;
-                           if (expressionEmpl != null)
-                           {
-                               var empls = _EmplService.GetPartial(expressionEmpl).Select(x => x.FullName).ToList();
-                               if (empls.Count > 0)
-                               {
-                                   foreach (string user in empls)
-                                   {
-                                       users += user + ";";
-                                   }
-                               }
-                               else
-                                   color = System.Drawing.Color.LightPink;
-                           }
-                           else
-                               color = System.Drawing.Color.LightPink;
-                       }
-                    break;
-                    case 3:
-                        var activitySpecifyUser = activity as WFChooseSpecificUser;
-                        var activityExpressionSpecific = activitySpecifyUser.inputUserName.Expression as System.Activities.Expressions.Literal<string>;
-                        if (activityExpressionSpecific != null)
-                        {
-                            stageName = activity.DisplayName;
-                            endText = activityExpressionSpecific.Value;
-                            filterType = FilterType.Login;
-
-                            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == endText);
-                            if (userTable != null && endText.Length > 0)
-                            {
-                                users = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id).FullName;
-                            }
-                            else
-                                color = System.Drawing.Color.LightPink;
-                        }
-                    break;
-                    case 4:
-                        var activityRoleUser = activity as WFChooseRoleUser;
-                        var activityExpressionRole = activityRoleUser.inputRoleName.Expression as System.Activities.Expressions.Literal<string>;
-                        if (activityExpressionRole != null)
-                        {
-                            stageName = activity.DisplayName;
-                            endText = activityExpressionRole.Value;
-                            filterType = FilterType.Role;
-
-
-                            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(contextDb));
-                            if (RoleManager.RoleExists(endText))
-                            {
-                                var names = RoleManager.FindByName(endText).Users;
-                                if (names != null && names.Count() > 0)
-                                {
-                                    foreach (IdentityUserRole name in names)
-                                    {
-                                        users += _EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId).FullName + ";";
-                                    }
-                                }
-                                else
-                                    color = System.Drawing.Color.LightPink;
-                            }
-                            else
-                                color = System.Drawing.Color.LightPink;
-                        }
-                    break;
-                }
-
-                rows.Add(new ProcessReportModel()
-                {
-                    ProcessName = processTable.ProcessName,
-                    TableName = processTable.TableName,
-                    StageName = stageName,
-                    FilterType = filterType,
-                    Filter = endText,
-                    Users = users,
-                    Color = color
-                });
-
-            }
-
-            IEnumerator<Activity> list = WorkflowInspectionServices.GetActivities(activity).GetEnumerator();
-
-            while (list.MoveNext())
-            {
-                var allStepsBuf = rows.Concat(printActivityTree(dict, list.Current, processTable));
-                rows = allStepsBuf.ToList();
-            }
-
-            return rows;
-        }
-
         public FileContentResult ReportOfRoutes()
         {
-            var rows = new List<ProcessReportModel>();
-            var finishRows = new List<ProcessReportModel>();
-            FileTable fileWF;
-            Activity activity;
+            var rows = new List<ReportProcessesView>();
+            string users;
 
             Dictionary<Type, int> typeDict = new Dictionary<Type, int>
             {
@@ -327,18 +182,7 @@ namespace RapidDoc.Controllers
 
             foreach (var process in processList)
             {
-                fileWF = _DocumentService.GetAllXAMLDocument(process.Id).OrderByDescending(x => x.Version).FirstOrDefault();
-
-                using (System.IO.Stream stream = new System.IO.MemoryStream(fileWF.Data))
-                {
-                    using (var xamlReader = new System.Xaml.XamlXmlReader(stream, new System.Xaml.XamlXmlReaderSettings { LocalAssembly = System.Reflection.Assembly.GetExecutingAssembly() }))
-                    {
-                        activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, new System.Activities.XamlIntegration.ActivityXamlServicesSettings { CompileExpressions = true }) as DynamicActivity;
-                    }
-                }
-                
-                rows = printActivityTree(typeDict, activity, process);
-                finishRows.AddRange(rows);
+                rows = rows.Concat(_ReportService.GetActivityStages(typeDict, _ReportService.GetActivity(process), process)).ToList();
             }
 
             WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(ConfigurationManager.AppSettings["ReportAdminDomain"], ConfigurationManager.AppSettings["ReportAdminUser"], ConfigurationManager.AppSettings["ReportAdminPassword"]);
@@ -351,17 +195,27 @@ namespace RapidDoc.Controllers
             excelWorksheet = (Excel.Worksheet)excelWorkbook.ActiveSheet;
 
 
-            foreach (var line in finishRows)
+            foreach (var line in rows)
             {
-                rowCount++;
-                excelWorksheet.Cells[rowCount, 1] = line.ProcessName.ToString();
-                excelWorksheet.Cells[rowCount, 2] = line.TableName.ToString();
+                rowCount++;               
+                excelWorksheet.Cells[rowCount, 1] = line.Process.ProcessName.ToString();
+                excelWorksheet.Cells[rowCount, 2] = line.Process.TableName.ToString();
                 excelWorksheet.Cells[rowCount, 3] = line.StageName.ToString();
                 excelWorksheet.Cells[rowCount, 4] = line.FilterType.ToString();
-                excelWorksheet.Cells[rowCount, 5] = line.Filter.ToString();
+                excelWorksheet.Cells[rowCount, 5] = line.FilterText.ToString();
                 Range range = (Range)excelWorksheet.Cells[rowCount, 5];
-                range.Interior.Color = System.Drawing.ColorTranslator.ToOle(line.Color);
-                excelWorksheet.Cells[rowCount, 6] = line.Users.ToString();
+                range.Interior.Color = System.Drawing.ColorTranslator.ToOle(line.Color);              
+                if (line.Names.Count > 1)
+                {
+                    users = String.Empty;
+                    foreach (EmplTable user in line.Names)
+                    {
+                        users += user.FullName + ";";
+                    }
+                    excelWorksheet.Cells[rowCount, 6] = users.ToString();
+                }
+                else
+                    excelWorksheet.Cells[rowCount, 6] = line.Names.FirstOrDefault().FullName;
             }
 
 

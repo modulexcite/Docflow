@@ -91,6 +91,7 @@ namespace RapidDoc.App_Start
             kernel.Bind<ICustomCheckDocument>().To<CustomCheckDocument>();
             kernel.Bind<IServiceIncidentService>().To<ServiceIncidentService>();
             kernel.Bind<ITripSettingsService>().To<TripSettingsService>();
+            kernel.Bind<IReportService>().To<ReportService>();
         }        
     }
 }

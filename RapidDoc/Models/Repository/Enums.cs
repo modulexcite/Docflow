@@ -57,7 +57,8 @@ namespace RapidDoc.Models.Repository
         Default = 0,
         Comment = 1,
         Delegation = 2,
-        SLAStatus = 3
+        SLAStatus = 3,
+        Routes = 4
     }
 
     public enum HistoryType : byte
