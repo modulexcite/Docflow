@@ -187,7 +187,7 @@ namespace RapidDoc.Controllers
 
             WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(ConfigurationManager.AppSettings["ReportAdminDomain"], ConfigurationManager.AppSettings["ReportAdminUser"], ConfigurationManager.AppSettings["ReportAdminPassword"]);
             contextImpersonation.Enter();
-
+            
             excelAppl = new Excel.Application();
             excelAppl.Visible = false;
             excelAppl.DisplayAlerts = false;
@@ -204,18 +204,23 @@ namespace RapidDoc.Controllers
                 excelWorksheet.Cells[rowCount, 4] = line.FilterType.ToString();
                 excelWorksheet.Cells[rowCount, 5] = line.FilterText.ToString();
                 Range range = (Range)excelWorksheet.Cells[rowCount, 5];
-                range.Interior.Color = System.Drawing.ColorTranslator.ToOle(line.Color);              
-                if (line.Names.Count > 1)
+                range.Interior.Color = System.Drawing.ColorTranslator.ToOle(line.Color);
+                if (line.Names.Count != 0)
                 {
-                    users = String.Empty;
-                    foreach (EmplTable user in line.Names)
+                    if (line.Names.Count > 1)
                     {
-                        users += user.FullName + ";";
+                        users = String.Empty;
+                        foreach (EmplTable user in line.Names)
+                        {
+                            users += user.FullName + ";";
+                        }
+                        excelWorksheet.Cells[rowCount, 6] = users.ToString();
                     }
-                    excelWorksheet.Cells[rowCount, 6] = users.ToString();
+                    else
+                        excelWorksheet.Cells[rowCount, 6] = line.Names.FirstOrDefault().FullName;
                 }
                 else
-                    excelWorksheet.Cells[rowCount, 6] = line.Names.FirstOrDefault().FullName;
+                    excelWorksheet.Cells[rowCount, 6] = "";
             }
 
 
