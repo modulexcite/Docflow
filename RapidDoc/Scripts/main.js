@@ -153,7 +153,7 @@ function grid_init(url_json) {
     var gridTableBody = pageLink.closest(".grid-wrap").find("tbody");
 
     $(window).scroll(function () {
-        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+        if ($(window).scrollTop() <= $(document).height() - $(window).height() && $(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
             $('div#loading').html('<img src="/Content/Custom/image-icon/autoload.gif"/>');
             self.loadNextPage();
         }
