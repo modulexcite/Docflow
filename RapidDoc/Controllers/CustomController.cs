@@ -447,6 +447,25 @@ namespace RapidDoc.Controllers
             return PartialView("_Empty");
         }
 
+        public ActionResult GetManualHRCardITR14(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITR1_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник службы ОЗиТБ"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITR1_Edit_Manual4", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
         public ActionResult GetManualHRCardITR21(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITR2_View model)
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
@@ -523,6 +542,25 @@ namespace RapidDoc.Controllers
             return PartialView("_Empty");
         }
 
+        public ActionResult GetManualHRCardITR24(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITR2_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник службы ОЗиТБ"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITR2_Edit_Manual4", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
         public ActionResult GetManualHRCardITRZIF1(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITRZIF_View model)
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
@@ -554,6 +592,25 @@ namespace RapidDoc.Controllers
                     if (current.Any(x => x.ActivityName == "Директор фабрики"))
                     {
                         return PartialView("USR_REQ_URP_RequestForHRCardITRZIF_Edit_Manual2", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardITRZIF3(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardITRZIF_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник службы ОЗиТБ"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardITRZIF_Edit_Manual3", model);
                     }
                 }
             }
@@ -618,6 +675,25 @@ namespace RapidDoc.Controllers
             return PartialView("_Empty");
         }
 
+        public ActionResult GetManualHRCardWork4(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardWork_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник службы ОЗиТБ"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardWork_Edit_Manual4", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
         public ActionResult GetManualHRCardWorkZIF1(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardWorkZIF_View model)
         {
             DocumentTable document = _DocumentService.Find(model.DocumentTableId);
@@ -649,6 +725,25 @@ namespace RapidDoc.Controllers
                     if (current.Any(x => x.ActivityName == "Исполнительный директор"))
                     {
                         return PartialView("USR_REQ_URP_RequestForHRCardWorkZIF_Edit_Manual2", model);
+                    }
+                }
+            }
+
+            return PartialView("_Empty");
+        }
+
+        public ActionResult GetManualHRCardWorkZIF3(RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForHRCardWorkZIF_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник службы ОЗиТБ"))
+                    {
+                        return PartialView("USR_REQ_URP_RequestForHRCardWorkZIF_Edit_Manual3", model);
                     }
                 }
             }

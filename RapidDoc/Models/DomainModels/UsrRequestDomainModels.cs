@@ -3702,6 +3702,8 @@ namespace RapidDoc.Models.DomainModels
      
         public string Circumstances { get; set; }
 
+        public string RecommendationOZTB { get; set; }
+
         [Required]
         public string SalaryCode { get; set; }
 
@@ -3785,6 +3787,8 @@ namespace RapidDoc.Models.DomainModels
 
         public string Circumstances { get; set; }
 
+        public string RecommendationOZTB { get; set; }
+
         [Required]
         public string SalaryCode { get; set; }
 
@@ -3857,6 +3861,8 @@ namespace RapidDoc.Models.DomainModels
         public string Reason3 { get; set; }
 
         public string Circumstances { get; set; }
+
+        public string RecommendationOZTB { get; set; }
 
         [Required]
         public string SalaryCode { get; set; }
@@ -3941,6 +3947,8 @@ namespace RapidDoc.Models.DomainModels
 
         public string Circumstances { get; set; }
 
+        public string RecommendationOZTB { get; set; }
+
         [Required]
         public string SalaryCode { get; set; }
 
@@ -4015,6 +4023,8 @@ namespace RapidDoc.Models.DomainModels
         public string Reason3 { get; set; }
 
         public string Circumstances { get; set; }
+
+        public string RecommendationOZTB { get; set; }
 
         [Required]
         public string SalaryCode { get; set; }

@@ -5029,6 +5029,10 @@ namespace RapidDoc.Models.ViewModels
         public string Circumstances { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Рекомендации/Требования")]
+        public string RecommendationOZTB { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Код установленной ЗП")]
         public string SalaryCode { get; set; }
 
@@ -5159,6 +5163,10 @@ namespace RapidDoc.Models.ViewModels
         public string Circumstances { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Рекомендации/Требования")]
+        public string RecommendationOZTB { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Код установленной ЗП")]
         public string SalaryCode { get; set; }
 
@@ -5267,6 +5275,10 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "Условия")]
         public string Circumstances { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Рекомендации/Требования")]
+        public string RecommendationOZTB { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Код установленной ЗП")]
@@ -5399,6 +5411,10 @@ namespace RapidDoc.Models.ViewModels
         public string Circumstances { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Рекомендации/Требования")]
+        public string RecommendationOZTB { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Код установленной ЗП")]
         public string SalaryCode { get; set; }
 
@@ -5506,6 +5522,10 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "Условия")]
         public string Circumstances { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Рекомендации/Требования")]
+        public string RecommendationOZTB { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Код установленной ЗП")]
