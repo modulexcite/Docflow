@@ -7258,9 +7258,11 @@ namespace RapidDoc.Models.ViewModels
     #region ХУ
     public class USR_REQ_HY_EmergencyPurposeTRU_View : BasicDocumentView
     {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Представитель ФЭУ")]
         public string UserChooseManual1 { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Исполнитель")]
         public string UserChooseManual2 { get; set; }
 
@@ -7451,6 +7453,7 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_HY_BookingRoom_View : BasicDocumentView
     {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Исполнитель")]
         public string UserChooseManual1 { get; set; }
 
@@ -7509,6 +7512,7 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_HY_FindApartment_View : BasicDocumentView
     {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Исполнитель")]
         public string UserChooseManual1 { get; set; }
 
@@ -7536,6 +7540,7 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_HY_RequestRepair_View : BasicDocumentView
     {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Исполнитель")]
         public string UserChooseManual1 { get; set; }
 
@@ -7551,9 +7556,11 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_HY_RequestTRU_View : BasicDocumentView
     {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Представитель ФЭУ")]
         public string UserChooseManual1 { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Исполнитель")]
         public string UserChooseManual2 { get; set; }
 
@@ -7744,6 +7751,7 @@ namespace RapidDoc.Models.ViewModels
 
     public class USR_REQ_HY_EmergencyRequestTRU_View : BasicDocumentView
     {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Исполнитель")]
         public string UserChooseManual1 { get; set; }
 
@@ -7948,6 +7956,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Подразделение")]
         public string Department { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Делопроизводитель")]
         public string UserChooseManual1 { get; set; }
 
@@ -8003,6 +8012,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Сотрудник")]
         public string Users { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Делопроизводитель")]
         public string UserChooseManual1 { get; set; }
 
@@ -8137,6 +8147,7 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Сотрудник")]
         public string Users { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Делопроизводитель")]
         public string UserChooseManual1 { get; set; }
 

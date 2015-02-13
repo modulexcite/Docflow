@@ -54,10 +54,11 @@ namespace RapidDoc.Controllers
                 case 1:
                     if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
                     {
-                        var users = _AccountService.GetPartial(x => x.Email != null).ToList();
+                        var users = _AccountService.GetPartial(x => x.Email != null && x.Enable == true).ToList();
                         List<CheckSLAStatus> checkData = new List<CheckSLAStatus>();
 
-                        foreach (var document in allDocument)
+                        foreach (var document in allDocument.Where(x => x.DocumentState == Models.Repository.DocumentState.Agreement
+                        || x.DocumentState == Models.Repository.DocumentState.Execution).ToList())
                         {
                             var checkUser = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Warning).ToList();
                             checkData.Add(new CheckSLAStatus(document, checkUser));
@@ -74,10 +75,11 @@ namespace RapidDoc.Controllers
                 case 2:
                     if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
                     {
-                        var users = _AccountService.GetPartial(x => x.Email != null).ToList();
+                        var users = _AccountService.GetPartial(x => x.Email != null && x.Enable == true).ToList();
                         List<CheckSLAStatus> checkData = new List<CheckSLAStatus>();
 
-                        foreach (var document in allDocument)
+                        foreach (var document in allDocument.Where(x => x.DocumentState == Models.Repository.DocumentState.Agreement
+                        || x.DocumentState == Models.Repository.DocumentState.Execution).ToList())
                         {
                             var checkUser = _Documentservice.GetUsersSLAStatus(document, SLAStatusList.Disturbance).ToList();
                             checkData.Add(new CheckSLAStatus(document, checkUser));
@@ -118,13 +120,11 @@ namespace RapidDoc.Controllers
                         var users = _AccountService.GetPartial(x => x.Email != null && x.Enable == true).ToList();
                         List<ReminderUsers> checkData = new List<ReminderUsers>();
 
-                        foreach (var document in allDocument)
+                        foreach (var document in allDocument.Where(x => x.DocumentState == Models.Repository.DocumentState.Agreement
+                        || x.DocumentState == Models.Repository.DocumentState.Execution).ToList())
                         {
-                            if (document.DocumentState == Models.Repository.DocumentState.Agreement || document.DocumentState == Models.Repository.DocumentState.Execution)
-                            {
-                                var usersReminder = _Documentservice.GetSignUsersDirect(document).ToList();
-                                checkData.Add(new ReminderUsers(document, usersReminder));
-                            }
+                            var usersReminder = _Documentservice.GetSignUsersDirect(document).ToList();
+                            checkData.Add(new ReminderUsers(document, usersReminder));
                         }
 
                         foreach (var user in users)
