@@ -1023,6 +1023,11 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Available { get; set; }
     }
+
+    public class USR_REQ_ZIF_RequestForCreatingItemsJDE_Table : BasicDocumentTable
+    {
+
+    }
     #endregion
 
     #region ОКС

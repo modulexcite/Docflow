@@ -1453,6 +1453,11 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Наличие у заказчика необходимого материала для ремонта/изготовления")]
         public string Available { get; set; }
     }
+
+    public class USR_REQ_ZIF_RequestForCreatingItemsJDE_View : BasicDocumentView
+    {
+
+    }
     #endregion
 
     #region ОКС
