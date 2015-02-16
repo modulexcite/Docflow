@@ -1593,14 +1593,12 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Маршрут")]
         public string Route { get; set; }
-        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
-        public DateTime? Date { get; set; }
-        [DataType(DataType.Time)]
+        public string Date { get; set; }
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Время вылета")]
-        public TimeSpan TimeDeparture { get; set; }
+        public string TimeDeparture { get; set; }
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Класс")]
         public string Category { get; set; }
@@ -1635,14 +1633,12 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Маршрут")]
         public string Route { get; set; }
-        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата")]
-        public DateTime? Date { get; set; }
-        [DataType(DataType.Time)]
+        public string Date { get; set; }
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Время вылета")]
-        public TimeSpan TimeDeparture { get; set; }
+        public string TimeDeparture { get; set; }
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Класс")]
         public string Category { get; set; }

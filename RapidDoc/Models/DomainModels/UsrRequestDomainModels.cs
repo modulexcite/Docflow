@@ -1114,9 +1114,9 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Route { get; set; }
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         [Required]
-        public TimeSpan TimeDeparture { get; set; }
+        public string TimeDeparture { get; set; }
         [Required]
         public string Category { get; set; }
         [Required]
@@ -1141,9 +1141,9 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Route { get; set; }
         [Required]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         [Required]
-        public TimeSpan TimeDeparture { get; set; }
+        public string TimeDeparture { get; set; }
         [Required]
         public string Category { get; set; }
         [Required]

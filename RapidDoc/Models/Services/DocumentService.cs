@@ -215,7 +215,7 @@ namespace RapidDoc.Models.Services
                                 )
                                 &&
                                 !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                            orderby document.ActivityName descending, document.ModifiedDate descending
+                            orderby String.IsNullOrEmpty(document.ActivityName), document.ModifiedDate descending
                             select document;
 
                 var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
