@@ -1009,6 +1009,20 @@ namespace RapidDoc.Models.DomainModels
         public string Department { get; set; }
     }
 
+    public class USR_REQ_ZIF_RequestForCarpenterWork_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Contact { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public string Available { get; set; }
+    }
     #endregion
 
     #region ОКС

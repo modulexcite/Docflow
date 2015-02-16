@@ -1432,6 +1432,27 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Подразделение")]
         public string Department { get; set; }
     }
+
+    public class USR_REQ_ZIF_RequestForCarpenterWork_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Подразделение")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Контактное лицо")]
+        public string Contact { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Обоснование необходимости работ, описание")]
+        public string Reason { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Наличие у заказчика необходимого материала для ремонта/изготовления")]
+        public string Available { get; set; }
+    }
     #endregion
 
     #region ОКС
