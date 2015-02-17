@@ -4,7 +4,13 @@
 <hr />
 <h4 class="text-info">Прошу произвести бронирование номера для:</h4>
 
-@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Users" } })
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Users)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.Users, new { @class = "form-control", placeholder = "Имя Фамилия" })
+</div>
+
 @Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Department" } })
 @Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Phone" } })
 @Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "DateArrival" } })
