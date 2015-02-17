@@ -32,6 +32,7 @@ namespace RapidDoc.Models.Services
         void SaveDomain(EmplTable domainTable, string currentUserName = "", Guid? companyId = null);
         void Delete(Guid id);
         EmplTable Find(Guid id, string currentUserId = "");
+        EmplTable FindIntercompany(Guid id);
         EmplView FindView(Guid id);
         SelectList GetDropListEmplNull(Guid? id);
         object GetJsonEmpl();
@@ -148,6 +149,10 @@ namespace RapidDoc.Models.Services
             ApplicationUser user = getCurrentUserId(currentUserId);
             return repo.Find(a => a.Id == id && a.CompanyTableId == user.CompanyTableId);
         }
+        public EmplTable FindIntercompany(Guid id)
+        {
+            return repo.Find(a => a.Id == id);
+        }
         public EmplView FindView(Guid id)
         {
             return Mapper.Map<EmplTable, EmplView>(Find(id));
@@ -175,7 +180,17 @@ namespace RapidDoc.Models.Services
 
             if(empls != null)
             {
-                return empls.OrderByDescending(x => x.Enable).FirstOrDefault();
+                EmplTable emplTable = empls.OrderByDescending(x => x.Enable).FirstOrDefault();
+
+                if (emplTable == null)
+                {
+                    empls = GetPartialIntercompany(x => x.ApplicationUserId == userId);
+                    if(empls != null)
+                    {
+                        return empls.OrderByDescending(x => x.Enable).FirstOrDefault();
+                    }
+                }
+                return emplTable;
             }
 
             return null;

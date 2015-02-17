@@ -121,7 +121,7 @@ namespace RapidDoc.Models.Services
         private EmplTable WFMatchingUpManagerFinder(EmplTable emplTable, int level, string currentUserId, string profileName = "")
         {
             if (((level == 0 && profileName == null) || (emplTable.ProfileName == profileName || emplTable.TitleTable.ProfileName == profileName)) && emplTable.Enable == true) return emplTable;
-            EmplTable manager = _EmplService.Find(emplTable.ManageId ?? Guid.Empty, currentUserId);
+            EmplTable manager = _EmplService.FindIntercompany(emplTable.ManageId ?? Guid.Empty);
 
             if(manager == null || manager.Id == manager.ManageId)
                 return null;

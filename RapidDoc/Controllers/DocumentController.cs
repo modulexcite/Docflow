@@ -351,7 +351,7 @@ namespace RapidDoc.Controllers
             ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
             if (userTable == null) return RedirectToAction("PageNotFound", "Error");
 
-            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id && x.CompanyTableId == userTable.CompanyTableId && x.Enable == true);
+            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id && x.Enable == true);
             if (emplTable == null) return RedirectToAction("PageNotFound", "Error");
 
             ProcessView process = _ProcessService.FindView(id);
