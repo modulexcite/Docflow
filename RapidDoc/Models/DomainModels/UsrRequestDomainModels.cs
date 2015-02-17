@@ -3353,7 +3353,7 @@ namespace RapidDoc.Models.DomainModels
         public DateTime PlanDate { get; set; }
 
         [Required]
-        public DateTime TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required]
         public string Reason { get; set; }
@@ -3378,7 +3378,7 @@ namespace RapidDoc.Models.DomainModels
         public DateTime PlanDate { get; set; }
 
         [Required]
-        public DateTime TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required]
         public string Reason { get; set; }
@@ -3401,7 +3401,7 @@ namespace RapidDoc.Models.DomainModels
         public DateTime PlanDate { get; set; }
 
         [Required]
-        public DateTime TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required]
         public string Reason { get; set; }
@@ -3424,7 +3424,7 @@ namespace RapidDoc.Models.DomainModels
         public DateTime PlanDate { get; set; }
 
         [Required]
-        public DateTime TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required]
         public string Reason { get; set; }
@@ -3450,7 +3450,7 @@ namespace RapidDoc.Models.DomainModels
         public DateTime PlanDate { get; set; }
 
         [Required]
-        public DateTime TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required]
         public string Reason { get; set; }
@@ -3473,7 +3473,7 @@ namespace RapidDoc.Models.DomainModels
         public DateTime PlanDate { get; set; }
 
         [Required]
-        public DateTime TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required]
         public string Reason { get; set; }

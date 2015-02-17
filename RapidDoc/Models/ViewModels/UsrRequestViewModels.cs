@@ -4545,11 +4545,10 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Запланированная дата отпуска по графику")]
         public DateTime? PlanDate { get; set; }
-
-        [DataType(DataType.Date)]
+       
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Перенести на")]
-        public DateTime? TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина")]
@@ -4580,10 +4579,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Запланированная дата отпуска по графику")]
         public DateTime? PlanDate { get; set; }
 
-        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Перенести на")]
-        public DateTime? TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина")]
@@ -4611,10 +4609,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Запланированная дата отпуска по графику")]
         public DateTime? PlanDate { get; set; }
 
-        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Перенести на")]
-        public DateTime? TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина")]
@@ -4642,10 +4639,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Запланированная дата отпуска по графику")]
         public DateTime? PlanDate { get; set; }
 
-        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Перенести на")]
-        public DateTime? TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина")]
@@ -4677,10 +4673,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Запланированная дата отпуска по графику")]
         public DateTime? PlanDate { get; set; }
 
-        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Перенести на")]
-        public DateTime? TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина")]
@@ -4708,10 +4703,9 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Запланированная дата отпуска по графику")]
         public DateTime? PlanDate { get; set; }
 
-        [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Перенести на")]
-        public DateTime? TransferDate { get; set; }
+        public string TransferDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Причина")]
