@@ -2921,6 +2921,25 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Amount { get; set; }
     }
+
+    public class USR_REQ_UZL_RequestForCrashedStone_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Explanation { get; set; }
+
+        [Required]
+        public string Value { get; set; }
+
+        [Required]
+        public DateTime? Date { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+    }
     #endregion
 
     #region УКР

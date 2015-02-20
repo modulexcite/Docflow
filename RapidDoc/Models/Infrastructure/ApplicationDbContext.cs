@@ -266,6 +266,7 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_YT_RequestForStandbyTransportUZL_Table> USR_REQ_YT_RequestForStandbyTransportUZL_Table { get; set; }
         public DbSet<USR_REQ_ZIF_RequestForCarpenterWork_Table> USR_REQ_ZIF_RequestForCarpenterWork_Table { get; set; }
         public DbSet<USR_REQ_ZIF_RequestForCreatingItemsJDE_Table> USR_REQ_ZIF_RequestForCreatingItemsJDE_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForCrashedStone_Table> USR_REQ_UZL_RequestForCrashedStone_Table { get; set; }
 
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {

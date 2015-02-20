@@ -3972,6 +3972,33 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Сумма заявки")]
         public string Amount { get; set; }
     }
+
+    public class USR_REQ_UZL_RequestForCrashedStone_View : BasicDocumentView
+	{
+        [Display(Name = "Подразделение")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Department { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Предмет заявки/характеристика")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Explanation { get; set; }
+
+        [Display(Name = "Объем")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Value { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата необходимости")]
+        public DateTime? Date { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Цель")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string Purpose { get; set; }
+
+	}
     #endregion
 
     #region УКР
