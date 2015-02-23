@@ -36,6 +36,7 @@ namespace RapidDoc.Models.Services
         EmplView FindView(Guid id);
         SelectList GetDropListEmplNull(Guid? id);
         object GetJsonEmpl();
+        object GetJsonEmplIntercompany();
         EmplTable GetEmployer(string userId, Guid? companyId);
     }
     public class EmplService : IEmplService
@@ -171,6 +172,17 @@ namespace RapidDoc.Models.Services
                                value = string.Format("{0},({1}) {2} - {3}", c.Id, c.AliasCompanyName, c.FullName, c.TitleName),
                                text = string.Format("({0}) {1} - {2}", c.AliasCompanyName, c.FullName, c.TitleName)
                            }; 
+
+            return jsondata;
+        }
+        public object GetJsonEmplIntercompany()
+        {
+            var jsondata = from c in GetPartialIntercompany(x => x.Enable == true)
+                           select new
+                           {
+                               value = string.Format("{0},({1}) {2} - {3}", c.Id, c.AliasCompanyName, c.FullName, c.TitleName),
+                               text = string.Format("({0}) {1} - {2}", c.AliasCompanyName, c.FullName, c.TitleName)
+                           };
 
             return jsondata;
         }
