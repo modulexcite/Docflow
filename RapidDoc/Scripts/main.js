@@ -422,3 +422,49 @@ function custom_tagsinputEmpl5_init(url_json) {
     }
 }
 
+function custom_tagsinputEmplIntercompany_init(url_json) {
+    try {
+        var element = document.getSelection('input[data-role=tagsinputEmplIntercompany]');
+        if (typeof (element) != 'undefined' && element != null) {
+            elt = $('input[data-role=tagsinputEmplIntercompany]');
+            elt.tagsinput({
+                itemValue: 'value',
+                itemText: 'text',
+                tagClass: function (item) {
+                    return 'label label-primary bts-tags';
+                }
+            });
+
+            elt.tagsinput('input').typeahead({
+                valueKey: 'text',
+                prefetch: url_json,
+                template: '<p>{{text}}</p>',
+                engine: Hogan
+
+            }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                this.tagsinput('add', datum);
+                this.tagsinput('input').typeahead('setQuery', '');
+            }, elt));
+
+            currentValue = $('input[data-role=tagsinputEmplIntercompany]').val();
+            if (currentValue != null) {
+                currentArrData = currentValue.split(",");
+                $('input[data-role=tagsinputEmpl]').val('');
+
+                if (currentArrData.length > 1) {
+                    for (var i = 0; i < currentArrData.length; i += 2) {
+                        var key = currentArrData[i];
+                        var numValue = i;
+                        numValue++;
+                        var value = currentArrData[numValue];
+                        if (value.length > 0)
+                            $('input[data-role=tagsinputEmplIntercompany]').tagsinput('add', { "value": key + "," + value, "text": value });
+                    }
+                }
+            }
+        }
+    }
+    catch (e) {
+    }
+}
+

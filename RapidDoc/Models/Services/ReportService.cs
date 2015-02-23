@@ -115,7 +115,7 @@ namespace RapidDoc.Models.Services
                             Expression<Func<EmplTable, bool>> expressionEmpl = dynamicExpression.Body.Operand;
                             if (expressionEmpl != null)
                             {
-                                namesList = _EmplService.GetPartial(expressionEmpl).ToList();
+                                namesList = _EmplService.GetPartialIntercompany(expressionEmpl).ToList();
                                 if (namesList.Count <= 0)
                                     color = Color.LightPink;
                             }

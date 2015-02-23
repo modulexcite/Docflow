@@ -145,7 +145,7 @@ namespace RapidDoc.Controllers
                     };
 
 
-                    List<ProcessTable> processList = _ProcessService.GetPartial(x => x.isApproved == true).ToList();
+                    List<ProcessTable> processList = _ProcessService.GetPartialIntercompany(x => x.isApproved == true).ToList();
 
                     foreach (var process in processList)
                     {

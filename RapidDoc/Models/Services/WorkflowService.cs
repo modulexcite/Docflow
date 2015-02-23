@@ -229,7 +229,7 @@ namespace RapidDoc.Models.Services
                     foreach(var item in result)
                     {
                         Guid emplId = Guid.Parse(item);
-                        EmplTable empl = _EmplService.Find(emplId, currentUserId);
+                        EmplTable empl = _EmplService.FindIntercompany(emplId);
 
                         if (empl != null && empl.Enable == true && empl.ApplicationUserId != null && empl.ApplicationUserId != documentTable.ApplicationUserCreatedId)
                         {
