@@ -72,6 +72,7 @@
       <AssemblyReference>Ninject</AssemblyReference>
       <AssemblyReference>Ninject.Web.Common</AssemblyReference>
       <AssemblyReference>Ninject.Web.Mvc</AssemblyReference>
+      <AssemblyReference>Ninject.Web.WebApi</AssemblyReference>
       <AssemblyReference>PresentationCore</AssemblyReference>
       <AssemblyReference>PresentationFramework</AssemblyReference>
       <AssemblyReference>RazorEngine</AssemblyReference>
@@ -120,7 +121,6 @@
       <AssemblyReference>System.Net.Http</AssemblyReference>
       <AssemblyReference>System.Net.Http.WebRequest</AssemblyReference>
       <AssemblyReference>System.Xml.Linq</AssemblyReference>
-      <AssemblyReference>WebActivator</AssemblyReference>
       <AssemblyReference>WebActivatorEx</AssemblyReference>
       <AssemblyReference>WebGrease</AssemblyReference>
       <AssemblyReference>WindowsBase</AssemblyReference>
@@ -401,7 +401,7 @@
                                         </local1:WFChooseStaffStructure.inputDocumentId>
                                         <local1:WFChooseStaffStructure.inputPredicate>
                                           <InArgument x:TypeArguments="sle:Expression(s:Func(local2:EmplTable, x:Boolean))">
-                                            <mca:CSharpValue x:TypeArguments="sle:Expression(s:Func(local2:EmplTable, x:Boolean))">x =&gt; x.DepartmentTable.DepartmentName == "Ревизионно контрольный сектор" &amp;&amp; x.TitleTable.TitleName == "Заведующий сектором" &amp;&amp; x.CompanyTable.AliasCompanyName == "ATK"</mca:CSharpValue>
+                                            <mca:CSharpValue x:TypeArguments="sle:Expression(s:Func(local2:EmplTable, x:Boolean))">x =&gt; x.DepartmentTable.DepartmentName == "Ревизионно контрольный сектор" &amp;&amp; x.TitleTable.TitleName == "Ведущий специалист РКС СФК" &amp;&amp; x.CompanyTable.AliasCompanyName == "ATK"</mca:CSharpValue>
                                           </InArgument>
                                         </local1:WFChooseStaffStructure.inputPredicate>
                                         <local1:WFChooseStaffStructure.inputStep>
@@ -783,7 +783,7 @@
     <x:Reference>__ReferenceID33</x:Reference>
     <x:Reference>__ReferenceID34</x:Reference>
     <x:Reference>__ReferenceID35</x:Reference>
-    <sads:DebugSymbol.Symbol>d3dDOlxVc2Vyc1xEbVNoa2EuQUxUWU5UQVVcRGVza3RvcFxHaXRIdWJcRG9jRmxvd1xEb2NmbG93XFJhcGlkRG9jXEFjdGl2aXRpZXNcVVNSX1JFUV9VU0hfUmVxdWVzdEZvclJlY2xhc3NpZmljYXRpb24ueGFtbIEBHAccZwEDAa0BAbMBAQKGAQOTBg8CAQGMAQnVARUDAdcF2QEP2QFzAwHOBe0FEfgFGgMBuwXdARGmAh0DAdIEqgIXqgJ7AwHJBNkFGeQFIgMBtgSuAhn8AiUDAcYDgAMfgAODAQMBvQPFBSHQBSoDAaoDhAMh0gMtAwG6AtYDJ9YDiwEDAbECsQUpvAUyAwGeAtoDKagENQMBrgGsBC+sBJMBAwGlAZ0FMagFOgMBkgGwBDHxBD0CATH1BDf1BJsBAgEoiQU5lAVCAgEV+QQ5hAVCAgECjwEPrgEqAwGGBrIBFbIBagMB/QW2ARfLATgDAdgF9QUX9QVqAwHFBfAFF/AFcgMBvAXgARf/ATIDAYEFgwIdgwJyAwH4BIcCH5wCQAMB0wThBR/hBXIDAcAE3AUf3AV6AwG3BLECH9UCPwMB9QPZAiXZAnoDAewD3QIn8gJIAwHHA80FJ80FegMBtAPIBSfIBYIBAwGrA4cDJ6sDRwMB6QKvAy2vA4IBAwHgArMDL8gDUAMBuwK5BS+5BYIBAwGoArQFL7QFigEDAZ8C3QMvgQRPAwHdAYUENYUEigEDAdQBiQQ3ngRYAwGvAaUFN6UFigEDAZwBoAU3oAWSAQMBkwGzBDfSBFECAVfVBDvqBFwCATKRBT+RBZ8BAgEfjAU/jAWaAQIBFoEFP4EFnAECAQz8BD/8BJoBAgEDnAEVnAFnAwG3Bo8B/gGPAYUCAwG2BqYBFaYBagMBrQahARWhAWcDAaQGjwHvAY8B8wEDAaMGqwEVqwFwAwGaBo8B3wGPAeIBAwGZBpcBFZcBYAMBkAaSARWSAWMDAYcGvgEdvgFvAwH0BcMBHcMBcwMB6wW5AR25AWcDAeIFyAEdyAF4AwHZBe0BHe0BbwMBsgXgAYIC4AGJAgMBsQX3AR33AXIDAagF8gEd8gFvAwGfBeAB8wHgAfcBAwGeBfwBHfwBeAMBlQXgAeMB4AHmAQMBlAXoAR3oAWgDAYsF4wEd4wFrAwGCBY8CJY8CdwMB7wSUAiWUAnsDAeYEigIligJvAwHdBJkCJZkCgAEDAdQEwwIlwwJ3AwGtBLEC9QGxAvwBAwGsBM0CJc0CegMBowTIAiXIAncDAZoE0gIl0gKAAQMBkQS5AiW5AnADAYgEtAIltAJzAwH/A74CJb4CywIDAfYD5QIt5QJ/AwHjA+oCLeoCgwEDAdoD4AIt4AJ3AwHRA+8CLe8CiAEDAcgDmQMtmQN/AwGhA4cDiwKHA5ICAwGgA6MDLaMDggEDAZcDngMtngN/AwGOA6gDLagDiAEDAYUDjwMtjwN4AwH8AooDLYoDewMB8wKUAy2UA9ACAwHqArsDNbsDhwEDAdcCwAM1wAOLAQMBzgK2AzW2A38DAcUCxQM1xQOQAQMBvALvAzXvA4cBAwGVAt0DiQLdA5ACAwGUAvkDNfkDigEDAYsC9AM19AOHAQMBggL+AzX+A5ABAwH5AeUDNeUDgAEDAfAB4AM14AODAQMB5wHqAzXqA7ECAwHeAZEEPZEEjwEDAcsBlgQ9lgSTAQMBwgGMBD2MBIcBAwG5AZsEPZsEmAEDAbABwAQ9wASPAQMBiQGzBJsCswSiAgMBiAHKBD3KBJIBAgF/xQQ9xQSPAQIBdrME1gGzBNwBAgF1zwQ9zwSYAQIBbLME6wGzBIACAgFrswSKArMEkAICAWq7BD27BIgBAgFhtgQ9tgSLAQIBWN0EQd0EkwECAU7iBEHiBJcBAgFF2ARB2ASLAQIBPOcEQecEnAECATM=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d3dDOlxVc2Vyc1xEbVNoa2EuQUxUWU5UQVVcRGVza3RvcFxHaXRIdWJcRG9jRmxvd1xEb2NmbG93XFJhcGlkRG9jXEFjdGl2aXRpZXNcVVNSX1JFUV9VU0hfUmVxdWVzdEZvclJlY2xhc3NpZmljYXRpb24ueGFtbIEBHAccZwEDAa0BAbMBAQKGAQOTBg8CAQGMAQnVARUDAdcF2QEP2QFzAwHOBe0FEfgFGgMBuwXdARGmAh0DAdIEqgIXqgJ7AwHJBNkFGeQFIgMBtgSuAhn8AiUDAcYDgAMfgAODAQMBvQPFBSHQBSoDAaoDhAMh0gMtAwG6AtYDJ9YDiwEDAbECsQUpvAUyAwGeAtoDKagENQMBrgGsBC+sBJMBAwGlAZ0FMagFOgMBkgGwBDHxBD0CATH1BDf1BJsBAgEoiQU5lAVCAgEV+QQ5hAVCAgECjwEPrgEqAwGGBrIBFbIBagMB/QW2ARfLATgDAdgF9QUX9QVqAwHFBfAFF/AFcgMBvAXgARf/ATIDAYEFgwIdgwJyAwH4BIcCH5wCQAMB0wThBR/hBXIDAcAE3AUf3AV6AwG3BLECH9UCPwMB9QPZAiXZAnoDAewD3QIn8gJIAwHHA80FJ80FegMBtAPIBSfIBYIBAwGrA4cDJ6sDRwMB6QKvAy2vA4IBAwHgArMDL8gDUAMBuwK5BS+5BYIBAwGoArQFL7QFigEDAZ8C3QMvgQRPAwHdAYUENYUEigEDAdQBiQQ3ngRYAwGvAaUFN6UFigEDAZwBoAU3oAWSAQMBkwGzBDfSBFECAVfVBDvqBFwCATKRBT+RBZ8BAgEfjAU/jAWaAQIBFoEFP4EFnAECAQz8BD/8BJoBAgEDnAEVnAFnAwG3Bo8B/gGPAYUCAwG2BqYBFaYBagMBrQahARWhAWcDAaQGjwHvAY8B8wEDAaMGqwEVqwFwAwGaBo8B3wGPAeIBAwGZBpcBFZcBYAMBkAaSARWSAWMDAYcGvgEdvgFvAwH0BcMBHcMBcwMB6wW5AR25AWcDAeIFyAEdyAF4AwHZBe0BHe0BbwMBsgXgAYIC4AGJAgMBsQX3AR33AXIDAagF8gEd8gFvAwGfBeAB8wHgAfcBAwGeBfwBHfwBeAMBlQXgAeMB4AHmAQMBlAXoAR3oAWgDAYsF4wEd4wFrAwGCBY8CJY8CdwMB7wSUAiWUAnsDAeYEigIligJvAwHdBJkCJZkCgAEDAdQEwwIlwwJ3AwGtBLEC9QGxAvwBAwGsBM0CJc0CegMBowTIAiXIAncDAZoE0gIl0gKAAQMBkQS5AiW5AnADAYgEtAIltAJzAwH/A74CJb4CywIDAfYD5QIt5QJ/AwHjA+oCLeoCgwEDAdoD4AIt4AJ3AwHRA+8CLe8CiAEDAcgDmQMtmQN/AwGhA4cDiwKHA5ICAwGgA6MDLaMDggEDAZcDngMtngN/AwGOA6gDLagDiAEDAYUDjwMtjwN4AwH8AooDLYoDewMB8wKUAy2UA9cCAwHqArsDNbsDhwEDAdcCwAM1wAOLAQMBzgK2AzW2A38DAcUCxQM1xQOQAQMBvALvAzXvA4cBAwGVAt0DiQLdA5ACAwGUAvkDNfkDigEDAYsC9AM19AOHAQMBggL+AzX+A5ABAwH5AeUDNeUDgAEDAfAB4AM14AODAQMB5wHqAzXqA7ECAwHeAZEEPZEEjwEDAcsBlgQ9lgSTAQMBwgGMBD2MBIcBAwG5AZsEPZsEmAEDAbABwAQ9wASPAQMBiQGzBJsCswSiAgMBiAHKBD3KBJIBAgF/xQQ9xQSPAQIBdrME1gGzBNwBAgF1zwQ9zwSYAQIBbLME6wGzBIACAgFrswSKArMEkAICAWq7BD27BIgBAgFhtgQ9tgSLAQIBWN0EQd0EkwECAU7iBEHiBJcBAgFF2ARB2ASLAQIBPOcEQecEnAECATM=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -992,7 +992,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flowchart_4" sap:VirtualizedContainerService.HintSize="200,51">
+      <sap2010:ViewStateData Id="Flowchart_4" sap:VirtualizedContainerService.HintSize="666,636">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>

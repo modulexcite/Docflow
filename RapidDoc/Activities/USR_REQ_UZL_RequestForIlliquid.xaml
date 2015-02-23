@@ -72,6 +72,7 @@
       <AssemblyReference>Ninject</AssemblyReference>
       <AssemblyReference>Ninject.Web.Common</AssemblyReference>
       <AssemblyReference>Ninject.Web.Mvc</AssemblyReference>
+      <AssemblyReference>Ninject.Web.WebApi</AssemblyReference>
       <AssemblyReference>PresentationCore</AssemblyReference>
       <AssemblyReference>PresentationFramework</AssemblyReference>
       <AssemblyReference>RazorEngine</AssemblyReference>
@@ -120,7 +121,6 @@
       <AssemblyReference>System.Net.Http</AssemblyReference>
       <AssemblyReference>System.Net.Http.WebRequest</AssemblyReference>
       <AssemblyReference>System.Xml.Linq</AssemblyReference>
-      <AssemblyReference>WebActivator</AssemblyReference>
       <AssemblyReference>WebActivatorEx</AssemblyReference>
       <AssemblyReference>WebGrease</AssemblyReference>
       <AssemblyReference>WindowsBase</AssemblyReference>
@@ -304,10 +304,10 @@
                     </FlowDecision.Condition>
                     <FlowDecision.True>
                       <FlowStep x:Name="__ReferenceID21" sap2010:WorkflowViewState.IdRef="FlowStep_11">
-                        <Flowchart DisplayName="Начальник УЗЛ" sap2010:WorkflowViewState.IdRef="Flowchart_3">
+                        <Flowchart DisplayName="Начальник УСХ" sap2010:WorkflowViewState.IdRef="Flowchart_3">
                           <Flowchart.StartNode>
                             <FlowStep x:Name="__ReferenceID8" sap2010:WorkflowViewState.IdRef="FlowStep_10">
-                              <local1:WFChooseStaffStructure _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник УЗЛ" sap2010:WorkflowViewState.IdRef="WFChooseStaffStructure_2" useManual="False">
+                              <local1:WFChooseStaffStructure _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="Начальник УСХ" sap2010:WorkflowViewState.IdRef="WFChooseStaffStructure_2" useManual="False">
                                 <local1:WFChooseStaffStructure.inputCurrentUser>
                                   <InArgument x:TypeArguments="x:String">
                                     <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
@@ -320,7 +320,7 @@
                                 </local1:WFChooseStaffStructure.inputDocumentId>
                                 <local1:WFChooseStaffStructure.inputPredicate>
                                   <InArgument x:TypeArguments="sle:Expression(s:Func(local2:EmplTable, x:Boolean))">
-                                    <mca:CSharpValue x:TypeArguments="sle:Expression(s:Func(local2:EmplTable, x:Boolean))">x =&gt; x.DepartmentTable.DepartmentName == "Управление закупок и логистики" &amp;&amp; x.TitleTable.TitleName == "Начальник управления" &amp;&amp; x.CompanyTable.AliasCompanyName == "ATK"</mca:CSharpValue>
+                                    <mca:CSharpValue x:TypeArguments="sle:Expression(s:Func(local2:EmplTable, x:Boolean))">x =&gt; x.DepartmentTable.DepartmentName == "Управление складского хозяйства" &amp;&amp; x.TitleTable.TitleName == "Начальник управления" &amp;&amp; x.CompanyTable.AliasCompanyName == "ATK"</mca:CSharpValue>
                                   </InArgument>
                                 </local1:WFChooseStaffStructure.inputPredicate>
                                 <local1:WFChooseStaffStructure.inputStep>
@@ -588,7 +588,7 @@
     <x:Reference>__ReferenceID22</x:Reference>
     <x:Reference>__ReferenceID23</x:Reference>
     <x:Reference>__ReferenceID24</x:Reference>
-    <sads:DebugSymbol.Symbol>d29DOlxVc2Vyc1xEbVNoa2EuQUxUWU5UQVVcRGVza3RvcFxHaXRIdWJcRG9jRmxvd1xEb2NmbG93XFJhcGlkRG9jXEFjdGl2aXRpZXNcVVNSX1JFUV9VWkxfUmVxdWVzdEZvcklsbGlxdWlkLnhhbWxZHAccZwEDAZ0BAaMBAQKGAQPQBA8CAQGMAQnVARUDAd8D2QEP2QFzAwHWA7AEEbsEGgMBwwPdARGrAh0DAdICrwIXrwJ7AwHJApwEGacEIgMBtgKzAhmBAyUDAcYBhQMfhQODAQMBvQGIBCGTBCoDAaoBiQMh3AMtAgEx4AMn4AOLAQIBKPQDKf8DMgIBFeQDKe8DMgIBAo8BD64BKgMBjgSyARWyAWoDAYUEtgEXywE4AwHgA7gEF7gEagMBzQOzBBezBHIDAcQD4AEX/wExAwGKA4MCHYMCcgMBgQOHAh+hAkADAdMCpAQfpARyAwHAAp8EH58EegMBtwK2Ah/aAj8DAfUB3gIl3gJ6AwHsAeICJ/cCSAMBxwGQBCeQBHoDAbQBiwQniwSCAQMBqwGMAyewA0cCAWm0Ay20A4IBAgFguAMv0gNQAgEy/AMv/AOPAQIBH/cDL/cDigECARbsAy/sA4wBAgEM5wMv5wOKAQIBA5wBFZwBZwMBvwSPAf4BjwGFAgMBvgSmARWmAWoDAbUEoQEVoQFnAwGsBI8B7wGPAfMBAwGrBKsBFasBcAMBogSPAd8BjwHiAQMBoQSXARWXAWADAZgEkgEVkgFjAwGPBL4BHb4BbwMB/APDAR3DAXMDAfMDuQEduQFnAwHqA8gBHcgBeAMB4QPtAR3tAW8DAboD4AH8AeABgwIDAbkD9wEd9wFyAwGwA/IBHfIBbwMBpwP8AR38AXgDAZ4D4AHcAeAB8QEDAZ0D6AEd6AFoAwGUA+MBHeMBawMBiwOPAiWPAncDAfgClAIllAJ7AwHvAooCJYoCbwMB5gKeAiWeAoABAwHdApkCJZkCkQEDAdQCyAIlyAJ3AwGtArYC9QG2AvwBAwGsAtICJdICegMBowLNAiXNAncDAZoC1wIl1wKAAQMBkQK+AiW+AnADAYgCuQIluQJzAwH/AcMCJcMCygIDAfYB6gIt6gJ/AwHjAe8CLe8CgwEDAdoB5QIt5QJ3AwHRAfQCLfQCiAEDAcgBngMtngN/AwGhAYwDhwKMA44CAwGgAagDLagDggEDAZcBowMtowN/AwGOAa0DLa0DiAEDAYUBlAMtlAN4AgF8jwMtjwN7AgFzmQMtmQPLAgIBasADNcADhwECAVfFAzXFA4sBAgFOuwM1uwN/AgFFzwM1zwOQAQIBPMoDNcoDoQECATM=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d29DOlxVc2Vyc1xEbVNoa2EuQUxUWU5UQVVcRGVza3RvcFxHaXRIdWJcRG9jRmxvd1xEb2NmbG93XFJhcGlkRG9jXEFjdGl2aXRpZXNcVVNSX1JFUV9VWkxfUmVxdWVzdEZvcklsbGlxdWlkLnhhbWxZHAccZwEDAZ0BAaMBAQKGAQPQBA8CAQGMAQnVARUDAd8D2QEP2QFzAwHWA7AEEbsEGgMBwwPdARGrAh0DAdICrwIXrwJ7AwHJApwEGacEIgMBtgKzAhmBAyUDAcYBhQMfhQODAQMBvQGIBCGTBCoDAaoBiQMh3AMtAgEx4AMn4AOLAQIBKPQDKf8DMgIBFeQDKe8DMgIBAo8BD64BKgMBjgSyARWyAWoDAYUEtgEXywE4AwHgA7gEF7gEagMBzQOzBBezBHIDAcQD4AEX/wExAwGKA4MCHYMCcgMBgQOHAh+hAkADAdMCpAQfpARyAwHAAp8EH58EegMBtwK2Ah/aAj8DAfUB3gIl3gJ6AwHsAeICJ/cCSAMBxwGQBCeQBHoDAbQBiwQniwSCAQMBqwGMAyewA0cCAWm0Ay20A4IBAgFguAMv0gNQAgEy/AMv/AOPAQIBH/cDL/cDigECARbsAy/sA4wBAgEM5wMv5wOKAQIBA5wBFZwBZwMBvwSPAf4BjwGFAgMBvgSmARWmAWoDAbUEoQEVoQFnAwGsBI8B7wGPAfMBAwGrBKsBFasBcAMBogSPAd8BjwHiAQMBoQSXARWXAWADAZgEkgEVkgFjAwGPBL4BHb4BbwMB/APDAR3DAXMDAfMDuQEduQFnAwHqA8gBHcgBeAMB4QPtAR3tAW8DAboD4AH8AeABgwIDAbkD9wEd9wFyAwGwA/IBHfIBbwMBpwP8AR38AXgDAZ4D4AHcAeAB8QEDAZ0D6AEd6AFoAwGUA+MBHeMBawMBiwOPAiWPAncDAfgClAIllAJ7AwHvAooCJYoCbwMB5gKeAiWeAoABAwHdApkCJZkCkQEDAdQCyAIlyAJ3AwGtArYC9QG2AvwBAwGsAtICJdICegMBowLNAiXNAncDAZoC1wIl1wKAAQMBkQK+AiW+AnADAYgCuQIluQJzAwH/AcMCJcMCywIDAfYB6gIt6gJ/AwHjAe8CLe8CgwEDAdoB5QIt5QJ3AwHRAfQCLfQCiAEDAcgBngMtngN/AwGhAYwDhwKMA44CAwGgAagDLagDggEDAZcBowMtowN/AwGOAa0DLa0DiAEDAYUBlAMtlAN4AgF8jwMtjwN7AgFzmQMtmQPLAgIBasADNcADhwECAVfFAzXFA4sBAgFOuwM1uwN/AgFFzwM1zwOQAQIBPMoDNcoDoQECATM=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
