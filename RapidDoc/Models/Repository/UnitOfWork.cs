@@ -35,32 +35,9 @@ namespace RapidDoc.Models.Infrastructure
             return repository;
         }
 
-        public ICollection<ValidationResult> Commit()
+        public void Commit()
         {
-            var validationResults = new List<ValidationResult>();
-
-            try
-            {
-                _ctx.SaveChanges();
-            }
-            catch (DbEntityValidationException dbe)
-            {
-                foreach (DbEntityValidationResult validation in dbe.EntityValidationErrors)
-                {
-                    IEnumerable<ValidationResult> validations = validation.ValidationErrors.Select(
-                        error => new ValidationResult(
-                                     error.ErrorMessage,
-                                     new[]
-                                         {
-                                             error.PropertyName
-                                         }));
-
-                    validationResults.AddRange(validations);
-
-                    return validationResults;
-                }
-            }
-            return validationResults;
+            _ctx.SaveChanges();
         }
 
         public T GetDbContext<T>() where T : DbContext, IDbContext

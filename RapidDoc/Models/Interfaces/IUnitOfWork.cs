@@ -14,6 +14,6 @@ namespace RapidDoc.Models.Infrastructure
     {
         TContext GetDbContext<TContext>() where TContext : DbContext, IDbContext;
         IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
-        ICollection<ValidationResult> Commit();
+        void Commit();
     }
 }

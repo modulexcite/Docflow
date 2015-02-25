@@ -323,6 +323,7 @@ namespace RapidDoc.Controllers
                 _DocumentService.DeleteDocumentDraft(documentId, processView.TableName, documentTable.RefDocumentId);
                 _ReviewDocLogService.DeleteAll(documentId);
                 _HistoryUserService.DeleteAll(documentId);
+                _DocumentReaderService.Delete(documentId);
                 _DocumentService.Delete(documentId);
                 return RedirectToAction("Index", "Document");
             }
@@ -804,6 +805,7 @@ namespace RapidDoc.Controllers
 
                 statuses.Add(new ViewDataUploadFilesResult()
                 {
+                    id = Id.ToString(),
                     name = doc.FileName,
                     size = doc.ContentLength,
                     url = @"/Document/DownloadFile/" + Id.ToString(),
@@ -818,7 +820,7 @@ namespace RapidDoc.Controllers
             {
                 statuses.Add(new ViewDataUploadFilesResult()
                 {
-
+                    id = String.Empty,
                     name = files.FileName,
                     error = String.Format(ValidationRes.ValidationResource.ErrorDocSize, process.DocSize, Math.Round(((files.ContentLength / 1024f) / 1024f), 2), files.ContentLength),
                     size = files.ContentLength,
@@ -840,6 +842,23 @@ namespace RapidDoc.Controllers
             JsonResult result = Json(uploadedFiles);
             result.ContentType = "text/plain";
             return result;
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        //public JsonResult AjaxUploadReplaceFile(Guid id, Guid processId, Guid fileId, HttpPostedFileBase files)
+        public JsonResult AjaxUploadReplaceFile(Guid processId, Guid fileId, Guid fileDocId)
+        {
+            foreach (string file in Request.Files)
+            {
+                HttpPostedFileBase hpf = Request.Files[file] as HttpPostedFileBase;
+                if (hpf.ContentLength == 0)
+                    continue;
+
+                return AjaxUpload(processId, fileId, hpf);
+            }
+
+            return null;
         }
 
         [HttpGet]
@@ -885,13 +904,17 @@ namespace RapidDoc.Controllers
                 }
 
                 string deleteType = "DELETE";
-                if (document.DocumentState != DocumentState.Created && !CheсkFileRightDelete(file, user, document))
+                if (document != null)
                 {
-                    deleteType = String.Empty;
+                    if (document.DocumentState != DocumentState.Created && !CheсkFileRightDelete(file, user, document))
+                    {
+                        deleteType = String.Empty;
+                    }
                 }
 
                 statuses.Add(new ViewDataUploadFilesResult()
                 {
+                    id = file.Id.ToString(),
                     name = file.FileName,
                     size = file.ContentLength,
                     url = @"/Document/DownloadFile/" + file.Id.ToString(),

@@ -368,7 +368,7 @@ namespace RapidDoc.Controllers
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
                 {
-                    if (current.Any(x => x.ActivityName == "УКР"))
+                    if (current.Any(x => x.ActivityName == "Начальник УКР"))
                     {
                         return PartialView("USR_REQ_UKR_RequestForExpertiseInstruction_Edit_Manual", model);
                     }
@@ -387,7 +387,7 @@ namespace RapidDoc.Controllers
                 var current = _DocumentService.GetCurrentSignStep(document.Id);
                 if (current != null)
                 {
-                    if (current.Any(x => x.ActivityName == "УКР"))
+                    if (current.Any(x => x.ActivityName == "Начальник УКР"))
                     {
                         return PartialView("USR_REQ_UKR_RequestForExpertiseDepartment_Edit_Manual", model);
                     }

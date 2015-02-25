@@ -20,7 +20,7 @@ $(function () {
 		limitMultiFileUploads: 1,
 		fileInput: $("input[type='file'][name='files']"),
 		url: urlFileUpload
-	});
+    });
 	
 	// Load existing files:
 	$('#ajaxUploadForm').addClass('fileupload-processing');

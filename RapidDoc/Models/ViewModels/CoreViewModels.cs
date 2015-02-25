@@ -129,6 +129,7 @@ namespace RapidDoc.Models.ViewModels
 
     public class ViewDataUploadFilesResult
     {
+        public string id { get; set; }
         public string name { get; set; }
         public string error { get; set; }
         public int size { get; set; }

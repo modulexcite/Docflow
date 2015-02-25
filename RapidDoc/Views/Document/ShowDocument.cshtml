@@ -293,6 +293,9 @@
 <script id="template-download" type="text/x-tmpl">
     {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
+        <td class="fileuploadtdid hidden">
+            {%=file.id%}
+        </td>
         <td>
             <span class="preview">
                 {% if (file.thumbnailUrl) { %}
@@ -320,6 +323,13 @@
         </td>
         <td>
             {%=file.createdDate%}
+        </td>
+        <td class="hidden">
+            <span class="btn btn-default btn-xs fileinput-button">
+                <i class="glyphicon glyphicon-repeat"></i>
+                <span>@UIElementRes.UIElement.Replace</span>
+                <input id="fileupload" type="file" name="replacefile[]" onclick="replaceFile(this);">
+            </span>
         </td>
         <td>
             {% if (file.deleteUrl) { %}
@@ -442,5 +452,14 @@
             }
         });
     });
+
+    function replaceFile(e) {
+        var replaceFileId = $(e).closest('tr').find('.fileuploadtdid').text().trim();
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            url: "@(Url.Action("AjaxUploadReplaceFile", "Document", new { processId = Model.ProcessView.Id, fileId = Model.fileId }))" + "&fileDocId=" + replaceFileId,
+            autoUpload: true
+        });
+    }
 </script>
 }
