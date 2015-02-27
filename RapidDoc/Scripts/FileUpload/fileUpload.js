@@ -20,6 +20,8 @@ $(function () {
 		limitMultiFileUploads: 1,
 		fileInput: $("input[type='file'][name='files']"),
 		url: urlFileUpload
+    }).bind('fileuploaddestroy', function (e, data) {
+        location.reload();
     });
 	
 	// Load existing files:

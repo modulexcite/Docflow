@@ -489,52 +489,52 @@ namespace RapidDoc.Models.Services
 
             if (type == (new USR_REQ_URP_RequestForHRChGraphTime_View()).GetType())
             {
-                if (actionModel.Name1 != String.Empty && (actionModel.Position1 == String.Empty || actionModel.Department1 == String.Empty || actionModel.Reason1 == String.Empty || actionModel.StartDate1 == null || actionModel.EndDate1 == null))
+                if (actionModel.Name1 != String.Empty && (actionModel.Position1 == String.Empty || actionModel.Department1 == String.Empty || actionModel.Reason1 == String.Empty || actionModel.StartDate1 == null || actionModel.EndDate1 == String.Empty))
                 {
                     errorList.Add("В строке 1 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name2 != String.Empty && (actionModel.Position2 == String.Empty || actionModel.Department2 == String.Empty || actionModel.Reason2 == String.Empty || actionModel.StartDate2 == null || actionModel.EndDate2 == null))
+                if (actionModel.Name2 != String.Empty && (actionModel.Position2 == String.Empty || actionModel.Department2 == String.Empty || actionModel.Reason2 == String.Empty || actionModel.StartDate2 == null || actionModel.EndDate2 == String.Empty))
                 {
                     errorList.Add("В строке 2 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name3 != String.Empty && (actionModel.Position3 == String.Empty || actionModel.Department3 == String.Empty || actionModel.Reason3 == String.Empty || actionModel.StartDate3 == null || actionModel.EndDate3 == null))
+                if (actionModel.Name3 != String.Empty && (actionModel.Position3 == String.Empty || actionModel.Department3 == String.Empty || actionModel.Reason3 == String.Empty || actionModel.StartDate3 == null || actionModel.EndDate3 == String.Empty))
                 {
                     errorList.Add("В строке 3 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name4 != String.Empty && (actionModel.Position4 == String.Empty || actionModel.Department4 == String.Empty || actionModel.Reason4 == String.Empty || actionModel.StartDate4 == null || actionModel.EndDate4 == null))
+                if (actionModel.Name4 != String.Empty && (actionModel.Position4 == String.Empty || actionModel.Department4 == String.Empty || actionModel.Reason4 == String.Empty || actionModel.StartDate4 == null || actionModel.EndDate4 == String.Empty))
                 {
                     errorList.Add("В строке 4 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name5 != String.Empty && (actionModel.Position5 == String.Empty || actionModel.Department5 == String.Empty || actionModel.Reason5 == String.Empty || actionModel.StartDate5 == null || actionModel.EndDate5 == null))
+                if (actionModel.Name5 != String.Empty && (actionModel.Position5 == String.Empty || actionModel.Department5 == String.Empty || actionModel.Reason5 == String.Empty || actionModel.StartDate5 == null || actionModel.EndDate5 == String.Empty))
                 {
                     errorList.Add("В строке 5 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name6 != String.Empty && (actionModel.Position6 == String.Empty || actionModel.Department6 == String.Empty || actionModel.Reason6 == String.Empty || actionModel.StartDate6 == null || actionModel.EndDate6 == null))
+                if (actionModel.Name6 != String.Empty && (actionModel.Position6 == String.Empty || actionModel.Department6 == String.Empty || actionModel.Reason6 == String.Empty || actionModel.StartDate6 == null || actionModel.EndDate6 == String.Empty))
                 {
                     errorList.Add("В строке 6 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name7 != String.Empty && (actionModel.Position7 == String.Empty || actionModel.Department7 == String.Empty || actionModel.Reason7 == String.Empty || actionModel.StartDate7 == null || actionModel.EndDate7 == null))
+                if (actionModel.Name7 != String.Empty && (actionModel.Position7 == String.Empty || actionModel.Department7 == String.Empty || actionModel.Reason7 == String.Empty || actionModel.StartDate7 == null || actionModel.EndDate7 == String.Empty))
                 {
                     errorList.Add("В строке 7 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name8 != String.Empty && (actionModel.Position8 == String.Empty || actionModel.Department8 == String.Empty || actionModel.Reason8 == String.Empty || actionModel.StartDate8 == null || actionModel.EndDate8 == null))
+                if (actionModel.Name8 != String.Empty && (actionModel.Position8 == String.Empty || actionModel.Department8 == String.Empty || actionModel.Reason8 == String.Empty || actionModel.StartDate8 == null || actionModel.EndDate8 == String.Empty))
                 {
                     errorList.Add("В строке 8 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name9 != String.Empty && (actionModel.Position9 == String.Empty || actionModel.Department9 == String.Empty || actionModel.Reason9 == String.Empty || actionModel.StartDate9 == null || actionModel.EndDate9 == null))
+                if (actionModel.Name9 != String.Empty && (actionModel.Position9 == String.Empty || actionModel.Department9 == String.Empty || actionModel.Reason9 == String.Empty || actionModel.StartDate9 == null || actionModel.EndDate9 == String.Empty))
                 {
                     errorList.Add("В строке 9 не заполнены все необходимые поля");
                 }
 
-                if (actionModel.Name10 != String.Empty && (actionModel.Position10 == String.Empty || actionModel.Department10 == String.Empty || actionModel.Reason10 == String.Empty || actionModel.StartDate10 == null || actionModel.EndDate10 == null))
+                if (actionModel.Name10 != String.Empty && (actionModel.Position10 == String.Empty || actionModel.Department10 == String.Empty || actionModel.Reason10 == String.Empty || actionModel.StartDate10 == null || actionModel.EndDate10 == String.Empty))
                 {
                     errorList.Add("В строке 10 не заполнены все необходимые поля");
                 }

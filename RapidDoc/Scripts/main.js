@@ -47,6 +47,10 @@ function selectpickerfull_init() {
     });
 }
 
+function selectpickermanual_init() {
+    $('.selectpickermanual').selectpicker();
+}
+
 function popover_init() {
     $('.popover-link').popover({
         trigger: 'hover',

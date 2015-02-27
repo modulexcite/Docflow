@@ -107,6 +107,7 @@ namespace RapidDoc.Models.DomainModels
         public string VersionName { get; set; }
         public string Version { get; set; }
         public string VersionComments { get; set; }
+        public Guid? ReplaceRef { get; set; }
     }
 
     public class EmailParameterTable : BasicTable

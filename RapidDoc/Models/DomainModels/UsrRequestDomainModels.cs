@@ -4195,16 +4195,16 @@ namespace RapidDoc.Models.DomainModels
         public DateTime? StartDate9 { get; set; }
         public DateTime? StartDate10 { get; set; }
 
-        public DateTime? EndDate1 { get; set; }
-        public DateTime? EndDate2 { get; set; }
-        public DateTime? EndDate3 { get; set; }
-        public DateTime? EndDate4 { get; set; }
-        public DateTime? EndDate5 { get; set; }
-        public DateTime? EndDate6 { get; set; }
-        public DateTime? EndDate7 { get; set; }
-        public DateTime? EndDate8 { get; set; }
-        public DateTime? EndDate9 { get; set; }
-        public DateTime? EndDate10 { get; set; }
+        public string EndDate1 { get; set; }
+        public string EndDate2 { get; set; }
+        public string EndDate3 { get; set; }
+        public string EndDate4 { get; set; }
+        public string EndDate5 { get; set; }
+        public string EndDate6 { get; set; }
+        public string EndDate7 { get; set; }
+        public string EndDate8 { get; set; }
+        public string EndDate9 { get; set; }
+        public string EndDate10 { get; set; }
     }
 
     public class USR_REQ_URP_RequestForHRChGraphConst_Table : BasicDocumentTable

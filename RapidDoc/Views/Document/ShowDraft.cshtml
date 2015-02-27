@@ -171,6 +171,9 @@
 <script id="template-download" type="text/x-tmpl">
     {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
+        <td class="fileuploadtdid hidden">
+            {%=file.id%}
+        </td>
         <td>
             <span class="preview">
                 {% if (file.thumbnailUrl) { %}
@@ -181,7 +184,11 @@
         <td>
             <p class="name">
                 {% if (file.url) { %}
+                {% if (file.isReplaceFile) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" class="text-danger"><del>{%=file.name%}</del></a>
+                {% } else { %}
                 <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}">{%=file.name%}</a>
+                {% } %}
                 {% } else { %}
                 <span>{%=file.name%}</span>
                 {% } %}
@@ -192,6 +199,18 @@
         </td>
         <td>
             <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {%=file.createdUser%}
+        </td>
+        <td>
+            {%=file.createdDate%}
+        </td>
+        <td>
+            {%=file.versionName%}
+        </td>
+        <td>
+
         </td>
         <td>
             {% if (file.deleteUrl) { %}
@@ -223,6 +242,7 @@
 $(function () {
     selectpicker_init();
     selectpickerfull_init();
+    selectpickermanual_init();
     datepicker_init("@UIElementRes.UIElement.LangName");
     datetimepicker_init("@UIElementRes.UIElement.LangName");
     summernote_init("@UIElementRes.UIElement.LangFullName");

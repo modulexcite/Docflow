@@ -139,5 +139,8 @@ namespace RapidDoc.Models.ViewModels
         public string deleteType { get; set; }
         public string createdUser { get; set; }
         public string createdDate { get; set; }
+        public string versionName { get; set; }
+        public bool isReplaceFile { get; set; }
+        public bool isClosed { get; set; }
     }
 }

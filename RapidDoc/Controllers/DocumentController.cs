@@ -755,6 +755,15 @@ namespace RapidDoc.Controllers
                     error = true;
             }
 
+            DocumentTable document = _DocumentService.FirstOrDefault(x => x.FileId == fileId);
+            if(document != null)
+            {
+                if(document.DocumentState == DocumentState.Closed || document.DocumentState == DocumentState.Cancelled)
+                {
+                    error = true;
+                }
+            }
+
             System.IO.FileStream inFile;
             byte[] binaryData;
             string contentType;
@@ -777,6 +786,8 @@ namespace RapidDoc.Controllers
                 doc.ContentLength = files.ContentLength;
                 doc.Data = data;
                 doc.Thumbnail = thumbnail;
+                doc.Version = "1";
+                doc.VersionName = "Version 1";
 
                 Guid Id = _DocumentService.SaveFile(doc);
 
@@ -813,7 +824,10 @@ namespace RapidDoc.Controllers
                     thumbnailUrl = @"data:image/png;base64," + Convert.ToBase64String(thumbnail),
                     deleteType = "DELETE",
                     createdUser = createdUser,
-                    createdDate = GetLocalTime(doc.CreatedDate, user.TimeZoneId).ToString()
+                    createdDate = GetLocalTime(doc.CreatedDate, user.TimeZoneId).ToString(),
+                    versionName = doc.VersionName,
+                    isReplaceFile = false,
+                    isClosed = false
                 });
             }
             else
@@ -829,7 +843,10 @@ namespace RapidDoc.Controllers
                     thumbnailUrl = "",
                     deleteType = "DELETE",
                     createdUser = "",
-                    createdDate = ""
+                    createdDate = "",
+                    versionName = "",
+                    isReplaceFile = false,
+                    isClosed = false
                 });
             }
             
@@ -846,7 +863,6 @@ namespace RapidDoc.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        //public JsonResult AjaxUploadReplaceFile(Guid id, Guid processId, Guid fileId, HttpPostedFileBase files)
         public JsonResult AjaxUploadReplaceFile(Guid processId, Guid fileId, Guid fileDocId)
         {
             foreach (string file in Request.Files)
@@ -855,7 +871,131 @@ namespace RapidDoc.Controllers
                 if (hpf.ContentLength == 0)
                     continue;
 
-                return AjaxUpload(processId, fileId, hpf);
+                ProcessTable process = _ProcessService.Find(processId);
+                var statuses = new List<ViewDataUploadFilesResult>();
+                bool error = false;
+
+                if (process.DocSize > 0)
+                {
+                    if (((hpf.ContentLength / 1024f) / 1024f) > process.DocSize)
+                        error = true;
+                }
+
+                if(fileDocId == Guid.Empty)
+                    error = true;
+
+                DocumentTable document = _DocumentService.FirstOrDefault(x => x.FileId == fileId);
+                if (document != null)
+                {
+                    if (document.DocumentState == DocumentState.Closed || document.DocumentState == DocumentState.Cancelled)
+                    {
+                        error = true;
+                    }
+                }
+
+                System.IO.FileStream inFile;
+                byte[] binaryData;
+                string contentType;
+
+                if (hpf != null && !string.IsNullOrEmpty(hpf.FileName) && fileId != Guid.Empty && error != true)
+                {
+                    BinaryReader binaryReader = new BinaryReader(hpf.InputStream);
+                    byte[] data = binaryReader.ReadBytes(hpf.ContentLength);
+                    ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+
+                    var thumbnail = new byte[] { };
+                    contentType = hpf.ContentType.ToString().ToUpper();
+                    thumbnail = GetThumbnail(data, contentType);
+
+                    // here you can save your file to the database...
+                    FileTable doc = new FileTable();
+                    doc.DocumentFileId = fileId;
+                    doc.FileName = hpf.FileName;
+                    doc.ContentType = contentType;
+                    doc.ContentLength = hpf.ContentLength;
+                    doc.Data = data;
+                    doc.Thumbnail = thumbnail;
+                    doc.Version = "1";
+                    doc.VersionName = "Version 1";
+
+                    FileTable replaceFileTable = _DocumentService.GetFile(fileDocId);
+                    if(replaceFileTable != null)
+                    {
+                        doc.Version = Convert.ToString(Convert.ToInt32(replaceFileTable.Version) + 1);
+                        doc.VersionName = "Version " + doc.Version;
+                        doc.ReplaceRef = fileDocId;
+                    }
+
+                    Guid Id = _DocumentService.SaveFile(doc);
+
+                    string createdUser = String.Empty;
+                    EmplTable emplTable = _EmplService.GetEmployer(doc.ApplicationUserCreatedId, process.CompanyTableId);
+                    if (emplTable == null)
+                    {
+                        createdUser = doc.ApplicationUserCreated.UserName;
+                    }
+                    else
+                    {
+                        createdUser = emplTable.FullName;
+                    }
+
+                    if (thumbnail.Length == 0)
+                    {
+                        inFile = new System.IO.FileStream(Server.MapPath("~/Content/FileUpload/content-types/64/Text.png"),
+                                    System.IO.FileMode.Open,
+                                    System.IO.FileAccess.Read);
+                        binaryData = new Byte[inFile.Length];
+                        long bytesRead = inFile.Read(binaryData, 0,
+                                             (int)inFile.Length);
+                        inFile.Close();
+                        thumbnail = binaryData;
+                    }
+
+                    statuses.Add(new ViewDataUploadFilesResult()
+                    {
+                        id = Id.ToString(),
+                        name = doc.FileName,
+                        size = doc.ContentLength,
+                        url = @"/Document/DownloadFile/" + Id.ToString(),
+                        deleteUrl = @"/Document/DeleteFile/" + Id.ToString(),
+                        thumbnailUrl = @"data:image/png;base64," + Convert.ToBase64String(thumbnail),
+                        deleteType = "DELETE",
+                        createdUser = createdUser,
+                        createdDate = GetLocalTime(doc.CreatedDate, user.TimeZoneId).ToString(),
+                        versionName = doc.VersionName,
+                        isReplaceFile = false,
+                        isClosed = false
+                    });
+                }
+                else
+                {
+                    statuses.Add(new ViewDataUploadFilesResult()
+                    {
+                        id = String.Empty,
+                        name = hpf.FileName,
+                        error = String.Format(ValidationRes.ValidationResource.ErrorDocSize, process.DocSize, Math.Round(((hpf.ContentLength / 1024f) / 1024f), 2), hpf.ContentLength),
+                        size = hpf.ContentLength,
+                        url = "",
+                        deleteUrl = "",
+                        thumbnailUrl = "",
+                        deleteType = "DELETE",
+                        createdUser = "",
+                        createdDate = "",
+                        versionName = "",
+                        isReplaceFile = false,
+                        isClosed = false
+                    });
+                }
+
+
+                var uploadedFiles = new
+                {
+                    files = statuses.ToArray()
+                };
+
+                JsonResult result = Json(uploadedFiles);
+                result.ContentType = "text/plain";
+                return result;
             }
 
             return null;
@@ -912,6 +1052,14 @@ namespace RapidDoc.Controllers
                     }
                 }
 
+                bool isClosed = true;
+                if (document != null && document.DocumentState != DocumentState.Cancelled && document.DocumentState != DocumentState.Closed)
+                {
+                    isClosed = false;
+                }
+
+                bool isReplaceFile = _DocumentService.FileReplaceContains(file.Id);
+
                 statuses.Add(new ViewDataUploadFilesResult()
                 {
                     id = file.Id.ToString(),
@@ -922,7 +1070,10 @@ namespace RapidDoc.Controllers
                     thumbnailUrl = @"data:image/png;base64," + Convert.ToBase64String(thumbnail),
                     deleteType = deleteType,
                     createdUser = createdUser,
-                    createdDate = GetLocalTime(file.CreatedDate, user.TimeZoneId).ToString()
+                    createdDate = GetLocalTime(file.CreatedDate, user.TimeZoneId).ToString(),
+                    versionName = file.VersionName,
+                    isReplaceFile = isReplaceFile,
+                    isClosed = isClosed
                 });
             }
             

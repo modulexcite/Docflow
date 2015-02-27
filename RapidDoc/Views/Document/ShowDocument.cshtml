@@ -38,11 +38,14 @@
             <div class="row fileupload-buttonbar hidden-print">
                 <div class="col-lg-7">
                     <!-- The fileinput-button span is used to style the file input field as button -->
+                    @if(Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Closed && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Cancelled)
+                    { 
                     <span class="btn btn-success btn-xs fileinput-button">
                         <i class="glyphicon glyphicon-plus"></i>
                         <span>@UIElementRes.UIElement.AddFiles</span>
                         <input type="file" name="files" multiple>
                     </span>
+                    }
                     <!-- The global file processing state -->
                     <span class="fileupload-process"></span>
                 </div>
@@ -306,7 +309,11 @@
         <td>
             <p class="name">
                 {% if (file.url) { %}
+                {% if (file.isReplaceFile) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" class="text-danger"><del>{%=file.name%}</del></a>
+                {% } else { %}
                 <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}">{%=file.name%}</a>
+                {% } %}
                 {% } else { %}
                 <span>{%=file.name%}</span>
                 {% } %}
@@ -324,12 +331,17 @@
         <td>
             {%=file.createdDate%}
         </td>
-        <td class="hidden">
+        <td>
+            {%=file.versionName%}
+        </td>
+        <td>
+            {% if (file.isReplaceFile === false && file.isClosed === false) { %}
             <span class="btn btn-default btn-xs fileinput-button">
                 <i class="glyphicon glyphicon-repeat"></i>
                 <span>@UIElementRes.UIElement.Replace</span>
-                <input id="fileupload" type="file" name="replacefile[]" onclick="replaceFile(this);">
+                <input class="fileuploadreplace" type="file" name="files2[]" onclick="replaceFile(this);">
             </span>
+            {% } %}
         </td>
         <td>
             {% if (file.deleteUrl) { %}
@@ -455,10 +467,14 @@
 
     function replaceFile(e) {
         var replaceFileId = $(e).closest('tr').find('.fileuploadtdid').text().trim();
-        $('#fileupload').fileupload({
+        $('.fileuploadreplace').fileupload({
             dataType: 'json',
+            limitMultiFileUploads: 1,
             url: "@(Url.Action("AjaxUploadReplaceFile", "Document", new { processId = Model.ProcessView.Id, fileId = Model.fileId }))" + "&fileDocId=" + replaceFileId,
-            autoUpload: true
+            autoUpload: true,
+            done: function (e, data) {
+                location.reload();
+            }
         });
     }
 </script>

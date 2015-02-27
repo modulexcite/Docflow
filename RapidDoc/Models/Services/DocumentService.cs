@@ -48,6 +48,8 @@ namespace RapidDoc.Models.Services
         void UpdateFile(FileTable file);
         bool FileContains(Guid documentFileId);
         FileTable GetFile(Guid Id);
+        FileTable FirstOrDefaultFile(Expression<Func<FileTable, bool>> predicate);
+        bool FileReplaceContains(Guid id);
         IEnumerable<FileTable> GetAllFilesDocument(Guid documentFileId);
         string DeleteFile(Guid Id);
         List<ApplicationUser> GetSignUsers(DocumentTable docuTable);
@@ -625,6 +627,16 @@ namespace RapidDoc.Models.Services
         public FileTable GetFile(Guid Id)
         {
             return repoFile.GetById(Id);
+        }
+
+        public FileTable FirstOrDefaultFile(Expression<Func<FileTable, bool>> predicate)
+        {
+            return repoFile.Find(predicate);
+        }
+
+        public bool FileReplaceContains(Guid id)
+        {
+            return repoFile.Any(x => x.ReplaceRef == id);
         }
 
         public IEnumerable<FileTable> GetAllFilesDocument(Guid documentFileId)
