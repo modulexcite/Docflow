@@ -218,21 +218,21 @@ namespace RapidDoc.Models.Services
                 switch (type)
                 {
                     case EmailTemplateType.Default:
-                        body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", docuTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = bodyText, DocumentText = parameters2[0] });
+                        body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", docuTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = bodyText, DocumentText = parameters2[0] }, "emailTemplateDefault");
                         break;
                     case EmailTemplateType.Comment:
-                        body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", docuTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = bodyText, LastComment = parameters[0], DocumentText = parameters2[0] });
+                        body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", docuTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = bodyText, LastComment = parameters[0], DocumentText = parameters2[0] }, "emailTemplateComment");
                         break;
 
                     case EmailTemplateType.Delegation:
-                        body = Razor.Parse(razorText, new { DocumentUri = documentUri, EmplNameTo = parameters[0], EmplNameFrom = parameters[1], BodyText = bodyText });
+                        body = Razor.Parse(razorText, new { DocumentUri = documentUri, EmplNameTo = parameters[0], EmplNameFrom = parameters[1], BodyText = bodyText }, "emailTemplateDelegation");
                         break;
 
                     case EmailTemplateType.SLAStatus:
-                        body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = parameters, DocumentNums = parameters2, documentText = parameters3, EmplName = emplTable.FullName, BodyText = bodyText });
+                        body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = parameters, DocumentNums = parameters2, documentText = parameters3, EmplName = emplTable.FullName, BodyText = bodyText }, "emailTemplateSLAStatus");
                         break;
                     case EmailTemplateType.Routes:
-                        body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = parameters, DocumentNums = parameters2, documentText = parameters3, EmplName = emplTable.FullName, BodyText = bodyText });
+                        body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = parameters, DocumentNums = parameters2, documentText = parameters3, EmplName = emplTable.FullName, BodyText = bodyText }, "emailTemplateRoutes");
                         break;
                 }
                 SendEmail(emailParameter, new string[] { userTable.Email }, new string[] { }, subject, body);

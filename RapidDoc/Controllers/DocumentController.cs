@@ -184,7 +184,6 @@ namespace RapidDoc.Controllers
             DocumentTable docuTable = _DocumentService.Find(id);
             if (docuTable == null) return RedirectToAction("PageNotFound", "Error");
 
-            DocumentView docuView = _DocumentService.Document2View(docuTable);
             ApplicationUser currentUser = _AccountService.Find(User.Identity.GetUserId());
             if (currentUser == null) return RedirectToAction("PageNotFound", "Error");
 
@@ -209,7 +208,7 @@ namespace RapidDoc.Controllers
                 {
                     if (operationType == OperationType.ApproveDocument)
                     {
-                        _WorkflowService.AgreementWorkflowApprove(id, process.TableName, documentData);
+                        _WorkflowService.AgreementWorkflowApprove(id, process.TableName, docuTable.WWFInstanceId, processId, documentData);
 
                         DocumentTable documentTable = _DocumentService.Find(id);
                         if (documentTable != null && documentTable.ProcessTable != null && documentTable.DocumentState == DocumentState.Closed && !String.IsNullOrEmpty(documentTable.ProcessTable.AfterEndReaderRoleId))
@@ -228,12 +227,13 @@ namespace RapidDoc.Controllers
                     }
                     else if (operationType == OperationType.RejectDocument)
                     {
-                        _WorkflowService.AgreementWorkflowReject(id, process.TableName, documentData);
+                        _WorkflowService.AgreementWorkflowReject(id, process.TableName, docuTable.WWFInstanceId, processId, documentData);
                     }
                 }
                 return RedirectToAction("Index", "Document");
             }
 
+            DocumentView docuView = _DocumentService.FindView(id);
             EmplTable emplResult = _EmplService.GetEmployer(docuView.ApplicationUserCreatedId, docuView.CompanyTableId);
             object viewModelResult = InitialViewShowDocument(docuTable, process, docuView, currentUser, emplResult);
             return View("~/Views/Document/ShowDocument.cshtml", viewModelResult);
@@ -341,8 +341,8 @@ namespace RapidDoc.Controllers
                 return RedirectToAction("PageNotFound", "Error");
             }
 
-            ProcessView processView = _ProcessService.FindView(processId);
-            _WorkflowService.AgreementWorkflowWithdraw(documentId, processView.TableName);
+            ProcessTable process = _ProcessService.Find(processId);
+            _WorkflowService.AgreementWorkflowWithdraw(documentId, process.TableName, documentTable.WWFInstanceId, processId);
             var view = ShowDraft(documentId);
             return view;
         }

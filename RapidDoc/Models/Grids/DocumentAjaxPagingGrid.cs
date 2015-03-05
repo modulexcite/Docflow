@@ -39,13 +39,23 @@ namespace RapidDoc.Models.Grids
 
             _displayingItems = base.GetItemsToDisplay().ToList();
             ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            List<EmplTable> cacheEmplList = new List<EmplTable>();
 
             foreach (var displayedItem in _displayingItems)
             {
                 displayedItem.isNotReview = _ReviewDocLogService.isNotReviewDocCurrentUser(displayedItem.Id ?? Guid.Empty, "", user);
                 displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id ?? Guid.Empty, "", user);
+                EmplTable empl = null;
 
-                EmplTable empl = _EmplService.GetEmployer(displayedItem.ApplicationUserCreatedId, displayedItem.CompanyTableId);
+                if (cacheEmplList.Any(x => x.ApplicationUserId == displayedItem.ApplicationUserCreatedId && x.CompanyTableId == displayedItem.CompanyTableId))
+                {
+                    empl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == displayedItem.ApplicationUserCreatedId && x.CompanyTableId == displayedItem.CompanyTableId);
+                }
+                else
+                {
+                    empl = _EmplService.GetEmployer(displayedItem.ApplicationUserCreatedId, displayedItem.CompanyTableId);
+                    cacheEmplList.Add(empl);
+                }
                 displayedItem.FullName = empl.FullName;
                 displayedItem.TitleName = empl.TitleName;
                 displayedItem.DepartmentName = empl.DepartmentName;
