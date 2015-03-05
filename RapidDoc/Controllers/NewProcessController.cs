@@ -44,11 +44,13 @@ namespace RapidDoc.Controllers
             {
                 ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorEmplNotFound, User.Identity.Name));
             }
-            var allCompanyProcesses = _ProcessService.GetAll().Where(x => x.CompanyTableId == user.CompanyTableId).Select(z => z.Id).ToList();
 
+            var allCompanyProcesses = _ProcessService.GetAll().Select(z => z.Id).ToList();
             List<ProcessView> topProcess = new List<ProcessView>();
-            var processes = _DocumentService.GetAll().GroupBy(x => x.ProcessTableId).Where(z => allCompanyProcesses.Contains(z.Key)).Select(g => new { ProcessTableId = g.Key, Count = g.Count() }).OrderByDescending(i => i.Count).Select(y => y.ProcessTableId).ToList();           
+            DateTime startDateTopProcess = DateTime.UtcNow.AddDays(-30);
+            var processes = _DocumentService.GetPartial(x => x.CreatedDate >= startDateTopProcess).GroupBy(x => x.ProcessTableId).Where(z => allCompanyProcesses.Contains(z.Key)).Select(g => new { ProcessTableId = g.Key, Count = g.Count() }).OrderByDescending(i => i.Count).Select(y => y.ProcessTableId).ToList();         
             int num = 0;
+
             if (processes != null)
             {
                 foreach (var processId in processes)
