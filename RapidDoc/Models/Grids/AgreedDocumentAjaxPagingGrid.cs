@@ -7,6 +7,7 @@ using RapidDoc.Models.ViewModels;
 using GridMvc;
 using System.Web.Mvc;
 using RapidDoc.Models.Services;
+using Microsoft.AspNet.Identity;
 
 namespace RapidDoc.Models.Grids
 {
@@ -36,16 +37,29 @@ namespace RapidDoc.Models.Grids
                 return _displayingItems;
 
             _displayingItems = base.GetItemsToDisplay().ToList();
+            ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
+            List<EmplTable> cacheEmplList = new List<EmplTable>();
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
  
             foreach (var displayedItem in _displayingItems)
             {
-                EmplTable empl = _EmplService.GetEmployer(displayedItem.ApplicationUserCreatedId, displayedItem.CompanyTableId);
+                EmplTable empl = null;
+                if (cacheEmplList.Any(x => x.ApplicationUserId == displayedItem.ApplicationUserCreatedId && x.CompanyTableId == displayedItem.CompanyTableId))
+                {
+                    empl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == displayedItem.ApplicationUserCreatedId && x.CompanyTableId == displayedItem.CompanyTableId);
+                }
+                else
+                {
+                    empl = _EmplService.GetEmployer(displayedItem.ApplicationUserCreatedId, displayedItem.CompanyTableId);
+                    cacheEmplList.Add(empl);
+                }
                 displayedItem.FullName = empl.FullName;
                 displayedItem.TitleName = empl.TitleName;
                 displayedItem.DepartmentName = empl.DepartmentName;
+                displayedItem.CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(displayedItem.CreatedDate), timeZoneInfo);
 
                 displayedItem.isNotReview = false;
-                displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id ?? Guid.Empty);
+                displayedItem.SLAStatus = _DocumentService.SLAStatus(displayedItem.Id ?? Guid.Empty, "", user);
             }
 
             return _displayingItems;

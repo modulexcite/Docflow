@@ -40,6 +40,7 @@ namespace RapidDoc.Models.Grids
             _displayingItems = base.GetItemsToDisplay().ToList();
             ApplicationUser user = _AccountService.Find(HttpContext.Current.User.Identity.GetUserId());
             List<EmplTable> cacheEmplList = new List<EmplTable>();
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
 
             foreach (var displayedItem in _displayingItems)
             {
@@ -59,6 +60,7 @@ namespace RapidDoc.Models.Grids
                 displayedItem.FullName = empl.FullName;
                 displayedItem.TitleName = empl.TitleName;
                 displayedItem.DepartmentName = empl.DepartmentName;
+                displayedItem.CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(displayedItem.CreatedDate), timeZoneInfo);
 
                 if (!String.IsNullOrEmpty(displayedItem.DocumentText) && displayedItem.DocumentText.Length > 80)
                 {

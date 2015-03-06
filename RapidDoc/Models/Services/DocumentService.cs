@@ -195,11 +195,30 @@ namespace RapidDoc.Models.Services
             {
                 var items = from document in contextQuery.DocumentTable
                         where !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                            join company in contextQuery.CompanyTable on document.CompanyTableId equals company.Id
+                            join process in contextQuery.ProcessTable on document.ProcessTableId equals process.Id
+                            join createdUser in contextQuery.Users on document.ApplicationUserCreatedId equals createdUser.Id
                         orderby document.ModifiedDate descending
-                        select document;
+                        select new DocumentView
+                        {
+                            ActivityName = document.ActivityName,
+                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
+                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
+                            CompanyTableId = document.CompanyTableId,
+                            CreatedDate = document.CreatedDate,
+                            DocumentNum = document.DocumentNum,
+                            DocumentState = document.DocumentState,
+                            DocumentText = document.DocumentText,
+                            FileId = document.FileId,
+                            Id = document.Id,
+                            ModifiedDate = document.ModifiedDate,
+                            ProcessTableId = document.ProcessTableId,
+                            AliasCompanyName = company.AliasCompanyName,
+                            ProcessName = process.ProcessName,
+                            CreatedBy = createdUser.UserName
+                        };
 
-                var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
-                return itemsResult.AsQueryable();
+                return items.AsQueryable();
             }
             else
             {
@@ -217,11 +236,29 @@ namespace RapidDoc.Models.Services
                                 )
                                 &&
                                 !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                            join company in contextQuery.CompanyTable on document.CompanyTableId equals company.Id
+                            join process in contextQuery.ProcessTable on document.ProcessTableId equals process.Id
+                            join createdUser in contextQuery.Users on document.ApplicationUserCreatedId equals createdUser.Id
                             orderby String.IsNullOrEmpty(document.ActivityName), document.ModifiedDate descending
-                            select document;
+                            select new DocumentView {
+                                ActivityName = document.ActivityName,
+                                ApplicationUserCreatedId = document.ApplicationUserCreatedId,
+                                ApplicationUserModifiedId = document.ApplicationUserModifiedId,
+                                CompanyTableId = document.CompanyTableId,
+                                CreatedDate = document.CreatedDate,
+                                DocumentNum = document.DocumentNum,
+                                DocumentState = document.DocumentState,
+                                DocumentText = document.DocumentText,
+                                FileId = document.FileId,
+                                Id = document.Id,
+                                ModifiedDate = document.ModifiedDate,
+                                ProcessTableId = document.ProcessTableId,
+                                AliasCompanyName = company.AliasCompanyName,
+                                ProcessName = process.ProcessName,
+                                CreatedBy = createdUser.UserName
+                            };
 
-                var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
-                return itemsResult.AsQueryable();
+                return items.AsQueryable();
             }
         }
 
@@ -234,12 +271,31 @@ namespace RapidDoc.Models.Services
             if (UserManager.IsInRole(user.Id, "Administrator"))
             {
                 var items = from document in contextQuery.DocumentTable
-                       where (contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                       orderby document.ModifiedDate descending
-                       select document;
+                        where (contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                            join company in contextQuery.CompanyTable on document.CompanyTableId equals company.Id
+                            join process in contextQuery.ProcessTable on document.ProcessTableId equals process.Id
+                            join createdUser in contextQuery.Users on document.ApplicationUserCreatedId equals createdUser.Id
+                        orderby document.ModifiedDate descending
+                        select new DocumentView
+                        {
+                            ActivityName = document.ActivityName,
+                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
+                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
+                            CompanyTableId = document.CompanyTableId,
+                            CreatedDate = document.CreatedDate,
+                            DocumentNum = document.DocumentNum,
+                            DocumentState = document.DocumentState,
+                            DocumentText = document.DocumentText,
+                            FileId = document.FileId,
+                            Id = document.Id,
+                            ModifiedDate = document.ModifiedDate,
+                            ProcessTableId = document.ProcessTableId,
+                            AliasCompanyName = company.AliasCompanyName,
+                            ProcessName = process.ProcessName,
+                            CreatedBy = createdUser.UserName
+                       };
 
-                var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
-                return itemsResult.AsQueryable();
+                return items.AsQueryable();
             }
             else
             {
@@ -257,11 +313,30 @@ namespace RapidDoc.Models.Services
                                ))
                            )
                            && (contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
-                            orderby document.ModifiedDate descending
-                       select document;
+                            join company in contextQuery.CompanyTable on document.CompanyTableId equals company.Id
+                            join process in contextQuery.ProcessTable on document.ProcessTableId equals process.Id
+                            join createdUser in contextQuery.Users on document.ApplicationUserCreatedId equals createdUser.Id
+                        orderby document.ModifiedDate descending
+                        select new DocumentView
+                        {
+                            ActivityName = document.ActivityName,
+                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
+                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
+                            CompanyTableId = document.CompanyTableId,
+                            CreatedDate = document.CreatedDate,
+                            DocumentNum = document.DocumentNum,
+                            DocumentState = document.DocumentState,
+                            DocumentText = document.DocumentText,
+                            FileId = document.FileId,
+                            Id = document.Id,
+                            ModifiedDate = document.ModifiedDate,
+                            ProcessTableId = document.ProcessTableId,
+                            AliasCompanyName = company.AliasCompanyName,
+                            ProcessName = process.ProcessName,
+                            CreatedBy = createdUser.UserName
+                        };
 
-                var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
-                return itemsResult.AsQueryable();
+                return items.AsQueryable();
             }
         }
 
@@ -271,15 +346,34 @@ namespace RapidDoc.Models.Services
             ApplicationDbContext contextQuery = _uow.GetDbContext<ApplicationDbContext>();
 
             var items = from document in contextQuery.DocumentTable
-                   where
+                    where
                        (contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == user.Id && x.TrackerType == TrackerType.Approved))
                        &&
                        !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
+                        join company in contextQuery.CompanyTable on document.CompanyTableId equals company.Id
+                        join process in contextQuery.ProcessTable on document.ProcessTableId equals process.Id
+                        join createdUser in contextQuery.Users on document.ApplicationUserCreatedId equals createdUser.Id
                         orderby document.ModifiedDate descending
-                   select document;
+                    select new DocumentView
+                    {
+                        ActivityName = document.ActivityName,
+                        ApplicationUserCreatedId = document.ApplicationUserCreatedId,
+                        ApplicationUserModifiedId = document.ApplicationUserModifiedId,
+                        CompanyTableId = document.CompanyTableId,
+                        CreatedDate = document.CreatedDate,
+                        DocumentNum = document.DocumentNum,
+                        DocumentState = document.DocumentState,
+                        DocumentText = document.DocumentText,
+                        FileId = document.FileId,
+                        Id = document.Id,
+                        ModifiedDate = document.ModifiedDate,
+                        ProcessTableId = document.ProcessTableId,
+                        AliasCompanyName = company.AliasCompanyName,
+                        ProcessName = process.ProcessName,
+                        CreatedBy = createdUser.UserName
+                    };
 
-            var itemsResult = Mapper.Map<IEnumerable<DocumentTable>, IEnumerable<DocumentView>>(items);
-            return itemsResult.AsQueryable();
+            return items.AsQueryable();
         }
 
         public IEnumerable<DocumentTable> GetPartial(Expression<Func<DocumentTable, bool>> predicate)

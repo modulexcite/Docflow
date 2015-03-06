@@ -36,16 +36,17 @@ namespace RapidDoc.Controllers
             RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(dbContext));
         }
 
-        public ActionResult Index()
+        [OutputCache(Duration = 86400, VaryByParam = "id")]
+        public ActionResult Index(string id)
         {
-            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+            ApplicationUser user = _AccountService.Find(id);
             EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == user.Id && x.Enable == true );
             if (emplTable == null)
             {
                 ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorEmplNotFound, User.Identity.Name));
             }
 
-            var allCompanyProcesses = _ProcessService.GetAll().Select(z => z.Id).ToList();
+            var allCompanyProcesses = _ProcessService.GetPartialIntercompany(x => x.CompanyTableId == user.CompanyTableId && x.isApproved == true).Select(z => z.Id).ToList();
             List<ProcessView> topProcess = new List<ProcessView>();
             DateTime startDateTopProcess = DateTime.UtcNow.AddDays(-30);
             var processes = _DocumentService.GetPartial(x => x.CreatedDate >= startDateTopProcess).GroupBy(x => x.ProcessTableId).Where(z => allCompanyProcesses.Contains(z.Key)).Select(g => new { ProcessTableId = g.Key, Count = g.Count() }).OrderByDescending(i => i.Count).Select(y => y.ProcessTableId).ToList();         
@@ -70,7 +71,6 @@ namespace RapidDoc.Controllers
                     }
                 }
             }
-
             ViewBag.TopProcess = topProcess;
 
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
