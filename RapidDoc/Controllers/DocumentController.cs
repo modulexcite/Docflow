@@ -249,7 +249,8 @@ namespace RapidDoc.Controllers
             viewModel.DocumentView = docuView;
             viewModel.docData = _DocumentService.GetDocumentView(documentTable.RefDocumentId, process.TableName);
             viewModel.fileId = docuView.FileId;
-            viewModel.WFTrackerItems = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == documentTable.Id);
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(userTable.TimeZoneId);
+            viewModel.WFTrackerItems = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == documentTable.Id, timeZoneInfo);
 
             ViewBag.CreatedDate = _SystemService.ConvertDateTimeToLocal(userTable, docuView.CreatedDate);
             if (emplTable != null)

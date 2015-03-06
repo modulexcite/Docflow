@@ -159,6 +159,7 @@ namespace RapidDoc.Controllers
         }
 
         [AllowAnonymous]
+        [OutputCache(Duration = 43200, VaryByParam = "none")]
         public ActionResult GetCompanyList()
         {
             return PartialView("_CompanyList", _CompanyService.GetAllView());

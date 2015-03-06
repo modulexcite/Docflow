@@ -16,7 +16,7 @@ namespace RapidDoc.Models.Services
     {
         IEnumerable<WFTrackerTable> GetAll();
         IEnumerable<WFTrackerTable> GetPartial(Expression<Func<WFTrackerTable, bool>> predicate);
-        IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate);
+        IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate, TimeZoneInfo currentTimeZoneInfo);
         bool Contains(Expression<Func<WFTrackerTable, bool>> predicate);
         WFTrackerTable FirstOrDefault(Expression<Func<WFTrackerTable, bool>> predicate);
         void SaveDomain(WFTrackerTable domainTable, string currentUserId = "");
@@ -50,7 +50,7 @@ namespace RapidDoc.Models.Services
         {
             return repo.FindAll(predicate);
         }
-        public IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate)
+        public IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate, TimeZoneInfo currentTimeZoneInfo)
         {
             IEnumerable<WFTrackerTable> trackerDomainItems = GetPartial(predicate).OrderBy(x => x.LineNum);
             List<WFTrackerListView> trackerViewItems = new List<WFTrackerListView>();
@@ -58,6 +58,7 @@ namespace RapidDoc.Models.Services
             int tmpNum;
             string workers;
             string prevActivityID = String.Empty;
+            List<EmplTable> cacheEmplList = new List<EmplTable>();
 
             foreach (var item in trackerDomainItems)
             {
@@ -65,7 +66,16 @@ namespace RapidDoc.Models.Services
                
                 foreach(var userItem in item.Users)
                 {
-                    var empl = repoEmpl.Find(x => x.ApplicationUserId == userItem.UserId);
+                    EmplTable empl = null;
+                    if (cacheEmplList.Any(x => x.ApplicationUserId == userItem.UserId))
+                    {
+                        empl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == userItem.UserId);
+                    }
+                    else
+                    {
+                        empl = repoEmpl.Find(x => x.ApplicationUserId == userItem.UserId);
+                        cacheEmplList.Add(empl);
+                    }
 
                     if (workers != String.Empty)
                     {
@@ -125,12 +135,52 @@ namespace RapidDoc.Models.Services
 
                 if (item.SignDate != null)
                 {
-                    var signEmpl = repoEmpl.Find(x => x.ApplicationUserId == item.SignUserId);
-                    trackerViewItems.Add(new WFTrackerListView { ActivityName = item.ActivityName, RowNum = tmpNum, Executors = signEmpl.FullName, SignDate = item.SignDate, TrackerType = item.TrackerType, ActivityID = item.ActivityID, SLAOffset = item.SLAOffset, CreatedDate = item.CreatedDate, PerformToDate = item.PerformToDate() });
+                    EmplTable signEmpl = null;
+                    if (cacheEmplList.Any(x => x.ApplicationUserId == item.SignUserId))
+                    {
+                        signEmpl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == item.SignUserId);
+                    }
+                    else
+                    {
+                        signEmpl = repoEmpl.Find(x => x.ApplicationUserId == item.SignUserId);
+                        cacheEmplList.Add(signEmpl);
+                    }
+
+                    WFTrackerListView model = new WFTrackerListView
+                    {
+                        ActivityName = item.ActivityName,
+                        RowNum = tmpNum,
+                        Executors = signEmpl.FullName,
+                        TrackerType = item.TrackerType,
+                        ActivityID = item.ActivityID,
+                        SLAOffset = item.SLAOffset,
+                        CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(item.CreatedDate, currentTimeZoneInfo)
+                    };
+                    model.SignDate = TimeZoneInfo.ConvertTimeFromUtc(item.SignDate ?? DateTime.MinValue, currentTimeZoneInfo);
+                    DateTime? performToDate = item.PerformToDate();
+                    if (performToDate != null)
+                        model.PerformToDate = TimeZoneInfo.ConvertTimeFromUtc(performToDate ?? DateTime.MinValue, currentTimeZoneInfo);
+                    
+                    trackerViewItems.Add(model);
                 }
                 else
                 {
-                    trackerViewItems.Add(new WFTrackerListView { ActivityName = item.ActivityName, RowNum = tmpNum, Executors = workers, TrackerType = item.TrackerType, ManualExecutor = item.ManualExecutor, ActivityID = item.ActivityID, SLAOffset = item.SLAOffset, CreatedDate = item.CreatedDate, PerformToDate = item.PerformToDate() });
+                    WFTrackerListView model = new WFTrackerListView
+                    {
+                        ActivityName = item.ActivityName,
+                        RowNum = tmpNum,
+                        Executors = workers,
+                        TrackerType = item.TrackerType,
+                        ManualExecutor = item.ManualExecutor,
+                        ActivityID = item.ActivityID,
+                        SLAOffset = item.SLAOffset,
+                        CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(item.CreatedDate, currentTimeZoneInfo)
+                    };
+                    DateTime? performToDate = item.PerformToDate();
+                    if (performToDate != null)
+                        model.PerformToDate = TimeZoneInfo.ConvertTimeFromUtc(performToDate ?? DateTime.MinValue, currentTimeZoneInfo);
+
+                    trackerViewItems.Add(model);
                 }
             }
 
