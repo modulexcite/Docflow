@@ -90,6 +90,9 @@ namespace RapidDoc
                         "~/Scripts/html5shiv.js",
                         "~/Scripts/respond.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/pnotify").Include(
+                        "~/Scripts/pnotify.custom.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/main").Include(
                         "~/Scripts/main.js"));
         }

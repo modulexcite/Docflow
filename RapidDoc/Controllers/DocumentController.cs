@@ -24,6 +24,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Threading.Tasks;
 using RapidDoc.Attributes;
+using System.Configuration;
 
 namespace RapidDoc.Controllers
 {
@@ -253,6 +254,7 @@ namespace RapidDoc.Controllers
             viewModel.WFTrackerItems = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == documentTable.Id, timeZoneInfo);
 
             ViewBag.CreatedDate = _SystemService.ConvertDateTimeToLocal(userTable, docuView.CreatedDate);
+            ViewBag.DocumentUrl = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuView.AliasCompanyName + "/Document/ShowDocument/" + docuView.Id + "?isAfterView=true";
             if (emplTable != null)
             {
                 ViewBag.Initiator = emplTable.ApplicationUserId != null ? emplTable.FullName : docuView.ApplicationUserCreatedId;
@@ -436,6 +438,7 @@ namespace RapidDoc.Controllers
             viewModel.ProcessTemplates = _DocumentService.GetAllTemplatesDocument(documentTable.ProcessTableId);
 
             ViewBag.CreatedDate = _SystemService.ConvertDateTimeToLocal(currentUser, docuView.CreatedDate);
+            ViewBag.DocumentUrl = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuView.AliasCompanyName + "/Document/ShowDraft/" + docuView.Id + "?isAfterView=true";
             if (emplTable != null)
             {
                 ViewBag.Initiator = emplTable.ApplicationUserId != null ? emplTable.FullName : docuView.ApplicationUserCreatedId;
