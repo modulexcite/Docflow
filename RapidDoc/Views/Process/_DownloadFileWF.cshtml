@@ -1,4 +1,5 @@
 ﻿@model List<RapidDoc.Models.DomainModels.FileTable>
+@using RapidDoc.Extensions;
 
 @foreach (var item in Model)
 {
@@ -8,6 +9,7 @@
         <td class="edit versionName">@item.VersionName</td>
         <td class="edit version">@item.Version</td>
         <td class="edit versionComments">@item.VersionComments</td>
+        <td class="edit Date">@Html.DateTimeLocalFor(model => item.CreatedDate)</td>
         <td><a href=@Url.Action("DeleteFileWF", new { id = item.Id, processId = item.DocumentFileId })><span class="fa fa-trash-o fa-lg"></span></a></td>
     </tr>
 }
