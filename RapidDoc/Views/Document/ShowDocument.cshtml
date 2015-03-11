@@ -11,8 +11,9 @@
             {
                 <span class="fa fa-archive"></span>
             }
-
-            @ViewBag.Title <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
+            <a href="@ViewBag.DocumentUrl" id="documenturl" class="hidden-print">#@Model.DocumentView.DocumentNum - @Model.ProcessView.ProcessName</a>
+            <span class="visible-print-inline">@Model.DocumentView.DocumentNum - @Model.ProcessView.ProcessName</span>
+            <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
         </h4>
     </div>
     <div class="col-xs-6">
@@ -441,6 +442,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/editentity")
     @Scripts.Render("~/bundles/fileupload")
+    @Scripts.Render("~/bundles/pnotify")
 }
 @section jsinit {
     var urlFileDownload = "@Url.Action("GetAllFileDocument", "Document", new { id = Model.fileId })";
@@ -465,6 +467,34 @@
                 e.preventDefault();
                 document.getElementById('saveCommentBtn').click();
             }
+        });
+
+        $('#documenturl').click(function (e) {
+            var doc = document;
+            var text = this;
+
+            if (doc.body.createTextRange) { // ms
+                var range = doc.body.createTextRange();
+                range.moveToElementText(text);
+                range.select();
+            } else if (window.getSelection) { // moz, opera, webkit
+                var selection = window.getSelection();
+                var range = doc.createRange();
+                range.selectNodeContents(text);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+
+            new PNotify({
+                title: '@UIElementRes.UIElement.LinkToDocument',
+                text: '@UIElementRes.UIElement.LinkToDocumentText',
+                type: 'info',
+                delay: 3000,
+                animate_speed: 'fast',
+                addclass: 'hidden-print'
+            });
+
+            return false;
         });
     });
 

@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using Microsoft.AspNet.Identity;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
 
 namespace RapidDoc.Models.Services
 {
@@ -131,14 +132,39 @@ namespace RapidDoc.Models.Services
         public string PrepareSearchString(dynamic docModel, string actionModelName)
         {
             Type type = Type.GetType("RapidDoc.Models.ViewModels." + actionModelName + "_View");
-            var properties = type.GetProperties().Where(x => x.PropertyType == typeof(string));
+            var properties = type.GetProperties();
             string allStringData = String.Empty;
             string regex = @"(<.+?>|&nbsp;)";
             string regexGuid = @"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})";
 
             foreach (PropertyInfo property in properties)
             {
-                if (property.PropertyType == typeof(string))
+                if (property.PropertyType.IsEnum)
+                {
+                    string enumValue = property.GetValue(docModel, null).ToString();
+                    MemberInfo member = property.PropertyType.GetMember(enumValue)[0];
+
+                    var attrs = member.GetCustomAttributes(typeof(DisplayAttribute), false);
+                    string outString = String.Empty;
+                    if (attrs.Any())
+                    {
+                        var displayAttr = ((DisplayAttribute)attrs[0]);
+
+                        outString = displayAttr.Name;
+
+                        if (displayAttr.ResourceType != null)
+                        {
+                            outString = displayAttr.GetName();
+                        }
+                    }
+                    else
+                    {
+                        outString = enumValue;
+                    }
+
+                    allStringData = allStringData + outString + "|";
+                }
+                else if (property.PropertyType == typeof(string))
                 {
                     var value = property.GetValue(docModel, null);
 
