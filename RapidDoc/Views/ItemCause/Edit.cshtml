@@ -1,0 +1,55 @@
+﻿@model RapidDoc.Models.ViewModels.ItemCauseView
+@using RapidDoc.Extensions;
+
+@{
+    ViewBag.Title = UIElementRes.UIElement.Edit;
+}
+
+<h2>@UIElementRes.UIElement.Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.CaseNumber)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.CaseNumber, new { @class = "form-control", @size = 70, @maxlength = 70, placeholder = "08-01", @autofocus = "required", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.CaseNumber)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.CaseName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.CaseName, new { @class = "form-control", @size = 70, @maxlength = 70, placeholder = "Служебные записки", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.CaseName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DepartmentName)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("DepartmentTableId", (IEnumerable<SelectListItem>)ViewBag.DepartmentList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.DepartmentTableId)
+        </div>
+
+        @{Html.RenderPartial("SaveBackBtn");}
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+@section jslaunch {
+    <script type="text/javascript">
+$(function () {
+    selectpicker_init();
+});
+    </script>
+}

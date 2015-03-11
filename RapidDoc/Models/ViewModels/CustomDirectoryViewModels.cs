@@ -50,4 +50,18 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Проживание норма")]
         public int ResidenceRate { get; set; }
     }
+
+    public class ItemCauseView: BasicCompanyNullView
+    {
+        [Display(Name = "№ дела")]
+        public string CaseNumber { get; set; }
+
+        [Display(Name = "Название дела")]
+        public string CaseName { get; set; }
+
+        public Guid? DepartmentTableId { get; set; }
+
+        [Display(Name = "DepartmentName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string DepartmentName { get; set; }
+    }
 }

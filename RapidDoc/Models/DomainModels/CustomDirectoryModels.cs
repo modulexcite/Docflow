@@ -37,4 +37,24 @@ namespace RapidDoc.Models.DomainModels
         public int DayRate { get; set; }
         public int ResidenceRate { get; set; }
     }
+
+    public class ItemCauseTable: BasicCompanyNullTable
+    {
+        public string CaseNumber { get; set; }
+        public string CaseName { get; set; }
+
+        public Guid? DepartmentTableId { get; set; }
+        public virtual DepartmentTable DepartmentTable { get; set; }
+
+        public  string Departmentname
+        {
+            get {
+                    if (this.DepartmentTable != null)
+                        return this.DepartmentTable.DepartmentName;
+
+                    return String.Empty;
+                }
+        }
+        
+    }
 }
