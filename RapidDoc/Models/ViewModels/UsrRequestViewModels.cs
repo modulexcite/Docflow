@@ -8378,4 +8378,12 @@ namespace RapidDoc.Models.ViewModels
         public string Phone { get; set; } 
     }
     #endregion
+
+    #region Служебные записки
+
+    public class USR_OFM_UIT_OfficeMemo_View : BasicDocumantOfficeMemoView
+    {
+    
+    }
+    #endregion
 }

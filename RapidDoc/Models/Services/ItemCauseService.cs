@@ -9,6 +9,7 @@ using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.ViewModels;
 using RapidDoc.Models.Repository;
 using RapidDoc.Models.Infrastructure;
+using System.Web.Mvc;
 
 
 namespace RapidDoc.Models.Services
@@ -26,6 +27,7 @@ namespace RapidDoc.Models.Services
         void Delete(Guid id);
         ItemCauseTable Find(Guid id);
         ItemCauseView FindView(Guid id);
+        SelectList GetDropListItemCause(Guid? id);
     }
 
     public class ItemCauseService : IItemCauseService
@@ -121,6 +123,12 @@ namespace RapidDoc.Models.Services
         public ItemCauseView FindView(Guid id)
         {
             return Mapper.Map<ItemCauseTable, ItemCauseView>(Find(id));
+        }
+
+        public SelectList GetDropListItemCause(Guid? id)
+        {
+            var items = GetAllView().ToList();
+            return new SelectList(items, "Id", "CaseName", id);
         }
     }
 }

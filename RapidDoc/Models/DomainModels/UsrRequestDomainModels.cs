@@ -6183,5 +6183,13 @@ namespace RapidDoc.Models.DomainModels
         public string Phone { get; set; }
     }
     #endregion
+
+    #region Служебные записки
+
+    public class USR_OFM_UIT_OfficeMemo_Table : BasicDocumantOfficeMemoTable
+    {
+
+    }
+    #endregion
 }
     

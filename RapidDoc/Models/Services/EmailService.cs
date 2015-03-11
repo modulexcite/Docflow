@@ -500,9 +500,9 @@ namespace RapidDoc.Models.Services
                 filterTexts.Add(reportProcess.FilterText);
             }
 
-            if (RoleManager.RoleExists("Administrator"))
+            if (RoleManager.RoleExists("SetupAdministrator"))
             {
-                var names = RoleManager.FindByName("Administrator").Users;
+                var names = RoleManager.FindByName("SetupAdministrator").Users;
                 if (names != null && names.Count() > 0)
                 {
                     foreach (IdentityUserRole name in names)

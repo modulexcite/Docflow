@@ -1,0 +1,33 @@
+﻿@model RapidDoc.Models.ViewModels.USR_OFM_UIT_OfficeMemo_View
+@using RapidDoc.Extensions;
+
+@Html.ValidationSummary(true)
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Folder)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => model.Folder, new { @class = "selectpicker" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.ItemCauseNumber)
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.ItemCauseTableId, (IEnumerable<SelectListItem>)ViewBag.ItemCauseList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
+    @Html.ValidationMessageFor(model => model.ItemCauseTableId)
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.DocumentTitle)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.DocumentTitle, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Тема документа " })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.MainField)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.MainField, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Основное поле" })
+</div>
