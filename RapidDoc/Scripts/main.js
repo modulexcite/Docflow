@@ -130,21 +130,23 @@ function summernote_init(lang) {
 
     if ($(".summernote")[0]) {
         $('.summernote').summernote({
-            height: 300,
+            height: 350,
             focus: true,
             lang: lang,
-
+            defaultFontName: 'Arial',
             toolbar: [
                 ['style', ['style']], // no style button
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['fontsize', ['fontsize']],
                 //['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['height', ['height']],
-                //['insert', ['picture', 'link']], // no insert buttons
+                //['height', ['height']],
+                ['insert', ['link']], // no insert buttons
                 ['table', ['table']], // no table button
+                ['misc', ['undo', 'redo']]
                 //['help', ['help']] //no help button
-            ]
+            ],
+            styleTags: ['p', 'h4', 'h6']
         });
     }
 }

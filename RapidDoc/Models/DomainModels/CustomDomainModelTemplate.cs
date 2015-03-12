@@ -23,7 +23,7 @@ namespace RapidDoc.Models.DomainModels
         public string Users { get; set; }
     }
 
-    public class BasicDocumantOfficeMemoTable : BasicDocumentTable
+    public abstract class BasicDocumantOfficeMemoTable : BasicDocumentTable
     {
         public Folder Folder { get; set; }
 
@@ -40,6 +40,10 @@ namespace RapidDoc.Models.DomainModels
                 return String.Empty;
             }
         }
+
+        public string DocumentWhom { get; set; }
+
+        public string DocumentCopy { get; set; }
 
         [Required]
         public string DocumentTitle { get; set; }

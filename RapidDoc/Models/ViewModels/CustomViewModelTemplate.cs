@@ -25,7 +25,7 @@ namespace RapidDoc.Models.ViewModels
         public string Users { get; set; }
     }
 
-    public class BasicDocumantOfficeMemoView : BasicDocumentView
+    public abstract class BasicDocumantOfficeMemoView : BasicDocumentView
     {
         [Display(Name = "Папка")]
         public Folder Folder { get; set; }
@@ -35,6 +35,12 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Номенклатурное дело")]
         public string ItemCauseNumber { get; set; }
+
+        [Display(Name = "Кому")]
+        public string DocumentWhom { get; set; }
+
+        [Display(Name = "Копия")]
+        public string DocumentCopy { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Тема документа")]

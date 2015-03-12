@@ -3,31 +3,47 @@
 
 @Html.ValidationSummary(true)
 
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.Folder)
+<div class="row">
+    <div class="col-md-4">
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.Folder)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => model.Folder, new { @class = "selectpickerfull" })
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ItemCauseNumber)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.ItemCauseTableId, (IEnumerable<SelectListItem>)ViewBag.ItemCauseList, new { @class = "selectpickerfull", @data_live_search = "true", @data_size = "10" })
+            @Html.ValidationMessageFor(model => model.ItemCauseTableId)
+        </div>
+    </div>
 </div>
+<br />
 <div class="editor-field">
-    @Html.EnumDropDownListFor(model => model.Folder, new { @class = "selectpicker" })
+    <div class="input-group input-group-sm">
+        <span class="input-group-addon" id="sizing-addon1"><strong>Кому:&nbsp;&nbsp;</strong></span>
+        @Html.TextBoxFor(model => Model.DocumentWhom, new { @class = "form-control", placeholder = "Кому", aria_describedby = "sizing-addon1" })
+    </div>
 </div>
-
-<div class="editor-label">
-    @Html.LabelFor(model => model.ItemCauseNumber)
-</div>
+<br />
 <div class="editor-field">
-    @Html.DropDownListFor(model => model.ItemCauseTableId, (IEnumerable<SelectListItem>)ViewBag.ItemCauseList, new { @class = "selectpicker", @data_live_search = "true", @data_size = "10" })
-    @Html.ValidationMessageFor(model => model.ItemCauseTableId)
+    <div class="input-group input-group-sm">
+        <span class="input-group-addon" id="sizing-addon2"><strong>Копия:</strong></span>
+        @Html.TextBoxFor(model => Model.DocumentCopy, new { @class = "form-control", placeholder = "Копия", aria_describedby = "sizing-addon2" })
+    </div>
 </div>
-
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.DocumentTitle)
-</div>
+<br />
 <div class="editor-field">
-    @Html.TextBoxFor(model => Model.DocumentTitle, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Тема документа " })
+    <div class="input-group input-group-sm">
+        <span class="input-group-addon" id="sizing-addon3"><strong>Тема:<span class="required">*</span></strong>&nbsp;</span>
+        @Html.TextBoxFor(model => Model.DocumentTitle, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Тема", aria_describedby = "sizing-addon3", autofocus = "required" })
+    </div>
 </div>
-
-<div class="editor-label">
-    @Html.LabelForRequired(model => Model.MainField)
-</div>
+<br />
 <div class="editor-field">
-    @Html.TextBoxFor(model => Model.MainField, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Основное поле" })
+    @Html.TextAreaFor(model => Model.MainField, new { @class = "form-control summernote" })
 </div>
