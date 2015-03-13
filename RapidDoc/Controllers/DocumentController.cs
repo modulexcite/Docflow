@@ -532,7 +532,6 @@ namespace RapidDoc.Controllers
 
         public ActionResult GetDocumentData(dynamic modelDoc, string tableName, string viewType)
         {
-            ViewBag.ItemCauseList = _ItemCauseService.GetDropListItemCause(null);
             return PartialView("~/Views/Custom/" + tableName + "_" + viewType + ".cshtml", modelDoc);
         }
 

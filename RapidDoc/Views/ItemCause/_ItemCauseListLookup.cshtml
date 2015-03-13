@@ -1,0 +1,16 @@
+﻿@model IEnumerable<RapidDoc.Models.ViewModels.ItemCauseView>
+@{int num = 0;}
+
+@foreach (var itemGroup in Model.GroupBy(x => x.DepartmentName))
+{
+    num++;
+    <p><a href="#" data-toggle="collapse" data-target="#collapseArea_@num" aria-expanded="false" aria-controls="collapseArea_@num"><strong>@itemGroup.Key</strong></a></p>
+    <div class="collapse" id="collapseArea_@num">
+        <div class="well well-sm">
+            @foreach (var item in Model.Where(x => x.DepartmentName == itemGroup.Key))
+            {
+                <p><a href="#" class="itemcauseslink" data-dismiss="modal" data-itemid="@item.Id"><span class="text-success">@item.CaseNumber</span> - @item.CaseName</a></p>
+            }
+        </div>
+    </div>
+}
