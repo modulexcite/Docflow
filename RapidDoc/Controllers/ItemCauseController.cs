@@ -43,6 +43,7 @@ namespace RapidDoc.Controllers
             return PartialView("_ItemCauseGrid", grid);
         }
 
+        [AllowAnonymous]
         public ActionResult ItemCausesListLookup()
         {
             var items = _Service.GetAllView();

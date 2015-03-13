@@ -37,13 +37,15 @@
 
 function selectpicker_init() {
     $('.selectpicker').selectpicker({
-        width: '30%'
+        width: '30%',
+        style: 'btn btn-default btn-sm'
     });
 }
 
 function selectpickerfull_init() {
     $('.selectpickerfull').selectpicker({
-        width: '100%'
+        width: '100%',
+        style: 'btn btn-default btn-sm'
     });
 }
 
