@@ -24,12 +24,16 @@ namespace RapidDoc.Controllers
     {
         private readonly IItemCauseService _Service;
         private readonly IDepartmentService _DepartmentService;
+        private readonly IAccountService _AccountService;
+        private readonly IEmplService _EmplService;
 
-        public ItemCauseController(IItemCauseService Service, ICompanyService companyService, IAccountService accountService, IDepartmentService departmentService)
+        public ItemCauseController(IItemCauseService Service, ICompanyService companyService, IAccountService accountService, IDepartmentService departmentService, IEmplService emplService)
             : base(companyService, accountService)
         {
             _Service = Service;
             _DepartmentService = departmentService;
+            _EmplService = emplService;
+            _AccountService = accountService;
         }
         
         public ActionResult Index()
@@ -46,7 +50,10 @@ namespace RapidDoc.Controllers
         [AllowAnonymous]
         public ActionResult ItemCausesListLookup()
         {
-            var items = _Service.GetAllView();
+            ApplicationUser currentApplUser = _AccountService.FirstOrDefault(user => user.UserName == User.Identity.Name);
+            EmplTable emplTable = _EmplService.FirstOrDefault(empl => empl.ApplicationUserId == currentApplUser.Id);
+            List<ItemCauseView> items = _Service.GetCurrentUserItemsCause(_Service.GetAllView().ToList(), _DepartmentService.FirstOrDefault(department => department.Id == emplTable.DepartmentTableId));
+
             return PartialView("_ItemCauseListLookup", items);
         }
 

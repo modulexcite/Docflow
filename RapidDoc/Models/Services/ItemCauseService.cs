@@ -27,17 +27,20 @@ namespace RapidDoc.Models.Services
         void Delete(Guid id);
         ItemCauseTable Find(Guid id);
         ItemCauseView FindView(Guid id);
+        List<ItemCauseView> GetCurrentUserItemsCause(List<ItemCauseView> list, DepartmentTable departmentTable);
     }
 
     public class ItemCauseService : IItemCauseService
     {
         private IRepository<ItemCauseTable> repo;
         private IUnitOfWork uow;
+        private readonly IDepartmentService _DepartmentService;
 
-        public ItemCauseService(IUnitOfWork _uow)
+        public ItemCauseService(IUnitOfWork _uow, IDepartmentService departmentService)
         {
             uow = _uow;
             repo = uow.GetRepository<ItemCauseTable>();
+            _DepartmentService = departmentService;
         }
 
         public IEnumerable<ItemCauseTable> GetAll()
@@ -122,6 +125,22 @@ namespace RapidDoc.Models.Services
         public ItemCauseView FindView(Guid id)
         {
             return Mapper.Map<ItemCauseTable, ItemCauseView>(Find(id));
+        }
+
+
+        public List<ItemCauseView> GetCurrentUserItemsCause(List<ItemCauseView> list, DepartmentTable departmentTable)
+        {
+            if (departmentTable == null) return list;
+            if (list.Exists(item => item.DepartmentTableId == departmentTable.Id))
+            {
+                list.Where(item => item.DepartmentTableId == departmentTable.Id).ToList().ForEach(x => x.IsCurrentUserDepartment = true);
+
+                return list;
+            }
+            else
+            {
+                return this.GetCurrentUserItemsCause(list, _DepartmentService.FirstOrDefault(depr => depr.Id == departmentTable.ParentDepartmentId));
+            }
         }
     }
 }
