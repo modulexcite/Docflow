@@ -603,6 +603,197 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Местоположение")]
         public ServiceIncidientLocation ServiceIncidientLocation { get; set; }
     }
+
+    public class USR_REQ_IT_CTP_RequestTRU_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Представитель ФЭУ")]
+        public string UserChooseManual1 { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цех, участок")]
+        public string Department { get; set; }
+
+        public string ItemName1 { get; set; }
+        public string ItemName2 { get; set; }
+        public string ItemName3 { get; set; }
+        public string ItemName4 { get; set; }
+        public string ItemName5 { get; set; }
+        public string ItemName6 { get; set; }
+        public string ItemName7 { get; set; }
+        public string ItemName8 { get; set; }
+        public string ItemName9 { get; set; }
+        public string ItemName10 { get; set; }
+        public string ItemName11 { get; set; }
+        public string ItemName12 { get; set; }
+        public string ItemName13 { get; set; }
+        public string ItemName14 { get; set; }
+        public string ItemName15 { get; set; }
+        public string ItemName16 { get; set; }
+        public string ItemName17 { get; set; }
+
+        public string Unit1 { get; set; }
+        public string Unit2 { get; set; }
+        public string Unit3 { get; set; }
+        public string Unit4 { get; set; }
+        public string Unit5 { get; set; }
+        public string Unit6 { get; set; }
+        public string Unit7 { get; set; }
+        public string Unit8 { get; set; }
+        public string Unit9 { get; set; }
+        public string Unit10 { get; set; }
+        public string Unit11 { get; set; }
+        public string Unit12 { get; set; }
+        public string Unit13 { get; set; }
+        public string Unit14 { get; set; }
+        public string Unit15 { get; set; }
+        public string Unit16 { get; set; }
+        public string Unit17 { get; set; }
+
+        public string Qty1 { get; set; }
+        public string Qty2 { get; set; }
+        public string Qty3 { get; set; }
+        public string Qty4 { get; set; }
+        public string Qty5 { get; set; }
+        public string Qty6 { get; set; }
+        public string Qty7 { get; set; }
+        public string Qty8 { get; set; }
+        public string Qty9 { get; set; }
+        public string Qty10 { get; set; }
+        public string Qty11 { get; set; }
+        public string Qty12 { get; set; }
+        public string Qty13 { get; set; }
+        public string Qty14 { get; set; }
+        public string Qty15 { get; set; }
+        public string Qty16 { get; set; }
+        public string Qty17 { get; set; }
+
+        public string Price1 { get; set; }
+        public string Price2 { get; set; }
+        public string Price3 { get; set; }
+        public string Price4 { get; set; }
+        public string Price5 { get; set; }
+        public string Price6 { get; set; }
+        public string Price7 { get; set; }
+        public string Price8 { get; set; }
+        public string Price9 { get; set; }
+        public string Price10 { get; set; }
+        public string Price11 { get; set; }
+        public string Price12 { get; set; }
+        public string Price13 { get; set; }
+        public string Price14 { get; set; }
+        public string Price15 { get; set; }
+        public string Price16 { get; set; }
+        public string Price17 { get; set; }
+
+        public string Amount1 { get; set; }
+        public string Amount2 { get; set; }
+        public string Amount3 { get; set; }
+        public string Amount4 { get; set; }
+        public string Amount5 { get; set; }
+        public string Amount6 { get; set; }
+        public string Amount7 { get; set; }
+        public string Amount8 { get; set; }
+        public string Amount9 { get; set; }
+        public string Amount10 { get; set; }
+        public string Amount11 { get; set; }
+        public string Amount12 { get; set; }
+        public string Amount13 { get; set; }
+        public string Amount14 { get; set; }
+        public string Amount15 { get; set; }
+        public string Amount16 { get; set; }
+        public string Amount17 { get; set; }
+
+        public string Location1 { get; set; }
+        public string Location2 { get; set; }
+        public string Location3 { get; set; }
+        public string Location4 { get; set; }
+        public string Location5 { get; set; }
+        public string Location6 { get; set; }
+        public string Location7 { get; set; }
+        public string Location8 { get; set; }
+        public string Location9 { get; set; }
+        public string Location10 { get; set; }
+        public string Location11 { get; set; }
+        public string Location12 { get; set; }
+        public string Location13 { get; set; }
+        public string Location14 { get; set; }
+        public string Location15 { get; set; }
+        public string Location16 { get; set; }
+        public string Location17 { get; set; }
+
+        public Months Month1 { get; set; }
+        public Months Month2 { get; set; }
+        public Months Month3 { get; set; }
+        public Months Month4 { get; set; }
+        public Months Month5 { get; set; }
+        public Months Month6 { get; set; }
+        public Months Month7 { get; set; }
+        public Months Month8 { get; set; }
+        public Months Month9 { get; set; }
+        public Months Month10 { get; set; }
+        public Months Month11 { get; set; }
+        public Months Month12 { get; set; }
+        public Months Month13 { get; set; }
+        public Months Month14 { get; set; }
+        public Months Month15 { get; set; }
+        public Months Month16 { get; set; }
+        public Months Month17 { get; set; }
+
+        public string Reason1 { get; set; }
+        public string Reason2 { get; set; }
+        public string Reason3 { get; set; }
+        public string Reason4 { get; set; }
+        public string Reason5 { get; set; }
+        public string Reason6 { get; set; }
+        public string Reason7 { get; set; }
+        public string Reason8 { get; set; }
+        public string Reason9 { get; set; }
+        public string Reason10 { get; set; }
+        public string Reason11 { get; set; }
+        public string Reason12 { get; set; }
+        public string Reason13 { get; set; }
+        public string Reason14 { get; set; }
+        public string Reason15 { get; set; }
+        public string Reason16 { get; set; }
+        public string Reason17 { get; set; }
+
+        public string AccountBZ1 { get; set; }
+        public string AccountBZ2 { get; set; }
+        public string AccountBZ3 { get; set; }
+        public string AccountBZ4 { get; set; }
+        public string AccountBZ5 { get; set; }
+        public string AccountBZ6 { get; set; }
+        public string AccountBZ7 { get; set; }
+        public string AccountBZ8 { get; set; }
+        public string AccountBZ9 { get; set; }
+        public string AccountBZ10 { get; set; }
+        public string AccountBZ11 { get; set; }
+        public string AccountBZ12 { get; set; }
+        public string AccountBZ13 { get; set; }
+        public string AccountBZ14 { get; set; }
+        public string AccountBZ15 { get; set; }
+        public string AccountBZ16 { get; set; }
+        public string AccountBZ17 { get; set; }
+
+        public string Description1 { get; set; }
+        public string Description2 { get; set; }
+        public string Description3 { get; set; }
+        public string Description4 { get; set; }
+        public string Description5 { get; set; }
+        public string Description6 { get; set; }
+        public string Description7 { get; set; }
+        public string Description8 { get; set; }
+        public string Description9 { get; set; }
+        public string Description10 { get; set; }
+        public string Description11 { get; set; }
+        public string Description12 { get; set; }
+        public string Description13 { get; set; }
+        public string Description14 { get; set; }
+        public string Description15 { get; set; }
+        public string Description16 { get; set; }
+        public string Description17 { get; set; }
+    }
     #endregion
 
     #region Заявки ИТ САиИБ

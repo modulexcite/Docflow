@@ -1,0 +1,54 @@
+﻿@model RapidDoc.Models.ViewModels.USR_REQ_IT_CTP_RequestTRU_View
+@using RapidDoc.Extensions;
+<h4 class="text-info">Прошу приобрести следующие ТМЦ:</h4>
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Department" } })
+<hr />
+<div class="table-responsivelarge" style="font-size:smaller;">
+    <table class="table table-condensed table-bordered table-bordered-bold">
+        <thead>
+            <tr>
+                <th>№ п/п</th>
+                <th><label class="label-required">Наименование материалов, марка, ГОСТ</label><span class="required">*</span></th>
+                <th style="min-width: 10em"><label class="label-required">Ед.изм.</label><span class="required">*</span></th>
+                <th style="min-width: 10em"><label class="label-required">Кол-во</label><span class="required">*</span></th>
+                <th>Цена за ед-цу, тг.</th>
+                <th>Стоимость тг.</th>
+                <th style="min-width: 20em"><label class="label-required">Склад</label><span class="required">*</span></th>
+                <th>Месяц поставки</th>
+                <th><label class="label-required">Обоснование (статья бюджета)</label><span class="required">*</span></th>
+                <th>За счет какой статьи БЗ(№, наименование подр.)</th>
+                <th style="min-width: 20em">Примечание</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 1; i < 18; i++)
+            {
+                <tr>
+                    <td>@i.ToString()</td>
+                    <td>
+                        @Html.TextArea("ItemName" + i.ToString(), new { @class = "form-control", @maxlength = 256 })
+                    </td>
+                    <td>
+                        @Html.TextArea("Unit" + i.ToString(), new { @class = "form-control", @maxlength = 256 })
+                    </td>
+                    <td>
+                        @Html.TextArea("Qty" + i.ToString(), new { @class = "form-control", @maxlength = 256 })
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        @Html.TextArea("Location" + i.ToString(), new { @class = "form-control", @maxlength = 256 })
+                    </td>
+                    <td></td>
+                    <td>
+                        @Html.TextArea("Reason" + i.ToString(), new { @class = "form-control", @maxlength = 256 })
+                    </td>
+                    <td></td>
+                    <td>
+                        @Html.TextArea("Description" + i.ToString(), new { @class = "form-control", @maxlength = 256 })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
