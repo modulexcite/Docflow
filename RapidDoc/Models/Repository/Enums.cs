@@ -90,4 +90,12 @@ namespace RapidDoc.Models.Repository
         SaveDraft = 2,
         RejectDocument = 3
     }
+
+    public enum RoleType : byte
+    {
+        System = 1,
+        Workflow = 2,
+        Reader = 3,
+        Group = 4
+    }
 }

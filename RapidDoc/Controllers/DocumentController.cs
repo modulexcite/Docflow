@@ -46,7 +46,7 @@ namespace RapidDoc.Controllers
         private readonly IItemCauseService _ItemCauseService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
-        protected RoleManager<IdentityRole> RoleManager { get; private set; }
+        protected RoleManager<ApplicationRole> RoleManager { get; private set; }
 
         public DocumentController(IDocumentService documentService, IProcessService processService, 
             IWorkflowService workflowService, IEmplService emplService, IAccountService accountService, ISystemService systemService,
@@ -72,7 +72,7 @@ namespace RapidDoc.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(dbContext));
+            RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(dbContext));
         }
 
         public ActionResult Index()

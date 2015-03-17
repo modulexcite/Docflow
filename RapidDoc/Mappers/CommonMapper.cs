@@ -95,7 +95,7 @@ namespace RapidDoc.Mappers
                 .ForMember(x => x.CreatedDate, opt => opt.Ignore())
                 .ForMember(x => x.ModifiedDate, opt => opt.Ignore());
 
-            Mapper.CreateMap<IdentityRole, RoleViewModel>();
+            Mapper.CreateMap<ApplicationRole, RoleViewModel>();
             Mapper.CreateMap<ApplicationUser, UserViewModel>();
 
             Mapper.CreateMap<WorkScheduleTable, WorkScheduleView>();

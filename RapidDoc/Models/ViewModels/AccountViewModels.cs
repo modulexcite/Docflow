@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Models.ViewModels
 {
@@ -85,6 +86,12 @@ namespace RapidDoc.Models.ViewModels
         public string Name { get; set; }
 
         public bool isUserRole { get; set; }
+
+        [Display(Name = "Description", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string Description { get; set; }
+
+        [Display(Name = "Type", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public RoleType RoleType { get; set; }
     }
 
     public class UserViewModel

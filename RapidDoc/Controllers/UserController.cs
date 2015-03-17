@@ -24,7 +24,7 @@ namespace RapidDoc.Controllers
         private readonly IEmplService _EmplService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
-        protected RoleManager<IdentityRole> RoleManager { get; private set; }
+        protected RoleManager<ApplicationRole> RoleManager { get; private set; }
 
         public UserController(ICompanyService companyService, IAccountService accountService, IDomainService domainService, IEmplService emplService)
             : base(companyService, accountService)
@@ -34,7 +34,7 @@ namespace RapidDoc.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(dbContext));
+            RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(dbContext));
         }
 
         public ActionResult Index()
@@ -208,7 +208,7 @@ namespace RapidDoc.Controllers
                 {
                     if (viewModel.Enable == false)
                     {
-                        var allRoles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
+                        var allRoles = Mapper.Map<IEnumerable<ApplicationRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
                         foreach (var role in allRoles)
                         {
                             UserManager.RemoveFromRole(viewModel.Id, role.Name);
@@ -248,7 +248,7 @@ namespace RapidDoc.Controllers
                 return HttpNotFound();
             }
 
-            var roles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
+            var roles = Mapper.Map<IEnumerable<ApplicationRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
 
             foreach (var role in roles)
             {
@@ -275,7 +275,7 @@ namespace RapidDoc.Controllers
 
             if (isAjax == true)
             {
-                var allRoles = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
+                var allRoles = Mapper.Map<IEnumerable<ApplicationRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
 
                 foreach (var role in allRoles)
                 {

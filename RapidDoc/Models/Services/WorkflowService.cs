@@ -172,7 +172,7 @@ namespace RapidDoc.Models.Services
 
             if (!String.IsNullOrEmpty(roleName))
             {
-                RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
+                RoleManager<ApplicationRole> RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
 
                 if (RoleManager.RoleExists(roleName))
                 {
@@ -244,12 +244,12 @@ namespace RapidDoc.Models.Services
         }
         public string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location)
         {
-            var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
+            var rm = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
             ServiceIncidentTable incidentTable = repoIncident.Find(x => x.ServiceName == serviceName && x.ServiceIncidientLevel == level && x.ServiceIncidientPriority == priority && x.ServiceIncidientLocation == location);
 
             if (incidentTable != null)
             {
-                IdentityRole identityRole = rm.FindById(incidentTable.RoleTableId);
+                ApplicationRole identityRole = rm.FindById(incidentTable.RoleTableId);
                 return identityRole.Name;
             }
 

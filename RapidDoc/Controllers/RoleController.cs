@@ -20,14 +20,14 @@ namespace RapidDoc.Controllers
     public class RoleController : BasicController
     {
         public UserManager<ApplicationUser> UserManager { get; private set; }
-        public RoleManager<IdentityRole> RoleManager { get; private set; }
+        public RoleManager<ApplicationRole> RoleManager { get; private set; }
 
         public RoleController(ICompanyService companyService, IAccountService accountService)
             : base(companyService, accountService)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(dbContext));
+            RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(dbContext));
         }
 
         public ActionResult Index()
@@ -37,14 +37,14 @@ namespace RapidDoc.Controllers
 
         public ActionResult Grid()
         {
-            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
+            var items = Mapper.Map<IEnumerable<ApplicationRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
             var grid = new RoleAjaxPagingGrid(items, 1, false);
             return PartialView("_RoleGrid", grid);
         }
 
         public JsonResult GetRoleList(int page)
         {
-            var items = Mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
+            var items = Mapper.Map<IEnumerable<ApplicationRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles);
             var grid = new RoleAjaxPagingGrid(items, page, true);
 
             return Json(new
@@ -64,7 +64,7 @@ namespace RapidDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var domainModel = new IdentityRole(viewModel.Name);
+                var domainModel = new ApplicationRole(viewModel.Name, viewModel.Description, viewModel.RoleType);
                 var roleresult = await RoleManager.CreateAsync(domainModel);
                 if (!roleresult.Succeeded)
                 {
@@ -91,7 +91,7 @@ namespace RapidDoc.Controllers
                 return HttpNotFound();
             }
 
-            var viewModel = Mapper.Map<IdentityRole, RoleViewModel>(domainModel);
+            var viewModel = Mapper.Map<ApplicationRole, RoleViewModel>(domainModel);
             return View(viewModel);
         }
 
@@ -107,6 +107,8 @@ namespace RapidDoc.Controllers
                 }
 
                 domainModel.Name = viewModel.Name;
+                domainModel.Description = viewModel.Description;
+                domainModel.RoleType = viewModel.RoleType;
                 var result = await RoleManager.UpdateAsync(domainModel);
                 if (!result.Succeeded)
                 {

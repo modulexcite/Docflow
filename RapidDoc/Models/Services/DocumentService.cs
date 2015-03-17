@@ -79,7 +79,7 @@ namespace RapidDoc.Models.Services
         private readonly IReviewDocLogService _ReviewDocLogService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
-        protected RoleManager<IdentityRole> RoleManager { get; private set; }
+        protected RoleManager<ApplicationRole> RoleManager { get; private set; }
 
         public DocumentService(IUnitOfWork uow, INumberSeqService numberSeqService, IProcessService processService, 
             IWorkflowTrackerService workflowTrackerService,
@@ -100,7 +100,7 @@ namespace RapidDoc.Models.Services
             _ReviewDocLogService = reviewDocLogService;
 
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
+            RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
         }
 
         public Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId, ApplicationUser user)

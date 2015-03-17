@@ -21,7 +21,7 @@ namespace RapidDoc.Controllers
         private readonly IDocumentService _DocumentService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
-        protected RoleManager<IdentityRole> RoleManager { get; private set; }
+        protected RoleManager<ApplicationRole> RoleManager { get; private set; }
 
         public NewProcessController(IProcessService processService, IGroupProcessService groupProcessService, IEmplService emplService, IDocumentService documentService, IAccountService accountService, ICompanyService companyService)
             : base(companyService, accountService)
@@ -33,7 +33,7 @@ namespace RapidDoc.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(dbContext));
+            RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(dbContext));
         }
 
         [OutputCache(Duration = 86400, VaryByParam = "id")]
