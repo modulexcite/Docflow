@@ -108,6 +108,8 @@ namespace RapidDoc.Models.Services
             ApplicationUser user = getCurrentUserName(currentUserName);
             if (domainTable.Id == Guid.Empty)
             {
+                domainTable.ApplicationUserCreatedId = user.Id;
+                domainTable.ApplicationUserModifiedId = user.Id;
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
                 if (companyId == null)
@@ -119,6 +121,7 @@ namespace RapidDoc.Models.Services
             else
             {
                 domainTable.ModifiedDate = DateTime.UtcNow;
+                domainTable.ApplicationUserModifiedId = user.Id;
                 repo.Update(domainTable);
             }
             _uow.Commit();

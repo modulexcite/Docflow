@@ -26,14 +26,16 @@ namespace RapidDoc.Controllers
         protected readonly IWorkScheduleService _WorkScheduleService;
         protected readonly ITitleService _TitleService;
         protected readonly IDepartmentService _DepartmentService;
+        protected readonly IItemCauseService _ItemCauseService;
 
-        public LDAPIntegrationController(ICompanyService companyService, IEmplService emplService, IWorkScheduleService workScheduleService, ITitleService titleService, IDepartmentService departmentService)
+        public LDAPIntegrationController(ICompanyService companyService, IEmplService emplService, IWorkScheduleService workScheduleService, ITitleService titleService, IDepartmentService departmentService, IItemCauseService itemCauseService)
         {
             _CompanyService = companyService;
             _EmplService = emplService;
             _WorkScheduleService = workScheduleService;
             _TitleService = titleService;
             _DepartmentService = departmentService;
+            _ItemCauseService = itemCauseService;
         }
 
         public void Get()
@@ -513,7 +515,7 @@ namespace RapidDoc.Controllers
 
             foreach (var department in departments)
             {
-                if (department.ParentDepartmentId == null && !_EmplService.Contains(x => x.DepartmentTableId == department.Id))
+                if (department.ParentDepartmentId == null && !_EmplService.Contains(x => x.DepartmentTableId == department.Id) && !_ItemCauseService.Contains(x => x.DepartmentTableId == department.Id))
                 {
                     _DepartmentService.Delete(department.Id);
                 }
