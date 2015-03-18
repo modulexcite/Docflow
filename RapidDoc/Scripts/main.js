@@ -430,6 +430,53 @@ function custom_tagsinputEmpl5_init(url_json) {
     }
 }
 
+function custom_tagsinputGroup_init(url_json) {
+    var element = document.getSelection('input[data-role=tagsinputGroup]');
+    if (typeof (element) != 'undefined' && element != null) {
+        try {
+            elt2 = $('input[data-role=tagsinputGroup]');
+            elt2.tagsinput({
+                itemValue: 'value',
+                itemText: 'text',
+                tagClass: function (item) {
+                    return 'label label-primary bts-tags';
+                }
+            });
+
+            elt2.tagsinput('input').typeahead({
+                valueKey: 'text',
+                prefetch: url_json,
+                template: '<p>{{text}}</p>',
+                engine: Hogan
+
+            }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                this.tagsinput('add', datum);
+                this.tagsinput('input').typeahead('setQuery', '');
+            }, elt2));
+
+            currentValue2 = $('input[data-role=tagsinputGroup]').val();
+            if (currentValue2 != null) {
+                currentArrData2 = currentValue2.split(",");
+                $('input[data-role=tagsinputGroup]').val('');
+
+                if (currentArrData2.length > 1) {
+                    for (var i = 0; i < currentArrData2.length; i += 2) {
+                        var key = currentArrData2[i];
+                        var numValue = i;
+                        numValue++;
+                        var value = currentArrData2[numValue];
+                        if (value.length > 0)
+                            $('input[data-role=tagsinputGroup]').tagsinput('add', { "value": key + "," + value, "text": value });
+                    }
+                }
+            }
+        }
+        catch (e) {
+
+        }
+    }
+}
+
 function custom_tagsinputEmplIntercompany_init(url_json) {
     try {
         var element = document.getSelection('input[data-role=tagsinputEmplIntercompany]');

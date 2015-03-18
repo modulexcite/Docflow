@@ -38,6 +38,13 @@ namespace RapidDoc.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
+        public JsonResult JsonGroup()
+        {
+            var jsondata = _EmplService.GetJsonGroup();
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
         public JsonResult JsonEmplIntercompany()
         {
             var jsondata = _EmplService.GetJsonEmplIntercompany();
