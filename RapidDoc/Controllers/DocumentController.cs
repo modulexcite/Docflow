@@ -1219,7 +1219,8 @@ namespace RapidDoc.Controllers
                     view = Create(processView, operationType, docModel, fileId, actionModelName, documentData);
                     break;
                 case 2:
-                    _DocumentService.UpdateDocumentFields(docModel, processView);
+                    if(_DocumentService.UpdateDocumentFields(docModel, processView))
+                        _SearchService.SaveSearchData(GuidNull2Guid(documentId), docModel, actionModelName);
                     view = ShowDocument(GuidNull2Guid(documentId), operationType, documentData, processView, GuidNull2Guid(processView.Id));
                     break;
                 case 3:
