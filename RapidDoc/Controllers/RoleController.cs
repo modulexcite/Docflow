@@ -184,6 +184,14 @@ namespace RapidDoc.Controllers
             return Json(new { result = "Redirect", url = Url.Action("Index") });
         }
 
+        [AllowAnonymous]
+        public ActionResult RoleLookup(string prefix)
+        {
+            var items = Mapper.Map<IEnumerable<ApplicationRole>, IEnumerable<RoleViewModel>>(RoleManager.Roles.Where(x => x.RoleType == Models.Repository.RoleType.Group));
+            ViewBag.PrefixOfficeMemo = prefix;
+            return PartialView("_RoleLookup", items);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && UserManager != null)

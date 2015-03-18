@@ -198,11 +198,11 @@ namespace RapidDoc.Models.Services
                                 value = string.Format("{0},({1}) {2} - {3}", c.Id, c.AliasCompanyName, c.FullName, c.TitleName),
                                 text = string.Format("({0}) {1} - {2}", c.AliasCompanyName, c.FullName, c.TitleName)
                             }).Union(from x in RoleManager.Roles.AsEnumerable()
-                                     where x.Description != null
+                                     where x.RoleType == RoleType.Group
                                      select new 
                                      {
                                         value = string.Format("{0}, {1}", x.Id, x.Name),
-                                        text = string.Format("({0}) - {1}", x.Name, x.Description)
+                                        text = string.Format("[ {0} ]", x.Description)
                                      });
 
             return jsondata;

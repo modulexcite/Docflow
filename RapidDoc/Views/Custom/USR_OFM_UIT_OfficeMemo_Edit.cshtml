@@ -32,14 +32,18 @@
 <br />
 <div class="editor-field">
     <div class="input-group input-group-sm">
-        <span class="input-group-addon" id="sizing-addon1"><strong>Кому:&nbsp;&nbsp;</strong></span>
-        @Html.TextBoxFor(model => Model.DocumentWhom, new { @class = "form-control", placeholder = "Кому", aria_describedby = "sizing-addon1" })
+        <span class="input-group-addon" id="sizing-addon1"><strong>Кому:&nbsp;&nbsp;</strong>
+            <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target=".documentwhom-modal"><span class="glyphicon glyphicon-plus" aria-hidden="false"></span></button>
+        </span>
+        @Html.TextBoxFor(model => Model.DocumentWhom, new { @class = "form-control", @data_role = "tagsinputGroup2", @size = 256, @maxlength = 256, placeholder = "Кому", aria_describedby = "sizing-addon1" })
     </div>
 </div>
 <br />
 <div class="editor-field">
     <div class="input-group input-group-sm">
-        <span class="input-group-addon" id="sizing-addon2"><strong>Копия:</strong></span>
+        <span class="input-group-addon" id="sizing-addon2"><strong>Копия:</strong>
+            <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target=".documentcopy-modal"><span class="glyphicon glyphicon-plus" aria-hidden="false"></span></button>
+        </span>
         @Html.TextBoxFor(model => Model.DocumentCopy, new { @class = "form-control", @data_role = "tagsinputGroup", @size = 256, @maxlength = 256, placeholder = "Копия", aria_describedby = "sizing-addon2"})
     </div>
 </div>
@@ -69,12 +73,52 @@
     </div>
 </div>
 
+<div class="modal fade documentwhom-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sidebar">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@UIElementRes.UIElement.DistributionGroup - Поле Кому</h4>
+            </div>
+            <div class="modal-body" style="min-height:700px;">
+                @Html.Action("RoleLookup", "Role", new { prefix = "whom" })
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade documentcopy-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sidebar">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@UIElementRes.UIElement.DistributionGroup - Поле Копия</h4>
+            </div>
+            <div class="modal-body" style="min-height:700px;">
+                @Html.Action("RoleLookup", "Role", new { prefix = "copy" })
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     $(function () {
         $('.itemcauseslink').click(function () {
             var element = $(event.target);
             $('#ItemCauseTableId').val(element.attr('data-itemid'));
             $('#ItemCauseTableName').text(element.text());
+        });
+
+        $('.distributiongrouplink_whom').click(function () {
+            var element = $(event.target);
+            var tagId = element.attr('data-itemid') + ', ' + element.attr('data-rolename');
+            $('input[data-role=tagsinputGroup2]').tagsinput('add', { value: tagId, text: '[ ' + element.text() + ' ]' });
+        });
+
+        $('.distributiongrouplink_copy').click(function () {
+            var element = $(event.target);
+            var tagId = element.attr('data-itemid') + ', ' + element.attr('data-rolename');
+            $('input[data-role=tagsinputGroup]').tagsinput('add', { value: tagId, text: '[ ' + element.text() + ' ]' });
         });
     });
 </script>
