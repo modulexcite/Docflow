@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using RapidDoc.Models.Interfaces;
+using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Models.ViewModels
 {
@@ -22,5 +23,31 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Users", ResourceType = typeof(CustomRes.Custom))]
         public string Users { get; set; }
+    }
+
+    public abstract class BasicDocumantOfficeMemoView : BasicDocumentView
+    {
+        [Display(Name = "Папка")]
+        public Folder Folder { get; set; }
+
+        public Guid? ItemCauseTableId { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Номенклатурное дело")]
+        public string ItemCauseNumber { get; set; }
+
+        [Display(Name = "Кому")]
+        public string DocumentWhom { get; set; }
+
+        [Display(Name = "Копия")]
+        public string DocumentCopy { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Тема документа")]
+        public string DocumentTitle { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Основное поле")]
+        public string MainField { get; set; }
     }
 }

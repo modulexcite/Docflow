@@ -490,8 +490,8 @@ namespace RapidDoc.Models.Services
             List<string> processUrls = new List<string>();
             List<string> stageNames = new List<string>();
             List<string> filterTexts = new List<string>();
-            
-            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
+
+            RoleManager<ApplicationRole> RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
 
             foreach (ReportProcessesView reportProcess in listProcesses)
             {
@@ -500,9 +500,9 @@ namespace RapidDoc.Models.Services
                 filterTexts.Add(reportProcess.FilterText);
             }
 
-            if (RoleManager.RoleExists("Administrator"))
+            if (RoleManager.RoleExists("SetupAdministrator"))
             {
-                var names = RoleManager.FindByName("Administrator").Users;
+                var names = RoleManager.FindByName("SetupAdministrator").Users;
                 if (names != null && names.Count() > 0)
                 {
                     foreach (IdentityUserRole name in names)

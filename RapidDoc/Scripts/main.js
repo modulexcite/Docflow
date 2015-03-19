@@ -37,13 +37,15 @@
 
 function selectpicker_init() {
     $('.selectpicker').selectpicker({
-        width: '30%'
+        width: '30%',
+        style: 'btn btn-default btn-sm'
     });
 }
 
 function selectpickerfull_init() {
     $('.selectpickerfull').selectpicker({
-        width: '100%'
+        width: '100%',
+        style: 'btn btn-default btn-sm'
     });
 }
 
@@ -130,21 +132,23 @@ function summernote_init(lang) {
 
     if ($(".summernote")[0]) {
         $('.summernote').summernote({
-            height: 300,
+            height: 350,
             focus: true,
             lang: lang,
-
+            defaultFontName: 'Arial',
             toolbar: [
                 ['style', ['style']], // no style button
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['fontsize', ['fontsize']],
                 //['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['height', ['height']],
-                //['insert', ['picture', 'link']], // no insert buttons
+                //['height', ['height']],
+                ['insert', ['link']], // no insert buttons
                 ['table', ['table']], // no table button
+                ['misc', ['undo', 'redo']]
                 //['help', ['help']] //no help button
-            ]
+            ],
+            styleTags: ['p', 'h4', 'h6']
         });
     }
 }
@@ -416,6 +420,100 @@ function custom_tagsinputEmpl5_init(url_json) {
                         var value = currentArrData2[numValue];
                         if (value.length > 0)
                             $('input[data-role=tagsinputEmpl5]').tagsinput('add', { "value": key + "," + value, "text": value });
+                    }
+                }
+            }
+        }
+        catch (e) {
+
+        }
+    }
+}
+
+function custom_tagsinputGroup_init(url_json) {
+    var element = document.getSelection('input[data-role=tagsinputGroup]');
+    if (typeof (element) != 'undefined' && element != null) {
+        try {
+            elt2 = $('input[data-role=tagsinputGroup]');
+            elt2.tagsinput({
+                itemValue: 'value',
+                itemText: 'text',
+                tagClass: function (item) {
+                    return 'label label-primary bts-tags';
+                }
+            });
+
+            elt2.tagsinput('input').typeahead({
+                valueKey: 'text',
+                prefetch: url_json,
+                template: '<p>{{text}}</p>',
+                engine: Hogan
+
+            }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                this.tagsinput('add', datum);
+                this.tagsinput('input').typeahead('setQuery', '');
+            }, elt2));
+
+            currentValue2 = $('input[data-role=tagsinputGroup]').val();
+            if (currentValue2 != null) {
+                currentArrData2 = currentValue2.split(",");
+                $('input[data-role=tagsinputGroup]').val('');
+
+                if (currentArrData2.length > 1) {
+                    for (var i = 0; i < currentArrData2.length; i += 2) {
+                        var key = currentArrData2[i];
+                        var numValue = i;
+                        numValue++;
+                        var value = currentArrData2[numValue];
+                        if (value.length > 0)
+                            $('input[data-role=tagsinputGroup]').tagsinput('add', { "value": key + "," + value, "text": value });
+                    }
+                }
+            }
+        }
+        catch (e) {
+
+        }
+    }
+}
+
+function custom_tagsinputGroup2_init(url_json) {
+    var element = document.getSelection('input[data-role=tagsinputGroup2]');
+    if (typeof (element) != 'undefined' && element != null) {
+        try {
+            elt2 = $('input[data-role=tagsinputGroup2]');
+            elt2.tagsinput({
+                itemValue: 'value',
+                itemText: 'text',
+                tagClass: function (item) {
+                    return 'label label-primary bts-tags';
+                }
+            });
+
+            elt2.tagsinput('input').typeahead({
+                valueKey: 'text',
+                prefetch: url_json,
+                template: '<p>{{text}}</p>',
+                engine: Hogan
+
+            }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                this.tagsinput('add', datum);
+                this.tagsinput('input').typeahead('setQuery', '');
+            }, elt2));
+
+            currentValue2 = $('input[data-role=tagsinputGroup2]').val();
+            if (currentValue2 != null) {
+                currentArrData2 = currentValue2.split(",");
+                $('input[data-role=tagsinputGroup2]').val('');
+
+                if (currentArrData2.length > 1) {
+                    for (var i = 0; i < currentArrData2.length; i += 2) {
+                        var key = currentArrData2[i];
+                        var numValue = i;
+                        numValue++;
+                        var value = currentArrData2[numValue];
+                        if (value.length > 0)
+                            $('input[data-role=tagsinputGroup2]').tagsinput('add', { "value": key + "," + value, "text": value });
                     }
                 }
             }

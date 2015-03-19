@@ -43,15 +43,16 @@ namespace RapidDoc.Controllers
         private readonly IHistoryUserService _HistoryUserService;
         private readonly ISearchService _SearchService;
         private readonly ICustomCheckDocument _CustomCheckDocument;
+        private readonly IItemCauseService _ItemCauseService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
-        protected RoleManager<IdentityRole> RoleManager { get; private set; }
+        protected RoleManager<ApplicationRole> RoleManager { get; private set; }
 
         public DocumentController(IDocumentService documentService, IProcessService processService, 
             IWorkflowService workflowService, IEmplService emplService, IAccountService accountService, ISystemService systemService,
             IWorkflowTrackerService workflowTrackerService, IReviewDocLogService reviewDocLogService,
             IDocumentReaderService documentReaderService, ICommentService commentService, IEmailService emailService,
-            IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument)
+            IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument, IItemCauseService itemCauseService)
             : base(companyService, accountService)
         {
             _DocumentService = documentService;
@@ -67,10 +68,11 @@ namespace RapidDoc.Controllers
             _HistoryUserService = historyUserService;
             _SearchService = searchService;
             _CustomCheckDocument = customCheckDocument;
+            _ItemCauseService = itemCauseService;
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(dbContext));
+            RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(dbContext));
         }
 
         public ActionResult Index()
@@ -252,7 +254,7 @@ namespace RapidDoc.Controllers
             viewModel.fileId = docuView.FileId;
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(userTable.TimeZoneId);
             viewModel.WFTrackerItems = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == documentTable.Id, timeZoneInfo);
-
+           
             ViewBag.CreatedDate = _SystemService.ConvertDateTimeToLocal(userTable, docuView.CreatedDate);
             ViewBag.DocumentUrl = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuView.AliasCompanyName + "/Document/ShowDocument/" + docuView.Id + "?isAfterView=true";
             if (emplTable != null)
@@ -406,8 +408,7 @@ namespace RapidDoc.Controllers
             viewModel.ProcessView = process;
             viewModel.docData = _DocumentService.RouteCustomModelView(process.TableName);
             viewModel.fileId = Guid.NewGuid();
-            viewModel.ProcessTemplates = _DocumentService.GetAllTemplatesDocument(id);
-
+            viewModel.ProcessTemplates = _DocumentService.GetAllTemplatesDocument(id);          
             return View(viewModel);
         }
 
@@ -1218,7 +1219,8 @@ namespace RapidDoc.Controllers
                     view = Create(processView, operationType, docModel, fileId, actionModelName, documentData);
                     break;
                 case 2:
-                    _DocumentService.UpdateDocumentFields(docModel, processView);
+                    if(_DocumentService.UpdateDocumentFields(docModel, processView))
+                        _SearchService.SaveSearchData(GuidNull2Guid(documentId), docModel, actionModelName);
                     view = ShowDocument(GuidNull2Guid(documentId), operationType, documentData, processView, GuidNull2Guid(processView.Id));
                     break;
                 case 3:

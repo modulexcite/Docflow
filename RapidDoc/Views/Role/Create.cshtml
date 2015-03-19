@@ -21,6 +21,34 @@
             @Html.ValidationMessageFor(model => model.Name)
         </div>
 
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.Description)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Description, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Description" })
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.RoleType)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => model.RoleType, new { @class = "selectpicker" })
+            @Html.ValidationMessageFor(model => model.RoleType)
+        </div>
+
         @{Html.RenderPartial("SaveBackBtn");}
     </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
+
+@section jslaunch {
+    <script type="text/javascript">
+        $(function () {
+            selectpicker_init();
+        });
+    </script>
 }

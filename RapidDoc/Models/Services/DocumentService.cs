@@ -37,7 +37,7 @@ namespace RapidDoc.Models.Services
         dynamic RouteCustomModelDomain(string customModel);
         dynamic RouteCustomRepository(string customModel);
         void UpdateDocument(DocumentTable domainTable, string currentUserId = "");
-        void UpdateDocumentFields(dynamic viewTable, ProcessView processView);
+        bool UpdateDocumentFields(dynamic viewTable, ProcessView processView);
         void SaveDocumentText(DocumentTable domainTable);
         bool isShowDocument(DocumentTable documentTable, ApplicationUser user, bool isAfterView = false);
         bool isSignDocument(Guid documentId, ApplicationUser user = null);
@@ -79,7 +79,7 @@ namespace RapidDoc.Models.Services
         private readonly IReviewDocLogService _ReviewDocLogService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
-        protected RoleManager<IdentityRole> RoleManager { get; private set; }
+        protected RoleManager<ApplicationRole> RoleManager { get; private set; }
 
         public DocumentService(IUnitOfWork uow, INumberSeqService numberSeqService, IProcessService processService, 
             IWorkflowTrackerService workflowTrackerService,
@@ -100,7 +100,7 @@ namespace RapidDoc.Models.Services
             _ReviewDocLogService = reviewDocLogService;
 
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_uow.GetDbContext<ApplicationDbContext>()));
+            RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
         }
 
         public Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId, ApplicationUser user)
@@ -149,7 +149,7 @@ namespace RapidDoc.Models.Services
             return docuTable.Id;
         }
 
-        public void UpdateDocumentFields(dynamic viewTable, ProcessView process)
+        public bool UpdateDocumentFields(dynamic viewTable, ProcessView process)
         {
             try
             {
@@ -171,13 +171,17 @@ namespace RapidDoc.Models.Services
                         domainTable.ModifiedDate = DateTime.UtcNow;
                         RouteCustomRepository(process.TableName).Update(domainTable);
                         _uow.Commit();
+
+                        return true;
                     }
                 }
             }
             catch
             {
-                return;
+                return false;
             }
+
+            return false;
         }
 
         public IEnumerable<DocumentTable> GetAll()

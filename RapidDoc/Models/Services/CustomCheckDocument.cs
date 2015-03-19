@@ -1010,9 +1010,9 @@ namespace RapidDoc.Models.Services
                 }
             }
 
-            if (type == (new USR_REQ_HY_RequestTRU_View()).GetType())
+            if ((type == (new USR_REQ_HY_RequestTRU_View()).GetType()) || (type == (new USR_REQ_IT_CTP_RequestTRU_View()).GetType()))
             {
-                if ((documentTable.ActivityName == "СХО" || documentTable.ActivityName == "Начальник СХО") && isSign == true)
+                if ((documentTable.ActivityName == "СХО" || documentTable.ActivityName == "Начальник СХО" || documentTable.ActivityName == "Заведующий складом СТП" || documentTable.ActivityName == "Заведующий складом СТП") && isSign == true)
                 {
                     if (actionModel.ItemName1 != String.Empty && ((actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
                     {

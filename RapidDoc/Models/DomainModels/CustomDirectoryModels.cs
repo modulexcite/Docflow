@@ -27,7 +27,7 @@ namespace RapidDoc.Models.DomainModels
         public string RoleTableId { get; set; }
 
         [ForeignKey("RoleTableId")]
-        public virtual IdentityRole IdentityRole { get; set; }
+        public virtual ApplicationRole IdentityRole { get; set; }
     }
 
     public class TripSettingsTable : BasicCompanyNullTable
@@ -55,6 +55,8 @@ namespace RapidDoc.Models.DomainModels
                     return String.Empty;
                 }
         }
+
+        public bool Enable { get; set; }
         
     }
 }

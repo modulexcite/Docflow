@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity.EntityFramework;
 using RapidDoc.Attributes.Validation;
+using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Models.DomainModels
 {
@@ -38,5 +39,28 @@ namespace RapidDoc.Models.DomainModels
                 return string.Empty;
             }
         }
+    }
+
+    public class ApplicationRole : IdentityRole
+    {
+        public ApplicationRole() : base() { }
+
+        public ApplicationRole(string name)
+            : base()
+        {
+            this.Name = name;
+        }
+
+        public ApplicationRole(string name, string description, RoleType roleType)
+            : base()
+        {
+            this.Name = name;
+            this.Description = description;
+            this.RoleType = roleType;
+        }
+
+        public string Description { get; set; }
+
+        public RoleType RoleType { get; set; }
     }
 }

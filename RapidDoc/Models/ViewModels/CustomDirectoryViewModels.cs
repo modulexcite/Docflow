@@ -63,5 +63,9 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "DepartmentName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string DepartmentName { get; set; }
+        public bool IsCurrentUserDepartment { get; set; }
+        
+        [Display(Name = "Включено")]
+        public bool Enable { get; set; }
     }
 }

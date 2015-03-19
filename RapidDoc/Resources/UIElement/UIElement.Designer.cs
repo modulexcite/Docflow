@@ -484,6 +484,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Группы рассылки.
+        /// </summary>
+        public static string DistributionGroup {
+            get {
+                return ResourceManager.GetString("DistributionGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Добавили читателей:.
         /// </summary>
         public static string DocumentAddReaders {

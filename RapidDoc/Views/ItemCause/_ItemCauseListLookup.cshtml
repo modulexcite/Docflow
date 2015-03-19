@@ -1,0 +1,72 @@
+﻿@model IEnumerable<RapidDoc.Models.ViewModels.ItemCauseView>
+
+<ul class="nav nav-tabs">
+    @if (Model.Any(x => x.IsCurrentUserDepartment == true))
+    {
+        <li class="active"><a href="#tab1userlist" data-toggle="tab"><span class="fa fa-list"></span>По подразделению</a></li>
+        <li><a href="#tab2alllist" data-toggle="tab"><strong><span class="fa fa-list"></span>Весь список</strong></a></li>
+    }
+    else
+    {
+        <li class="active"><a href="#tab2alllist" data-toggle="tab"><strong><span class="fa fa-list"></span>Весь список</strong></a></li>
+    }
+</ul>
+ 
+<div class="panel-body">
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="tab1userlist">
+@{int num = 0;}
+            @foreach (var itemGroup in Model.Where(x => x.IsCurrentUserDepartment == true).GroupBy(x => x.DepartmentName))
+            {
+                num++;
+                <p><a href="#" data-toggle="collapse" data-target="#collapseArea_@num" aria-expanded="false" aria-controls="collapseArea_@num"><strong>@itemGroup.Key</strong></a></p>
+                <div class="collapse.in" id="collapseArea_@num">
+                <div class="well well-sm">
+                    @foreach (var item in Model.Where(x => x.DepartmentName == itemGroup.Key && x.IsCurrentUserDepartment == true))
+                    {
+                        <p><a href="#" class="itemcauseslink" data-dismiss="modal" data-itemid="@item.Id">@item.CaseNumber - @item.CaseName</a></p>
+                    }
+                </div>
+                </div>
+            }
+        </div>
+        @if (Model.Any(x => x.IsCurrentUserDepartment == true))
+        {
+            <div class="tab-pane fade" id="tab2alllist">
+                @{num = 0;}
+                @foreach (var itemGroup in Model.GroupBy(x => x.DepartmentName))
+                {
+                    num++;
+                    <p><a href="#" data-toggle="collapse" data-target="#collapseArea_@num" aria-expanded="false" aria-controls="collapseArea_@num"><strong>@itemGroup.Key</strong></a></p>
+                    <div class="collapse" id="collapseArea_@num">
+                        <div class="well well-sm">
+                            @foreach (var item in Model.Where(x => x.DepartmentName == itemGroup.Key))
+                            {
+                                <p><a href="#" class="itemcauseslink" data-dismiss="modal" data-itemid="@item.Id">@item.CaseNumber - @item.CaseName</a></p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="tab-pane fade in active" id="tab2alllist">
+                @{num = 0;}
+@foreach (var itemGroup in Model.GroupBy(x => x.DepartmentName))
+{
+    num++;
+    <p><a href="#" data-toggle="collapse" data-target="#collapseArea_@num" aria-expanded="false" aria-controls="collapseArea_@num"><strong>@itemGroup.Key</strong></a></p>
+    <div class="collapse" id="collapseArea_@num">
+        <div class="well well-sm">
+            @foreach (var item in Model.Where(x => x.DepartmentName == itemGroup.Key))
+            {
+                <p><a href="#" class="itemcauseslink" data-dismiss="modal" data-itemid="@item.Id">@item.CaseNumber - @item.CaseName</a></p>
+            }
+        </div>
+                    </div>
+                }
+    </div>
+}
+    </div>
+</div>   

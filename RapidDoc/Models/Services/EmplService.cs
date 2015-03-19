@@ -36,6 +36,7 @@ namespace RapidDoc.Models.Services
         EmplView FindView(Guid id);
         SelectList GetDropListEmplNull(Guid? id);
         object GetJsonEmpl();
+        object GetJsonGroup();
         object GetJsonEmplIntercompany();
         EmplTable GetEmployer(string userId, Guid? companyId);
     }
@@ -44,12 +45,14 @@ namespace RapidDoc.Models.Services
         private IRepository<EmplTable> repo;
         private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
+        protected RoleManager<ApplicationRole> RoleManager { get; private set; }
 
         public EmplService(IUnitOfWork uow)
         {
             _uow = uow;
             repo = uow.GetRepository<EmplTable>();
             repoUser = uow.GetRepository<ApplicationUser>();
+            RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
         }
         public IEnumerable<EmplTable> GetAll()
         {
@@ -186,6 +189,25 @@ namespace RapidDoc.Models.Services
 
             return jsondata;
         }
+
+        public object GetJsonGroup()
+        {
+            var jsondata = (from c in GetPartial(x => x.Enable == true)
+                            select new
+                            {
+                                value = string.Format("{0},({1}) {2} - {3}", c.Id, c.AliasCompanyName, c.FullName, c.TitleName),
+                                text = string.Format("({0}) {1} - {2}", c.AliasCompanyName, c.FullName, c.TitleName)
+                            }).Union(from x in RoleManager.Roles.AsEnumerable()
+                                     where x.RoleType == RoleType.Group
+                                     select new 
+                                     {
+                                        value = string.Format("{0}, {1}", x.Id, x.Name),
+                                        text = string.Format("[ {0} ]", x.Description)
+                                     });
+
+            return jsondata;
+        }
+
         public EmplTable GetEmployer(string userId, Guid? companyId)
         {
             var empls = GetPartialIntercompany(x => x.ApplicationUserId == userId && x.CompanyTableId == companyId);

@@ -155,7 +155,7 @@ namespace RapidDoc.Models.Services
                             filterType = FilterType.Role;
 
 
-                            RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(contextDb));
+                            RoleManager<ApplicationRole> RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(contextDb));
                             if (RoleManager.RoleExists(filterText))
                             {
                                 var names = RoleManager.FindByName(filterText).Users;

@@ -38,6 +38,13 @@ namespace RapidDoc.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
+        public JsonResult JsonGroup()
+        {
+            var jsondata = _EmplService.GetJsonGroup();
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
         public JsonResult JsonEmplIntercompany()
         {
             var jsondata = _EmplService.GetJsonEmplIntercompany();
@@ -1462,6 +1469,30 @@ namespace RapidDoc.Controllers
             }
 
             return PartialView("USR_REQ_HY_RequestTRU_View_Full", model);
+        }
+
+        public ActionResult GetRequestCTPTRU(RapidDoc.Models.ViewModels.USR_REQ_IT_CTP_RequestTRU_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "СТП"))
+                    {
+                        return PartialView("USR_REQ_IT_CTP_RequestTRU_Edit_CTP", model);
+                    }
+
+                    if (current.Any(x => x.ActivityName == "Заведующий складом СТП"))
+                    {
+                        return PartialView("USR_REQ_IT_CTP_RequestTRU_Edit_StockMan", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_REQ_IT_CTP_RequestTRU_View_Full", model);
         }
 
         public ActionResult GetEmergencyRequestTRU(RapidDoc.Models.ViewModels.USR_REQ_HY_EmergencyRequestTRU_View model)

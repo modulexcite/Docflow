@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using RapidDoc.Models.Interfaces;
+using RapidDoc.Models.Repository;
 
 namespace RapidDoc.Models.DomainModels
 {
@@ -20,5 +21,34 @@ namespace RapidDoc.Models.DomainModels
 
         [Required]
         public string Users { get; set; }
+    }
+
+    public abstract class BasicDocumantOfficeMemoTable : BasicDocumentTable
+    {
+        public Folder Folder { get; set; }
+
+        public Guid? ItemCauseTableId { get; set; }
+        public virtual ItemCauseTable ItemCauseTable { get; set; }
+
+        [Required]
+        public string ItemCauseNumber
+        {
+            get {
+                if (this.ItemCauseTable != null)
+                    return this.ItemCauseTable.CaseNumber;
+
+                return String.Empty;
+            }
+        }
+
+        public string DocumentWhom { get; set; }
+
+        public string DocumentCopy { get; set; }
+
+        [Required]
+        public string DocumentTitle { get; set; }
+
+        [Required]
+        public string MainField { get; set; }
     }
 }

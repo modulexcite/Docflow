@@ -6,12 +6,12 @@
 
 <div class="row">
     <div class="col-xs-6">
+        @if (Model.DocumentView.isArchive == true)
+        {
+            <span class="fa fa-archive"></span>
+        }
+        <h5 class="hidden-print"><a href="@ViewBag.DocumentUrl" id="documenturl">#@Model.DocumentView.DocumentNum</a><strong> - @Model.ProcessView.ProcessName</strong></h5>
         <h4>
-            @if (Model.DocumentView.isArchive == true)
-            {
-                <span class="fa fa-archive"></span>
-            }
-            <a href="@ViewBag.DocumentUrl" id="documenturl" class="hidden-print">#@Model.DocumentView.DocumentNum - @Model.ProcessView.ProcessName</a>
             <span class="visible-print-inline">@Model.DocumentView.DocumentNum - @Model.ProcessView.ProcessName</span>
             <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
         </h4>

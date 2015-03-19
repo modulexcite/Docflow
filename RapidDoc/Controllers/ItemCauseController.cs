@@ -24,12 +24,14 @@ namespace RapidDoc.Controllers
     {
         private readonly IItemCauseService _Service;
         private readonly IDepartmentService _DepartmentService;
+        private readonly IEmplService _EmplService;
 
-        public ItemCauseController(IItemCauseService Service, ICompanyService companyService, IAccountService accountService, IDepartmentService departmentService)
+        public ItemCauseController(IItemCauseService Service, ICompanyService companyService, IAccountService accountService, IDepartmentService departmentService, IEmplService emplService)
             : base(companyService, accountService)
         {
             _Service = Service;
             _DepartmentService = departmentService;
+            _EmplService = emplService;
         }
         
         public ActionResult Index()
@@ -41,6 +43,19 @@ namespace RapidDoc.Controllers
         {
             var grid = new ItemCauseAjaxPagingGrid(_Service.GetAllView(), 1, false);
             return PartialView("_ItemCauseGrid", grid);
+        }
+
+        [AllowAnonymous]
+        public ActionResult ItemCausesListLookup()
+        {
+            ApplicationUser currentApplUser = _AccountService.Find(User.Identity.GetUserId());
+            EmplTable emplTable = _EmplService.FirstOrDefault(empl => empl.ApplicationUserId == currentApplUser.Id && empl.CompanyTableId == currentApplUser.CompanyTableId);
+            List<ItemCauseView> items = new List<ItemCauseView>();
+
+            if (emplTable != null && emplTable.DepartmentTableId != null)
+                items.AddRange(_Service.GetCurrentUserItemsCause(_Service.GetPartialView(item => item.Enable == true).ToList(), _DepartmentService.FirstOrDefault(department => department.Id == emplTable.DepartmentTableId), currentApplUser.CompanyTableId ?? Guid.Empty));
+
+            return PartialView("_ItemCauseListLookup", items);
         }
 
         public JsonResult GetItemCausesList(int page)
