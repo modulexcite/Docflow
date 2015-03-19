@@ -55,6 +55,8 @@ namespace RapidDoc.Models.DomainModels
                     return String.Empty;
                 }
         }
+
+        public bool Enable { get; set; }
         
     }
 }
