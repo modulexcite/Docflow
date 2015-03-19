@@ -27,10 +27,10 @@ namespace RapidDoc.Models.DomainModels
     {
         public Folder Folder { get; set; }
 
+        [Required]
         public Guid? ItemCauseTableId { get; set; }
         public virtual ItemCauseTable ItemCauseTable { get; set; }
-
-        [Required]
+     
         public string ItemCauseNumber
         {
             get {
