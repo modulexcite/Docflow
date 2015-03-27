@@ -1051,13 +1051,5 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Кадровые приказы")]
         Element7 = 6
     }
-
-    public enum DocumentType : byte
-    {
-        [Display(Name = "Запрос")]
-        Request = 0,
-
-        [Display(Name = "Служебная записка")]
-        OfficeMemo = 1
-    }
+    
 }

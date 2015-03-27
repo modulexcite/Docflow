@@ -50,6 +50,5 @@ namespace RapidDoc.Models.DomainModels
 
         [Required]
         public string MainField { get; set; }
-        public bool Parallel { get; set; }
     }
 }

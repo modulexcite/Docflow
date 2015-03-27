@@ -49,8 +49,5 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Основное поле")]
         public string MainField { get; set; }
-
-        [Display(Name = "Параллельно")]
-        public bool Parallel { get; set; }
     }
 }

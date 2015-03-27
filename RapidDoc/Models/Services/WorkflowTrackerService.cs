@@ -200,7 +200,7 @@ namespace RapidDoc.Models.Services
 
             if (endSteps != null && endSteps.Count() > 0)
             {
-                WFTrackerTable endStep = endSteps.Where(b => b.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum).FirstOrDefault();
+                WFTrackerTable endStep = endSteps.OrderByDescending(x => x.LineNum).FirstOrDefault();
 
                 if (endStep != null)
                 {

@@ -44,10 +44,7 @@ namespace RapidDoc.Models.Services
         void AgreementWorkflowReject(Guid documentId, string TableName, Guid WWFInstanceId, Guid processId, IDictionary<string, object> documentData);
         void AgreementWorkflowWithdraw(Guid documentId, string TableName, Guid WWFInstanceId, Guid processId);
         void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUserId, string workflowId, bool useManual, int slaOffset, bool executionStep);
-        List<Array> GetRequestTree(Activity activity, string _parallel = "");
-        List<Array> GetOfficeMemoTree(Activity activity, bool parallelSequence, List<string> userList, string _parallel = "", bool _cycle = false);
-        List<Array> GetTrackerList(Activity activity, IDictionary<string, object> documentData, DocumentType documentType);
-        List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField);
+        List<Array> printActivityTree(Activity activity, string _parallel = "");
     }
 
     public class WorkflowService : IWorkflowService
@@ -63,7 +60,8 @@ namespace RapidDoc.Models.Services
         private readonly IReviewDocLogService _ReviewDocLogService;
         private readonly ICustomCheckDocument _CustomCheckDocument;
         
-        IDictionary<string, object> outputParameters;              
+        IDictionary<string, object> outputParameters;
+        private List<Array> allSteps = new List<Array>();
 
         public WorkflowService(IUnitOfWork uow, IDocumentService documentService, IEmplService emplService, 
             IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService,
@@ -262,7 +260,7 @@ namespace RapidDoc.Models.Services
             SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
             FileTable fileTableWF = GetActualFileWF(TableName, documentTable);
             Activity activity = ChooseActualWorkflow(TableName, fileTableWF);
-            _WorkflowTrackerService.SaveTrackList(documentTable.Id, this.GetTrackerList(activity, documentData, documentTable.DocType));        
+            _WorkflowTrackerService.SaveTrackList(documentTable.Id, printActivityTree(activity));
             StartAndPersistInstance(documentTable.Id, DocumentState.Agreement, documentData, instanceStore, activity, fileTableWF);
             DeleteInstanceStoreOwner(instanceStore);
             _EmailService.SendExecutorEmail(documentTable.Id);
@@ -571,7 +569,6 @@ namespace RapidDoc.Models.Services
         }
         public Activity ChooseActualWorkflow(string _tableName, FileTable fileWF, bool flag = true)
         {
-            flag = false;
             if (flag == true)
             {
                 using (System.IO.Stream stream = new System.IO.MemoryStream(fileWF.Data))
@@ -635,135 +632,23 @@ namespace RapidDoc.Models.Services
                     {
                     }
                 }
-                if (trackerTable.ParallelID == String.Empty)
+
+                IEnumerable<WFTrackerTable> trackerTableCancel = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == trackerTable.DocumentTableId && x.LineNum > trackerTable.LineNum && x.ActivityID != trackerTable.ActivityID).ToList();
+                foreach (var item in trackerTableCancel)
                 {
-                    IEnumerable<WFTrackerTable> trackerTableCancel = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == trackerTable.DocumentTableId && x.LineNum > trackerTable.LineNum && x.ActivityID != trackerTable.ActivityID).ToList();
-                    foreach (var item in trackerTableCancel)
-                    {
-                        item.TrackerType = TrackerType.NonActive;
-                        item.SignDate = null;
-                        item.SignUserId = null;
-                        if (item.Users != null)
-                            item.Users.Clear();
-                        item.SLAOffset = 0;
-                        item.StartDateSLA = null;
-                        item.ManualExecutor = false;
-                        _WorkflowTrackerService.SaveDomain(item, currentUserId);
-                    }
+                    item.TrackerType = TrackerType.NonActive;
+                    item.SignDate = null;
+                    item.SignUserId = null;
+                    if (item.Users != null)
+                        item.Users.Clear();
+                    item.SLAOffset = 0;
+                    item.StartDateSLA = null;
+                    item.ManualExecutor = false;
+                    _WorkflowTrackerService.SaveDomain(item, currentUserId);
                 }
             }
         }
-        /*public List<Array> printActivityTree(Activity activity, IDictionary<string, object> documentData, string _parallel = "", bool _cycle = false)
-        {
-            string[] myIntArray = new string[3];
-            List<Array> allSteps = new List<Array>();
-
-            if (activity.GetType() == typeof(WFChooseUpManager) ||
-                activity.GetType() == typeof(WFChooseStaffStructure) ||
-                activity.GetType() == typeof(WFChooseSpecificUserFromService) ||
-                activity.GetType() == typeof(WFChooseSpecificUser) ||
-                activity.GetType() == typeof(WFChooseRoleUser) ||
-                activity.GetType() == typeof(WFChooseManualExecution) ||
-                activity.GetType() == typeof(WFChooseDocUsers) ||
-                activity.GetType() == typeof(WFChooseCreatedUser))
-            {
-                if (_parallel != String.Empty)
-                {
-                    if ((bool)documentData["Parallel"] == true)
-                    {
-                        foreach (string item in ofmList)
-                        {                       
-                            myIntArray.SetValue(item, 0);
-                            myIntArray.SetValue(item, 1);
-                            myIntArray.SetValue(_parallel, 2);
-                            allSteps.Add(myIntArray);
-                            myIntArray = new string[3];
-                        }
-                    }
-                }
-                else
-                {
-                    if (_cycle == true && (bool)documentData["Parallel"] == false)
-                    {
-                        foreach (string item in ofmList)
-                        {                       
-                            myIntArray.SetValue(item, 0);
-                            myIntArray.SetValue(item, 1);
-                            myIntArray.SetValue(_parallel, 2);
-                            allSteps.Add(myIntArray);
-                            myIntArray = new string[3];
-                        }
-                    }
-                    else
-                    {
-                        if (_cycle == false)
-                        {
-                            myIntArray.SetValue(activity.DisplayName, 0);
-                            myIntArray.SetValue(activity.Id, 1);
-                            myIntArray.SetValue(_parallel, 2);
-                            allSteps.Add(myIntArray);
-                        }
-                    }
-                }
-            }
-            if (activity is Parallel || activity is ParallelForEach<string>)
-                _parallel = activity.Id;
-            if (activity is DoWhile)
-                _cycle = true;
-
-            if (activity is ParallelForEach<string> || activity is DoWhile)
-            {
-                string initailStructure = (string)documentData["DocumentWhom"];
-                string[] arrayTempStructrue = initailStructure.Split(',');
-                ofmList.Clear();
-
-                Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
-                string[] arrayStructure = arrayTempStructrue.Where(a => isGuid.IsMatch(a) == true).ToArray();
-                EmplTable userName;
-                foreach(string item in arrayStructure)
-			    {
-                    userName = _EmplService.Find(Guid.Parse(item), HttpContext.Current.User.Identity.GetUserId());
-
-                    if (userName != null && !ofmList.Exists(x => x == userName.UserName))
-                    {
-                            ofmList.Add(userName.UserName);
-                    }
-                    else
-                    {
-                        RoleManager<ApplicationRole> RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
-
-                        var names = RoleManager.FindById(item).Users;
-                        if (names != null && names.Count() > 0)
-                        {
-                            foreach (IdentityUserRole name in names)
-                            {
-                                userName = _EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId);
-                                if (!ofmList.Exists(x => x == userName.UserName) && userName != null)
-                                {
-                                    ofmList.Add(userName.UserName);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            IEnumerator<Activity> list = WorkflowInspectionServices.GetActivities(activity).GetEnumerator();
-
-            while (list.MoveNext())
-            {
-                var allStepsBuf = allSteps.Concat(printActivityTree(list.Current, documentData, _parallel, _cycle));
-                allSteps = allStepsBuf.ToList();
-            }
-            if (((activity is Parallel) || (activity is ParallelForEach<string>)) && (activity.Id == _parallel))
-                _parallel = "";
-            if ((activity is DoWhile) && (_cycle == true))
-                _cycle = false;
-            return allSteps;
-        }*/
-
-
-        public List<Array> GetRequestTree(Activity activity, string _parallel = "")
+        public List<Array> printActivityTree(Activity activity, string _parallel = "")
         {
             string[] myIntArray = new string[3];
             List<Array> allSteps = new List<Array>();
@@ -789,139 +674,12 @@ namespace RapidDoc.Models.Services
 
             while (list.MoveNext())
             {
-                var allStepsBuf = allSteps.Concat(GetRequestTree(list.Current, _parallel));
+                var allStepsBuf = allSteps.Concat(printActivityTree(list.Current, _parallel));
                 allSteps = allStepsBuf.ToList();
             }
             if ((activity is Parallel) && (activity.Id == _parallel))
                 _parallel = "";
             return allSteps;
-        }
-
-        public List<Array> GetOfficeMemoTree(Activity activity, bool parallelSequence, List<string> userList, string _parallel = "", bool _cycle = false)
-        {
-            string[] myIntArray = new string[3];
-            List<Array> allSteps = new List<Array>();
-
-            if (activity.GetType() == typeof(WFChooseUpManager) ||
-                activity.GetType() == typeof(WFChooseStaffStructure) ||
-                activity.GetType() == typeof(WFChooseSpecificUserFromService) ||
-                activity.GetType() == typeof(WFChooseSpecificUser) ||
-                activity.GetType() == typeof(WFChooseRoleUser) ||
-                activity.GetType() == typeof(WFChooseManualExecution) ||
-                activity.GetType() == typeof(WFChooseDocUsers) ||
-                activity.GetType() == typeof(WFChooseCreatedUser))
-            {
-                if (_cycle == false && _parallel == String.Empty)
-                {
-                    myIntArray.SetValue(activity.DisplayName, 0);
-                    myIntArray.SetValue(activity.Id, 1);
-                    myIntArray.SetValue(_parallel, 2);
-                    allSteps.Add(myIntArray);
-                }
-                else if (parallelSequence == true && _parallel != String.Empty)
-                {
-                    foreach (string item in userList)
-                    {
-                        myIntArray.SetValue(item, 0);
-                        myIntArray.SetValue(activity.Id + item, 1);
-                        myIntArray.SetValue(_parallel, 2);
-                        allSteps.Add(myIntArray);
-                        myIntArray = new string[3];
-                    }
-                }
-                else if (parallelSequence == false && _parallel == String.Empty && _cycle == true)
-                {
-                    foreach (string item in userList)
-                    {
-                        myIntArray.SetValue(item, 0);
-                        myIntArray.SetValue(activity.Id + item, 1);
-                        myIntArray.SetValue(_parallel, 2);
-                        allSteps.Add(myIntArray);
-                        myIntArray = new string[3];
-                    } 
-                }
-            }
-
-            if (activity is ParallelForEach<string>)
-                _parallel = activity.Id;
-            else if (activity is DoWhile)
-                _cycle = true;
-
-            IEnumerator<Activity> list = WorkflowInspectionServices.GetActivities(activity).GetEnumerator();
-
-            while (list.MoveNext())
-            {
-                var allStepsBuf = allSteps.Concat(GetOfficeMemoTree(list.Current, parallelSequence, userList, _parallel, _cycle));
-                allSteps = allStepsBuf.ToList();
-            }
-
-            if ((activity is ParallelForEach<string>) && (activity.Id == _parallel))
-                _parallel = "";
-            if ((activity is DoWhile) && (_cycle == true))
-                _cycle = false;
-
-            return allSteps;
-        }
-
-        public List<Array> GetTrackerList(Activity activity, IDictionary<string, object> documentData, DocumentType documentType)
-        {
-            List<Array> allSteps = new List<Array>();
-
-            switch (documentType)
-            {
-                case DocumentType.Request:
-                    allSteps = this.GetRequestTree(activity);
-                    break;
-                case DocumentType.OfficeMemo:
-                    List<string> users = this.GetUniqueUserList(documentData, "DocumentWhom");
-                    allSteps = this.GetOfficeMemoTree(activity, (bool)documentData["Parallel"], users);
-                    documentData["DocumentWhom"] = users;
-                    break;
-            }
-
-            return allSteps;
-        }
-
-
-        public List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField)
-        {
-            List<string> ofmList = new List<string>();
-            string initailStructure = (string)documentData[nameField];
-            string[] arrayTempStructrue = initailStructure.Split(',');
-            ofmList.Clear();
-
-            Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
-            string[] arrayStructure = arrayTempStructrue.Where(a => isGuid.IsMatch(a) == true).ToArray();
-            EmplTable emplTable;
-
-            foreach (string item in arrayStructure)
-            {
-                emplTable = _EmplService.FindIntercompany(Guid.Parse(item));
-
-                if (emplTable != null && !ofmList.Exists(x => x == emplTable.UserName))
-                {
-                    ofmList.Add(emplTable.UserName);
-                }
-                else
-                {
-                    RoleManager<ApplicationRole> RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
-
-                    var names = RoleManager.FindById(item).Users;
-                    if (names != null && names.Count() > 0)
-                    {
-                        foreach (IdentityUserRole name in names)
-                        {
-                            emplTable = _EmplService.FindIntercompany(Guid.Parse(name.UserId));
-                            if (emplTable != null && !ofmList.Exists(x => x == emplTable.UserName))
-                            {
-                                ofmList.Add(emplTable.UserName);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return ofmList;
         }
     }
 }
