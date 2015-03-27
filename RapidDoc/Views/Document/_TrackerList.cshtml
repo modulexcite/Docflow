@@ -1,0 +1,92 @@
+﻿@model IEnumerable<RapidDoc.Models.ViewModels.WFTrackerListView>
+@{
+    bool isPerformDate = Model.Any(x => x.PerformToDate != null);
+}
+
+
+@if (Model.Count() > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-condensed">
+            <thead class="">
+                <tr>
+                    <th class="actionField">
+                        #
+                    </th>
+                    <td class="actionField hidden-print"></td>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().ActivityName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().Executors)
+                    </th>
+                    @if (isPerformDate == true)
+                    {
+                    <th class="hidden-print">
+                        @Html.DisplayName(FieldNameRes.FieldNameResource.PerformToDate)
+                    </th>
+                    }
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().SignDate)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var trackerItem in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="label label-primary rowNum cellAligmentMiddle">@Html.DisplayFor(modelItem => trackerItem.RowNum)</span>
+                        </td>
+                        <td class="hidden-print">
+                            @if ((trackerItem.ManualExecutor == true && (bool)ViewBag.SignDocument) || (User.IsInRole("Administrator") && trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting))
+                            {
+                                <a href=@Url.Action("AddExecutor", new { id = ViewBag.DocumentId, activityId = trackerItem.ActivityID }) class="hidden-print"><span class="fa fa-users fa-lg"></span></a>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => trackerItem.ActivityName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => trackerItem.Executors)
+                        </td>
+                        @if (isPerformDate == true)
+                        {
+                        <td class="hidden-print">
+                            @if (trackerItem.PerformToDate != null)
+                            {
+                                @Html.DisplayFor(modelItem => trackerItem.PerformToDate)
+                            }
+                        </td>
+                        }
+                        <td>
+                            @if (trackerItem.SignDate != null)
+                            {
+                                @Html.DisplayFor(modelItem => trackerItem.SignDate)
+                            }
+                        </td>
+                        <th>
+                            @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting)
+                            {
+                                <span class="fa fa-spinner fa-spin fa-2x text-primary hidden-print"></span>
+                                <p class="visible-print-inline">@UIElementRes.UIElement.Waiting</p>
+                            }
+                            @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Approved)
+                            {
+                                <span class="fa fa-check fa-2x text-primary hidden-print"></span>
+                                <p class="visible-print-inline">@UIElementRes.UIElement.Yes</p>
+                            }
+                            @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Cancelled)
+                            {
+                                <span class="fa fa-times fa-2x text-primary hidden-print"></span>
+                                <p class="visible-print-inline">@UIElementRes.UIElement.No</p>
+                            }
+                        </th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
