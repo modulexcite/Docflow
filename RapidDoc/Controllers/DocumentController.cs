@@ -146,6 +146,11 @@ namespace RapidDoc.Controllers
             DocumentTable documentTable = _DocumentService.Find(id);
             ApplicationUser currentUser = _AccountService.Find(User.Identity.GetUserId());
 
+            if (documentTable == null || currentUser == null)
+            {
+                return RedirectToAction("PageNotFound", "Error");
+            }
+
             if (documentTable.DocumentState == DocumentState.Created)
             {
                 if (documentTable.ApplicationUserCreatedId == currentUser.Id || UserManager.IsInRole(currentUser.Id, "Administrator"))
@@ -166,7 +171,7 @@ namespace RapidDoc.Controllers
             ProcessView process = _ProcessService.FindView(documentTable.ProcessTableId);
             EmplTable emplTable = _EmplService.GetEmployer(docuView.ApplicationUserCreatedId, docuView.CompanyTableId);
 
-            if (documentTable == null || docuView == null || process == null || currentUser == null || emplTable == null || _DocumentService.isShowDocument(documentTable, currentUser, isAfterView) == false)
+            if (docuView == null || process == null || emplTable == null || _DocumentService.isShowDocument(documentTable, currentUser, isAfterView) == false)
             {
                 return RedirectToAction("PageNotFound", "Error");
             }
@@ -1339,6 +1344,16 @@ namespace RapidDoc.Controllers
 
             ActionResult view = RoutePostMethod(processView, actionModel, type, operationType, documentId, fileId, actionModelName, documentData);
             return view;
+        }
+
+        public ActionResult GetTrackerList(Guid id, bool signDocument)
+        {
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id, timeZoneInfo);
+            ViewBag.DocumentId = id;
+            ViewBag.SignDocument = signDocument;
+            return PartialView("~/Views/Document/_TrackerList.cshtml", model);
         }
 
         private void CheckAttachedFiles(ProcessView process, Guid fileId, Guid? documentId)
