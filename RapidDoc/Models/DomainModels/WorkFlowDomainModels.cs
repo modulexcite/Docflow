@@ -100,6 +100,8 @@ namespace RapidDoc.Models.DomainModels
 
         public Guid? GroupProcessTableId { get; set; }
         public virtual GroupProcessTable GroupProcessTable { get; set; }
+
+        public DocumentType DocType { get; set; }
     }
 
     public class DocumentTable : BasicCompanyNullTable
@@ -115,6 +117,7 @@ namespace RapidDoc.Models.DomainModels
         public Guid FileId { get; set; }
         public DocumentState DocumentState { get; set; }
         public string ActivityName { get; set; }
+        public DocumentType DocType { get; set; }
 
         public string GroupProcessName 
         {

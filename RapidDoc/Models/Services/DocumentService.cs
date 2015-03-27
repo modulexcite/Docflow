@@ -114,6 +114,7 @@ namespace RapidDoc.Models.Services
             docuTable.CompanyTableId = user.CompanyTableId;
             docuTable.ApplicationUserCreatedId = user.Id;
             docuTable.ApplicationUserModifiedId = user.Id;
+            docuTable.DocType = _ProcessService.Find(processId).DocType;
 
             Guid numberSeqId = _ProcessService.Find(processId).GroupProcessTable.NumberSeriesTableId ?? Guid.Empty;
             docuTable.DocumentNum = _NumberSeqService.GetDocumentNum(numberSeqId);
