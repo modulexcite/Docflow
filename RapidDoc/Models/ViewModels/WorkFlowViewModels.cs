@@ -82,6 +82,9 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "MandatoryDocDate", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public DateTime? MandatoryDocDate { get; set; }
+        
+        [Display(Name = "DocumentType", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public DocumentType DocType { get; set; }
     }
 
     public class DocumentComposite
@@ -113,6 +116,8 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "CurrentActivityName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string ActivityName { get; set; }
+
+        public DocumentType DocType { get; set; }
 
         [Display(Name = "DocumentText", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string DocumentText { get; set; }
