@@ -26,6 +26,7 @@ using RapidDoc.Models.Repository;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Core.Objects;
+using RapidDoc.Activities.CodeActivities;
 
 namespace RapidDoc.Models.Services
 {
@@ -571,7 +572,6 @@ namespace RapidDoc.Models.Services
         }
         public Activity ChooseActualWorkflow(string _tableName, FileTable fileWF, bool flag = true)
         {
-            flag = false;
             if (flag == true)
             {
                 using (System.IO.Stream stream = new System.IO.MemoryStream(fileWF.Data))
@@ -652,123 +652,14 @@ namespace RapidDoc.Models.Services
                     }
                 }
             }
-        }
-        /*public List<Array> printActivityTree(Activity activity, IDictionary<string, object> documentData, string _parallel = "", bool _cycle = false)
-        {
-            string[] myIntArray = new string[3];
-            List<Array> allSteps = new List<Array>();
-
-            if (activity.GetType() == typeof(WFChooseUpManager) ||
-                activity.GetType() == typeof(WFChooseStaffStructure) ||
-                activity.GetType() == typeof(WFChooseSpecificUserFromService) ||
-                activity.GetType() == typeof(WFChooseSpecificUser) ||
-                activity.GetType() == typeof(WFChooseRoleUser) ||
-                activity.GetType() == typeof(WFChooseManualExecution) ||
-                activity.GetType() == typeof(WFChooseDocUsers) ||
-                activity.GetType() == typeof(WFChooseCreatedUser))
-            {
-                if (_parallel != String.Empty)
-                {
-                    if ((bool)documentData["Parallel"] == true)
-                    {
-                        foreach (string item in ofmList)
-                        {                       
-                            myIntArray.SetValue(item, 0);
-                            myIntArray.SetValue(item, 1);
-                            myIntArray.SetValue(_parallel, 2);
-                            allSteps.Add(myIntArray);
-                            myIntArray = new string[3];
-                        }
-                    }
-                }
-                else
-                {
-                    if (_cycle == true && (bool)documentData["Parallel"] == false)
-                    {
-                        foreach (string item in ofmList)
-                        {                       
-                            myIntArray.SetValue(item, 0);
-                            myIntArray.SetValue(item, 1);
-                            myIntArray.SetValue(_parallel, 2);
-                            allSteps.Add(myIntArray);
-                            myIntArray = new string[3];
-                        }
-                    }
-                    else
-                    {
-                        if (_cycle == false)
-                        {
-                            myIntArray.SetValue(activity.DisplayName, 0);
-                            myIntArray.SetValue(activity.Id, 1);
-                            myIntArray.SetValue(_parallel, 2);
-                            allSteps.Add(myIntArray);
-                        }
-                    }
-                }
-            }
-            if (activity is Parallel || activity is ParallelForEach<string>)
-                _parallel = activity.Id;
-            if (activity is DoWhile)
-                _cycle = true;
-
-            if (activity is ParallelForEach<string> || activity is DoWhile)
-            {
-                string initailStructure = (string)documentData["DocumentWhom"];
-                string[] arrayTempStructrue = initailStructure.Split(',');
-                ofmList.Clear();
-
-                Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
-                string[] arrayStructure = arrayTempStructrue.Where(a => isGuid.IsMatch(a) == true).ToArray();
-                EmplTable userName;
-                foreach(string item in arrayStructure)
-			    {
-                    userName = _EmplService.Find(Guid.Parse(item), HttpContext.Current.User.Identity.GetUserId());
-
-                    if (userName != null && !ofmList.Exists(x => x == userName.UserName))
-                    {
-                            ofmList.Add(userName.UserName);
-                    }
-                    else
-                    {
-                        RoleManager<ApplicationRole> RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
-
-                        var names = RoleManager.FindById(item).Users;
-                        if (names != null && names.Count() > 0)
-                        {
-                            foreach (IdentityUserRole name in names)
-                            {
-                                userName = _EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId);
-                                if (!ofmList.Exists(x => x == userName.UserName) && userName != null)
-                                {
-                                    ofmList.Add(userName.UserName);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            IEnumerator<Activity> list = WorkflowInspectionServices.GetActivities(activity).GetEnumerator();
-
-            while (list.MoveNext())
-            {
-                var allStepsBuf = allSteps.Concat(printActivityTree(list.Current, documentData, _parallel, _cycle));
-                allSteps = allStepsBuf.ToList();
-            }
-            if (((activity is Parallel) || (activity is ParallelForEach<string>)) && (activity.Id == _parallel))
-                _parallel = "";
-            if ((activity is DoWhile) && (_cycle == true))
-                _cycle = false;
-            return allSteps;
-        }*/
-
+        }     
 
         public List<Array> GetRequestTree(Activity activity, string _parallel = "")
         {
             string[] myIntArray = new string[3];
             List<Array> allSteps = new List<Array>();
 
-            if (activity.GetType() == typeof(WFChooseUpManager) ||
+            if (
                 activity.GetType() == typeof(WFChooseStaffStructure) ||
                 activity.GetType() == typeof(WFChooseSpecificUserFromService) ||
                 activity.GetType() == typeof(WFChooseSpecificUser) ||
@@ -802,14 +693,8 @@ namespace RapidDoc.Models.Services
             string[] myIntArray = new string[3];
             List<Array> allSteps = new List<Array>();
 
-            if (activity.GetType() == typeof(WFChooseUpManager) ||
-                activity.GetType() == typeof(WFChooseStaffStructure) ||
-                activity.GetType() == typeof(WFChooseSpecificUserFromService) ||
-                activity.GetType() == typeof(WFChooseSpecificUser) ||
-                activity.GetType() == typeof(WFChooseRoleUser) ||
-                activity.GetType() == typeof(WFChooseManualExecution) ||
-                activity.GetType() == typeof(WFChooseDocUsers) ||
-                activity.GetType() == typeof(WFChooseCreatedUser))
+            if (activity.GetType() == typeof(WFChooseOfficeMemoSpecificUser) ||
+                activity.GetType() == typeof(WFChooseUpManager))
             {
                 if (_cycle == false && _parallel == String.Empty)
                 {
@@ -911,7 +796,7 @@ namespace RapidDoc.Models.Services
                     {
                         foreach (IdentityUserRole name in names)
                         {
-                            emplTable = _EmplService.FindIntercompany(Guid.Parse(name.UserId));
+                            emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId);
                             if (emplTable != null && !ofmList.Exists(x => x == emplTable.UserName))
                             {
                                 ofmList.Add(emplTable.UserName);
