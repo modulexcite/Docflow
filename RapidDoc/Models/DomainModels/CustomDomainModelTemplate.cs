@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using RapidDoc.Models.Interfaces;
 using RapidDoc.Models.Repository;
 
@@ -35,7 +36,7 @@ namespace RapidDoc.Models.DomainModels
         {
             get {
                 if (this.ItemCauseTable != null)
-                    return this.ItemCauseTable.CaseNumber;
+                    return this.ItemCauseTable.CaseNumber + " - " + this.ItemCauseTable.CaseName;
 
                 return String.Empty;
             }

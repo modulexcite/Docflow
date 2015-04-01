@@ -2680,6 +2680,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForImportORZZIF_View : BasicDocumentView
@@ -2728,6 +2730,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForImportTMCNoneZIF_View : BasicDocumentView
@@ -2776,7 +2780,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
-
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForImportTMCUZL_View : BasicDocumentView
@@ -2825,6 +2830,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForInOutNotebook_View : BasicDocumentView
@@ -2947,6 +2954,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForExportZIFOre_View : BasicDocumentView
@@ -2987,6 +2996,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForExportOSPVHZIF_View : BasicDocumentView
@@ -3036,7 +3047,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
-
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForExportItems_View : BasicDocumentView
@@ -3105,7 +3117,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
-
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForHU_View : BasicDocumentView
@@ -3170,6 +3183,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForMovementItems_View : BasicDocumentView
@@ -3238,6 +3253,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForMovementAssets_View : BasicDocumentView
@@ -3302,6 +3319,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForTemporaryORZ_View : BasicDocumentView
@@ -3417,7 +3436,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
-
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForExportItemFromORZ_View : BasicDocumentView
@@ -3466,7 +3486,8 @@ namespace RapidDoc.Models.ViewModels
         public bool Post5 { get; set; }
         [Display(Name = "Пост №11(КПП Транспортный ЗИФ)")]
         public bool Post6 { get; set; }
-
+        [Display(Name = "Пост №28(Реагентное отделение)")]
+        public bool Post7 { get; set; }
     }
     #endregion
 

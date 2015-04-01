@@ -30,6 +30,8 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Папка")]
         public Folder Folder { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Номенклатурное дело")]
         public Guid? ItemCauseTableId { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]

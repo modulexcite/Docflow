@@ -28,6 +28,7 @@ using System.Configuration;
 
 namespace RapidDoc.Controllers
 {
+    [ValidateInput(false)]
     public class DocumentController : BasicController
     {
         private readonly IDocumentService _DocumentService;
@@ -1241,6 +1242,7 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult PostDocument(Guid processId, int type, OperationType operationType, Guid? documentId, Guid fileId, FormCollection collection, string actionModelName)
         {
             IDictionary<string, object> documentData = new Dictionary<string, object>();
@@ -1298,9 +1300,19 @@ namespace RapidDoc.Controllers
                     }
                     else if (propertyInfo.PropertyType == typeof(Guid?))
                     {
+                        bool isRequired = propertyInfo
+                                .GetCustomAttributes(typeof(RequiredAttribute), false)
+                                .Length == 1;
+
                         Guid? valueNotGuid = collection[key] == "" ? null : (Guid?)Guid.Parse(collection[key]);
-                        propertyInfo.SetValue(actionModel, valueNotGuid, null);
-                        documentData.Add(key, valueNotGuid);
+
+                        if ((isRequired == true && valueNotGuid != null) || (isRequired == false))
+                        {
+                            propertyInfo.SetValue(actionModel, valueNotGuid, null);
+                            documentData.Add(key, valueNotGuid);
+                        }
+                        else
+                            ModelState.AddModelError(string.Empty, String.Format(ValidationRes.ValidationResource.ErrorFieldisNull, GetAttributeDisplayName(propertyInfo)));
                     }
                     else if (propertyInfo.PropertyType == typeof(Guid))
                     {

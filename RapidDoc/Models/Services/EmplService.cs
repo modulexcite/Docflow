@@ -201,7 +201,7 @@ namespace RapidDoc.Models.Services
                                      where x.RoleType == RoleType.Group
                                      select new 
                                      {
-                                        value = string.Format("{0}, {1}", x.Id, x.Name),
+                                        value = string.Format("{0}, {1}", x.Id, x.Description.Replace(",", " ")),
                                         text = string.Format("[ {0} ]", x.Description)
                                      });
 

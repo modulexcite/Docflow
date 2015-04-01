@@ -225,49 +225,59 @@ namespace RapidDoc.Models.Services
         }
         public void SaveTrackList(Guid documentId, List<Array> allSteps)
         {
-            foreach(string[] step in allSteps)
+            string userid = getCurrentUserId(String.Empty);
+            DateTime createdDate = DateTime.UtcNow;
+
+            foreach (string[] step in allSteps)
             {
-                WFTrackerTable trackerTable     = new WFTrackerTable();
-                trackerTable.ActivityName       = step[0];
-                trackerTable.ActivityID         = step[1];
-                trackerTable.ParallelID         = step[2];
-                trackerTable.DocumentTableId    = documentId;
-                trackerTable.TrackerType        = TrackerType.NonActive;
-                SaveDomain(trackerTable);
+                WFTrackerTable trackerTable = new WFTrackerTable();
+                trackerTable.ActivityName = step[0];
+                trackerTable.ActivityID = step[1];
+                trackerTable.ParallelID = step[2];
+                trackerTable.DocumentTableId = documentId;
+                trackerTable.TrackerType = TrackerType.NonActive;
+
+                trackerTable.CreatedDate = createdDate;
+                trackerTable.ModifiedDate = trackerTable.CreatedDate;
+                trackerTable.ApplicationUserCreatedId = userid;
+                trackerTable.ApplicationUserModifiedId = userid;
+                repo.Add(trackerTable);
             }
+            _uow.Commit();
         }
         public void SaveDomain(WFTrackerTable domainTable, string currentUserId = "")
         {
-            ApplicationUser user = getCurrentUserId(currentUserId);
+            string userid = getCurrentUserId(currentUserId);
             if (domainTable.Id == Guid.Empty)
             {
                 domainTable.CreatedDate = DateTime.UtcNow;
                 domainTable.ModifiedDate = domainTable.CreatedDate;
-                domainTable.ApplicationUserCreatedId = user.Id;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserCreatedId = userid;
+                domainTable.ApplicationUserModifiedId = userid;
                 repo.Add(domainTable);
             }
             else
             {
                 domainTable.ModifiedDate = DateTime.UtcNow;
-                domainTable.ApplicationUserModifiedId = user.Id;
+                domainTable.ApplicationUserModifiedId = userid;
                 repo.Update(domainTable);
             }
             _uow.Commit();
         }
+
         public WFTrackerTable Find(Guid id)
         {
             return repo.GetById(id);
         }
-        private ApplicationUser getCurrentUserId(string currentUserId = "")
+        private string getCurrentUserId(string currentUserId = "")
         {
             if (currentUserId != string.Empty)
             {
-                return repoUser.GetById(currentUserId);
+                return currentUserId;
             }
             else
             {
-                return repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
+                return HttpContext.Current.User.Identity.GetUserId();
             }
         }
         public void DeleteAll(Guid documentId)

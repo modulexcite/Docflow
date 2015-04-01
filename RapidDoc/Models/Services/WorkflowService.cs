@@ -264,7 +264,7 @@ namespace RapidDoc.Models.Services
             FileTable fileTableWF = GetActualFileWF(TableName, documentTable);
             Activity activity = ChooseActualWorkflow(TableName, fileTableWF);
             _WorkflowTrackerService.SaveTrackList(documentTable.Id, this.GetTrackerList(activity, documentData, documentTable.DocType));        
-            StartAndPersistInstance(documentTable.Id, DocumentState.Agreement, documentData, instanceStore, activity, fileTableWF);
+            StartAndPersistInstance(documentTable.Id, DocumentState.Agreement, documentData, instanceStore, activity, fileTableWF); 
             DeleteInstanceStoreOwner(instanceStore);
             _EmailService.SendExecutorEmail(documentTable.Id);
         }
@@ -659,7 +659,7 @@ namespace RapidDoc.Models.Services
             string[] myIntArray = new string[3];
             List<Array> allSteps = new List<Array>();
 
-            if (
+            if (activity.GetType() == typeof(WFChooseUpManager) ||
                 activity.GetType() == typeof(WFChooseStaffStructure) ||
                 activity.GetType() == typeof(WFChooseSpecificUserFromService) ||
                 activity.GetType() == typeof(WFChooseSpecificUser) ||

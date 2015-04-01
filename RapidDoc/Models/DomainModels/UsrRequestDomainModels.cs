@@ -1993,6 +1993,7 @@ namespace RapidDoc.Models.DomainModels
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
         public bool Post6 { get; set; }
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForImportORZZIF_Table : BasicDocumentTable
@@ -2027,6 +2028,7 @@ namespace RapidDoc.Models.DomainModels
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
         public bool Post6 { get; set; }
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForImportTMCNoneZIF_Table : BasicDocumentTable
@@ -2061,6 +2063,7 @@ namespace RapidDoc.Models.DomainModels
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
         public bool Post6 { get; set; }
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForImportTMCUZL_Table : BasicDocumentTable
@@ -2095,6 +2098,7 @@ namespace RapidDoc.Models.DomainModels
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
         public bool Post6 { get; set; }
+        public bool Post7 { get; set; }
 
     }
 
@@ -2184,6 +2188,7 @@ namespace RapidDoc.Models.DomainModels
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
         public bool Post6 { get; set; }
+        public bool Post7 { get; set; }
 
     }
 
@@ -2213,7 +2218,7 @@ namespace RapidDoc.Models.DomainModels
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
         public bool Post6 { get; set; }
-
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForExportOSPVHZIF_Table : BasicDocumentTable
@@ -2248,7 +2253,7 @@ namespace RapidDoc.Models.DomainModels
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
         public bool Post6 { get; set; }
-    
+        public bool Post7 { get; set; }
     }
 
 
@@ -2299,7 +2304,7 @@ namespace RapidDoc.Models.DomainModels
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
         public bool Post6 { get; set; }
-
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForHU_Table : BasicDocumentTable
@@ -2346,6 +2351,7 @@ namespace RapidDoc.Models.DomainModels
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
         public bool Post6 { get; set; }
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForMovementItems_Table : BasicDocumentTable
@@ -2394,7 +2400,8 @@ namespace RapidDoc.Models.DomainModels
         public bool Post3 { get; set; }
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
-        public bool Post6 { get; set; }        
+        public bool Post6 { get; set; }
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForMovementAssets_Table : BasicDocumentTable
@@ -2440,7 +2447,8 @@ namespace RapidDoc.Models.DomainModels
         public bool Post3 { get; set; }
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
-        public bool Post6 { get; set; }    
+        public bool Post6 { get; set; }
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForTemporaryORZ_Table : BasicDocumentTable
@@ -2524,9 +2532,8 @@ namespace RapidDoc.Models.DomainModels
         public bool Post3 { get; set; }
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
-        public bool Post6 { get; set; } 
-
-
+        public bool Post6 { get; set; }
+        public bool Post7 { get; set; }
     }
 
     public class USR_REQ_UB_RequestForExportItemFromORZ_Table : BasicDocumentTable
@@ -2555,15 +2562,13 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public string Date { get; set; }
 
-
         public bool Post1 { get; set; }
         public bool Post2 { get; set; }
         public bool Post3 { get; set; }
         public bool Post4 { get; set; }
         public bool Post5 { get; set; }
         public bool Post6 { get; set; }
-
-
+        public bool Post7 { get; set; }
     }
     #endregion 
 

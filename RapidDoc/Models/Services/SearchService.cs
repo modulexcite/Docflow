@@ -186,13 +186,44 @@ namespace RapidDoc.Models.Services
                                 stringWithoutTags = stringWithoutTags.Replace(guid, "");
                             }
 
-                            allStringData = allStringData + stringWithoutTags + "|";
+                            stringWithoutTags = StripTagsCharArray(stringWithoutTags);
+                            stringWithoutTags = stringWithoutTags.Replace("\r", "").Replace("\n", "").Trim();
+                            if (!String.IsNullOrEmpty(stringWithoutTags))
+                            {
+                                allStringData = allStringData + stringWithoutTags + "|";
+                            }
                         }
                     }
                 }
             }
 
             return allStringData;
+        }
+
+        public string StripTagsCharArray(string source)
+        {
+            char[] array = new char[source.Length];
+            int arrayIndex = 0;
+            bool inside = false;
+            for (int i = 0; i < source.Length; i++)
+            {
+                char let = source[i];
+                if (let == '<')
+                {
+                    inside = true; continue;
+                }
+                if (let == '>')
+                {
+                    inside = false;
+                    continue;
+                }
+                if (!inside)
+                {
+                    array[arrayIndex] = let;
+                    arrayIndex++;
+                }
+            }
+            return new string(array, 0, arrayIndex);
         }
 
         public void SaveSearchData(Guid id, string searchString)
