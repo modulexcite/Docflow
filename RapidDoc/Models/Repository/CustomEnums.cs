@@ -929,41 +929,44 @@ namespace RapidDoc.Models.Repository
 
     public enum Months : byte
     {
+        [Display(Name = "Не указано")]
+        Indefinite = 0,
+
         [Display(Name = "Январь")]
-        January = 0,
+        January = 1,
 
         [Display(Name = "Февраль")]
-        February = 1,
+        February = 2,
 
         [Display(Name = "Март")]
-        March = 2,
+        March = 3,
 
         [Display(Name = "Апрель")]
-        April = 3,
+        April = 4,
 
         [Display(Name = "Май")]
-        May = 4,
+        May = 5,
 
         [Display(Name = "Июнь")]
-        June = 5,
+        June = 6,
 
         [Display(Name = "Июль")]
-        July = 6,
+        July = 7,
 
         [Display(Name = "Август")]
-        August = 7,
+        August = 8,
 
         [Display(Name = "Сентябрь")]
-        September = 8,
+        September = 9,
 
         [Display(Name = "Октябрь")]
-        October = 9,
+        October = 10,
 
         [Display(Name = "Ноябрь")]
-        November = 10,
+        November = 11,
 
         [Display(Name = "Декабрь")]
-        December = 11
+        December = 12
     }
 
     public enum Payment : byte
@@ -975,7 +978,10 @@ namespace RapidDoc.Models.Repository
         Element2 = 1,
 
         [Display(Name = "За счет Kazzinc Holding")]
-        Element3 = 2
+        Element3 = 2,
+
+        [Display(Name = "Тоо Kazzinc")]
+        Element4 = 3
     }
 
     public enum PurposeTrip : byte
