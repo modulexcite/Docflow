@@ -637,7 +637,7 @@ namespace RapidDoc.Models.Services
                 }
                 if (trackerTable.ParallelID == String.Empty)
                 {
-                    IEnumerable<WFTrackerTable> trackerTableCancel = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == trackerTable.DocumentTableId && x.LineNum > trackerTable.LineNum && x.ActivityID != trackerTable.ActivityID).ToList();
+                    IEnumerable<WFTrackerTable> trackerTableCancel = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == trackerTable.DocumentTableId && x.LineNum > trackerTable.LineNum && x.ActivityID != trackerTable.ActivityID && x.TrackerType != TrackerType.NonActive).ToList();
                     foreach (var item in trackerTableCancel)
                     {
                         item.TrackerType = TrackerType.NonActive;
@@ -781,11 +781,12 @@ namespace RapidDoc.Models.Services
 
             foreach (string item in arrayStructure)
             {
-                emplTable = _EmplService.FindIntercompany(Guid.Parse(item));
+                Guid applicationUserId = Guid.Parse(item);
+                emplTable = _EmplService.FirstOrDefault(x => x.Id == applicationUserId && x.Enable == true);
 
                 if (emplTable != null && !ofmList.Exists(x => x == emplTable.UserName))
                 {
-                    ofmList.Add(emplTable.UserName);
+                    ofmList.Add(emplTable.ApplicationUserId);
                 }
                 else
                 {
@@ -796,10 +797,10 @@ namespace RapidDoc.Models.Services
                     {
                         foreach (IdentityUserRole name in names)
                         {
-                            emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId);
+                            emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId && x.Enable == true);
                             if (emplTable != null && !ofmList.Exists(x => x == emplTable.UserName))
                             {
-                                ofmList.Add(emplTable.UserName);
+                                ofmList.Add(emplTable.ApplicationUserId);
                             }
                         }
                     }

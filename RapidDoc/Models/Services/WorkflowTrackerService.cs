@@ -9,6 +9,8 @@ using RapidDoc.Models.Infrastructure;
 using RapidDoc.Models.Repository;
 using RapidDoc.Models.ViewModels;
 using Microsoft.AspNet.Identity;
+using System.Data;
+using System.ComponentModel;
 
 namespace RapidDoc.Models.Services
 {
@@ -228,23 +230,60 @@ namespace RapidDoc.Models.Services
             string userid = getCurrentUserId(String.Empty);
             DateTime createdDate = DateTime.UtcNow;
 
-            foreach (string[] step in allSteps)
+            using(var bcp = new System.Data.SqlClient.SqlBulkCopy(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             {
-                WFTrackerTable trackerTable = new WFTrackerTable();
-                trackerTable.ActivityName = step[0];
-                trackerTable.ActivityID = step[1];
-                trackerTable.ParallelID = step[2];
-                trackerTable.DocumentTableId = documentId;
-                trackerTable.TrackerType = TrackerType.NonActive;
+                bcp.BatchSize = allSteps.Count;
+                bcp.DestinationTableName = "[dbo].[WFTrackerTable]";
+                DataTable table = new DataTable();
+                table.Columns.Add("Id", typeof(Guid));
+                table.Columns.Add("LineNum", typeof(int));
+                table.Columns.Add("DocumentTableId", typeof(Guid));
+                table.Columns.Add("ActivityName", typeof(string));
+                table.Columns.Add("ActivityID", typeof(string));
+                table.Columns.Add("ParallelID", typeof(string));
+                table.Columns.Add("SignUserId", typeof(string));
+                table.Columns.Add("SignDate", typeof(DateTime));
+                table.Columns.Add("TrackerType", typeof(RapidDoc.Models.Repository.TrackerType));
+                table.Columns.Add("ManualExecutor", typeof(Boolean));
+                table.Columns.Add("SLAOffset", typeof(int));
+                table.Columns.Add("ExecutionStep", typeof(Boolean));
+                table.Columns.Add("TimeStamp", typeof(Byte[]));
+                table.Columns.Add("CreatedDate", typeof(DateTime));
+                table.Columns.Add("ModifiedDate", typeof(DateTime));
+                table.Columns.Add("ApplicationUserCreatedId", typeof(string));
+                table.Columns.Add("ApplicationUserModifiedId", typeof(string));
+                table.Columns.Add("StartDateSLA", typeof(DateTime));
 
-                trackerTable.CreatedDate = createdDate;
-                trackerTable.ModifiedDate = trackerTable.CreatedDate;
-                trackerTable.ApplicationUserCreatedId = userid;
-                trackerTable.ApplicationUserModifiedId = userid;
-                repo.Add(trackerTable);
+                foreach (string[] step in allSteps)
+                {
+                    DataRow row = table.NewRow();
+                    row["Id"] = Guid.NewGuid();
+                    row["LineNum"] = DBNull.Value;
+                    row["DocumentTableId"] = documentId;
+                    row["ActivityName"] = step[0];
+                    row["ActivityID"] = step[1];
+                    row["ParallelID"] = step[2];
+                    row["SignUserId"] = DBNull.Value;
+                    row["SignDate"] = DBNull.Value;
+                    row["TrackerType"] = TrackerType.NonActive;
+                    row["ManualExecutor"] = 0;
+                    row["SLAOffset"] = 0;
+                    row["ExecutionStep"] = 0;
+                    row["TimeStamp"] = DBNull.Value;
+                    row["CreatedDate"] = createdDate;
+                    row["ModifiedDate"] = createdDate;
+                    row["ApplicationUserCreatedId"] = userid;
+                    row["ApplicationUserModifiedId"] = userid;
+                    row["StartDateSLA"] = DBNull.Value;
+
+                    table.Rows.Add(row);
+                }
+
+                bcp.WriteToServer(table);
+                _uow.Commit();
             }
-            _uow.Commit();
         }
+
         public void SaveDomain(WFTrackerTable domainTable, string currentUserId = "")
         {
             string userid = getCurrentUserId(currentUserId);
