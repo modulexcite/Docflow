@@ -751,7 +751,9 @@ namespace RapidDoc.Models.Services
         public List<Array> GetTrackerList(Activity activity, IDictionary<string, object> documentData, DocumentType documentType)
         {
             List<Array> allSteps = new List<Array>();
+            allSteps = this.GetRequestTree(activity);
 
+            /*
             switch (documentType)
             {
                 case DocumentType.Request:
@@ -763,7 +765,7 @@ namespace RapidDoc.Models.Services
                     documentData["DocumentWhom"] = users;
                     break;
             }
-
+            */
             return allSteps;
         }
 

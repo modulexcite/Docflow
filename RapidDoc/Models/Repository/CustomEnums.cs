@@ -980,7 +980,7 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "За счет Kazzinc Holding")]
         Element3 = 2,
 
-        [Display(Name = "Тоо Kazzinc")]
+        [Display(Name = "За счет Kazzinc")]
         Element4 = 3
     }
 
@@ -1039,23 +1039,11 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Служебные записки")]
         Element1 = 0,
 
-        [Display(Name = "Письма")]
-        Element2 = 1,
-
-        [Display(Name = "Проекты приказов")]
-        Element3 = 2,
-
-        [Display(Name =  "Заявления")]
+        [Display(Name = "Заявления")]
         Element4 = 3,
 
         [Display(Name = "Объяснительные записки")]
-        Element5 = 4,
-
-        [Display(Name = "Письма(акиматы и другие гос. органы")]
-        Element6 = 5,
-
-        [Display(Name = "Кадровые приказы")]
-        Element7 = 6
+        Element5 = 4
     }
 
     public enum DocumentType : byte
