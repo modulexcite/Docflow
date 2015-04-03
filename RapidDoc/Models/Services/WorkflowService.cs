@@ -27,6 +27,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Core.Objects;
 using RapidDoc.Activities.CodeActivities;
+using System.Data;
 
 namespace RapidDoc.Models.Services
 {
@@ -48,7 +49,7 @@ namespace RapidDoc.Models.Services
         List<Array> GetRequestTree(Activity activity, string _parallel = "");
         List<Array> GetTrackerList(Activity activity, IDictionary<string, object> documentData, DocumentType documentType);
         List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField);
-        void CreateDynamicTracker(List<string> users);
+        void CreateDynamicTracker(List<string> users, Guid documentId);
     }
 
     public class WorkflowService : IWorkflowService
@@ -727,7 +728,7 @@ namespace RapidDoc.Models.Services
                 Guid applicationUserId = Guid.Parse(item);
                 emplTable = _EmplService.FirstOrDefault(x => x.Id == applicationUserId && x.Enable == true);
 
-                if (emplTable != null && !ofmList.Exists(x => x == emplTable.UserName))
+                if (emplTable != null && !ofmList.Exists(x => x == emplTable.ApplicationUserId))
                 {
                     ofmList.Add(emplTable.ApplicationUserId);
                 }
@@ -741,7 +742,7 @@ namespace RapidDoc.Models.Services
                         foreach (IdentityUserRole name in names)
                         {
                             emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId && x.Enable == true);
-                            if (emplTable != null && !ofmList.Exists(x => x == emplTable.UserName))
+                            if (emplTable != null && !ofmList.Exists(x => x == emplTable.ApplicationUserId))
                             {
                                 ofmList.Add(emplTable.ApplicationUserId);
                             }
@@ -754,9 +755,95 @@ namespace RapidDoc.Models.Services
         }
 
 
-        public void CreateDynamicTracker(List<string> users)
+        public void CreateDynamicTracker(List<string> users, Guid documentId)
         {
-            throw new NotImplementedException();
+            string userid = HttpContext.Current.User.Identity.GetUserId();
+            DateTime createdDate = DateTime.UtcNow;
+
+            using (var bcp = new System.Data.SqlClient.SqlBulkCopy(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            {
+                bcp.BatchSize = users.Count;
+                bcp.DestinationTableName = "[dbo].[WFTrackerTable]";
+                DataTable table = new DataTable();
+                table.Columns.Add("Id", typeof(Guid));
+                table.Columns.Add("LineNum", typeof(int));
+                table.Columns.Add("DocumentTableId", typeof(Guid));
+                table.Columns.Add("ActivityName", typeof(string));
+                table.Columns.Add("ActivityID", typeof(string));
+                table.Columns.Add("ParallelID", typeof(string));
+                table.Columns.Add("SignUserId", typeof(string));
+                table.Columns.Add("SignDate", typeof(DateTime));
+                table.Columns.Add("TrackerType", typeof(RapidDoc.Models.Repository.TrackerType));
+                table.Columns.Add("ManualExecutor", typeof(Boolean));
+                table.Columns.Add("SLAOffset", typeof(int));
+                table.Columns.Add("ExecutionStep", typeof(Boolean));
+                table.Columns.Add("TimeStamp", typeof(Byte[]));
+                table.Columns.Add("CreatedDate", typeof(DateTime));
+                table.Columns.Add("ModifiedDate", typeof(DateTime));
+                table.Columns.Add("ApplicationUserCreatedId", typeof(string));
+                table.Columns.Add("ApplicationUserModifiedId", typeof(string));
+                table.Columns.Add("StartDateSLA", typeof(DateTime));
+
+                int num = 0;
+                foreach (string item in users)
+                {
+                    num++;
+                    DataRow row = table.NewRow();
+                    row["Id"] = Guid.NewGuid();
+                    row["LineNum"] = DBNull.Value;
+                    row["DocumentTableId"] = documentId;
+                    row["ActivityName"] = String.Empty;
+                    row["ActivityID"] = item;
+                    row["ParallelID"] = String.Empty;
+                    row["SignUserId"] = DBNull.Value;
+                    row["SignDate"] = DBNull.Value;
+                    if (num == 1)
+                        row["TrackerType"] = TrackerType.Waiting;
+                    else
+                        row["TrackerType"] = TrackerType.NonActive;
+                    row["ManualExecutor"] = 0;
+                    row["SLAOffset"] = 0;
+                    row["ExecutionStep"] = 0;
+                    row["TimeStamp"] = DBNull.Value;
+                    row["CreatedDate"] = createdDate;
+                    row["ModifiedDate"] = createdDate;
+                    row["ApplicationUserCreatedId"] = userid;
+                    row["ApplicationUserModifiedId"] = userid;
+                    row["StartDateSLA"] = DBNull.Value;
+
+                    table.Rows.Add(row);
+                }
+
+                bcp.WriteToServer(table);
+                _uow.Commit();
+            }
+
+            using (var bcp = new System.Data.SqlClient.SqlBulkCopy(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            {
+                var trackerlist = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.ActivityName == String.Empty).ToList();
+
+                bcp.BatchSize = trackerlist.Count;
+                bcp.DestinationTableName = "[dbo].[WFTrackerUsersTable]";
+                DataTable table = new DataTable();
+                table.Columns.Add("Id", typeof(Guid));
+                table.Columns.Add("TimeStamp", typeof(Byte[]));
+                table.Columns.Add("InitiatorUserId", typeof(string));
+                table.Columns.Add("UserId", typeof(string));
+                table.Columns.Add("WFTrackerTable_Id", typeof(Guid));
+
+                foreach (var item in trackerlist)
+                {
+                    DataRow row = table.NewRow();
+                    row["Id"] = Guid.NewGuid();
+                    row["TimeStamp"] = DBNull.Value;
+                    row["InitiatorUserId"] = DBNull.Value;
+                    row["UserId"] = users.FirstOrDefault(x => x == item.ActivityID);
+                    row["WFTrackerTable_Id"] = item.Id;
+                }
+
+                bcp.WriteToServer(table);
+                _uow.Commit();
+            }
         }
     }
 }

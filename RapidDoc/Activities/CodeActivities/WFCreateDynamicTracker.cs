@@ -15,15 +15,20 @@ namespace RapidDoc.Activities.CodeActivities
         [RequiredArgument]
         public InArgument<List<string>> inputUsers { get; set; }
 
+        [RequiredArgument]
+        public InArgument<Guid> inputDocumentId { get; set; }
+
         [Inject]
         public IWorkflowService _service { get; set; }
 
         protected override void Execute(CodeActivityContext context)
         {
             List<string> users = context.GetValue(this.inputUsers);
+            Guid documentId = context.GetValue(this.inputDocumentId);
+
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
 
-            _service.CreateDynamicTracker(users);
+            _service.CreateDynamicTracker(users, documentId);
 
         }
     }
