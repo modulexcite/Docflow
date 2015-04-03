@@ -312,11 +312,21 @@
                 <FlowStep.Next>
                   <FlowStep x:Name="__ReferenceID14" sap2010:WorkflowViewState.IdRef="FlowStep_23">
                     <local2:WFCreateDynamicTracker _service="{x:Null}" DisplayName="Создание трекера" sap2010:WorkflowViewState.IdRef="WFCreateDynamicTracker_1">
+                      <local2:WFCreateDynamicTracker.inputCurrentUser>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
+                        </InArgument>
+                      </local2:WFCreateDynamicTracker.inputCurrentUser>
                       <local2:WFCreateDynamicTracker.inputDocumentId>
                         <InArgument x:TypeArguments="s:Guid">
                           <mca:CSharpValue x:TypeArguments="s:Guid">inputDocumentId</mca:CSharpValue>
                         </InArgument>
                       </local2:WFCreateDynamicTracker.inputDocumentId>
+                      <local2:WFCreateDynamicTracker.inputParallel>
+                        <InArgument x:TypeArguments="x:Boolean">
+                          <mca:CSharpValue x:TypeArguments="x:Boolean">(bool)documentData["Parallel"]</mca:CSharpValue>
+                        </InArgument>
+                      </local2:WFCreateDynamicTracker.inputParallel>
                       <local2:WFCreateDynamicTracker.inputUsers>
                         <InArgument x:TypeArguments="scg:List(x:String)">
                           <mca:CSharpValue x:TypeArguments="scg:List(x:String)">listOfPeople</mca:CSharpValue>
@@ -394,7 +404,7 @@
     <x:Reference>__ReferenceID12</x:Reference>
     <x:Reference>__ReferenceID13</x:Reference>
     <x:Reference>__ReferenceID14</x:Reference>
-    <sads:DebugSymbol.Symbol>d1hDOlxVc2Vyc1xpZ2RtaXRcU291cmNlXFJlcG9zXERvY2Zsb3dSZXBvXFJhcGlkRG9jXEFjdGl2aXRpZXNcVVNSX09GTV9VSVRfT2ZmaWNlTWVtby54YW1sNhsHG2cBAwGNAQGTAQEChQEDjgMPAgEBjAEJ5gEVAwHeAeoBD+oBcwMB1AHzAhH+AhoDAb8B7gERtwIdAgFLugIVxQI1AgE2yQIbyQJ/AgEs3QId6AImAgEXzQId2AImAgECjwEPmgEYAwHSAp0BE7wBLgMBkgLAARnAAW4DAYgCxAEb2QE8AwHfAfsCF/sCagMBygH2Ahf2AnIDAcAB8QEXkAIyAgF/lAIdlAJyAgF1mAIfrQJAAgFMwgIbwgJvAgFBvQIbvQJmAgE35QIj5QKDAQIBIuACI+ACfgIBGNUCI9UCgAECAQ3QAiPQAn4CAQOXARWXAY0BAwHdApIBFZIBcQMB0wKqARmqAWsDAcgCnQGCAp0BiQIDAccCtAEZtAFuAwG9Aq8BGa8BawMBswKdAfMBnQH3AQMBsgK5ARm5AXQDAagCnQHjAZ0B5gEDAacCpQEZpQFkAwGdAqABGaABZwMBkwLMASHMAXMDAf4B0QEh0QF3AwH0AccBIccBawMB6gHWASHWAXwDAeAB/gEd/gFvAwG1AfEBigLxAZECAwG0AYgCHYgCcgMBqgGDAh2DAm8DAaAB8QH7AfEB/wEDAZ8BjQIdjQJ4AwGVAfEB6wHxAe4BAwGUAfkBHfkBaAMBigH0AR30AWsDAYABoAIloAJ3AgFrpQIlpQJ7AgFhmwIlmwJvAgFXqgIlqgKAAQIBTQ==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d2dDOlxVc2Vyc1xEbVNoa2EuQUxUWU5UQVVcRGVza3RvcFxHaXRIdWJcRG9jRmxvd1xEb2NmbG93XFJhcGlkRG9jXEFjdGl2aXRpZXNcVVNSX09GTV9VSVRfT2ZmaWNlTWVtby54YW1sOBsHG2cBAwGNAQGTAQEChQEDmAMPAgEBjAEJ5gEVAwHyAeoBD+oBcwMB6AH9AhGIAxoDAdMB7gERtwIdAgFfugIVzwI1AgE20wIb0wJ/AgEs5wId8gImAgEX1wId4gImAgECjwEPmgEYAwHmAp0BE7wBLgMBpgLAARnAAW4DAZwCxAEb2QE8AwHzAYUDF4UDagMB3gGAAxeAA3IDAdQB8QEXkAIyAwGTAZQCHZQCcgMBiQGYAh+tAkACAWDMAhvMAm8CAVXCAhvCAmYCAUu9Ahu9AmkCAUHHAhvHAngCATfvAiPvAoMBAgEi6gIj6gJ+AgEY3wIj3wKAAQIBDdoCI9oCfgIBA5cBFZcBjQEDAfECkgEVkgFxAwHnAqoBGaoBawMB3AKdAYICnQGJAgMB2wK0ARm0AW4DAdECrwEZrwFrAwHHAp0B8wGdAfcBAwHGArkBGbkBdAMBvAKdAeMBnQHmAQMBuwKlARmlAWQDAbECoAEZoAFnAwGnAswBIcwBcwMBkgLRASHRAXcDAYgCxwEhxwFrAwH+AdYBIdYBfAMB9AH+AR3+AW8DAckB8QGKAvEBkQIDAcgBiAIdiAJyAwG+AYMCHYMCbwMBtAHxAfsB8QH/AQMBswGNAh2NAngDAakB8QHrAfEB7gEDAagB+QEd+QFoAwGeAfQBHfQBawMBlAGgAiWgAncCAX+lAiWlAnsCAXWbAiWbAm8CAWuqAiWqAoABAgFh</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

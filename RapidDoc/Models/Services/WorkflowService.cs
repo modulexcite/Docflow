@@ -49,7 +49,7 @@ namespace RapidDoc.Models.Services
         List<Array> GetRequestTree(Activity activity, string _parallel = "");
         List<Array> GetTrackerList(Activity activity, IDictionary<string, object> documentData, DocumentType documentType);
         List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField);
-        void CreateDynamicTracker(List<string> users, Guid documentId);
+        void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel);
     }
 
     public class WorkflowService : IWorkflowService
@@ -755,7 +755,7 @@ namespace RapidDoc.Models.Services
         }
 
 
-        public void CreateDynamicTracker(List<string> users, Guid documentId)
+        public void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel)
         {
             string userid = HttpContext.Current.User.Identity.GetUserId();
             DateTime createdDate = DateTime.UtcNow;

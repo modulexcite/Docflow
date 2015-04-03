@@ -18,6 +18,12 @@ namespace RapidDoc.Activities.CodeActivities
         [RequiredArgument]
         public InArgument<Guid> inputDocumentId { get; set; }
 
+        [RequiredArgument]
+        public InArgument<string> inputCurrentUser { get; set; }
+
+        [RequiredArgument]
+        public InArgument<bool> inputParallel { get; set; }
+
         [Inject]
         public IWorkflowService _service { get; set; }
 
@@ -25,10 +31,12 @@ namespace RapidDoc.Activities.CodeActivities
         {
             List<string> users = context.GetValue(this.inputUsers);
             Guid documentId = context.GetValue(this.inputDocumentId);
+            string currentUserId = context.GetValue(this.inputCurrentUser);
+            bool isParallel = context.GetValue(this.inputParallel);
 
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
 
-            _service.CreateDynamicTracker(users, documentId);
+            _service.CreateDynamicTracker(users, documentId, currentUserId, isParallel);
 
         }
     }
