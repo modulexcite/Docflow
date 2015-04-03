@@ -46,9 +46,9 @@ namespace RapidDoc.Models.Services
         void AgreementWorkflowWithdraw(Guid documentId, string TableName, Guid WWFInstanceId, Guid processId);
         void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUserId, string workflowId, bool useManual, int slaOffset, bool executionStep);
         List<Array> GetRequestTree(Activity activity, string _parallel = "");
-        List<Array> GetOfficeMemoTree(Activity activity, bool parallelSequence, List<string> userList, string _parallel = "", bool _cycle = false);
         List<Array> GetTrackerList(Activity activity, IDictionary<string, object> documentData, DocumentType documentType);
         List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField);
+        void CreateDynamicTracker(List<string> users);
     }
 
     public class WorkflowService : IWorkflowService
@@ -687,73 +687,13 @@ namespace RapidDoc.Models.Services
                 _parallel = "";
             return allSteps;
         }
-
-        public List<Array> GetOfficeMemoTree(Activity activity, bool parallelSequence, List<string> userList, string _parallel = "", bool _cycle = false)
-        {
-            string[] myIntArray = new string[3];
-            List<Array> allSteps = new List<Array>();
-
-            if (activity.GetType() == typeof(WFChooseOfficeMemoSpecificUser) ||
-                activity.GetType() == typeof(WFChooseUpManager))
-            {
-                if (_cycle == false && _parallel == String.Empty)
-                {
-                    myIntArray.SetValue(activity.DisplayName, 0);
-                    myIntArray.SetValue(activity.Id, 1);
-                    myIntArray.SetValue(_parallel, 2);
-                    allSteps.Add(myIntArray);
-                }
-                else if (parallelSequence == true && _parallel != String.Empty)
-                {
-                    foreach (string item in userList)
-                    {
-                        myIntArray.SetValue(item, 0);
-                        myIntArray.SetValue(activity.Id + item, 1);
-                        myIntArray.SetValue(_parallel, 2);
-                        allSteps.Add(myIntArray);
-                        myIntArray = new string[3];
-                    }
-                }
-                else if (parallelSequence == false && _parallel == String.Empty && _cycle == true)
-                {
-                    foreach (string item in userList)
-                    {
-                        myIntArray.SetValue(item, 0);
-                        myIntArray.SetValue(activity.Id + item, 1);
-                        myIntArray.SetValue(_parallel, 2);
-                        allSteps.Add(myIntArray);
-                        myIntArray = new string[3];
-                    } 
-                }
-            }
-
-            if (activity is ParallelForEach<string>)
-                _parallel = activity.Id;
-            else if (activity is DoWhile)
-                _cycle = true;
-
-            IEnumerator<Activity> list = WorkflowInspectionServices.GetActivities(activity).GetEnumerator();
-
-            while (list.MoveNext())
-            {
-                var allStepsBuf = allSteps.Concat(GetOfficeMemoTree(list.Current, parallelSequence, userList, _parallel, _cycle));
-                allSteps = allStepsBuf.ToList();
-            }
-
-            if ((activity is ParallelForEach<string>) && (activity.Id == _parallel))
-                _parallel = "";
-            if ((activity is DoWhile) && (_cycle == true))
-                _cycle = false;
-
-            return allSteps;
-        }
+      
 
         public List<Array> GetTrackerList(Activity activity, IDictionary<string, object> documentData, DocumentType documentType)
         {
             List<Array> allSteps = new List<Array>();
-            allSteps = this.GetRequestTree(activity);
-
-            /*
+           
+            
             switch (documentType)
             {
                 case DocumentType.Request:
@@ -761,11 +701,12 @@ namespace RapidDoc.Models.Services
                     break;
                 case DocumentType.OfficeMemo:
                     List<string> users = this.GetUniqueUserList(documentData, "DocumentWhom");
-                    allSteps = this.GetOfficeMemoTree(activity, (bool)documentData["Parallel"], users);
+                    allSteps = this.GetRequestTree(activity);
+                   // allSteps = this.GetOfficeMemoTree(activity, (bool)documentData["Parallel"], users);
                     documentData["DocumentWhom"] = users;
                     break;
             }
-            */
+            
             return allSteps;
         }
 
@@ -810,6 +751,12 @@ namespace RapidDoc.Models.Services
             }
 
             return ofmList;
+        }
+
+
+        public void CreateDynamicTracker(List<string> users)
+        {
+            throw new NotImplementedException();
         }
     }
 }
