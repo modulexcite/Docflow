@@ -15,8 +15,8 @@ namespace RapidDoc.Models.Repository
         [LocalizedDescAttributre("Agreement", typeof(RapidDoc.Resources.Enums.Enums))]
         Agreement = 1,
 
-        [LocalizedDescAttributre("Completed", typeof(RapidDoc.Resources.Enums.Enums))]
-        Completed = 2,
+        [LocalizedDescAttributre("OnSign", typeof(RapidDoc.Resources.Enums.Enums))]
+        OnSign = 2,
 
         [LocalizedDescAttributre("Cancelled", typeof(RapidDoc.Resources.Enums.Enums))]
         Cancelled = 3,

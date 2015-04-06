@@ -432,7 +432,7 @@ namespace RapidDoc.Models.Services
             domainTable.ApplicationUserModifiedId = user.Id;
             domainTable.ModifiedDate = DateTime.UtcNow;
 
-            if (domainTable.DocumentState == DocumentState.Agreement || domainTable.DocumentState == DocumentState.Execution)
+            if (domainTable.DocumentState == DocumentState.Agreement || domainTable.DocumentState == DocumentState.Execution || domainTable.DocumentState == DocumentState.OnSign)
             {
                 //IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == domainTable.Id && x.TrackerType == TrackerType.Waiting);
                 ApplicationDbContext dbContext = new ApplicationDbContext();

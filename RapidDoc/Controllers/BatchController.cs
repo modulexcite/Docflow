@@ -96,7 +96,6 @@ namespace RapidDoc.Controllers
                 case 3:
                     foreach (var document in allDocument.Where(x => x.DocumentState == Models.Repository.DocumentState.Closed
                         || x.DocumentState == Models.Repository.DocumentState.Cancelled
-                        || x.DocumentState == Models.Repository.DocumentState.Completed
                         || x.DocumentState == Models.Repository.DocumentState.Created).ToList())
                     {
                         IEnumerable<ReviewDocLogTable> reviewDocuments = _ReviewDocLogService.GetPartial(x => x.DocumentTableId == document.Id && x.isArchive == false).ToList();

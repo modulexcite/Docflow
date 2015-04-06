@@ -757,8 +757,8 @@ namespace RapidDoc.Models.Services
 
         public void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel)
         {
-            string userid = HttpContext.Current.User.Identity.GetUserId();
             DateTime createdDate = DateTime.UtcNow;
+            string createdDateStr = createdDate.ToString();
 
             using (var bcp = new System.Data.SqlClient.SqlBulkCopy(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             {
@@ -792,8 +792,8 @@ namespace RapidDoc.Models.Services
                     row["Id"] = Guid.NewGuid();
                     row["LineNum"] = DBNull.Value;
                     row["DocumentTableId"] = documentId;
-                    row["ActivityName"] = String.Empty;
-                    row["ActivityID"] = item;
+                    row["ActivityName"] = "СЗ";
+                    row["ActivityID"] = createdDateStr;
                     row["ParallelID"] = String.Empty;
                     row["SignUserId"] = DBNull.Value;
                     row["SignDate"] = DBNull.Value;
@@ -807,8 +807,8 @@ namespace RapidDoc.Models.Services
                     row["TimeStamp"] = DBNull.Value;
                     row["CreatedDate"] = createdDate;
                     row["ModifiedDate"] = createdDate;
-                    row["ApplicationUserCreatedId"] = userid;
-                    row["ApplicationUserModifiedId"] = userid;
+                    row["ApplicationUserCreatedId"] = currentUserId;
+                    row["ApplicationUserModifiedId"] = currentUserId;
                     row["StartDateSLA"] = DBNull.Value;
 
                     table.Rows.Add(row);
@@ -820,7 +820,7 @@ namespace RapidDoc.Models.Services
 
             using (var bcp = new System.Data.SqlClient.SqlBulkCopy(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             {
-                var trackerlist = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.ActivityName == String.Empty).ToList();
+                var trackerlist = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.ActivityName == "СЗ" && x.ActivityID == createdDateStr).OrderBy(x => x.LineNum).ToList();
 
                 bcp.BatchSize = trackerlist.Count;
                 bcp.DestinationTableName = "[dbo].[WFTrackerUsersTable]";
@@ -831,14 +831,17 @@ namespace RapidDoc.Models.Services
                 table.Columns.Add("UserId", typeof(string));
                 table.Columns.Add("WFTrackerTable_Id", typeof(Guid));
 
+                int num = 0;
                 foreach (var item in trackerlist)
                 {
                     DataRow row = table.NewRow();
                     row["Id"] = Guid.NewGuid();
                     row["TimeStamp"] = DBNull.Value;
                     row["InitiatorUserId"] = DBNull.Value;
-                    row["UserId"] = users.FirstOrDefault(x => x == item.ActivityID);
+                    row["UserId"] = users[num];
                     row["WFTrackerTable_Id"] = item.Id;
+                    table.Rows.Add(row);
+                    num++;
                 }
 
                 bcp.WriteToServer(table);

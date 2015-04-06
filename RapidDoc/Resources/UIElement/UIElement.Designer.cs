@@ -259,7 +259,7 @@ namespace UIElementRes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Дублировать.
+        ///   Looks up a localized string similar to Копию.
         /// </summary>
         public static string Copy {
             get {

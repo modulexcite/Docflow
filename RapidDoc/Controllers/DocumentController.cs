@@ -358,6 +358,37 @@ namespace RapidDoc.Controllers
             return view;
         }
 
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "ApproveDocumentCZ")]
+        public ActionResult ApproveDocumentCZ(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
+        {
+            string currentUserId = User.Identity.GetUserId();
+            var trackerParallel = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.SignUserId == null && x.ParallelID != String.Empty && x.TrackerType == TrackerType.Waiting && x.Users.Any(p => p.UserId == currentUserId)).ToList();
+            if (trackerParallel != null && trackerParallel.Count > 0)
+            {
+                _DocumentService.SaveSignData(trackerParallel, TrackerType.Approved);
+            }
+
+            var trackerSeq = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.SignUserId == null && x.ParallelID == String.Empty && x.Users.Any(p => p.UserId == currentUserId)).ToList();
+            if (trackerSeq != null && trackerSeq.Count > 0)
+            {
+                _DocumentService.SaveSignData(trackerSeq, TrackerType.Approved);
+
+                foreach(var item in trackerSeq)
+                {
+                    var nextstep = _WorkflowTrackerService.FirstOrDefault(x => x.TrackerType == TrackerType.NonActive && x.LineNum > item.LineNum && x.ActivityID == item.ActivityID);
+                    if (nextstep != null)
+                    {
+                        nextstep.TrackerType = TrackerType.Waiting;
+                        nextstep.StartDateSLA = DateTime.UtcNow;
+                        _WorkflowTrackerService.SaveDomain(nextstep, currentUserId);
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Document");
+        }
+
         public ActionResult CopyDocument(Guid processId, Guid fileId,Guid documentId)
         {
             ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
@@ -621,7 +652,6 @@ namespace RapidDoc.Controllers
             {
                 if (docuTable.DocumentState == Models.Repository.DocumentState.Closed 
                     || docuTable.DocumentState == Models.Repository.DocumentState.Cancelled
-                    || docuTable.DocumentState == Models.Repository.DocumentState.Completed
                     || docuTable.DocumentState == Models.Repository.DocumentState.Created)
                 {
                     ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());

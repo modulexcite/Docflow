@@ -1,4 +1,16 @@
 ﻿@model RapidDoc.Models.ViewModels.USR_REQ_URP_RequestForTeaching_View
 @using RapidDoc.Extensions;
 
-@Html.Partial("_DocumentEditFields", Model)
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.ToUsers)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.ToUsers, new { @class = "form-control", placeholder = "Имя Фамилия" })
+</div>
+
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Department" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "UserChooseManual1" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Theme" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "DocDate" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Place" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Company" } })

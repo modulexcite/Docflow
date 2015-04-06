@@ -105,10 +105,17 @@
             <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
             @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentView.Id })
 
-            @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.isSign)
+            @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.OnSign) && Model.DocumentView.isSign)
             {
-                <button type="submit" class="btn btn-success btn-lg hidden-print" name="action:ApproveDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Approve</button>
-                <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".bs-reject-modal-sm">@UIElementRes.UIElement.Reject</button>
+                if (Model.DocumentView.DocType == RapidDoc.Models.Repository.DocumentType.Request || (Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement && Model.DocumentView.DocType == RapidDoc.Models.Repository.DocumentType.OfficeMemo))
+                { 
+                    <button type="submit" class="btn btn-success btn-lg hidden-print" name="action:ApproveDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Approve</button>
+                    <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".bs-reject-modal-sm">@UIElementRes.UIElement.Reject</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-success btn-lg hidden-print" name="action:ApproveDocumentCZ" onclick="saveLastComment();">@UIElementRes.UIElement.Approve</button>
+                }
             }
 
             @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.CreatedBy == User.Identity.Name)
