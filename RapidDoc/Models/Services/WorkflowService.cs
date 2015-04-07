@@ -48,7 +48,7 @@ namespace RapidDoc.Models.Services
         void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUserId, string workflowId, bool useManual, int slaOffset, bool executionStep);
         List<Array> GetRequestTree(Activity activity, string _parallel = "");
         List<Array> GetTrackerList(Activity activity, IDictionary<string, object> documentData, DocumentType documentType);
-        List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField);
+        List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField,  bool justNoneApprove = false);
         void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel);
     }
 
@@ -712,12 +712,16 @@ namespace RapidDoc.Models.Services
         }
 
 
-        public List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField)
+        public List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField, bool justNoneApprove = false)
         {
+            Guid documentId = new Guid();
             List<string> ofmList = new List<string>();
             string initailStructure = (string)documentData[nameField];
             string[] arrayTempStructrue = initailStructure.Split(',');
             ofmList.Clear();
+
+            if (justNoneApprove == true && documentData.ContainsKey("documentId"))
+                documentId = (Guid)documentData["documentId"];
 
             Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
             string[] arrayStructure = arrayTempStructrue.Where(a => isGuid.IsMatch(a) == true).ToArray();
@@ -730,7 +734,15 @@ namespace RapidDoc.Models.Services
 
                 if (emplTable != null && !ofmList.Exists(x => x == emplTable.ApplicationUserId))
                 {
-                    ofmList.Add(emplTable.ApplicationUserId);
+                    if (justNoneApprove == true)
+                    {
+                        if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Approved && x.SignUserId == emplTable.ApplicationUserId))
+                            continue;
+                        else
+                            ofmList.Add(emplTable.ApplicationUserId);
+                    }
+                        else
+                            ofmList.Add(emplTable.ApplicationUserId);
                 }
                 else
                 {
@@ -744,7 +756,15 @@ namespace RapidDoc.Models.Services
                             emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId && x.Enable == true);
                             if (emplTable != null && !ofmList.Exists(x => x == emplTable.ApplicationUserId))
                             {
-                                ofmList.Add(emplTable.ApplicationUserId);
+                                if (justNoneApprove == true)
+                                {
+                                    if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Approved && x.SignUserId == emplTable.ApplicationUserId))
+                                        continue;
+                                    else
+                                        ofmList.Add(emplTable.ApplicationUserId);
+                                }
+                                else
+                                    ofmList.Add(emplTable.ApplicationUserId);
                             }
                         }
                     }

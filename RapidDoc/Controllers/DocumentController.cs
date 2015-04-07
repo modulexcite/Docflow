@@ -389,6 +389,28 @@ namespace RapidDoc.Controllers
             return RedirectToAction("Index", "Document");
         }
 
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "AddUsersDocumentCZ")]
+        public ActionResult AddUsersDocumentCZ(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
+        {
+            string currentUserId = User.Identity.GetUserId();
+            IDictionary<string, object> documentData = new Dictionary<string, object>();
+
+            if ((collection["IsParallel"] != null && collection["Flow"] != null) && collection["Flow"] != String.Empty)
+            {
+                documentData.Add("IsParallel", collection["IsParallel"].ToLower().Contains("true"));
+                documentData.Add("Flow", collection["Flow"]);
+                documentData.Add("documentId", documentId);
+
+                List<string> users = _WorkflowService.GetUniqueUserList(documentData, "Flow", true);
+
+                if(users.Count > 0)
+                    _WorkflowService.CreateDynamicTracker(users, documentId, currentUserId, (bool)documentData["IsParallel"]);
+            }
+
+            return RedirectToAction("ShowDocument", new { id = documentId });
+        }
+
         public ActionResult CopyDocument(Guid processId, Guid fileId,Guid documentId)
         {
             ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
