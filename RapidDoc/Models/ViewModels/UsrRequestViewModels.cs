@@ -4525,7 +4525,7 @@ namespace RapidDoc.Models.ViewModels
     public class USR_REQ_URP_RequestForTeaching_View : BasicDocumentView
     {
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "ФИО сотрудника")]
+        [Display(Name = "ФИО и должность сотрудника")]
         public string ToUsers { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]

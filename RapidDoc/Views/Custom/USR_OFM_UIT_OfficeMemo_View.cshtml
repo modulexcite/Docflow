@@ -24,38 +24,60 @@
 <div class="modal fade addusers-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content  modal-lg">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">@CustomRes.Custom.Users</h4>
-                </div>
-                <div class="modal-body" style="min-height:600px; left:auto">
-
-                    <div class="row">
-                        <div class="col-md-2">
-                            <div class="input-group-addon" style="padding-right: 10px;">
-                                <div class="row">
-                                    <div class="col-md-12 text-left">
-                                        <strong>Маршрут:</strong>
-                                        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target=".documentwhom-modal"><span class="glyphicon glyphicon-plus" aria-hidden="false"></span></button>
-                                    </div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@CustomRes.Custom.Users</h4>
+            </div>
+            <div class="modal-body" style="min-height: 250px;">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="input-group-addon" style="padding-right: 10px;">
+                            <div class="row">
+                                <div class="col-md-12 text-left">
+                                    <strong>Маршрут:</strong>
+                                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target=".documentwhom-modal"><span class="glyphicon glyphicon-plus" aria-hidden="false"></span></button>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12 text-left">
-                                        <br />
-                                        @Html.CheckBox("IsParallel", new { @data_labelauty = "Параллельно|Параллельно" })
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-left">
+                                    <br />
+                                    @Html.CheckBox("IsParallel", new { @data_labelauty = "Параллельно|Параллельно" })
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-10">
-                            @Html.TextBox("Flow", "", new { @class = "form-control", @data_role = "tagsinputGroup2", @size = 256, @maxlength = 256, placeholder = "Маршрут" })
-                        </div>
                     </div>
-                    <br>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-success btn-lg hidden-print" name="action:AddUsersDocumentCZ">@UIElementRes.UIElement.AddUsers</button>
+                    <div class="col-md-10">
+                        @Html.TextBox("Flow", "", new { @class = "form-control", @data_role = "tagsinputGroup2", @size = 256, @maxlength = 256, placeholder = "Маршрут" })
                     </div>
+                </div>
+                <br>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary hidden-print" name="action:AddUsersDocumentCZ">@UIElementRes.UIElement.AddUsers</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<div class="modal fade documentwhom-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sidebar">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@UIElementRes.UIElement.DistributionGroup - Поле Кому</h4>
+            </div>
+            <div class="modal-body" style="min-height:700px;">
+                @Html.Action("RoleLookup", "Role", new { prefix = "whom" })
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.distributiongrouplink_whom').click(function () {
+            var element = $(event.target);
+            var tagId = element.attr('data-itemid') + ', ' + element.attr('data-rolename');
+            $('input[data-role=tagsinputGroup2]').tagsinput('add', { value: tagId, text: element.text() });
+        });
+    });
+</script>

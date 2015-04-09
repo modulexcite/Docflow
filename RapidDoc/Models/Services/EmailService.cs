@@ -339,28 +339,29 @@ namespace RapidDoc.Models.Services
         public void SendInitiatorCommentEmail(Guid documentId, string lastComment)
         {
             var docuTable = _DocumentService.Find(documentId);
-
-            var currentReaders = _DocumentReaderService.GetPartial(x => x.DocumentTableId == documentId).ToList();
             var users = repoUser.FindAll(x => x.Id == docuTable.ApplicationUserCreatedId).ToList();
 
-            foreach (var reader in currentReaders)
+            if (docuTable.DocType == DocumentType.Request)
             {
-                users.Add(repoUser.GetById(reader.UserId));
-            }
+                var currentReaders = _DocumentReaderService.GetPartial(x => x.DocumentTableId == documentId).ToList();
+                foreach (var reader in currentReaders)
+                {
+                    users.Add(repoUser.GetById(reader.UserId));
+                }
 
-            var signUsers = _DocumentService.GetSignUsersDirect(docuTable);
-            foreach (var signUser in signUsers)
-            {
-                if (users.Any(x => x.Id == signUser.Id))
-                    continue;
-                else
-                    users.Add(signUser);
+                var signUsers = _DocumentService.GetSignUsersDirect(docuTable);
+                foreach (var signUser in signUsers)
+                {
+                    if (users.Any(x => x.Id == signUser.Id))
+                        continue;
+                    else
+                        users.Add(signUser);
+                }
             }
 
 
             if (docuTable != null)
             {
-                //ApplicationUser userTable = _AccountService.Find(docuTable.ApplicationUserCreatedId);
                 foreach (var userTable in users)
                 {
                     if (userTable.Email != String.Empty && userTable.UserName != HttpContext.Current.User.Identity.Name)

@@ -37,7 +37,6 @@ namespace RapidDoc.Activities.CodeActivities
             _service = DependencyResolver.Current.GetService<IWorkflowService>();
 
             _service.CreateDynamicTracker(users, documentId, currentUserId, isParallel);
-
         }
     }
 }

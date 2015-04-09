@@ -1069,6 +1069,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Маршрут.
+        /// </summary>
+        public static string SendBookmark {
+            get {
+                return ResourceManager.GetString("SendBookmark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to На вас настроенно делегирование с пользователя.
         /// </summary>
         public static string SendDelegationEmplEmail {

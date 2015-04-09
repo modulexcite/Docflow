@@ -31,35 +31,38 @@
             @Html.HiddenFor(model => model.fileId)
             @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "View" })
             <br class="hidden-print">
-            <h3 class="hidden-print">@UIElementRes.UIElement.AttachedFiles</h3>
-            @if (!String.IsNullOrEmpty(Model.ProcessView.MandatoryFileTypes))
-            {
-                <h5 class="text-danger hidden-print">@UIElementRes.UIElement.SupportFileTypes: @Model.ProcessView.MandatoryFileTypes</h5>
-            }
-            <div class="row fileupload-buttonbar hidden-print">
-                <div class="col-lg-7">
-                    <!-- The fileinput-button span is used to style the file input field as button -->
-                    @if(Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Closed && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Cancelled)
-                    { 
-                    <span class="btn btn-success btn-xs fileinput-button">
-                        <i class="glyphicon glyphicon-plus"></i>
-                        <span>@UIElementRes.UIElement.AddFiles</span>
-                        <input type="file" name="files" multiple>
-                    </span>
-                    }
-                    <!-- The global file processing state -->
-                    <span class="fileupload-process"></span>
-                </div>
-                <!-- The global progress state -->
-                <div class="col-lg-5 fileupload-progress fade">
-                    <!-- The global progress bar -->
-                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+            @if (Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Closed && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Cancelled)
+            {     
+                <h3 class="hidden-print">@UIElementRes.UIElement.AttachedFiles</h3>
+                if (!String.IsNullOrEmpty(Model.ProcessView.MandatoryFileTypes))
+                {
+                    <h5 class="text-danger hidden-print">@UIElementRes.UIElement.SupportFileTypes: @Model.ProcessView.MandatoryFileTypes</h5>
+                }
+                <div class="row fileupload-buttonbar hidden-print">
+                    <div class="col-lg-7">
+                        <!-- The fileinput-button span is used to style the file input field as button -->
+                        @if(Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Closed && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Cancelled)
+                        { 
+                        <span class="btn btn-success btn-xs fileinput-button">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>@UIElementRes.UIElement.AddFiles</span>
+                            <input type="file" name="files" multiple>
+                        </span>
+                        }
+                        <!-- The global file processing state -->
+                        <span class="fileupload-process"></span>
                     </div>
-                    <!-- The extended global progress state -->
-                    <div class="progress-extended">&nbsp;</div>
+                    <!-- The global progress state -->
+                    <div class="col-lg-5 fileupload-progress fade">
+                        <!-- The global progress bar -->
+                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                        </div>
+                        <!-- The extended global progress state -->
+                        <div class="progress-extended">&nbsp;</div>
+                    </div>
                 </div>
-            </div>
+            }
             <table role="presentation" class="table table-striped hidden-print"><tbody class="files"></tbody></table>
             <br>
             <h3 class="hidden-print">@UIElementRes.UIElement.ProgressWork</h3>
@@ -100,9 +103,7 @@
                     </div>
                 </div>
             </div>
-            
-            <br class="hidden-print">
-            <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
+           
             @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentView.Id })
 
             @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.OnSign) && Model.DocumentView.isSign)
@@ -181,7 +182,7 @@
                          Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.OnSign)
                     {
                         <li>
-                            <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target=".addusers-modal">@UIElementRes.UIElement.AddUsers...</button>
+                            <a href="#" data-toggle="modal" data-target=".addusers-modal">@UIElementRes.UIElement.SendBookmark</a>
                         </li>   
                     }
                 </ul>

@@ -47,8 +47,8 @@ namespace RapidDoc.Models.Services
         void AgreementWorkflowWithdraw(Guid documentId, string TableName, Guid WWFInstanceId, Guid processId);
         void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUserId, string workflowId, bool useManual, int slaOffset, bool executionStep);
         List<Array> GetRequestTree(Activity activity, string _parallel = "");
-        List<Array> GetTrackerList(Activity activity, IDictionary<string, object> documentData, DocumentType documentType);
-        List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField,  bool justNoneApprove = false);
+        List<Array> GetTrackerList(Guid documentId, Activity activity, IDictionary<string, object> documentData, DocumentType documentType);
+        List<string> GetUniqueUserList(Guid documentId, IDictionary<string, object> documentData, string nameField);
         void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel);
     }
 
@@ -264,7 +264,7 @@ namespace RapidDoc.Models.Services
             SqlWorkflowInstanceStore instanceStore = SetupInstanceStore();
             FileTable fileTableWF = GetActualFileWF(TableName, documentTable);
             Activity activity = ChooseActualWorkflow(TableName, fileTableWF);
-            _WorkflowTrackerService.SaveTrackList(documentTable.Id, this.GetTrackerList(activity, documentData, documentTable.DocType));        
+            _WorkflowTrackerService.SaveTrackList(documentTable.Id, this.GetTrackerList(documentTable.Id, activity, documentData, documentTable.DocType));     
             StartAndPersistInstance(documentTable.Id, DocumentState.Agreement, documentData, instanceStore, activity, fileTableWF); 
             DeleteInstanceStoreOwner(instanceStore);
             _EmailService.SendExecutorEmail(documentTable.Id);
@@ -690,7 +690,7 @@ namespace RapidDoc.Models.Services
         }
       
 
-        public List<Array> GetTrackerList(Activity activity, IDictionary<string, object> documentData, DocumentType documentType)
+        public List<Array> GetTrackerList(Guid documentId, Activity activity, IDictionary<string, object> documentData, DocumentType documentType)
         {
             List<Array> allSteps = new List<Array>();
            
@@ -701,7 +701,7 @@ namespace RapidDoc.Models.Services
                     allSteps = this.GetRequestTree(activity);
                     break;
                 case DocumentType.OfficeMemo:
-                    List<string> users = this.GetUniqueUserList(documentData, "DocumentWhom");
+                    List<string> users = this.GetUniqueUserList(documentId, documentData, "DocumentWhom");
                     allSteps = this.GetRequestTree(activity);
                    // allSteps = this.GetOfficeMemoTree(activity, (bool)documentData["Parallel"], users);
                     documentData["DocumentWhom"] = users;
@@ -712,59 +712,48 @@ namespace RapidDoc.Models.Services
         }
 
 
-        public List<string> GetUniqueUserList(IDictionary<string, object> documentData, string nameField, bool justNoneApprove = false)
+        public List<string> GetUniqueUserList(Guid documentId, IDictionary<string, object> documentData, string nameField)
         {
-            Guid documentId = new Guid();
             List<string> ofmList = new List<string>();
             string initailStructure = (string)documentData[nameField];
             string[] arrayTempStructrue = initailStructure.Split(',');
             ofmList.Clear();
 
-            if (justNoneApprove == true && documentData.ContainsKey("documentId"))
-                documentId = (Guid)documentData["documentId"];
-
             Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
             string[] arrayStructure = arrayTempStructrue.Where(a => isGuid.IsMatch(a) == true).ToArray();
-            EmplTable emplTable;
+            DocumentTable documentTable = _DocumentService.Find(documentId);
 
-            foreach (string item in arrayStructure)
+            foreach (string emplIdStr in arrayStructure)
             {
-                Guid applicationUserId = Guid.Parse(item);
-                emplTable = _EmplService.FirstOrDefault(x => x.Id == applicationUserId && x.Enable == true);
+                Guid emplId = Guid.Parse(emplIdStr);
+                var emplTable = _EmplService.FirstOrDefault(x => x.Id == emplId && x.Enable == true);
 
-                if (emplTable != null && !ofmList.Exists(x => x == emplTable.ApplicationUserId))
+                if (emplTable != null && (documentTable == null || documentTable.ApplicationUserCreatedId != emplTable.ApplicationUserId) && !ofmList.Exists(x => x == emplTable.ApplicationUserId))
                 {
-                    if (justNoneApprove == true)
-                    {
-                        if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Approved && x.SignUserId == emplTable.ApplicationUserId))
-                            continue;
-                        else
-                            ofmList.Add(emplTable.ApplicationUserId);
-                    }
-                        else
-                            ofmList.Add(emplTable.ApplicationUserId);
+                    if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Approved && x.TrackerType == TrackerType.Cancelled && x.SignUserId == emplTable.ApplicationUserId)
+                        || _WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.Users.Any(p => p.UserId == emplTable.ApplicationUserId) && x.TrackerType == TrackerType.Waiting))
+                        continue;
+                    else
+                        ofmList.Add(emplTable.ApplicationUserId);
                 }
                 else
                 {
                     RoleManager<ApplicationRole> RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
-
-                    var names = RoleManager.FindById(item).Users;
-                    if (names != null && names.Count() > 0)
+                    ApplicationRole role = RoleManager.FindById(emplIdStr);
+                    if (role != null)
                     {
-                        foreach (IdentityUserRole name in names)
+                        if (role.Users != null && role.Users.Count() > 0)
                         {
-                            emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId && x.Enable == true);
-                            if (emplTable != null && !ofmList.Exists(x => x == emplTable.ApplicationUserId))
+                            foreach (IdentityUserRole userRole in role.Users)
                             {
-                                if (justNoneApprove == true)
+                                if ((documentTable == null || documentTable.ApplicationUserCreatedId != userRole.UserId) && repoUser.Contains(x => x.Id == userRole.UserId && x.Enable == true) && !ofmList.Exists(x => x == userRole.UserId))
                                 {
-                                    if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Approved && x.SignUserId == emplTable.ApplicationUserId))
+                                    if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Approved && x.TrackerType == TrackerType.Cancelled && x.SignUserId == userRole.UserId)
+                                        || _WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.Users.Any(p => p.UserId == userRole.UserId) && x.TrackerType == TrackerType.Waiting))
                                         continue;
                                     else
-                                        ofmList.Add(emplTable.ApplicationUserId);
+                                        ofmList.Add(userRole.UserId);
                                 }
-                                else
-                                    ofmList.Add(emplTable.ApplicationUserId);
                             }
                         }
                     }
@@ -777,8 +766,12 @@ namespace RapidDoc.Models.Services
 
         public void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel)
         {
+            if (users == null)
+                return;
+
+            var documentTable = _DocumentService.Find(documentId);
             DateTime createdDate = DateTime.UtcNow;
-            string createdDateStr = createdDate.ToString();
+            string activityId = Guid.NewGuid().ToString();
 
             using (var bcp = new System.Data.SqlClient.SqlBulkCopy(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             {
@@ -807,20 +800,27 @@ namespace RapidDoc.Models.Services
                 int num = 0;
                 foreach (string item in users)
                 {
+                    var emplTable = _EmplService.GetEmployer(item, documentTable.CompanyTableId);
+
                     num++;
                     DataRow row = table.NewRow();
                     row["Id"] = Guid.NewGuid();
                     row["LineNum"] = DBNull.Value;
                     row["DocumentTableId"] = documentId;
-                    row["ActivityName"] = "СЗ";
-                    row["ActivityID"] = createdDateStr;
-                    row["ParallelID"] = String.Empty;
+                    row["ActivityName"] = emplTable.TitleName;
+                    row["ActivityID"] = activityId;
+                    if(parallel == false)
+                        row["ParallelID"] = String.Empty;
+                    else
+                        row["ParallelID"] = "Parallel";
                     row["SignUserId"] = DBNull.Value;
                     row["SignDate"] = DBNull.Value;
-                    if (num == 1)
+
+                    if (num == 1 || parallel == true)
                         row["TrackerType"] = TrackerType.Waiting;
                     else
                         row["TrackerType"] = TrackerType.NonActive;
+
                     row["ManualExecutor"] = 0;
                     row["SLAOffset"] = 0;
                     row["ExecutionStep"] = 0;
@@ -840,7 +840,7 @@ namespace RapidDoc.Models.Services
 
             using (var bcp = new System.Data.SqlClient.SqlBulkCopy(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             {
-                var trackerlist = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.ActivityName == "СЗ" && x.ActivityID == createdDateStr).OrderBy(x => x.LineNum).ToList();
+                var trackerlist = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.ActivityID == activityId).OrderBy(x => x.LineNum).ToList();
 
                 bcp.BatchSize = trackerlist.Count;
                 bcp.DestinationTableName = "[dbo].[WFTrackerUsersTable]";
@@ -866,6 +866,18 @@ namespace RapidDoc.Models.Services
 
                 bcp.WriteToServer(table);
                 _uow.Commit();
+            }
+
+            var trackerUsers = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.ActivityID == activityId && x.TrackerType == TrackerType.Waiting).ToList();
+            foreach (var item in trackerUsers)
+            {
+                if (item.Users != null)
+                {
+                    foreach (var user in item.Users)
+                    {
+                        _EmailService.SendNewExecutorEmail(documentId, user.UserId);
+                    }
+                }
             }
         }
     }

@@ -259,7 +259,7 @@ namespace RapidDoc.Controllers
             viewModel.docData = _DocumentService.GetDocumentView(documentTable.RefDocumentId, process.TableName);
             viewModel.fileId = docuView.FileId;
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(userTable.TimeZoneId);
-            viewModel.WFTrackerItems = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == documentTable.Id, timeZoneInfo);
+            viewModel.WFTrackerItems = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == documentTable.Id, timeZoneInfo, documentTable.DocType);
            
             ViewBag.CreatedDate = _SystemService.ConvertDateTimeToLocal(userTable, docuView.CreatedDate);
             ViewBag.DocumentUrl = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuView.AliasCompanyName + "/Document/ShowDocument/" + docuView.Id + "?isAfterView=true";
@@ -362,30 +362,11 @@ namespace RapidDoc.Controllers
         [MultipleButton(Name = "action", Argument = "ApproveDocumentCZ")]
         public ActionResult ApproveDocumentCZ(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
-            string currentUserId = User.Identity.GetUserId();
-            var trackerParallel = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.SignUserId == null && x.ParallelID != String.Empty && x.TrackerType == TrackerType.Waiting && x.Users.Any(p => p.UserId == currentUserId)).ToList();
-            if (trackerParallel != null && trackerParallel.Count > 0)
+            var users = _DocumentService.ApproveDocumentCZ(documentId);
+            foreach (var userid in users)
             {
-                _DocumentService.SaveSignData(trackerParallel, TrackerType.Approved);
+                _EmailService.SendNewExecutorEmail(documentId, userid);
             }
-
-            var trackerSeq = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.SignUserId == null && x.ParallelID == String.Empty && x.Users.Any(p => p.UserId == currentUserId)).ToList();
-            if (trackerSeq != null && trackerSeq.Count > 0)
-            {
-                _DocumentService.SaveSignData(trackerSeq, TrackerType.Approved);
-
-                foreach(var item in trackerSeq)
-                {
-                    var nextstep = _WorkflowTrackerService.FirstOrDefault(x => x.TrackerType == TrackerType.NonActive && x.LineNum > item.LineNum && x.ActivityID == item.ActivityID);
-                    if (nextstep != null)
-                    {
-                        nextstep.TrackerType = TrackerType.Waiting;
-                        nextstep.StartDateSLA = DateTime.UtcNow;
-                        _WorkflowTrackerService.SaveDomain(nextstep, currentUserId);
-                    }
-                }
-            }
-
             return RedirectToAction("Index", "Document");
         }
 
@@ -400,15 +381,14 @@ namespace RapidDoc.Controllers
             {
                 documentData.Add("IsParallel", collection["IsParallel"].ToLower().Contains("true"));
                 documentData.Add("Flow", collection["Flow"]);
-                documentData.Add("documentId", documentId);
 
-                List<string> users = _WorkflowService.GetUniqueUserList(documentData, "Flow", true);
+                List<string> users = _WorkflowService.GetUniqueUserList(documentId, documentData, "Flow");
 
                 if(users.Count > 0)
                     _WorkflowService.CreateDynamicTracker(users, documentId, currentUserId, (bool)documentData["IsParallel"]);
             }
 
-            return RedirectToAction("ShowDocument", new { id = documentId });
+            return RedirectToAction("ShowDocument", new { id = documentId, isAfterView = true });
         }
 
         public ActionResult CopyDocument(Guid processId, Guid fileId,Guid documentId)
@@ -1414,10 +1394,20 @@ namespace RapidDoc.Controllers
         {
             ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
-            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id, timeZoneInfo);
+            DocumentTable documentTable = _DocumentService.Find(id);
             ViewBag.DocumentId = id;
             ViewBag.SignDocument = signDocument;
-            return PartialView("~/Views/Document/_TrackerList.cshtml", model);
+            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id, timeZoneInfo, documentTable.DocType);
+
+            switch(documentTable.DocType)
+            {
+                case DocumentType.Request:
+                    return PartialView("~/Views/Document/_TrackerList.cshtml", model);
+                case DocumentType.OfficeMemo:
+                    return PartialView("~/Views/Document/_TrackerListCZ.cshtml", model);
+                default:
+                    return PartialView("~/Views/Document/_TrackerList.cshtml", model);
+            }
         }
 
         private void CheckAttachedFiles(ProcessView process, Guid fileId, Guid? documentId)
@@ -1473,6 +1463,16 @@ namespace RapidDoc.Controllers
                 docModel.DocumentTableId = documentTable.Id;
                 _DocumentService.UpdateDocumentFields(docModel, processView);
             }
+        }
+
+        public ActionResult GetWaitingUserCZ(Guid id)
+        {
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+            DocumentTable documentTable = _DocumentService.Find(id);
+            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id, timeZoneInfo, documentTable.DocType);
+            ViewBag.DocumentId = id;
+            return View("~/Views/Document/ShowWaitingUsersCZ.cshtml", model);          
         }
 
         protected override void Dispose(bool disposing)

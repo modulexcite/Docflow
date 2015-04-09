@@ -170,6 +170,8 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Date", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public DateTime? SignDate { get; set; }
 
+        public string SignUserId { get; set; }
+
         public bool ManualExecutor { get; set; }
 
         public TrackerType TrackerType { get; set; }

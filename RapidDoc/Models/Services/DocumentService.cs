@@ -61,6 +61,7 @@ namespace RapidDoc.Models.Services
         void DeleteFiles(Guid documentId);
         void DeleteDocumentDraft(Guid documentId, string tableName, Guid refDocumentId);
         void Delete(Guid Id);
+        List<string> ApproveDocumentCZ(Guid documentId);
     }
 
     public class DocumentService : IDocumentService
@@ -77,6 +78,7 @@ namespace RapidDoc.Models.Services
         private readonly IDocumentReaderService _DocumentReaderService;
         private readonly IWorkScheduleService _WorkScheduleService;
         private readonly IReviewDocLogService _ReviewDocLogService;
+        private readonly IEmplService _EmplService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected RoleManager<ApplicationRole> RoleManager { get; private set; }
@@ -84,7 +86,7 @@ namespace RapidDoc.Models.Services
         public DocumentService(IUnitOfWork uow, INumberSeqService numberSeqService, IProcessService processService, 
             IWorkflowTrackerService workflowTrackerService,
             IDelegationService delegationService, IDocumentReaderService documentReaderService, IWorkScheduleService workScheduleService,
-            IReviewDocLogService reviewDocLogService)
+            IReviewDocLogService reviewDocLogService, IEmplService emplService)
         {
             _uow = uow;
             repoProcess = uow.GetRepository<ProcessTable>();
@@ -98,6 +100,7 @@ namespace RapidDoc.Models.Services
             _DocumentReaderService = documentReaderService;
             _WorkScheduleService = workScheduleService;
             _ReviewDocLogService = reviewDocLogService;
+            _EmplService = emplService;
 
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
             RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
@@ -434,26 +437,34 @@ namespace RapidDoc.Models.Services
 
             if (domainTable.DocumentState == DocumentState.Agreement || domainTable.DocumentState == DocumentState.Execution || domainTable.DocumentState == DocumentState.OnSign)
             {
-                //IEnumerable<WFTrackerTable> items = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == domainTable.Id && x.TrackerType == TrackerType.Waiting);
-                ApplicationDbContext dbContext = new ApplicationDbContext();
-                List<WFTrackerTable> items = dbContext.WFTrackerTable.Where(x => x.DocumentTableId == domainTable.Id && x.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum).ToList();
-                dbContext.Dispose();
-                string currentName = String.Empty;
-
-                if (items != null)
+                switch(domainTable.DocType)
                 {
-                    foreach (var item in items)
-                    {
-                        currentName += item.ActivityName + "/";
-                    }
-                }
+                    case DocumentType.Request :
+                        ApplicationDbContext dbContext = new ApplicationDbContext();
+                        List<WFTrackerTable> items = dbContext.WFTrackerTable.Where(x => x.DocumentTableId == domainTable.Id && x.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum).ToList();
+                        dbContext.Dispose();
+                        string currentName = String.Empty;
 
-                if (currentName != String.Empty)
-                {
-                    currentName = currentName.Remove(currentName.Length - 1);
-                }
+                        if (items != null)
+                        {
+                            foreach (var item in items)
+                            {
+                                currentName += item.ActivityName + "/";
+                            }
+                        }
 
-                domainTable.ActivityName = currentName;
+                        if (currentName != String.Empty)
+                        {
+                            currentName = currentName.Remove(currentName.Length - 1);
+                        }
+
+                        domainTable.ActivityName = currentName;
+                        break;
+
+                    case DocumentType.OfficeMemo :
+                        domainTable.ActivityName = "CZ";
+                        break;
+                }
             }
             else if (domainTable.DocumentState == DocumentState.Closed || domainTable.DocumentState == DocumentState.Cancelled)
             {
@@ -923,6 +934,64 @@ namespace RapidDoc.Models.Services
                 return methodGeneric.Invoke(_uow, null);
             }
             return null;
+        }
+
+        public List<string> ApproveDocumentCZ(Guid documentId)
+        {
+            List<string> ret = new List<string>();
+            string currentUserId = HttpContext.Current.User.Identity.GetUserId();
+            ret.AddRange(ApproveDocumentUserCZ(documentId, currentUserId));
+
+            var emplTables = _EmplService.GetPartialIntercompany(x => x.ApplicationUserId == currentUserId && x.Enable == true).ToList();
+
+            foreach(var empl in emplTables)
+            {
+                var delegationItems = _DelegationService.GetPartial(x => x.EmplTableToId == empl.Id
+                    && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
+                    && x.isArchive == false && x.CompanyTableId == empl.CompanyTable.Id).ToList();
+
+                foreach(var delegation in delegationItems)
+                {
+                    var item = _EmplService.FirstOrDefault(x => x.Id == delegation.EmplTableFromId && x.CompanyTableId == delegation.CompanyTableId && x.Enable == true);
+                    if(item != null)
+                    {
+                        ret.AddRange(ApproveDocumentUserCZ(documentId, item.ApplicationUserId));
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        private List<string> ApproveDocumentUserCZ(Guid documentId, string userid)
+        {
+            List<string> ret = new List<string>(); 
+            var trackerParallel = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.SignUserId == null && x.ParallelID != String.Empty && x.TrackerType == TrackerType.Waiting && x.Users.Any(p => p.UserId == userid)).ToList();
+            if (trackerParallel != null && trackerParallel.Count > 0)
+            {
+                SaveSignData(trackerParallel, TrackerType.Approved);
+            }
+
+            var trackerSeq = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.SignUserId == null && x.ParallelID == String.Empty && x.Users.Any(p => p.UserId == userid)).ToList();
+            if (trackerSeq != null && trackerSeq.Count > 0)
+            {
+                SaveSignData(trackerSeq, TrackerType.Approved);
+
+                foreach (var item in trackerSeq)
+                {
+                    var nextstep = _WorkflowTrackerService.FirstOrDefault(x => x.TrackerType == TrackerType.NonActive && x.LineNum > item.LineNum && x.ActivityID == item.ActivityID);
+                    if (nextstep != null)
+                    {
+                        nextstep.TrackerType = TrackerType.Waiting;
+                        nextstep.StartDateSLA = DateTime.UtcNow;
+                        _WorkflowTrackerService.SaveDomain(nextstep, userid);
+                        if (nextstep.Users != null)
+                            ret.AddRange(nextstep.Users.Select(x => x.UserId));
+                    }
+                }
+            }
+
+            return ret;
         }
     }
 }

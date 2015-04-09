@@ -18,7 +18,7 @@ namespace RapidDoc.Models.Services
     {
         IEnumerable<WFTrackerTable> GetAll();
         IEnumerable<WFTrackerTable> GetPartial(Expression<Func<WFTrackerTable, bool>> predicate);
-        IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate, TimeZoneInfo currentTimeZoneInfo);
+        IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate, TimeZoneInfo currentTimeZoneInfo, DocumentType documentType);
         bool Contains(Expression<Func<WFTrackerTable, bool>> predicate);
         WFTrackerTable FirstOrDefault(Expression<Func<WFTrackerTable, bool>> predicate);
         void SaveDomain(WFTrackerTable domainTable, string currentUserId = "");
@@ -52,7 +52,7 @@ namespace RapidDoc.Models.Services
         {
             return repo.FindAll(predicate);
         }
-        public IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate, TimeZoneInfo currentTimeZoneInfo)
+        public IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate, TimeZoneInfo currentTimeZoneInfo, DocumentType documentType)
         {
             IEnumerable<WFTrackerTable> trackerDomainItems = GetPartial(predicate).OrderBy(x => x.LineNum);
             List<WFTrackerListView> trackerViewItems = new List<WFTrackerListView>();
@@ -153,6 +153,7 @@ namespace RapidDoc.Models.Services
                         ActivityName = item.ActivityName,
                         RowNum = tmpNum,
                         Executors = signEmpl.FullName,
+                        SignUserId = item.SignUserId,
                         TrackerType = item.TrackerType,
                         ActivityID = item.ActivityID,
                         SLAOffset = item.SLAOffset,
@@ -162,8 +163,9 @@ namespace RapidDoc.Models.Services
                     DateTime? performToDate = item.PerformToDate();
                     if (performToDate != null)
                         model.PerformToDate = TimeZoneInfo.ConvertTimeFromUtc(performToDate ?? DateTime.MinValue, currentTimeZoneInfo);
-                    
-                    trackerViewItems.Add(model);
+
+                    if (documentType == DocumentType.Request || (!trackerViewItems.Any(x => x.SignUserId == item.SignUserId) && documentType == DocumentType.OfficeMemo))
+                        trackerViewItems.Add(model);
                 }
                 else
                 {
