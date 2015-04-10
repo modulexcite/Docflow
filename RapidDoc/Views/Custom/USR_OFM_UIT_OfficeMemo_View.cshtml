@@ -51,8 +51,9 @@
                     </div>
                 </div>
                 <br>
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary hidden-print" name="action:AddUsersDocumentCZ">@UIElementRes.UIElement.AddUsers</button>
+                <div>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
+                    <button type="submit" class="btn btn-primary pull-right" name="action:AddUsersDocumentCZ">@UIElementRes.UIElement.AddUsers</button>
                 </div>
             </div>
         </div>
@@ -77,13 +78,14 @@
             <div class="modal-header">
                 <div id="alert_placeholder"></div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Укажите коментарии</h4>
+                <h4 class="modal-title">Отмена документа</h4>
             </div>
             <div class="modal-body" style="min-height:250px;">
-                @Html.TextArea("Comment", new { @class = "form-control", @maxlength = 256 })
+                @Html.TextArea("RejectComment", new { @class = "form-control", @placeholder = "Обязательно укажите причину отмены" })
                 <br>
-                <div class="col-md-4">
-                    <button type="submit" id="rejectButton" class="btn btn-success btn-lg hidden-print" name="action:RejectDocumentCZ" onclick="saveLastComment();">@UIElementRes.UIElement.Reject</button>
+                <div>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
+                    <button type="submit" id="rejectButton" class="btn btn-danger pull-right" name="action:RejectDocumentCZ">@UIElementRes.UIElement.Reject</button>
                 </div>
             </div>
         </div>
@@ -94,13 +96,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Коментарии</h4>
+                <h4 class="modal-title">Утверждение документа</h4>
             </div>
             <div class="modal-body" style="min-height:200px;">
-                @Html.TextArea("Comment", new { @class = "form-control", @maxlength = 256 })
+                @Html.TextArea("ApproveComment", new { @class = "form-control", @placeholder = "Замечания" })
                 <br>
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-success btn-lg hidden-print" name="action:ApproveDocumentCZ" onclick="saveLastComment();">@UIElementRes.UIElement.Approve</button>
+                <div>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
+                    <button type="submit" class="btn btn-success pull-right" name="action:ApproveDocumentCZ">@UIElementRes.UIElement.Approve</button>
                 </div>
             </div>
         </div>
@@ -121,9 +124,9 @@
         });
 
         $('#rejectButton').click(function (event) {
-            var comment = $('#Comment').val();
+            var comment = $('#RejectComment').val();
             if (comment == "") {
-                bootstrap_alert.warning('Необходимо ввести коентарии');
+                bootstrap_alert.warning('Необходимо заполнить причину отмены');
                 event.preventDefault();
             }
         });

@@ -363,7 +363,7 @@ namespace RapidDoc.Controllers
         public ActionResult ApproveDocumentCZ(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
             var users = _DocumentService.SignDocumentCZ(documentId,  TrackerType.Approved,
-                (collection["Comment"] != null | collection["Comment"] != string.Empty) ? (string)collection["Comment"] : "");
+                (collection["ApproveComment"] != null | collection["ApproveComment"] != string.Empty) ? (string)collection["ApproveComment"] : "");
                     
             foreach (var userid in users)
             {
@@ -379,7 +379,7 @@ namespace RapidDoc.Controllers
             ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
 
             var users = _DocumentService.SignDocumentCZ(documentId, TrackerType.Cancelled,
-                (collection["Comment"] != null | collection["Comment"] != string.Empty) ? (string)collection["Comment"] : "");
+                (collection["RejectComment"] != null | collection["RejectComment"] != string.Empty) ? (string)collection["RejectComment"] : "");
 
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
             DocumentTable documentTable = _DocumentService.Find(documentId);

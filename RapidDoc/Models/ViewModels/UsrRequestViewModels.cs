@@ -2377,6 +2377,7 @@ namespace RapidDoc.Models.ViewModels
         public bool Number31 { get; set; }
         public bool Number94 { get; set; }
         public bool Number97 { get; set; }
+        public bool Number100 { get; set; }
 
         public string Number32 { get; set; }
         public string Number33 { get; set; }
@@ -2411,6 +2412,7 @@ namespace RapidDoc.Models.ViewModels
         public string Number62 { get; set; }
         public string Number95 { get; set; }
         public string Number98 { get; set; }
+        public string Number101 { get; set; }
 
         public string Number63 { get; set; }
         public string Number64 { get; set; }
@@ -2445,6 +2447,7 @@ namespace RapidDoc.Models.ViewModels
         public string Number93 { get; set; }
         public string Number96 { get; set; }
         public string Number99 { get; set; }
+        public string Number102 { get; set; }
     }
 
     public class USR_REQ_UBP_RequestForGetConclusion_View : BasicDocumentView
