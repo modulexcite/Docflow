@@ -61,7 +61,7 @@ namespace RapidDoc.Models.Services
         void DeleteFiles(Guid documentId);
         void DeleteDocumentDraft(Guid documentId, string tableName, Guid refDocumentId);
         void Delete(Guid Id);
-        List<string> ApproveDocumentCZ(Guid documentId);
+        List<string> SignDocumentCZ(Guid documentId, TrackerType trackerType, string comment = "");
     }
 
     public class DocumentService : IDocumentService
@@ -936,11 +936,11 @@ namespace RapidDoc.Models.Services
             return null;
         }
 
-        public List<string> ApproveDocumentCZ(Guid documentId)
+        public List<string> SignDocumentCZ(Guid documentId, TrackerType trackerType, string comment = "")
         {
             List<string> ret = new List<string>();
             string currentUserId = HttpContext.Current.User.Identity.GetUserId();
-            ret.AddRange(ApproveDocumentUserCZ(documentId, currentUserId));
+            ret.AddRange(SignDocumentUserCZ(documentId, trackerType, currentUserId, comment));
 
             var emplTables = _EmplService.GetPartialIntercompany(x => x.ApplicationUserId == currentUserId && x.Enable == true).ToList();
 
@@ -955,38 +955,42 @@ namespace RapidDoc.Models.Services
                     var item = _EmplService.FirstOrDefault(x => x.Id == delegation.EmplTableFromId && x.CompanyTableId == delegation.CompanyTableId && x.Enable == true);
                     if(item != null)
                     {
-                        ret.AddRange(ApproveDocumentUserCZ(documentId, item.ApplicationUserId));
+                        ret.AddRange(SignDocumentUserCZ(documentId, trackerType, item.ApplicationUserId, comment));
                     }
                 }
             }
-
             return ret;
         }
 
-        private List<string> ApproveDocumentUserCZ(Guid documentId, string userid)
+        private List<string> SignDocumentUserCZ(Guid documentId, TrackerType trackerType, string userid, string comment = "")
         {
-            List<string> ret = new List<string>(); 
+            List<string> ret = new List<string>();
             var trackerParallel = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.SignUserId == null && x.ParallelID != String.Empty && x.TrackerType == TrackerType.Waiting && x.Users.Any(p => p.UserId == userid)).ToList();
+            trackerParallel.ForEach(x => x.Comments = comment);
             if (trackerParallel != null && trackerParallel.Count > 0)
             {
-                SaveSignData(trackerParallel, TrackerType.Approved);
+                SaveSignData(trackerParallel, trackerType);
             }
 
             var trackerSeq = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.SignUserId == null && x.ParallelID == String.Empty && x.Users.Any(p => p.UserId == userid)).ToList();
             if (trackerSeq != null && trackerSeq.Count > 0)
             {
-                SaveSignData(trackerSeq, TrackerType.Approved);
+                trackerSeq.ForEach(x => x.Comments = comment);
+                SaveSignData(trackerSeq, trackerType);
 
-                foreach (var item in trackerSeq)
+                if (trackerType == TrackerType.Approved)
                 {
-                    var nextstep = _WorkflowTrackerService.FirstOrDefault(x => x.TrackerType == TrackerType.NonActive && x.LineNum > item.LineNum && x.ActivityID == item.ActivityID);
-                    if (nextstep != null)
+                    foreach (var item in trackerSeq)
                     {
-                        nextstep.TrackerType = TrackerType.Waiting;
-                        nextstep.StartDateSLA = DateTime.UtcNow;
-                        _WorkflowTrackerService.SaveDomain(nextstep, userid);
-                        if (nextstep.Users != null)
-                            ret.AddRange(nextstep.Users.Select(x => x.UserId));
+                        var nextstep = _WorkflowTrackerService.FirstOrDefault(x => x.TrackerType == TrackerType.NonActive && x.LineNum > item.LineNum && x.ActivityID == item.ActivityID);
+                        if (nextstep != null)
+                        {
+                            nextstep.TrackerType = TrackerType.Waiting;
+                            nextstep.StartDateSLA = DateTime.UtcNow;
+                            _WorkflowTrackerService.SaveDomain(nextstep, userid);
+                            if (nextstep.Users != null)
+                                ret.AddRange(nextstep.Users.Select(x => x.UserId));
+                        }
                     }
                 }
             }

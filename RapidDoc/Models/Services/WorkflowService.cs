@@ -730,7 +730,7 @@ namespace RapidDoc.Models.Services
 
                 if (emplTable != null && (documentTable == null || documentTable.ApplicationUserCreatedId != emplTable.ApplicationUserId) && !ofmList.Exists(x => x == emplTable.ApplicationUserId))
                 {
-                    if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Approved && x.TrackerType == TrackerType.Cancelled && x.SignUserId == emplTable.ApplicationUserId)
+                    if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled) && x.SignUserId == emplTable.ApplicationUserId)
                         || _WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.Users.Any(p => p.UserId == emplTable.ApplicationUserId) && x.TrackerType == TrackerType.Waiting))
                         continue;
                     else
@@ -748,7 +748,7 @@ namespace RapidDoc.Models.Services
                             {
                                 if ((documentTable == null || documentTable.ApplicationUserCreatedId != userRole.UserId) && repoUser.Contains(x => x.Id == userRole.UserId && x.Enable == true) && !ofmList.Exists(x => x == userRole.UserId))
                                 {
-                                    if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.Approved && x.TrackerType == TrackerType.Cancelled && x.SignUserId == userRole.UserId)
+                                    if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled) && x.SignUserId == userRole.UserId)
                                         || _WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.Users.Any(p => p.UserId == userRole.UserId) && x.TrackerType == TrackerType.Waiting))
                                         continue;
                                     else

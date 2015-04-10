@@ -362,11 +362,29 @@ namespace RapidDoc.Controllers
         [MultipleButton(Name = "action", Argument = "ApproveDocumentCZ")]
         public ActionResult ApproveDocumentCZ(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
-            var users = _DocumentService.ApproveDocumentCZ(documentId);
+            var users = _DocumentService.SignDocumentCZ(documentId,  TrackerType.Approved,
+                (collection["Comment"] != null | collection["Comment"] != string.Empty) ? (string)collection["Comment"] : "");
+                    
             foreach (var userid in users)
             {
                 _EmailService.SendNewExecutorEmail(documentId, userid);
             }
+            return RedirectToAction("Index", "Document");
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "RejectDocumentCZ")]
+        public ActionResult RejectDocumentCZ(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
+        {
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+
+            var users = _DocumentService.SignDocumentCZ(documentId, TrackerType.Cancelled,
+                (collection["Comment"] != null | collection["Comment"] != string.Empty) ? (string)collection["Comment"] : "");
+
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+            DocumentTable documentTable = _DocumentService.Find(documentId);
+
+            _EmailService.SendInitiatorRejectEmail(documentId);
             return RedirectToAction("Index", "Document");
         }
 

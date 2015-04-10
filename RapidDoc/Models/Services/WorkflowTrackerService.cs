@@ -157,7 +157,8 @@ namespace RapidDoc.Models.Services
                         TrackerType = item.TrackerType,
                         ActivityID = item.ActivityID,
                         SLAOffset = item.SLAOffset,
-                        CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(item.CreatedDate, currentTimeZoneInfo)
+                        CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(item.CreatedDate, currentTimeZoneInfo),
+                        Comments = item.Comments
                     };
                     model.SignDate = TimeZoneInfo.ConvertTimeFromUtc(item.SignDate ?? DateTime.MinValue, currentTimeZoneInfo);
                     DateTime? performToDate = item.PerformToDate();
@@ -178,7 +179,8 @@ namespace RapidDoc.Models.Services
                         ManualExecutor = item.ManualExecutor,
                         ActivityID = item.ActivityID,
                         SLAOffset = item.SLAOffset,
-                        CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(item.CreatedDate, currentTimeZoneInfo)
+                        CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(item.CreatedDate, currentTimeZoneInfo),
+                        Comments = item.Comments
                     };
                     DateTime? performToDate = item.PerformToDate();
                     if (performToDate != null)
@@ -208,7 +210,7 @@ namespace RapidDoc.Models.Services
 
                 if (endStep != null)
                 {
-                    if (endStep.ParallelID != String.Empty)
+                    if (endStep.ParallelID != String.Empty && endStep.DocumentTable.DocType != DocumentType.OfficeMemo)
                     {
                         List<WFTrackerTable> alltrack = repo.FindAll(x => x.DocumentTableId == endStep.DocumentTableId).Where(b => b.ParallelID == endStep.ParallelID).ToList();
                         if (alltrack.Any(x => x.TrackerType == TrackerType.Cancelled) && endStep.DocumentTable.DocumentState != DocumentState.Agreement)

@@ -22,10 +22,18 @@
                 @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Approved)
                 {
                     @UIElementRes.UIElement.Yes
+                    if (trackerItem.Comments != null && trackerItem.Comments != String.Empty)
+                    {
+                        <span>(</span>@trackerItem.Comments<span>)</span>
+                    }
                 }
                 @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Cancelled)
                 {
                     @UIElementRes.UIElement.No
+                    if (trackerItem.Comments != null && trackerItem.Comments != String.Empty)
+                    { 
+                        <span>(</span>@trackerItem.Comments<span>)</span>
+                    }
                 }
             </h5>
         </li>

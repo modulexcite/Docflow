@@ -71,13 +71,62 @@
         </div>
     </div>
 </div>
+<div class="modal fade rejectcz-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div id="alert_placeholder"></div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Укажите коментарии</h4>
+            </div>
+            <div class="modal-body" style="min-height:250px;">
+                @Html.TextArea("Comment", new { @class = "form-control", @maxlength = 256 })
+                <br>
+                <div class="col-md-4">
+                    <button type="submit" id="rejectButton" class="btn btn-success btn-lg hidden-print" name="action:RejectDocumentCZ" onclick="saveLastComment();">@UIElementRes.UIElement.Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade approvecz-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Коментарии</h4>
+            </div>
+            <div class="modal-body" style="min-height:200px;">
+                @Html.TextArea("Comment", new { @class = "form-control", @maxlength = 256 })
+                <br>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-success btn-lg hidden-print" name="action:ApproveDocumentCZ" onclick="saveLastComment();">@UIElementRes.UIElement.Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     $(function () {
+        bootstrap_alert = function () { }
+        bootstrap_alert.warning = function (message) {
+            $('#alert_placeholder').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>' + message + '</div>')
+        }
+
         $('.distributiongrouplink_whom').click(function () {
             var element = $(event.target);
             var tagId = element.attr('data-itemid') + ', ' + element.attr('data-rolename');
             $('input[data-role=tagsinputGroup2]').tagsinput('add', { value: tagId, text: element.text() });
         });
+
+        $('#rejectButton').click(function (event) {
+            var comment = $('#Comment').val();
+            if (comment == "") {
+                bootstrap_alert.warning('Необходимо ввести коентарии');
+                event.preventDefault();
+            }
+        });
+
     });
 </script>
