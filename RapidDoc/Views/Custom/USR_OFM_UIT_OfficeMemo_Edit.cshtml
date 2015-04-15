@@ -1,4 +1,7 @@
 ﻿@model RapidDoc.Models.ViewModels.USR_OFM_UIT_OfficeMemo_View
+@{
+    Model.Parallel = true;         
+}
 @using RapidDoc.Extensions;
 
 @Html.ValidationSummary(true)
@@ -30,28 +33,18 @@
     </div>
 </div>
 <br />
-<div class="row">
-    <div class="col-md-2">
-        <div class="input-group-addon" style="padding-right: 10px;">
-            <div class="row">
-                <div class="col-md-12 text-left">
-                    <strong>Маршрут:</strong>
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target=".documentwhom-modal"><span class="fa fa-users fa-lg" aria-hidden="false"></span></button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 text-left">
-                    <br />
-                    @Html.CheckBoxFor(model => Model.Parallel, new { @data_labelauty = "Параллельно|Параллельно" })
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-10">
-        @Html.TextBoxFor(model => Model.DocumentWhom, new { @class = "form-control", @data_role = "tagsinputGroup2", @size = 256, @maxlength = 256, placeholder = "Маршрут" })
+
+<div class="form-group">
+    <div class="input-group">
+        <span class="input-group-addon">
+            <a href="#" class="hidden-print" data-toggle="modal" data-target=".documentwhom-modal"><span class="fa fa-users fa-lg" aria-hidden="false"></span></a>
+        </span>
+        <span class="input-group-addon checkbox-inline">
+            @Html.CheckBoxFor(model => Model.Parallel, new { @data_labelauty = "Параллельно|Параллельно" })
+        </span>
+        @Html.TextBoxFor(model => Model.DocumentWhom, new { @class = "form-control", @data_role = "tagsinputGroup2", @size = 256, @maxlength = 256, placeholder = "Маршрут согласования" })
     </div>
 </div>
-<br />
 <div class="editor-field">
     <div class="input-group input-group-sm">
         <span class="input-group-addon" id="sizing-addon3"><strong>Тема:<span class="required">*</span></strong>&nbsp;</span>
@@ -105,19 +98,19 @@
     $('#MainField').val("<div style=\"line-height: 21.4285717010498px;\"><span style=\"font-weight: bold;\">Кому: &nbsp; &nbsp; &nbsp;</span><span style=\"font-weight: bold;\">&nbsp;</span>Исполнительным директорам</div><div style=\"line-height: 21.4285717010498px;\"><span style=\"font-weight: bold;\">Копия: &nbsp; &nbsp;&nbsp;</span>Руководителям структурных подразделений</div><div style=\"line-height: 21.4285717010498px;\"><span style=\"font-weight: bold;\">От кого: &nbsp;&nbsp;</span>Исполнительного директора</div><div style=\"line-height: 21.4285717010498px;\"><br></div><div style=\"line-height: 21.4285717010498px; margin-left: 25px;\">Текст служебной записки ...</div><div style=\"line-height: 21.4285717010498px;\"><br></div><div style=\"line-height: 21.4285717010498px;\"><div>исп.&nbsp;</div><div>вн.&nbsp;</div></div>");
 
     $(function () {
-        $('.itemcauseslink').click(function () {
+        $('.itemcauseslink').click(function (event) {
             var element = $(event.target);
             $('#ItemCauseTableId').val(element.attr('data-itemid'));
             $('#ItemCauseNumber').text(element.text());
         });
 
-        $('.distributiongrouplink_whom').click(function () {
+        $('.distributiongrouplink_whom').click(function (event) {
             var element = $(event.target);
             var tagId = element.attr('data-itemid') + ', ' + element.attr('data-rolename');
             $('input[data-role=tagsinputGroup2]').tagsinput('add', { value: tagId, text: element.text() });
         });
 
-        $('.distributiongrouplink_copy').click(function () {
+        $('.distributiongrouplink_copy').click(function (event) {
             var element = $(event.target);
             var tagId = element.attr('data-itemid') + ', ' + element.attr('data-rolename');
             $('input[data-role=tagsinputGroup]').tagsinput('add', { value: tagId, text: element.text() });

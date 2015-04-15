@@ -568,7 +568,7 @@ namespace RapidDoc.Models.Services
 
         public FileTable GetActualFileWF(string _tableName, DocumentTable documentTable)
         {
-            FileTable fileWF = _DocumentService.GetAllXAMLDocument(documentTable.ProcessTableId).OrderByDescending(x => x.Version).FirstOrDefault();
+            FileTable fileWF = _DocumentService.GetAllXAMLDocument(documentTable.ProcessTableId).OrderByDescending(x => Convert.ToInt32(x.Version)).FirstOrDefault();
             return fileWF;
         }
         public Activity ChooseActualWorkflow(string _tableName, FileTable fileWF, bool flag = true)
@@ -703,7 +703,6 @@ namespace RapidDoc.Models.Services
                 case DocumentType.OfficeMemo:
                     List<string> users = this.GetUniqueUserList(documentId, documentData, "DocumentWhom");
                     allSteps = this.GetRequestTree(activity);
-                   // allSteps = this.GetOfficeMemoTree(activity, (bool)documentData["Parallel"], users);
                     documentData["DocumentWhom"] = users;
                     break;
             }
@@ -722,6 +721,7 @@ namespace RapidDoc.Models.Services
             Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
             string[] arrayStructure = arrayTempStructrue.Where(a => isGuid.IsMatch(a) == true).ToArray();
             DocumentTable documentTable = _DocumentService.Find(documentId);
+            var trackerListCheck = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled || x.TrackerType == TrackerType.Waiting)).ToList();
 
             foreach (string emplIdStr in arrayStructure)
             {
@@ -730,8 +730,8 @@ namespace RapidDoc.Models.Services
 
                 if (emplTable != null && (documentTable == null || documentTable.ApplicationUserCreatedId != emplTable.ApplicationUserId) && !ofmList.Exists(x => x == emplTable.ApplicationUserId))
                 {
-                    if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled) && x.SignUserId == emplTable.ApplicationUserId)
-                        || _WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.Users.Any(p => p.UserId == emplTable.ApplicationUserId) && x.TrackerType == TrackerType.Waiting))
+                    if (trackerListCheck.Any(x => (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled) && x.SignUserId == emplTable.ApplicationUserId)
+                        || trackerListCheck.Any(x => x.Users.Any(p => p.UserId == emplTable.ApplicationUserId) && x.TrackerType == TrackerType.Waiting))
                         continue;
                     else
                         ofmList.Add(emplTable.ApplicationUserId);
@@ -744,12 +744,15 @@ namespace RapidDoc.Models.Services
                     {
                         if (role.Users != null && role.Users.Count() > 0)
                         {
+                            var empllist = _EmplService.GetPartialIntercompany(x => x.Enable == true).ToList();
+
                             foreach (IdentityUserRole userRole in role.Users)
                             {
-                                if ((documentTable == null || documentTable.ApplicationUserCreatedId != userRole.UserId) && repoUser.Contains(x => x.Id == userRole.UserId && x.Enable == true) && !ofmList.Exists(x => x == userRole.UserId))
+                                if ((documentTable == null || documentTable.ApplicationUserCreatedId != userRole.UserId)
+                                    && !ofmList.Exists(x => x == userRole.UserId) && empllist.Any(x => x.ApplicationUserId == userRole.UserId))
                                 {
-                                    if (_WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled) && x.SignUserId == userRole.UserId)
-                                        || _WorkflowTrackerService.Contains(x => x.DocumentTableId == documentId && x.Users.Any(p => p.UserId == userRole.UserId) && x.TrackerType == TrackerType.Waiting))
+                                    if (trackerListCheck.Any(x => (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled) && x.SignUserId == userRole.UserId)
+                                        || trackerListCheck.Any(x => x.Users.Any(p => p.UserId == userRole.UserId) && x.TrackerType == TrackerType.Waiting))
                                         continue;
                                     else
                                         ofmList.Add(userRole.UserId);
@@ -766,16 +769,32 @@ namespace RapidDoc.Models.Services
 
         public void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel)
         {
-            if (users == null)
+            List<string> result = new List<string>();
+            if (users == null && users.Count == 0)
+                return;
+
+            var trackerListCheck = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled || x.TrackerType == TrackerType.Waiting)).ToList();
+
+            foreach(var userId in users)
+            {
+                if (trackerListCheck.Any(x => (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled) && x.SignUserId == userId)
+                        || trackerListCheck.Any(x => x.Users.Any(p => p.UserId == userId) && x.TrackerType == TrackerType.Waiting))
+                    continue;
+                else
+                    result.Add(userId);
+            }
+
+            if (result.Count == 0)
                 return;
 
             var documentTable = _DocumentService.Find(documentId);
+            var employers = _EmplService.GetPartialIntercompany(x => x.Enable == true).ToList();
             DateTime createdDate = DateTime.UtcNow;
             string activityId = Guid.NewGuid().ToString();
 
             using (var bcp = new System.Data.SqlClient.SqlBulkCopy(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             {
-                bcp.BatchSize = users.Count;
+                bcp.BatchSize = result.Count;
                 bcp.DestinationTableName = "[dbo].[WFTrackerTable]";
                 DataTable table = new DataTable();
                 table.Columns.Add("Id", typeof(Guid));
@@ -798,16 +817,19 @@ namespace RapidDoc.Models.Services
                 table.Columns.Add("StartDateSLA", typeof(DateTime));
 
                 int num = 0;
-                foreach (string item in users)
+                foreach (string item in result)
                 {
-                    var emplTable = _EmplService.GetEmployer(item, documentTable.CompanyTableId);
+                    var emplTable = employers.Find(x => x.ApplicationUserId == item);
 
                     num++;
                     DataRow row = table.NewRow();
                     row["Id"] = Guid.NewGuid();
                     row["LineNum"] = DBNull.Value;
                     row["DocumentTableId"] = documentId;
-                    row["ActivityName"] = emplTable.TitleName;
+                    if (emplTable != null)
+                        row["ActivityName"] = emplTable.TitleName;
+                    else
+                        row["ActivityName"] = String.Empty;
                     row["ActivityID"] = activityId;
                     if(parallel == false)
                         row["ParallelID"] = String.Empty;
@@ -858,7 +880,7 @@ namespace RapidDoc.Models.Services
                     row["Id"] = Guid.NewGuid();
                     row["TimeStamp"] = DBNull.Value;
                     row["InitiatorUserId"] = DBNull.Value;
-                    row["UserId"] = users[num];
+                    row["UserId"] = result[num];
                     row["WFTrackerTable_Id"] = item.Id;
                     table.Rows.Add(row);
                     num++;

@@ -3,22 +3,22 @@
 <div id="comments">
 @if (Model.Count() > 0)
 {
-    <br class="hidden-print">
-    <h3 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h3>
-    
+    <h4 class="hidden-print">@FieldNameRes.FieldNameResource.Comments</h4>
+    <br class="visible-print">
+    <h5 class="visible-print">@FieldNameRes.FieldNameResource.Comments</h5>
+
     foreach (var item in Model)
     {
-        <div class="bs-callout bs-callout-info">
+        <div class="bs-callout bs-callout-info hidden-print">
             <h4>@item.EmplName <small>@item.TitleName</small></h4>
             <p>@item.Comment</p>
             <h5><small class="pull-right">@item.CreatedDate</small></h5>
         </div>
+        <div class="well well-sm visible-print">
+            <h5>@item.EmplName <small>@item.TitleName</small></h5>
+            <p>@item.Comment</p>
+            <h6><small class="pull-right">@item.CreatedDate</small></h6>
+        </div>
     }
 }
-@*
-    else
-    {
-        <p class="text-center hidden-print"><small class="text-center"><em>@UIElementRes.UIElement.NoItems</em></small></p>
-    }
-*@
 </div>

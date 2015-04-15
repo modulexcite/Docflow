@@ -355,7 +355,7 @@ namespace RapidDoc.Models.Services
 
             var items = from document in contextQuery.DocumentTable
                     where
-                       (contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == user.Id && x.TrackerType == TrackerType.Approved))
+                       (contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == user.Id && (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled)))
                        &&
                        !(contextQuery.ReviewDocLogTable.Any(x => x.ApplicationUserCreatedId == user.Id && x.DocumentTableId == document.Id && x.isArchive == true))
                         join company in contextQuery.CompanyTable on document.CompanyTableId equals company.Id
@@ -437,34 +437,30 @@ namespace RapidDoc.Models.Services
 
             if (domainTable.DocumentState == DocumentState.Agreement || domainTable.DocumentState == DocumentState.Execution || domainTable.DocumentState == DocumentState.OnSign)
             {
-                switch(domainTable.DocType)
+                ApplicationDbContext dbContext = new ApplicationDbContext();
+                List<WFTrackerTable> items = dbContext.WFTrackerTable.Where(x => x.DocumentTableId == domainTable.Id && x.TrackerType == TrackerType.Waiting).OrderBy(x => x.LineNum).ToList();
+                dbContext.Dispose();
+                string currentName = String.Empty;
+
+                if (items != null)
                 {
-                    case DocumentType.Request :
-                        ApplicationDbContext dbContext = new ApplicationDbContext();
-                        List<WFTrackerTable> items = dbContext.WFTrackerTable.Where(x => x.DocumentTableId == domainTable.Id && x.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum).ToList();
-                        dbContext.Dispose();
-                        string currentName = String.Empty;
-
-                        if (items != null)
-                        {
-                            foreach (var item in items)
-                            {
-                                currentName += item.ActivityName + "/";
-                            }
-                        }
-
-                        if (currentName != String.Empty)
-                        {
-                            currentName = currentName.Remove(currentName.Length - 1);
-                        }
-
-                        domainTable.ActivityName = currentName;
-                        break;
-
-                    case DocumentType.OfficeMemo :
-                        domainTable.ActivityName = "CZ";
-                        break;
+                    foreach (var item in items)
+                    {
+                        currentName += item.ActivityName + "/";
+                        if(currentName.Length > 60)
+                            break;
+                    }
                 }
+
+                if (currentName != String.Empty)
+                {
+                    currentName = currentName.Remove(currentName.Length - 1);
+
+                    if(currentName.Length > 60)
+                        currentName = currentName.Substring(0, 60) + "...";
+                }
+
+                domainTable.ActivityName = currentName;
             }
             else if (domainTable.DocumentState == DocumentState.Closed || domainTable.DocumentState == DocumentState.Cancelled)
             {

@@ -2,6 +2,7 @@
 
 @if (Model.Count() > 0)
 {
+    <h5 class="visible-print">Подписи:</h5>
     <ul>
     @foreach (var trackerItem in Model.Where(x => x.TrackerType == RapidDoc.Models.Repository.TrackerType.Approved || x.TrackerType == RapidDoc.Models.Repository.TrackerType.Cancelled).OrderBy(x => x.SignDate))
     {
@@ -39,10 +40,12 @@
         </li>
     }
     </ul>
-    if (Model.Where(x => x.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting).Count() > 0)
-    {
-        <a href="@Url.Action("GetWaitingUserCZ", "Document", new { id = ViewBag.DocumentId })" class="hidden-print"><p class="help-block">@Model.Where(x => x.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting).Count() ожидают подписи</p></a>
-        <br class="hidden-print" />
-    }
 }
+
+@if ((int)ViewBag.CountWaiting > 0)
+{
+    <a href="@Url.Action("GetWaitingUserCZ", "Document", new { id = ViewBag.DocumentId })" class="hidden-print"><p class="help-block">@ViewBag.CountWaiting ожидают подписи</p></a>
+    <br class="hidden-print" />
+}
+
 

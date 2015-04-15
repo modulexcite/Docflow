@@ -117,7 +117,7 @@ function qrcode_init() {
     var qrcode = new QRCode(document.getElementById("qrcode"), {
         width: 100,
         height: 100,
-        colorDark: "#27ad60",
+        colorDark: "#000000",
         colorLight: "#ffffff"
     });
 

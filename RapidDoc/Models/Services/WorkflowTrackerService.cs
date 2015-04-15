@@ -54,13 +54,13 @@ namespace RapidDoc.Models.Services
         }
         public IEnumerable<WFTrackerListView> GetPartialView(Expression<Func<WFTrackerTable, bool>> predicate, TimeZoneInfo currentTimeZoneInfo, DocumentType documentType)
         {
-            IEnumerable<WFTrackerTable> trackerDomainItems = GetPartial(predicate).OrderBy(x => x.LineNum);
+            List<WFTrackerTable> trackerDomainItems = GetPartial(predicate).OrderBy(x => x.LineNum).ToList();
+            List<EmplTable> cacheEmplList = repoEmpl.All().ToList();
             List<WFTrackerListView> trackerViewItems = new List<WFTrackerListView>();
+
             int rowNum = 0;
-            int tmpNum;
             string workers;
             string prevActivityID = String.Empty;
-            List<EmplTable> cacheEmplList = new List<EmplTable>();
 
             foreach (var item in trackerDomainItems)
             {
@@ -68,16 +68,7 @@ namespace RapidDoc.Models.Services
                
                 foreach(var userItem in item.Users)
                 {
-                    EmplTable empl = null;
-                    if (cacheEmplList.Any(x => x.ApplicationUserId == userItem.UserId))
-                    {
-                        empl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == userItem.UserId);
-                    }
-                    else
-                    {
-                        empl = repoEmpl.Find(x => x.ApplicationUserId == userItem.UserId);
-                        cacheEmplList.Add(empl);
-                    }
+                    EmplTable empl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == userItem.UserId);
 
                     if (workers != String.Empty)
                     {
@@ -88,7 +79,7 @@ namespace RapidDoc.Models.Services
 
                     var delegationItems = repoDelegation.FindAll(x => x.EmplTableFromId == empl.Id
                         && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
-                        && x.isArchive == false && x.CompanyTableId == empl.CompanyTable.Id);
+                        && x.isArchive == false && x.CompanyTableId == empl.CompanyTable.Id).ToList();
 
                     bool addUser;
                     foreach (var delegationItem in delegationItems)
@@ -122,36 +113,23 @@ namespace RapidDoc.Models.Services
                     if (prevActivityID != item.ParallelID)
                     {
                         rowNum = rowNum + 1;
-                    }
-                    tmpNum = rowNum;
-
-                    if (prevActivityID != item.ParallelID)
                         prevActivityID = item.ParallelID;
+                    }
                 }
                 else
                 {
                     rowNum = rowNum + 1;
-                    tmpNum = rowNum;
                     prevActivityID = String.Empty;
                 }
 
                 if (item.SignDate != null)
                 {
-                    EmplTable signEmpl = null;
-                    if (cacheEmplList.Any(x => x.ApplicationUserId == item.SignUserId))
-                    {
-                        signEmpl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == item.SignUserId);
-                    }
-                    else
-                    {
-                        signEmpl = repoEmpl.Find(x => x.ApplicationUserId == item.SignUserId);
-                        cacheEmplList.Add(signEmpl);
-                    }
+                    EmplTable signEmpl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == item.SignUserId);
 
                     WFTrackerListView model = new WFTrackerListView
                     {
                         ActivityName = item.ActivityName,
-                        RowNum = tmpNum,
+                        RowNum = rowNum,
                         Executors = signEmpl.FullName,
                         SignUserId = item.SignUserId,
                         TrackerType = item.TrackerType,
@@ -173,7 +151,7 @@ namespace RapidDoc.Models.Services
                     WFTrackerListView model = new WFTrackerListView
                     {
                         ActivityName = item.ActivityName,
-                        RowNum = tmpNum,
+                        RowNum = rowNum,
                         Executors = workers,
                         TrackerType = item.TrackerType,
                         ManualExecutor = item.ManualExecutor,

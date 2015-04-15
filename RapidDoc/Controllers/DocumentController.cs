@@ -257,10 +257,7 @@ namespace RapidDoc.Controllers
             docuView.isArchive = _ReviewDocLogService.isArchive(documentTable.Id, "", userTable);
             viewModel.DocumentView = docuView;
             viewModel.docData = _DocumentService.GetDocumentView(documentTable.RefDocumentId, process.TableName);
-            viewModel.fileId = docuView.FileId;
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(userTable.TimeZoneId);
-            viewModel.WFTrackerItems = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == documentTable.Id, timeZoneInfo, documentTable.DocType);
-           
+            viewModel.fileId = docuView.FileId;           
             ViewBag.CreatedDate = _SystemService.ConvertDateTimeToLocal(userTable, docuView.CreatedDate);
             ViewBag.DocumentUrl = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + docuView.AliasCompanyName + "/Document/ShowDocument/" + docuView.Id + "?isAfterView=true";
             if (emplTable != null)
@@ -364,7 +361,10 @@ namespace RapidDoc.Controllers
         {
             var users = _DocumentService.SignDocumentCZ(documentId,  TrackerType.Approved,
                 (collection["ApproveComment"] != null | collection["ApproveComment"] != string.Empty) ? (string)collection["ApproveComment"] : "");
-                    
+
+            DocumentTable documentTable = _DocumentService.Find(documentId);
+            _DocumentService.UpdateDocument(documentTable, User.Identity.GetUserId());
+
             foreach (var userid in users)
             {
                 _EmailService.SendNewExecutorEmail(documentId, userid);
@@ -383,6 +383,7 @@ namespace RapidDoc.Controllers
 
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
             DocumentTable documentTable = _DocumentService.Find(documentId);
+            _DocumentService.UpdateDocument(documentTable, user.Id);
 
             _EmailService.SendInitiatorRejectEmail(documentId);
             return RedirectToAction("Index", "Document");
@@ -404,6 +405,9 @@ namespace RapidDoc.Controllers
 
                 if(users.Count > 0)
                     _WorkflowService.CreateDynamicTracker(users, documentId, currentUserId, (bool)documentData["IsParallel"]);
+
+                DocumentTable documentTable = _DocumentService.Find(documentId);
+                _DocumentService.UpdateDocument(documentTable, currentUserId);
             }
 
             return RedirectToAction("ShowDocument", new { id = documentId, isAfterView = true });
@@ -1415,15 +1419,18 @@ namespace RapidDoc.Controllers
             DocumentTable documentTable = _DocumentService.Find(id);
             ViewBag.DocumentId = id;
             ViewBag.SignDocument = signDocument;
-            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id, timeZoneInfo, documentTable.DocType);
 
             switch(documentTable.DocType)
             {
                 case DocumentType.Request:
-                    return PartialView("~/Views/Document/_TrackerList.cshtml", model);
+                    var modelRequest = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id, timeZoneInfo, documentTable.DocType);
+                    return PartialView("~/Views/Document/_TrackerList.cshtml", modelRequest);
                 case DocumentType.OfficeMemo:
-                    return PartialView("~/Views/Document/_TrackerListCZ.cshtml", model);
+                    ViewBag.CountWaiting = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == id && x.TrackerType == TrackerType.Waiting).ToList().Count;
+                    var modelOfficeMemo = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id && (x.TrackerType == TrackerType.Approved || x.TrackerType == TrackerType.Cancelled), timeZoneInfo, documentTable.DocType);
+                    return PartialView("~/Views/Document/_TrackerListCZ.cshtml", modelOfficeMemo);
                 default:
+                    var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id, timeZoneInfo, documentTable.DocType);
                     return PartialView("~/Views/Document/_TrackerList.cshtml", model);
             }
         }
@@ -1488,7 +1495,7 @@ namespace RapidDoc.Controllers
             ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
             DocumentTable documentTable = _DocumentService.Find(id);
-            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id, timeZoneInfo, documentTable.DocType);
+            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id && x.TrackerType == TrackerType.Waiting, timeZoneInfo, documentTable.DocType);
             ViewBag.DocumentId = id;
             return View("~/Views/Document/ShowWaitingUsersCZ.cshtml", model);          
         }

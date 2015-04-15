@@ -5,10 +5,10 @@
 
 <div class="row">
     <div class="col-xs-6">
-        <h4><span class="fa fa-file-o"></span> @ViewBag.Title</h4>
+        <h5><span class="fa fa-file-o"></span> <strong>@ViewBag.Title</strong></h5>
     </div>
     <div class="col-xs-6">
-        <h4>@Html.ActionLink(UIElementRes.UIElement.Cancel, "Index", "Document", new { @class = "pull-right" })</h4>
+        <h5>@Html.ActionLink(UIElementRes.UIElement.Cancel, "Index", "Document", new { @class = "pull-right" })</h5>
     </div>
 </div>
 @using (Html.BeginForm("", "", new { processId = Model.ProcessView.Id, type = 1, fileId = Model.fileId, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
@@ -24,7 +24,7 @@
         @if (Model.ProcessTemplates.Count() > 0)
         { 
             <br>
-            <h3>@UIElementRes.UIElement.Templates</h3>
+            <h4>@UIElementRes.UIElement.Templates</h4>
             <div>
                 @foreach (var item in Model.ProcessTemplates)
                 {
@@ -33,7 +33,13 @@
             </div>   
         }      
         <br>
-        <h3>@UIElementRes.UIElement.AttachedFiles</h3>
+        <h4>@UIElementRes.UIElement.AttachedFiles
+            <span class="btn btn-primary btn-xs fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>@UIElementRes.UIElement.AddFiles</span>
+                <input type="file" name="files" multiple>
+            </span>
+        </h4>
         @if(!String.IsNullOrEmpty(Model.ProcessView.MandatoryFileTypes))
         {
             <h5 class="text-danger">@UIElementRes.UIElement.SupportFileTypes: @Model.ProcessView.MandatoryFileTypes</h5>
@@ -42,32 +48,10 @@
         {
             <h5 class="text-danger">@String.Format(UIElementRes.UIElement.MustAttachedFiles, Model.ProcessView.MandatoryNumberFiles)</h5>
         }
-        <div class="row fileupload-buttonbar">
-            <div class="col-lg-7">
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success btn-xs fileinput-button">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span>@UIElementRes.UIElement.AddFiles</span>
-                    <input type="file" name="files" multiple>
-                </span>
-                <!-- The global file processing state -->
-                <span class="fileupload-process"></span>
-            </div>
-            <!-- The global progress state -->
-            <div class="col-lg-5 fileupload-progress fade">
-                <!-- The global progress bar -->
-                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
-                </div>
-                <!-- The extended global progress state -->
-                <div class="progress-extended">&nbsp;</div>
-            </div>
-        </div>
-
         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
         <br>
         <p>
-            <button type="submit" class="btn btn-primary btn-lg" name="action:ApproveNewDocument">@UIElementRes.UIElement.Approve</button>
+            <button type="submit" class="btn btn-success btn-lg" name="action:ApproveNewDocument">@UIElementRes.UIElement.Approve</button>
             <button type="submit" class="btn btn-default btn-sm" name="action:SaveDraft">@UIElementRes.UIElement.SaveDraft</button>
             <a href="@Url.Action("Index", "Document")" class="btn btn-default btn-sm" role="button">@UIElementRes.UIElement.Cancel</a>
         </p>

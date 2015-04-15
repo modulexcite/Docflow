@@ -5,248 +5,223 @@
 }
 
 <div class="row">
-    <div class="col-xs-6">
-        @if (Model.DocumentView.isArchive == true)
-        {
-            <span class="fa fa-archive"></span>
-        }
+    <div class="col-xs-5">
         <h5 class="hidden-print"><a href="@ViewBag.DocumentUrl" id="documenturl">#@Model.DocumentView.DocumentNum</a><strong> - @Model.ProcessView.ProcessName</strong></h5>
-        <h4>
+        <h5>
             <span class="visible-print-inline">@Model.DocumentView.DocumentNum - @Model.ProcessView.ProcessName</span>
             <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
-        </h4>
+            @if (Model.DocumentView.isArchive == true)
+            {
+                <span class="fa fa-archive"></span>
+            }
+        </h5>
     </div>
-    <div class="col-xs-6">
-        <h4 class="text-right"><small class="hidden-print">(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h4>
+    <div class="col-xs-5">
+        <h5 class="text-right"><small class="hidden-print">(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h5>
+    </div>
+    <div class="col-xs-2">
+        <div id="qrcode" class="pull-right"></div>
     </div>
 </div>
-<hr />
-    @using (Html.BeginForm("", "", new { processId = Model.ProcessView.Id, type = 2, fileId = Model.fileId, documentId = Model.DocumentView.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(false)
 
-        <fieldset>
-            @Html.HiddenFor(model => model.ProcessView.Id)
-            @Html.HiddenFor(model => model.fileId)
-            @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "View" })
-            <br class="hidden-print">
-            @if (Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Closed && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Cancelled)
-            {     
-                <h3 class="hidden-print">@UIElementRes.UIElement.AttachedFiles</h3>
-                if (!String.IsNullOrEmpty(Model.ProcessView.MandatoryFileTypes))
-                {
-                    <h5 class="text-danger hidden-print">@UIElementRes.UIElement.SupportFileTypes: @Model.ProcessView.MandatoryFileTypes</h5>
-                }
-                <div class="row fileupload-buttonbar hidden-print">
-                    <div class="col-lg-7">
-                        <!-- The fileinput-button span is used to style the file input field as button -->
-                        @if(Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Closed && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Cancelled)
-                        { 
-                        <span class="btn btn-success btn-xs fileinput-button">
-                            <i class="glyphicon glyphicon-plus"></i>
-                            <span>@UIElementRes.UIElement.AddFiles</span>
-                            <input type="file" name="files" multiple>
-                        </span>
-                        }
-                        <!-- The global file processing state -->
-                        <span class="fileupload-process"></span>
-                    </div>
-                    <!-- The global progress state -->
-                    <div class="col-lg-5 fileupload-progress fade">
-                        <!-- The global progress bar -->
-                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar progress-bar-success" style="width:0%;"></div>
-                        </div>
-                        <!-- The extended global progress state -->
-                        <div class="progress-extended">&nbsp;</div>
-                    </div>
-                </div>
-            }
-            <table role="presentation" class="table table-striped hidden-print"><tbody class="files"></tbody></table>
-            <br>
-            <h3 class="hidden-print">@UIElementRes.UIElement.ProgressWork</h3>
-            @Html.Action("GetTrackerList", "Document", new { id = Model.DocumentView.Id, signDocument = Model.DocumentView.isSign })
+@using (Html.BeginForm("", "", new { processId = Model.ProcessView.Id, type = 2, fileId = Model.fileId, documentId = Model.DocumentView.Id, actionModelName = Model.ProcessView.TableName }, FormMethod.Post, new { id = "ajaxUploadForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false)
 
-            <div class="hidden-print">
-            @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0)
+    <fieldset>
+        @Html.HiddenFor(model => model.ProcessView.Id)
+        @Html.HiddenFor(model => model.fileId)
+        @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "View" })
+        <br class="hidden-print">
+        @if (Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Closed && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Cancelled)
+        {     
+            <h4 class="hidden-print">@UIElementRes.UIElement.AttachedFiles
+            <span class="btn btn-primary btn-xs fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>@UIElementRes.UIElement.AddFiles</span>
+                <input type="file" name="files" multiple>
+            </span>
+            </h4>
+            if (!String.IsNullOrEmpty(Model.ProcessView.MandatoryFileTypes))
             {
-                <ul>
-                    @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)
-                    {
-                        <li>@UIElementRes.UIElement.DocumentReject <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr> @Html.DateTimeLocal(history.CreatedDate)</li>
-                    }
-                </ul>
+                <h5 class="text-danger hidden-print">@UIElementRes.UIElement.SupportFileTypes: @Model.ProcessView.MandatoryFileTypes</h5>
             }
-                <div class="row">
-                    <div class="col-md-6">
-                        @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders).Count() > 0)
-                        {
+        }
+        <table role="presentation" class="table table-striped hidden-print"><tbody class="files"></tbody></table>
+        <h4 class="hidden-print">@UIElementRes.UIElement.ProgressWork</h4>
+        <br class="visible-print">
+        @Html.Action("GetTrackerList", "Document", new { id = Model.DocumentView.Id, signDocument = Model.DocumentView.isSign })        
+        <div class="hidden-print">
+        @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0 && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Cancelled)
+        {
+            <ul>
+                @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)
+                {
+                    <li>@UIElementRes.UIElement.DocumentReject <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr> @Html.DateTimeLocal(history.CreatedDate)</li>
+                }
+            </ul>
+        }
+        @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders).Count() > 0)
+        {
+            <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">@UIElementRes.UIElement.DocumentAddReaders</a>
+            <div class="collapse" id="collapseExample">
+                <div class="well">
+                    <div class="row">
+                        <div class="col-xs-6">
                             <ul>
                                 @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.AddReaders)
                                 {
                                     <li>@UIElementRes.UIElement.DocumentAddReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr></li>
                                 }
                             </ul>
-                        }
-                    </div>
-                    <div class="col-md-6">
-                        @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders).Count() > 0)
-                        {
-                            <ul>
-                                @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders)
-                                {
-                                    <li>@UIElementRes.UIElement.DocumentRemoveReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr></li>
-                                }
-                            </ul>
-                        }
+                        </div>
+                        <div class="col-xs-6">
+                            @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders).Count() > 0)
+                            {
+                                <ul>
+                                    @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RemoveReaders)
+                                    {
+                                        <li>@UIElementRes.UIElement.DocumentRemoveReaders @history.Description @Html.DateTimeLocal(history.CreatedDate), <abbr title="@history.CreatedEmplName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@history.CreatedEmplDepartment - @history.CreatedEmplTitle">@history.CreatedBy</abbr></li>
+                                    }
+                                </ul>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
+        }
+        </div>
            
+        @if (Model.DocumentView.DocType != RapidDoc.Models.Repository.DocumentType.OfficeMemo)
+        { 
             @Html.Action("GetAllComment", "Document", new { documentId = Model.DocumentView.Id })
+            <hr />
+        }
 
-            @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.OnSign) && Model.DocumentView.isSign)
+        @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.OnSign) && Model.DocumentView.isSign)
+        {
+            if (Model.DocumentView.DocType == RapidDoc.Models.Repository.DocumentType.Request || (Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement && Model.DocumentView.DocType == RapidDoc.Models.Repository.DocumentType.OfficeMemo))
             {
-                if (Model.DocumentView.DocType == RapidDoc.Models.Repository.DocumentType.Request || (Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement && Model.DocumentView.DocType == RapidDoc.Models.Repository.DocumentType.OfficeMemo))
-                { 
-                    @*<button type="submit" class="btn btn-success btn-lg hidden-print" name="action:ApproveDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Approve</button>*@
-                    <button type="button" class="btn btn-success hidden-print" data-toggle="modal" data-target=".bs-approve-modal-sm">@UIElementRes.UIElement.Approve</button>
-                    <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".bs-reject-modal-sm">@UIElementRes.UIElement.Reject</button>
+                <button type="button" class="btn btn-success hidden-print" data-toggle="modal" data-target=".bs-approve-modal-sm">@UIElementRes.UIElement.Approve</button>
+                <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".bs-reject-modal-sm">@UIElementRes.UIElement.Reject</button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-success hidden-print" data-toggle="modal" data-target=".approvecz-modal-sm">@UIElementRes.UIElement.Approve</button>
+                <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".rejectcz-modal-sm">@UIElementRes.UIElement.Reject</button>
+            }
+        }
+
+        @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.CreatedBy == User.Identity.Name)
+        {
+            <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".bs-withdraw-modal-sm">@UIElementRes.UIElement.Withdraw</button>
+        }
+
+        <div class="btn-group hidden-print">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                @UIElementRes.UIElement.Create <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href=@Url.Action("AddReader", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.Reader</a></li>
+                @if (Model.DocumentView.isArchive == false)
+                {
+                    <li><a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.ToArchive</a></li>
                 }
                 else
                 {
-                    <button type="button" class="btn btn-success hidden-print" data-toggle="modal" data-target=".approvecz-modal-sm">@UIElementRes.UIElement.Approve</button>
-
-                    <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".rejectcz-modal-sm">@UIElementRes.UIElement.Reject</button>
+                    <li><a href=@Url.Action("DocumentFromArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.FromArchive</a></li>
                 }
-            }
+                <li>
+                    <a href=@Url.Action("CopyDocument", new { processId = Model.ProcessView.Id, fileId = Model.fileId, documentId = Model.DocumentView.Id })>@UIElementRes.UIElement.Copy</a>
+                </li>
+                @if (Model.DocumentView.DocType == RapidDoc.Models.Repository.DocumentType.OfficeMemo &&
+                        Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.OnSign)
+                {
+                    <li>
+                        <a href="#" data-toggle="modal" data-target=".addusers-modal">@UIElementRes.UIElement.SendBookmark</a>
+                    </li>   
+                }
+            </ul>
+        </div>
 
-            @if ((Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && Model.DocumentView.CreatedBy == User.Identity.Name)
-            {
-                <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".bs-withdraw-modal-sm">@UIElementRes.UIElement.Withdraw</button>
-            }
-
-            @*<div class="modal fade bs-reject-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">@UIElementRes.UIElement.Confirmation</h4>
-                </div>
-                <div class="modal-body">
-                    <p>@UIElementRes.UIElement.ConfirmationReject</p>
-                    <p class="text-danger">@UIElementRes.UIElement.RejectReason</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" name="action:RejectDocument" onclick="saveLastComment();">@UIElementRes.UIElement.Yes</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">@UIElementRes.UIElement.No</button>
+        <div class="modal fade bs-reject-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div id="alert_placeholder"></div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Отмена документа</h4>
+                    </div>
+                    <div class="modal-body" style="min-height:250px;">
+                        @Html.TextArea("RejectCommentRequest", new { @class = "form-control", @placeholder = "Обязательно укажите причину отмены" })
+                        <div class="modal-footer">
+                            <button type="submit" id="rejectRequest" class="btn btn-danger" name="action:RejectDocument">@UIElementRes.UIElement.Reject</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>*@
-            <div class="modal fade bs-reject-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <div id="alert_placeholder"></div>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Отмена документа</h4>
-                        </div>
-                        <div class="modal-body" style="min-height:250px;">
-                            @Html.TextArea("RejectCommentRequest", new { @class = "form-control", @placeholder = "Обязательно укажите причину отмены" })
-                            <br>
-                            <div>
-                                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
-                                <button type="submit" id="rejectRequest" class="btn btn-danger pull-right" name="action:RejectDocument">@UIElementRes.UIElement.Reject</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="modal fade bs-approve-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Утверждение документа</h4>
-                        </div>
-                        <div class="modal-body" style="min-height:200px;">
-                            @Html.TextArea("ApproveCommentRequest", new { @class = "form-control", @placeholder = "Замечания" })
-                            <br>
-                            <div>
-                                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
-                                <button type="submit" id="approveRequest" class="btn btn-success pull-right" name="action:ApproveDocument">@UIElementRes.UIElement.Approve</button>
-                            </div>
-                        </div>
+        <div class="modal fade bs-approve-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Утверждение документа</h4>
                     </div>
-                </div>
-            </div>
-
-            <div class="modal fade bs-withdraw-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">@UIElementRes.UIElement.Confirmation</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>@UIElementRes.UIElement.WithdrawQuestion</p>
-                        </div>
+                    <div class="modal-body" style="min-height:200px;">
+                        @Html.TextArea("ApproveCommentRequest", new { @class = "form-control", @placeholder = "Замечания" })
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success" name="action:WithdrawDocument">@UIElementRes.UIElement.Yes</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">@UIElementRes.UIElement.No</button>
+                            <button type="submit" id="approveRequest" class="btn btn-success" name="action:ApproveDocument">@UIElementRes.UIElement.Approve</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="btn-group hidden-print">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    @UIElementRes.UIElement.Create <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href=@Url.Action("AddReader", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.Reader</a></li>
-                    @if (Model.DocumentView.isArchive == false)
-                    {
-                        <li><a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.ToArchive</a></li>
-                    }
-                    else
-                    {
-                        <li><a href=@Url.Action("DocumentFromArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.FromArchive</a></li>
-                    }
-                    <li>
-                        <a href=@Url.Action("CopyDocument", new { processId = Model.ProcessView.Id, fileId = Model.fileId, documentId = Model.DocumentView.Id })>@UIElementRes.UIElement.Copy</a>
-                    </li>
-                    @if (Model.DocumentView.DocType == RapidDoc.Models.Repository.DocumentType.OfficeMemo &&
-                         Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.OnSign)
-                    {
-                        <li>
-                            <a href="#" data-toggle="modal" data-target=".addusers-modal">@UIElementRes.UIElement.SendBookmark</a>
-                        </li>   
-                    }
-                </ul>
-            </div>
-            <a href="javascript:window.print()" class="btn btn-default hidden-print">@UIElementRes.UIElement.Print</a>
-            <a href=@Url.Action("Index", "Document") class="btn btn-default hidden-print" role="button">@UIElementRes.UIElement.Close</a>
-        </fieldset>
-    }
-
-    <p>
-        <h4 class="text-right hidden-print">@UIElementRes.UIElement.AddComment</h4>
-        @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentView.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }, new { name = "commentForm" }))
-        {
-            <div class="hidden-print">
-                @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
-                <div class="row">
-                    <div class="col-md-7 visible-lg-inline"></div>
-                    <div class="col-md-5"><button type="submit" class="btn btn-primary btn-xs btn-block pull-right" id="saveCommentBtn">@UIElementRes.UIElement.Save / Ctrl + Enter</button></div>
+        <div class="modal fade bs-withdraw-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">@UIElementRes.UIElement.Confirmation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>@UIElementRes.UIElement.WithdrawQuestion</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" name="action:WithdrawDocument">@UIElementRes.UIElement.Yes</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">@UIElementRes.UIElement.No</button>
+                    </div>
                 </div>
             </div>
-            <br class="hidden-print">
-        }
-    </p>
+        </div>
+
+        <a href="javascript:window.print()" class="btn btn-default hidden-print">@UIElementRes.UIElement.Print</a>
+        <a href=@Url.Action("Index", "Document") class="btn btn-default hidden-print" role="button">@UIElementRes.UIElement.Close</a>
+    </fieldset>
+}
+
+@if(Model.DocumentView.DocType != RapidDoc.Models.Repository.DocumentType.OfficeMemo)
+{
+<p>
+    <h4 class="text-right hidden-print">@UIElementRes.UIElement.AddComment</h4>
+    @using (Ajax.BeginForm("GetAllComment", new { documentId = Model.DocumentView.Id }, new AjaxOptions { UpdateTargetId = "comments", OnComplete = "clearTextAreaComment" }, new { name = "commentForm" }))
+    {
+        <div class="hidden-print">
+            @Html.TextArea("lastComment", new { @class = "form-control", @rows = "3" })
+            <div class="row">
+                <div class="col-md-7 visible-lg-inline"></div>
+                <div class="col-md-5"><button type="submit" class="btn btn-primary btn-xs btn-block pull-right" id="saveCommentBtn">@UIElementRes.UIElement.Save / Ctrl + Enter</button></div>
+            </div>
+        </div>
+        <br class="hidden-print">
+    }
+</p>
+}
 
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
@@ -361,61 +336,6 @@
         }
     }
 </script>
-    <br class="hidden-print">
-    <br class="hidden-print">
-    <div class="row">
-        <div id="qrcode" class="pull-right"></div>
-    </div>
-
-    <!-- The template to display files available for upload -->
-    <script id="template-upload" type="text/x-tmpl">
-        {% for (var i=0, file; file=o.files[i]; i++) { %}
-        <tr class="template-upload fade">
-            <td>
-                <span class="preview"></span>
-            </td>
-            <td>
-                <p class="name">{%=file.name%}</p>
-                <strong class="error text-danger"></strong>
-            </td>
-            <td>
-                <p class="size">Processing...</p>
-                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
-            </td>
-            <td></td>
-        </tr>
-        {% } %}
-    </script>
-    <!-- The template to display files available for download -->
-    <script id="template-download" type="text/x-tmpl">
-        {% for (var i=0, file; file=o.files[i]; i++) { %}
-        <tr class="template-download fade">
-            <td>
-                <span class="preview">
-                    {% if (file.thumbnailUrl) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
-                    {% } %}
-                </span>
-            </td>
-            <td>
-                <p class="name">
-                    {% if (file.url) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}">{%=file.name%}</a>
-                    {% } else { %}
-                    <span>{%=file.name%}</span>
-                    {% } %}
-                </p>
-                {% if (file.error) { %}
-                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
-                {% } %}
-            </td>
-            <td>
-                <span class="size">{%=o.formatFileSize(file.size)%}</span>
-            </td>
-            <td></td>
-        </tr>
-        {% } %}
-    </script>
 
 @section Scripts {
     @Scripts.Render("~/bundles/editentity")

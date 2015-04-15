@@ -49,7 +49,7 @@ namespace RapidDoc.Models.Services
         {
             Activity activity;
 
-            FileTable wfXamlFile = _DocumentService.GetAllXAMLDocument(processTable.Id).OrderByDescending(x => x.Version).FirstOrDefault();
+            FileTable wfXamlFile = _DocumentService.GetAllXAMLDocument(processTable.Id).OrderByDescending(x => Convert.ToInt32(x.Version)).FirstOrDefault();
 
             using (Stream stream = new MemoryStream(wfXamlFile.Data))
             {

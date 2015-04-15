@@ -334,7 +334,7 @@ namespace RapidDoc.Controllers
                     BinaryReader binaryReader = new BinaryReader(fileWF.InputStream);
                     byte[] data = binaryReader.ReadBytes(fileWF.ContentLength);
 
-                    FileTable fileTable = _DocumentService.GetAllXAMLDocument(id).OrderByDescending(x => x.Version).FirstOrDefault();
+                    FileTable fileTable = _DocumentService.GetAllXAMLDocument(id).OrderByDescending(x => Convert.ToInt32(x.Version)).FirstOrDefault();
                     string currentVersion = "0";
 
                     if (fileTable != null)
