@@ -770,6 +770,7 @@ namespace RapidDoc.Models.Services
         public void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel)
         {
             List<string> result = new List<string>();
+            List<string> reminderList = new List<string>();
             if (users == null && users.Count == 0)
                 return;
 
@@ -839,7 +840,10 @@ namespace RapidDoc.Models.Services
                     row["SignDate"] = DBNull.Value;
 
                     if (num == 1 || parallel == true)
+                    {
                         row["TrackerType"] = TrackerType.Waiting;
+                        reminderList.Add(item);
+                    }
                     else
                         row["TrackerType"] = TrackerType.NonActive;
 
@@ -890,16 +894,9 @@ namespace RapidDoc.Models.Services
                 _uow.Commit();
             }
 
-            var trackerUsers = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.ActivityID == activityId && x.TrackerType == TrackerType.Waiting).ToList();
-            foreach (var item in trackerUsers)
+            foreach (var userId in reminderList)
             {
-                if (item.Users != null)
-                {
-                    foreach (var user in item.Users)
-                    {
-                        _EmailService.SendNewExecutorEmail(documentId, user.UserId);
-                    }
-                }
+                _EmailService.SendNewExecutorEmail(documentId, userId);
             }
         }
     }
