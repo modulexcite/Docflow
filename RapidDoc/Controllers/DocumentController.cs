@@ -767,7 +767,15 @@ namespace RapidDoc.Controllers
                 FullName = m.FullName,
                 ApplicationUserId = m.ApplicationUserId,
                 isActiveDualList = _DocumentReaderService.Contains(x => x.DocumentTableId == id && x.UserId == m.ApplicationUserId)
-            }).ToList();
+            }).Union(from x in RoleManager.Roles.AsEnumerable()
+                        where x.RoleType == RoleType.Group
+                        select new EmplDualListView
+                        {
+                            AliasCompanyName = UIElementRes.UIElement.Group,
+                            FullName = x.Description,
+                            ApplicationUserId = x.Id,
+                            isActiveDualList = false
+                        }).ToList();
 
             return result;
         }
