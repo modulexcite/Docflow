@@ -22,6 +22,7 @@ namespace RapidDoc.Models.Services
         IEnumerable<DocumentReaderTable> GetPartial(Expression<Func<DocumentReaderTable, bool>> predicate);
         DocumentReaderTable FirstOrDefault(Expression<Func<DocumentReaderTable, bool>> predicate);
         bool Contains(Expression<Func<DocumentReaderTable, bool>> predicate);
+        bool ContainsRoleUser(Guid documentId, string userId);
         List<string> SaveReader(Guid documentId, string[] listdata);
         List<string> AddReader(Guid documentId, List<IdentityUserRole> listdata);
         void SaveDomain(DocumentReaderTable domainTable);
@@ -37,12 +38,14 @@ namespace RapidDoc.Models.Services
         private IUnitOfWork _uow;
         private readonly IEmplService _EmplService;
         private readonly IHistoryUserService _HistoryUserService;
+        protected RoleManager<ApplicationRole> RoleManager { get; private set; }
 
         public DocumentReaderService(IUnitOfWork uow, IEmplService emplService, IHistoryUserService historyUserService)
         {
             _uow = uow;
             repo = uow.GetRepository<DocumentReaderTable>();
             repoUser = uow.GetRepository<ApplicationUser>();
+            RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
             _EmplService = emplService;
             _HistoryUserService = historyUserService;
         }
@@ -68,26 +71,57 @@ namespace RapidDoc.Models.Services
             string addReadersDescription = String.Empty;
             string removeReadersDescription = String.Empty;
             ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
+            List<EmplTable> emplList = _EmplService.GetAll().ToList();
 
             if (listdata != null)
             {
                 foreach (string userId in listdata)
                 {
-                    if (Contains(x => x.DocumentTableId == documentId && x.UserId == userId) == false)
-                    {
-                        newReader.Add(userId);
+                    if ((Contains(x => x.DocumentTableId == documentId && x.UserId == userId && x.RoleId == null) == false) &&
+                        (Contains(x => x.DocumentTableId == documentId && x.RoleId == userId && x.UserId != userId) == false))
+                    {                       
                         var empl = _EmplService.GetEmployer(userId, user.CompanyTableId);
-                        addReadersDescription += empl.FullName + "; ";
+                        if (empl == null)
+                        {
+                            ApplicationRole role = RoleManager.FindById(userId);
 
-                        DocumentReaderTable reader = new DocumentReaderTable();
-                        reader.DocumentTableId = documentId;
-                        reader.UserId = userId;
-                        SaveDomain(reader);
+                            var names = role.Users;
+                            if (names != null && names.Count() > 0)
+                            {
+                                DocumentReaderTable reader = new DocumentReaderTable();
+                                reader.DocumentTableId = documentId;
+                                reader.UserId = userId;
+                                reader.RoleId = userId;
+                                SaveDomain(reader);
+
+                                foreach (IdentityUserRole name in names)
+                                {
+                                    if (emplList.Exists(x => x.ApplicationUserId == name.UserId && x.Enable == true))
+                                    {
+                                        
+                                        newReader.Add(name.UserId);
+                                    }                                     
+                                }
+
+                                addReadersDescription += role.Description + "; "; 
+                            }
+                        }
+                        else
+                        {
+                            addReadersDescription += empl.FullName + "; ";
+
+                            DocumentReaderTable reader = new DocumentReaderTable();
+                            reader.DocumentTableId = documentId;
+                            reader.UserId = userId;
+                            SaveDomain(reader);
+                            newReader.Add(userId);
+                        }
                     }
                 }
             }
 
-            var currentReaders = GetPartial(x => x.DocumentTableId == documentId).ToList();
+            var currentReaders = GetPartial(x => x.DocumentTableId == documentId && x.RoleId == null).ToList();
+            var currentReadersGroup = GetPartial(x => x.DocumentTableId == documentId && x.RoleId != null).GroupBy(x => x.RoleId).ToList();
             if(listdata == null)
                 Delete(documentId);
 
@@ -99,13 +133,30 @@ namespace RapidDoc.Models.Services
                     {
                         var empl = _EmplService.GetEmployer(item.UserId, user.CompanyTableId);
                         removeReadersDescription += empl.FullName + "; ";
-                        Delete(x => x.DocumentTableId == documentId && x.UserId == item.UserId);
+                        Delete(x => x.DocumentTableId == documentId && x.UserId == item.UserId && x.RoleId == null);
                     }
                 }
                 else
                 {
                     var empl = _EmplService.GetEmployer(item.UserId, user.CompanyTableId);
                     removeReadersDescription += empl.FullName + "; ";
+                }
+            }
+
+            foreach (var item in currentReadersGroup)
+            {
+                ApplicationRole role = RoleManager.FindById(item.Key);
+                if (listdata != null)
+                {
+                    if (listdata.Contains(item.Key) == false)
+                    {                   
+                        removeReadersDescription += role.Description + "; ";
+                        Delete(x => x.DocumentTableId == documentId && x.RoleId == item.Key);
+                    }
+                }
+                else
+                {
+                    removeReadersDescription += role.Description + "; ";
                 }
             }
 
@@ -175,6 +226,26 @@ namespace RapidDoc.Models.Services
         public DocumentReaderTable Find(Guid id)
         {
             return repo.GetById(id);
+        }
+
+
+        public bool ContainsRoleUser(Guid documentId, string userId)
+        {
+            var listGroup =  GetPartial(x => x.DocumentTableId == documentId && x.RoleId != null).GroupBy(x => x.RoleId).ToList();
+            foreach (var item in listGroup)
+            {
+                ApplicationRole role = RoleManager.FindById(item.Key);
+
+                var names = role.Users;
+                if (names != null && names.Count() > 0)
+                {
+                    if (names.ToList().Exists(x => x.UserId == userId))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

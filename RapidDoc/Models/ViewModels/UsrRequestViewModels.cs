@@ -6707,7 +6707,7 @@ namespace RapidDoc.Models.ViewModels
         public string Title { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "ФИО сотрудника, которого необходимо встетить\\отвезти")]
+        [Display(Name = "ФИО сотрудника, которого необходимо встретить\\отвезти")]
         public string EmplName { get; set; }
 
         [Display(Name = "Наименование предприятия, в котором работают сотрудники")]

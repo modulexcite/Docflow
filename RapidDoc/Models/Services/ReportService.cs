@@ -115,7 +115,7 @@ namespace RapidDoc.Models.Services
                             Expression<Func<EmplTable, bool>> expressionEmpl = dynamicExpression.Body.Operand;
                             if (expressionEmpl != null)
                             {
-                                namesList = _EmplService.GetPartialIntercompany(expressionEmpl).ToList();
+                                namesList = _EmplService.GetPartialIntercompany(expressionEmpl).Where(x => x.Enable == true).ToList();
                                 if (namesList.Count <= 0)
                                     color = Color.LightPink;
                             }
@@ -134,7 +134,7 @@ namespace RapidDoc.Models.Services
                             filterText = activityExpressionSpecific.Value;
                             filterType = FilterType.Login;
 
-                            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == filterText);
+                            ApplicationUser userTable = _AccountService.FirstOrDefault(x => x.UserName == filterText && x.Enable == true);
                             if (userTable != null && filterText.Length > 0)
                             {
                                 namesList.Add(_EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id));
@@ -163,7 +163,10 @@ namespace RapidDoc.Models.Services
                                 {
                                     foreach (IdentityUserRole name in names)
                                     {
-                                        namesList.Add(_EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId));
+                                        if (_EmplService.Contains(x => x.ApplicationUserId == name.UserId && x.Enable == true))
+                                        {
+                                            namesList.Add(_EmplService.FirstOrDefault(x => x.ApplicationUserId == name.UserId));
+                                        }                                        
                                     }
                                 }
                                 else
