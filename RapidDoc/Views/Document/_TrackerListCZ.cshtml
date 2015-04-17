@@ -2,12 +2,12 @@
 
 @if (Model.Count() > 0)
 {
-    <h5 class="visible-print">Подписи:</h5>
+    @Html.Label("Подписи:", new { @class = "visible-print" })
     <ul>
     @foreach (var trackerItem in Model.Where(x => x.TrackerType == RapidDoc.Models.Repository.TrackerType.Approved || x.TrackerType == RapidDoc.Models.Repository.TrackerType.Cancelled).OrderBy(x => x.SignDate))
     {
         <li>
-            <h5>
+            <p>
                 @Html.DisplayFor(modelItem => trackerItem.Executors)
                 @if (trackerItem.SignDate != null)
                 {
@@ -36,7 +36,7 @@
                         <span><em>( @trackerItem.Comments )</em></span>
                     }
                 }
-            </h5>
+            </p>
         </li>
     }
     </ul>

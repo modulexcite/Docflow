@@ -894,10 +894,7 @@ namespace RapidDoc.Models.Services
                 _uow.Commit();
             }
 
-            foreach (var userId in reminderList)
-            {
-                _EmailService.SendNewExecutorEmail(documentId, userId);
-            }
+            _EmailService.SendNewExecutorEmail(documentId, reminderList);
         }
     }
 }
