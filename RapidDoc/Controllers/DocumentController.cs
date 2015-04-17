@@ -734,13 +734,33 @@ namespace RapidDoc.Controllers
             {
                 errorText = ValidationRes.ValidationResource.ErrorLimitReaders;
             }
+            if (listdata != null)
+            {
+                foreach (string item in listdata)
+                {
+                    ApplicationRole role = RoleManager.FindById(item);
+
+                    if ((role != null) && (_DocumentReaderService.Contains(x => x.DocumentTableId == id && x.RoleId == item) == false))
+                    {
+                        if (RoleManager.RoleExists("MailingAdmin"))
+                        {
+                            IdentityUserRole user = RoleManager.FindByName("MailingAdmin").Users.FirstOrDefault(x => x.UserId == User.Identity.GetUserId());
+                            if (user == null)
+                            {
+                                errorText = ValidationRes.ValidationResource.ErrorRoleMailingGroup;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
 
             if (isAjax == true && String.IsNullOrEmpty(errorText))
             {
                 try
                 {
                     List<string> newReader = _DocumentReaderService.SaveReader(id, listdata);
-                    _EmailService.SendReaderEmail(id, newReader);
+                    //_EmailService.SendReaderEmail(id, newReader.Distinct().ToList());
                 }
                 catch (Exception ex)
                 {
@@ -766,7 +786,7 @@ namespace RapidDoc.Controllers
                 AliasCompanyName = m.AliasCompanyName,
                 FullName = m.FullName,
                 ApplicationUserId = m.ApplicationUserId,
-                isActiveDualList = _DocumentReaderService.Contains(x => x.DocumentTableId == id && x.UserId == m.ApplicationUserId)
+                isActiveDualList = _DocumentReaderService.Contains(x => x.DocumentTableId == id && x.UserId == m.ApplicationUserId && x.RoleId == null)
             }).Union(from x in RoleManager.Roles.AsEnumerable()
                         where x.RoleType == RoleType.Group
                         select new EmplDualListView
@@ -774,7 +794,7 @@ namespace RapidDoc.Controllers
                             AliasCompanyName = UIElementRes.UIElement.Group,
                             FullName = x.Description,
                             ApplicationUserId = x.Id,
-                            isActiveDualList = false
+                            isActiveDualList = _DocumentReaderService.Contains(z => z.DocumentTableId == id && z.RoleId == x.Id)
                         }).ToList();
 
             return result;

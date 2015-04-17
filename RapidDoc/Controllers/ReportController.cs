@@ -52,6 +52,12 @@ namespace RapidDoc.Controllers
             return View();
         }
 
+        public ActionResult ReportOfRoutes()
+        {
+            ViewBag.ProcessList = _ProcessService.GetDropListProcessNull(null);
+            return View();
+        }
+
         [HttpPost]
         public FileContentResult GenerateDetail(ReportParametersBasicView model)
         {
@@ -264,8 +270,9 @@ namespace RapidDoc.Controllers
             return File(buff, "application/vnd.ms-excel", "ReportDepartment.xls");
         }
 
-        public FileContentResult ReportOfRoutes()
+        public FileContentResult GetReportOfRoutes(Guid? processId)
         {
+            List<ProcessTable> processList = new List<ProcessTable>();
             var rows = new List<ReportProcessesView>();
             string users;
 
@@ -287,7 +294,10 @@ namespace RapidDoc.Controllers
 
             int rowCount = 1;
 
-            List<ProcessTable> processList = _ProcessService.GetPartial(x => x.isApproved == true).ToList();
+            if (processId == null)
+                processList = _ProcessService.GetPartial(x => x.isApproved == true).ToList();
+            else
+                processList.AddRange(_ProcessService.GetPartial(x => x.Id == processId).ToList());
 
             foreach (var process in processList)
             {

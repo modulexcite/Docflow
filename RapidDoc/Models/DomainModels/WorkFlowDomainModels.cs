@@ -232,7 +232,7 @@ namespace RapidDoc.Models.DomainModels
     {
         public Guid DocumentTableId { get; set; }
         public virtual DocumentTable DocumentTable { get; set; }
-
+        public string RoleId { get; set; }
         [Required]
         public string UserId { get; set; }
     }
