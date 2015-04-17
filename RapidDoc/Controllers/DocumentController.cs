@@ -781,7 +781,7 @@ namespace RapidDoc.Controllers
                 try
                 {
                     List<string> newReader = _DocumentReaderService.SaveReader(id, listdata);
-                    //_EmailService.SendReaderEmail(id, newReader.Distinct().ToList());
+                    _EmailService.SendReaderEmail(id, newReader.Distinct().ToList());
                 }
                 catch (Exception ex)
                 {

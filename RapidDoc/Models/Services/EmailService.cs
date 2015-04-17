@@ -34,7 +34,7 @@ namespace RapidDoc.Models.Services
         void SaveDomain(EmailParameterTable domainTable);
         EmailParameterTable Find(Guid id);
         void InitializeMailParameter();
-        void SendEmail(string[] emailTo, string[] ccTo, string subject, string body);
+        void SendEmail(EmailParameterTable emailParameter, string[] emailTo, string[] ccTo, string subject, string body);
         void SendInitiatorEmail(Guid documentId);
         void SendExecutorEmail(Guid documentId);
         void SendInitiatorRejectEmail(Guid documentId);
@@ -129,13 +129,9 @@ namespace RapidDoc.Models.Services
             SaveDomain(domainTable);
         }
 
-        public void SendEmail(string[] emailTo, string[] ccTo, string subject, string body)
+        public void SendEmail(EmailParameterTable emailParameter, string[] emailTo, string[] ccTo, string subject, string body)
         {
             if (emailTo == null || emailTo.Length == 0)
-                return;
-
-            EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
-            if (emailParameter == null)
                 return;
 
             SmtpClient smtpClient = new SmtpClient(emailParameter.SmtpServer, emailParameter.SmtpPort);
@@ -190,6 +186,12 @@ namespace RapidDoc.Models.Services
                 string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
                 EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
 
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
+                string processName = documentTable.ProcessName;
+
                 new Task(() =>
                 {
                     string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml";
@@ -199,8 +201,8 @@ namespace RapidDoc.Models.Services
                     CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
-                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, documentTable.ProcessTable.ProcessName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendInitiatorEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
-                    SendEmail(new string[] { user.Email }, new string[] { }, String.Format("Вы создали новый документ [{0}]", documentTable.DocumentNum), body);
+                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendInitiatorEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
+                    SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Вы создали новый документ [{0}]", documentTable.DocumentNum), body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
@@ -211,29 +213,68 @@ namespace RapidDoc.Models.Services
         public void SendExecutorEmail(Guid documentId)
         {
             var documentTable = _DocumentService.Find(documentId);
-            if (documentTable == null && documentTable.DocumentState != DocumentState.Agreement)
+            if (documentTable == null || (documentTable.DocumentState != DocumentState.Agreement && documentTable.DocumentState != DocumentState.Execution))
                 return;
 
             var userList = _DocumentService.GetSignUsersDirect(documentTable);
 
-            foreach(var user in userList)
+            if (userList.Count < 20)
             {
-                if (!String.IsNullOrEmpty(user.Email))
+                foreach (var user in userList)
+                {
+                    if (!String.IsNullOrEmpty(user.Email))
+                    {
+                        string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
+                        EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
+
+                        EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                        if (emailParameter == null)
+                            return;
+
+                        string processName = documentTable.ProcessName;
+
+                        new Task(() =>
+                        {
+                            string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml";
+                            string razorText = System.IO.File.ReadAllText(absFile);
+
+                            string currentLang = Thread.CurrentThread.CurrentCulture.Name;
+                            CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
+                            Thread.CurrentThread.CurrentCulture = ci;
+                            Thread.CurrentThread.CurrentUICulture = ci;
+                            string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
+                            SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
+                            ci = CultureInfo.GetCultureInfo(currentLang);
+                            Thread.CurrentThread.CurrentCulture = ci;
+                            Thread.CurrentThread.CurrentUICulture = ci;
+                        }).Start();
+                    }
+                }
+            }
+            else
+            {
+                List<string> emails = userList.Where(x => x.Email != String.Empty).GroupBy(x => x.Email).Select(x => x.Key).ToList();
+                if (emails != null && emails.Count > 0)
                 {
                     string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
-                    EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
+
+                    EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                    if (emailParameter == null)
+                        return;
+
+                    string processName = documentTable.ProcessName;
 
                     new Task(() =>
                     {
-                        string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml";
+                        string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicBulkEmailTemplate.cshtml";
                         string razorText = System.IO.File.ReadAllText(absFile);
 
                         string currentLang = Thread.CurrentThread.CurrentCulture.Name;
-                        CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
+                        CultureInfo ci = CultureInfo.GetCultureInfo("ru-RU");
                         Thread.CurrentThread.CurrentCulture = ci;
                         Thread.CurrentThread.CurrentUICulture = ci;
-                        string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, documentTable.ProcessTable.ProcessName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
-                        SendEmail(new string[] { user.Email }, new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
+                        string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailBulkTemplateDefault");
+                        SendEmail(emailParameter, emails.ToArray(), new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
                         ci = CultureInfo.GetCultureInfo(currentLang);
                         Thread.CurrentThread.CurrentCulture = ci;
                         Thread.CurrentThread.CurrentUICulture = ci;
@@ -277,6 +318,12 @@ namespace RapidDoc.Models.Services
                     string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
                     EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
 
+                    EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                    if (emailParameter == null)
+                        return;
+
+                    string processName = documentTable.ProcessName;
+
                     new Task(() =>
                     {
                         string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml";
@@ -286,8 +333,8 @@ namespace RapidDoc.Models.Services
                         CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
                         Thread.CurrentThread.CurrentCulture = ci;
                         Thread.CurrentThread.CurrentUICulture = ci;
-                        string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, documentTable.ProcessTable.ProcessName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendInitiatorRejectEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
-                        SendEmail(new string[] { user.Email }, new string[] { }, String.Format("Ваш документ [{0}] был отменен", documentTable.DocumentNum), body);
+                        string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendInitiatorRejectEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
+                        SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Ваш документ [{0}] был отменен", documentTable.DocumentNum), body);
                         ci = CultureInfo.GetCultureInfo(currentLang);
                         Thread.CurrentThread.CurrentCulture = ci;
                         Thread.CurrentThread.CurrentUICulture = ci;
@@ -308,6 +355,12 @@ namespace RapidDoc.Models.Services
                 string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
                 EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
 
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
+                string processName = documentTable.ProcessName;
+
                 new Task(() =>
                 {
                     string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml";
@@ -317,8 +370,8 @@ namespace RapidDoc.Models.Services
                     CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
-                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, documentTable.ProcessTable.ProcessName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendInitiatorClosedEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
-                    SendEmail(new string[] { user.Email }, new string[] { }, String.Format("Ваш документ [{0}] закрыт", documentTable.DocumentNum), body);
+                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendInitiatorClosedEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
+                    SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Ваш документ [{0}] закрыт", documentTable.DocumentNum), body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
@@ -329,7 +382,7 @@ namespace RapidDoc.Models.Services
         public void SendInitiatorCommentEmail(Guid documentId, string lastComment)
         {
             var documentTable = _DocumentService.Find(documentId);
-            if (documentTable == null && documentTable.DocType != DocumentType.Request)
+            if (documentTable == null || documentTable.DocType != DocumentType.Request)
                 return;
 
             var users = repoUser.FindAll(x => x.Id == documentTable.ApplicationUserCreatedId).ToList();
@@ -354,6 +407,12 @@ namespace RapidDoc.Models.Services
                     string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
                     EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
 
+                    EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                    if (emailParameter == null)
+                        return;
+
+                    string processName = documentTable.ProcessName;
+
                     new Task(() =>
                     {
                         string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\CommentEmailTemplate.cshtml";
@@ -363,8 +422,8 @@ namespace RapidDoc.Models.Services
                         CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
                         Thread.CurrentThread.CurrentCulture = ci;
                         Thread.CurrentThread.CurrentUICulture = ci;
-                        string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, documentTable.ProcessTable.ProcessName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendInitiatorCommentEmail, LastComment = lastComment, DocumentText = documentTable.DocumentText }, "emailTemplateComment");
-                        SendEmail(new string[] { user.Email }, new string[] { }, String.Format("Новый комментарий в документе [{0}]", documentTable.DocumentNum), body);
+                        string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendInitiatorCommentEmail, LastComment = lastComment, DocumentText = documentTable.DocumentText }, "emailTemplateComment");
+                        SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Новый комментарий в документе [{0}]", documentTable.DocumentNum), body);
                         ci = CultureInfo.GetCultureInfo(currentLang);
                         Thread.CurrentThread.CurrentCulture = ci;
                         Thread.CurrentThread.CurrentUICulture = ci;
@@ -383,6 +442,10 @@ namespace RapidDoc.Models.Services
             {
                 string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString();
 
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
                 new Task(() =>
                 {
                     string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\DelegationEmailTemplate.cshtml";
@@ -393,7 +456,7 @@ namespace RapidDoc.Models.Services
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
                     string body = Razor.Parse(razorText, new { DocumentUri = documentUri, EmplNameTo = emplTableTo.FullName, EmplNameFrom = emplTableFrom.FullName, BodyText = UIElementRes.UIElement.SendDelegationEmplEmail }, "emailTemplateDelegation");
-                    SendEmail(new string[] { user.Email }, new string[] { }, "На вас настроенно делегирование", body);
+                    SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, "На вас настроенно делегирование", body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
@@ -407,31 +470,33 @@ namespace RapidDoc.Models.Services
             if (documentTable == null)
                 return;
 
-            foreach (var userId in newReader)
+            List<string> emails = repoUser.FindAll(x => newReader.Contains(x.Id) && x.Email != String.Empty).GroupBy(x => x.Email).Select(x => x.Key).ToList();
+
+            if (emails != null && emails.Count > 0)
             {
-                ApplicationUser user = repoUser.GetById(userId);
+                string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
 
-                if (!String.IsNullOrEmpty(user.Email))
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
+                string processName = documentTable.ProcessName;
+
+                new Task(() =>
                 {
-                    string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
-                    EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
+                    string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicBulkEmailTemplate.cshtml";
+                    string razorText = System.IO.File.ReadAllText(absFile);
 
-                    new Task(() =>
-                    {
-                        string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml";
-                        string razorText = System.IO.File.ReadAllText(absFile);
-
-                        string currentLang = Thread.CurrentThread.CurrentCulture.Name;
-                        CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
-                        Thread.CurrentThread.CurrentCulture = ci;
-                        Thread.CurrentThread.CurrentUICulture = ci;
-                        string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, documentTable.ProcessTable.ProcessName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendReaderEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
-                        SendEmail(new string[] { user.Email }, new string[] { }, String.Format("Вас добавили читателем, документ [{0}]", documentTable.DocumentNum), body);
-                        ci = CultureInfo.GetCultureInfo(currentLang);
-                        Thread.CurrentThread.CurrentCulture = ci;
-                        Thread.CurrentThread.CurrentUICulture = ci;
-                    }).Start();
-                }
+                    string currentLang = Thread.CurrentThread.CurrentCulture.Name;
+                    CultureInfo ci = CultureInfo.GetCultureInfo("ru-RU");
+                    Thread.CurrentThread.CurrentCulture = ci;
+                    Thread.CurrentThread.CurrentUICulture = ci;
+                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, BodyText = UIElementRes.UIElement.SendReaderEmail, DocumentText = documentTable.DocumentText }, "emailBulkTemplateDefault");
+                    SendEmail(emailParameter, emails.ToArray(), new string[] { }, String.Format("Вас добавили читателем, документ [{0}]", documentTable.DocumentNum), body);
+                    ci = CultureInfo.GetCultureInfo(currentLang);
+                    Thread.CurrentThread.CurrentCulture = ci;
+                    Thread.CurrentThread.CurrentUICulture = ci;
+                }).Start();
             }
         }
 
@@ -447,6 +512,12 @@ namespace RapidDoc.Models.Services
                 string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
                 EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
 
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
+                string processName = documentTable.ProcessName;
+
                 new Task(() =>
                 {
                     string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml";
@@ -456,8 +527,8 @@ namespace RapidDoc.Models.Services
                     CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
-                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, documentTable.ProcessTable.ProcessName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
-                    SendEmail(new string[] { user.Email }, new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
+                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
+                    SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
@@ -477,6 +548,12 @@ namespace RapidDoc.Models.Services
             {
                 string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
 
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
+                string processName = documentTable.ProcessName;
+
                 new Task(() =>
                 {
                     string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicBulkEmailTemplate.cshtml";
@@ -486,8 +563,8 @@ namespace RapidDoc.Models.Services
                     CultureInfo ci = CultureInfo.GetCultureInfo("ru-RU");
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
-                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, documentTable.ProcessName), DocumentUri = documentUri, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailBulkTemplateDefault");
-                    SendEmail(emails.ToArray(), new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
+                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailBulkTemplateDefault");
+                    SendEmail(emailParameter, emails.ToArray(), new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
@@ -515,6 +592,10 @@ namespace RapidDoc.Models.Services
 
                 EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
 
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
                 new Task(() =>
                 {
                     string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml";
@@ -525,7 +606,7 @@ namespace RapidDoc.Models.Services
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
                     string body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = documentUrls.ToArray(), DocumentNums = documentNums.ToArray(), documentText = documentText.ToArray(), EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendSLAWarningEmail }, "emailTemplateSLAStatus");
-                    SendEmail(new string[] { user.Email }, new string[] { }, "Срок исполнения подходит к концу", body);
+                    SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, "Срок исполнения подходит к концу", body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
@@ -553,6 +634,10 @@ namespace RapidDoc.Models.Services
 
                 EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
 
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
                 new Task(() =>
                 {
                     string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml";
@@ -563,7 +648,7 @@ namespace RapidDoc.Models.Services
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
                     string body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = documentUrls.ToArray(), DocumentNums = documentNums.ToArray(), documentText = documentText.ToArray(), EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendSLADisturbanceEmail }, "emailTemplateSLAStatus");
-                    SendEmail(new string[] { user.Email }, new string[] { }, "Исполнение по документам просрочено", body);
+                    SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, "Исполнение по документам просрочено", body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
@@ -594,6 +679,10 @@ namespace RapidDoc.Models.Services
 
                 EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
 
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
                 new Task(() =>
                 {
                     string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml";
@@ -604,7 +693,7 @@ namespace RapidDoc.Models.Services
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
                     string body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = documentUrls.ToArray(), DocumentNums = documentNums.ToArray(), documentText = documentText.ToArray(), EmplName = emplTable.FullName, BodyText = "Документы на подписи" }, "emailTemplateSLAStatus");
-                    SendEmail(new string[] { user.Email }, new string[] { }, "У вас на подписи находятся следующие документы", body);
+                    SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, "У вас на подписи находятся следующие документы", body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
@@ -639,6 +728,10 @@ namespace RapidDoc.Models.Services
                         {
                             EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
 
+                            EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                            if (emailParameter == null)
+                                return;
+
                             new Task(() =>
                             {
                                 string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\RoutEmailTemplate.cshtml";
@@ -649,7 +742,7 @@ namespace RapidDoc.Models.Services
                                 Thread.CurrentThread.CurrentCulture = ci;
                                 Thread.CurrentThread.CurrentUICulture = ci;
                                 string body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = processUrls.ToArray(), DocumentNums = stageNames.ToArray(), documentText = filterTexts.ToArray(), EmplName = emplTable.FullName, BodyText = "У вас несколько ошибочных маршрутов" }, "emailTemplateRoutes");
-                                SendEmail(new string[] { user.Email }, new string[] { }, "Маршруты процессов на исправление", body);
+                                SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, "Маршруты процессов на исправление", body);
                                 ci = CultureInfo.GetCultureInfo(currentLang);
                                 Thread.CurrentThread.CurrentCulture = ci;
                                 Thread.CurrentThread.CurrentUICulture = ci;

@@ -583,10 +583,9 @@ namespace RapidDoc.Models.Services
 
             if (docuTable != null)
             {
-                //IEnumerable<WFTrackerTable> trackerTables = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting);
-                ApplicationDbContext dbContext = new ApplicationDbContext();
-                List<WFTrackerTable> trackerTables = dbContext.WFTrackerTable.Where(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting).OrderByDescending(x => x.LineNum).ToList();
-                
+                List<WFTrackerTable> trackerTables = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == docuTable.Id && x.TrackerType == TrackerType.Waiting).ToList();
+                List<ApplicationUser> users = repoUser.FindAll(x => x.Enable == true && x.Email != String.Empty).ToList();
+
                 if (trackerTables != null)
                 {
                     foreach (var trackerTable in trackerTables)
@@ -595,7 +594,7 @@ namespace RapidDoc.Models.Services
                         {
                             foreach (var trackUser in trackerTable.Users)
                             {
-                                ApplicationUser user = repoUser.GetById(trackUser.UserId);
+                                ApplicationUser user = users.FirstOrDefault(x => x.Id == trackUser.UserId);
                                 if (user != null)
                                     signUsers.Add(user);
                             }
@@ -604,7 +603,6 @@ namespace RapidDoc.Models.Services
                 }
                 List<ApplicationUser> delegationUserCheck = signUsers.ToList();
                 signUsers.AddRange(_DelegationService.GetDelegationUsers(docuTable, delegationUserCheck));
-                dbContext.Dispose();
             }
 
             return signUsers;
