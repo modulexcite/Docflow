@@ -734,6 +734,7 @@ namespace RapidDoc.Controllers
             {
                 errorText = ValidationRes.ValidationResource.ErrorLimitReaders;
             }
+
             if (listdata != null)
             {
                 foreach (string item in listdata)
@@ -741,6 +742,26 @@ namespace RapidDoc.Controllers
                     ApplicationRole role = RoleManager.FindById(item);
 
                     if ((role != null) && (_DocumentReaderService.Contains(x => x.DocumentTableId == id && x.RoleId == item) == false))
+                    {
+                        if (RoleManager.RoleExists("MailingAdmin"))
+                        {
+                            IdentityUserRole user = RoleManager.FindByName("MailingAdmin").Users.FirstOrDefault(x => x.UserId == User.Identity.GetUserId());
+                            if (user == null)
+                            {
+                                errorText = ValidationRes.ValidationResource.ErrorRoleMailingGroup;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            var currentReaders = _DocumentReaderService.GetPartial(x => x.DocumentTableId == id && x.RoleId != null).GroupBy(x => x.RoleId);
+            if (currentReaders.Count() > 0)
+            {
+                foreach (var item in currentReaders)
+                {
+                    if (listdata == null || listdata.Contains(item.Key) == false)
                     {
                         if (RoleManager.RoleExists("MailingAdmin"))
                         {
