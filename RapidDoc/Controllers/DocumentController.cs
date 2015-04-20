@@ -359,7 +359,7 @@ namespace RapidDoc.Controllers
         [MultipleButton(Name = "action", Argument = "ApproveDocumentCZ")]
         public ActionResult ApproveDocumentCZ(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
-            var users = _DocumentService.SignDocumentCZ(documentId,  TrackerType.Approved,
+            var users = _DocumentService.SignDocumentCZ(documentId,  TrackerType.Approved, 
                 (collection["ApproveComment"] != null | collection["ApproveComment"] != string.Empty) ? (string)collection["ApproveComment"] : "");
 
             DocumentTable documentTable = _DocumentService.Find(documentId);
@@ -676,7 +676,8 @@ namespace RapidDoc.Controllers
             {
                 if (docuTable.DocumentState == Models.Repository.DocumentState.Closed 
                     || docuTable.DocumentState == Models.Repository.DocumentState.Cancelled
-                    || docuTable.DocumentState == Models.Repository.DocumentState.Created)
+                    || docuTable.DocumentState == Models.Repository.DocumentState.Created
+                    || docuTable.DocumentState == Models.Repository.DocumentState.OnSign)
                 {
                     ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
                     if (userTable == null) return HttpNotFound();
@@ -695,7 +696,7 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            return RedirectToAction("ShowDocument", new { id = id });
+            return RedirectToAction("ShowDocument", new { id = id, isAfterView = true });
         }
 
         public ActionResult DocumentFromArchive(Guid id)
@@ -703,7 +704,7 @@ namespace RapidDoc.Controllers
             ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
             if (userTable == null) return HttpNotFound();
 
-            IEnumerable<ReviewDocLogTable> reviewTables = _ReviewDocLogService.GetPartial(x => x.DocumentTableId == id && x.ApplicationUserCreatedId == userTable.Id && x.isArchive == true);
+            IEnumerable<ReviewDocLogTable> reviewTables = _ReviewDocLogService.GetPartial(x => x.DocumentTableId == id && x.ApplicationUserCreatedId == userTable.Id && x.isArchive == true).ToList();
 
             if (reviewTables != null)
             {
@@ -714,7 +715,7 @@ namespace RapidDoc.Controllers
                 }
             }
 
-            return RedirectToAction("ShowDocument", new { id = id });
+            return RedirectToAction("ShowDocument", new { id = id, isAfterView = true });
         }
 
         public ActionResult AddReader(Guid id)
@@ -1355,6 +1356,50 @@ namespace RapidDoc.Controllers
             ProcessView processView = _ProcessService.FindView(processId);
             if (processView == null)
                 return RedirectToAction("PageNotFound", "Error");
+
+            //---------------------------------------------------------------------------
+            if (!String.IsNullOrEmpty(collection["ApproveCommentRequest"]))
+            {
+                Guid documentGuidId = GuidNull2Guid(documentId);
+                string approveCommentRequest = collection["ApproveCommentRequest"].ToString();
+                if (actionModelName == "USR_OFM_UIT_OfficeMemo")
+                {
+                    var trackers = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentGuidId && x.TrackerType == TrackerType.Waiting);
+                    foreach (var tracker in trackers)
+                    {
+                        tracker.Comments = approveCommentRequest;
+                        _WorkflowTrackerService.SaveDomain(tracker);
+                    }
+                }
+                else
+                {
+                    SaveComment(GuidNull2Guid(documentId), approveCommentRequest);
+                }
+            }
+            if (!String.IsNullOrEmpty(collection["RejectCommentRequest"]))
+            {
+                Guid documentGuidId = GuidNull2Guid(documentId);
+                string rejectCommentRequest = collection["RejectCommentRequest"].ToString();
+                if (actionModelName == "USR_OFM_UIT_OfficeMemo")
+                {
+                    var trackers = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentGuidId && x.TrackerType == TrackerType.Waiting);
+                    foreach (var tracker in trackers)
+                    {
+                        tracker.Comments = rejectCommentRequest;
+                        _WorkflowTrackerService.SaveDomain(tracker);
+                    }
+                }
+                else
+                {
+                    SaveComment(GuidNull2Guid(documentId), rejectCommentRequest);
+                }
+            }
+            else
+            {
+                if(operationType == OperationType.RejectDocument)
+                    ModelState.AddModelError(string.Empty, UIElementRes.UIElement.RejectReason);
+            }
+            //---------------------------------------------------------------------------
 
             foreach (var key in collection.AllKeys)
             {
