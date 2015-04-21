@@ -61,6 +61,15 @@ namespace ValidationRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Максимально допустимое количество файлов 20.
+        /// </summary>
+        public static string ErrorDocCount {
+            get {
+                return ResourceManager.GetString("ErrorDocCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Максимально допустимый размер файла {0} МБ, Вы добавили файл: {1} МБ.
         /// </summary>
         public static string ErrorDocSize {

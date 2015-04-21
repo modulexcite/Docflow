@@ -891,6 +891,7 @@ namespace RapidDoc.Controllers
             ProcessTable process = _ProcessService.Find(processId);
             var statuses = new List<ViewDataUploadFilesResult>();
             bool error = false;
+            string errorText = String.Empty;
 
             if (process.DocSize > 0)
             {
@@ -904,7 +905,13 @@ namespace RapidDoc.Controllers
                 if(document.DocumentState == DocumentState.Closed || document.DocumentState == DocumentState.Cancelled)
                 {
                     error = true;
+                    errorText = String.Format(ValidationRes.ValidationResource.ErrorDocSize, process.DocSize, Math.Round(((files.ContentLength / 1024f) / 1024f), 2), files.ContentLength);
                 }
+            }
+            if (_DocumentService.GetAllFilesDocument(fileId).Where(x => x.Version == "1" && x.ApplicationUserCreatedId == User.Identity.GetUserId()).Count() > 20)
+            {
+                error = true;
+                errorText = ValidationRes.ValidationResource.ErrorDocCount;
             }
 
             System.IO.FileStream inFile;
@@ -920,6 +927,11 @@ namespace RapidDoc.Controllers
                 var thumbnail = new byte[] { };
                 contentType = files.ContentType.ToString().ToUpper();
                 thumbnail = GetThumbnail(data, contentType);
+
+                if (_DocumentService.GetAllFilesDocument(fileId).ToList().Exists(x => x.ApplicationUserCreatedId == User.Identity.GetUserId() && x.CreatedDate > DateTime.UtcNow.AddMinutes(-5)) == false)
+                {
+                    _EmailService.SendInitiatorEmailDocAdding(document.Id);
+                }
 
                 // here you can save your file to the database...
                 FileTable doc = new FileTable();
@@ -974,12 +986,12 @@ namespace RapidDoc.Controllers
                 });
             }
             else
-            {
+            {              
                 statuses.Add(new ViewDataUploadFilesResult()
                 {
                     id = String.Empty,
                     name = files.FileName,
-                    error = String.Format(ValidationRes.ValidationResource.ErrorDocSize, process.DocSize, Math.Round(((files.ContentLength / 1024f) / 1024f), 2), files.ContentLength),
+                    error = errorText,
                     size = files.ContentLength,
                     url = "",
                     deleteUrl = "",
@@ -998,7 +1010,7 @@ namespace RapidDoc.Controllers
             {
                 files = statuses.ToArray()
             };
-
+          
             JsonResult result = Json(uploadedFiles);
             result.ContentType = "text/plain";
             return result;
