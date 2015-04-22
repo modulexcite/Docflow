@@ -164,8 +164,8 @@ namespace RapidDoc.Models.Services
         public SelectList GetDropListEmplNull(Guid? id)
         {
             var items = GetAllView().ToList();
-            items.Insert(0, new EmplView { FirstName = UIElementRes.UIElement.NoValue, Id = null });
-            return new SelectList(items, "Id", "FullName", id);
+            items.Insert(0, new EmplView { AliasCompanyName = UIElementRes.UIElement.No, FirstName = UIElementRes.UIElement.NoValue, Id = null });
+            return new SelectList(items, "Id", "FullNameAddon", id);
         }
         public object GetJsonEmpl()
         {

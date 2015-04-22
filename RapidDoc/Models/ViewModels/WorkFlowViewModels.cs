@@ -217,6 +217,21 @@ namespace RapidDoc.Models.ViewModels
     public class SearchFormView
     {
         public string SearchText { get; set; }
+
+        [Display(Name = "StartDate", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public DateTime? StartDate { get; set; }
+
+        [Display(Name = "EndDate", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public DateTime? EndDate { get; set; }
+
+        [Display(Name = "CreatedBy", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public Guid? CreatedEmplTableId { get; set; }
+
+        [Display(Name = "CompanyName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public Guid? CompanyTableId { get; set; }
+
+        [Display(Name = "ProcessName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public Guid? ProcessTableId { get; set; }
         public string HTMLString { get; set; }
         public bool NoMoreData { get; set; }
     }

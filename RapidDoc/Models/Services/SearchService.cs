@@ -22,11 +22,12 @@ namespace RapidDoc.Models.Services
     {
         IEnumerable<SearchTable> GetPartial(Expression<Func<SearchTable, bool>> predicate);
         IEnumerable<SearchView> GetPartialView(Expression<Func<SearchTable, bool>> predicate);
+        IEnumerable<SearchView> Domain2ViewModel(IEnumerable<SearchTable> source);
         SearchTable FirstOrDefault(Expression<Func<SearchTable, bool>> predicate);
         SearchView FirstOrDefaultView(Expression<Func<SearchTable, bool>> predicate);
         bool Contains(Expression<Func<SearchTable, bool>> predicate);
         void SaveDomain(SearchTable domainTable);
-        List<SearchView> GetDocuments(int blockNumber, int blockSize, string searchText);
+        List<SearchView> GetDocuments(int blockNumber, int blockSize, SearchFormView model);
         void SaveSearchData(Guid id, string searchString);
         void SaveSearchData(Guid id, dynamic docModel, string actionModelName);
         string PrepareSearchString(dynamic docModel, string actionModelName);
@@ -75,6 +76,28 @@ namespace RapidDoc.Models.Services
 
             return items;
         }
+        public IEnumerable<SearchView> Domain2ViewModel(IEnumerable<SearchTable> source)
+        {
+            var items = Mapper.Map<IEnumerable<SearchTable>, IEnumerable<SearchView>>(source);
+            List<ApplicationUser> users = repoUser.All().ToList();
+            List<EmplTable> empls = repoEmpl.All().ToList();
+            ApplicationUser currentUser = users.FirstOrDefault(x => x.Id == HttpContext.Current.User.Identity.GetUserId());
+
+            foreach (var item in items)
+            {
+                DocumentTable docuTable = _DocumentService.Find(item.DocumentTableId);
+                item.isShow = _DocumentService.isShowDocument(docuTable, currentUser, true);
+
+                ApplicationUser user = users.FirstOrDefault(x => x.Id == item.ApplicationUserCreatedId);
+                EmplTable empl = empls.FirstOrDefault(x => x.ApplicationUserId == user.Id && x.CompanyTableId == user.CompanyTableId);
+                if (empl != null)
+                    item.CreatedUserName = "(" + empl.AliasCompanyName + ") " + empl.FullName + " " + empl.TitleName + " " + empl.DepartmentName + " " + _SystemService.ConvertDateTimeToLocal(currentUser, item.CreatedDate);
+                else
+                    item.CreatedUserName = String.Empty;
+            }
+
+            return items;
+        }
         public SearchTable FirstOrDefault(Expression<Func<SearchTable, bool>> predicate)
         {
             return repo.Find(predicate);
@@ -111,21 +134,35 @@ namespace RapidDoc.Models.Services
             }
             _uow.Commit();
         }
-        public List<SearchView> GetDocuments(int blockNumber, int blockSize, string searchText)
+        public List<SearchView> GetDocuments(int blockNumber, int blockSize, SearchFormView model)
         {
             List<SearchView> result = new List<SearchView>();
-            if (!String.IsNullOrEmpty(searchText))
-            {
-                int startIndex = (blockNumber - 1) * blockSize;
-                string searchString = searchText.Trim();
+            int startIndex = (blockNumber - 1) * blockSize;
+            string createdUserId = null;
+            string searchString = null;
 
-                if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(model.SearchText))
+            {
+                searchString = model.SearchText.Trim();
+            }
+
+            if (model.CreatedEmplTableId != null)
+            {
+                EmplTable emplTable = repoEmpl.GetById(model.CreatedEmplTableId ?? Guid.Empty);
+                if (emplTable != null)
                 {
-                    var resultText = this.GetPartialView(x => x.DocumentText.Contains(searchString)).OrderByDescending(x => x.CreatedDate).Skip(startIndex).Take(blockSize).ToList();
-                    var resultNum = this.GetPartialView(x => x.DocumentTable.DocumentNum.Contains(searchString)).Skip(startIndex).Take(blockSize).ToList();
-                    result = resultNum.Concat(resultText).ToList();
+                    createdUserId = emplTable.ApplicationUserId;
                 }
             }
+
+            var prepareResult = this.GetPartial(x => (x.CreatedDate >= model.StartDate || model.StartDate == null) &&
+                (x.CreatedDate <= model.EndDate || model.EndDate == null) &&
+                (x.DocumentTable.CompanyTableId == model.CompanyTableId || model.CompanyTableId == null) &&
+                (x.DocumentTable.ProcessTableId == model.ProcessTableId || model.ProcessTableId == null) &&
+                (x.DocumentTable.ApplicationUserCreatedId == createdUserId || createdUserId == null) &&
+                (x.DocumentText.Contains(searchString) || (x.DocumentTable.DocumentNum.Contains(searchString)) || searchString == null || searchString == String.Empty)).OrderByDescending(x => x.CreatedDate).Skip(startIndex).Take(blockSize).ToList();
+
+            result = Domain2ViewModel(prepareResult).ToList();
             return result;
         }
 

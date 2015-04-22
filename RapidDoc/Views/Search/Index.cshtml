@@ -11,6 +11,47 @@
     <div class="form-group">
         @Html.TextBoxFor(model => model.SearchText, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = UIElementRes.UIElement.SearchText, @autofocus = "required", @x_webkit_speech = "" })
     </div>
+    <a data-toggle="collapse" href="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings">@UIElementRes.UIElement.AddonSettings</a>
+    <div class="collapse" id="collapseSettings">
+        <div class="well">
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.StartDate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.StartDate, new { @class = "datepicker form-control", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), format = "mm/dd/yyyy", placeholder = FieldNameRes.FieldNameResource.StartDate, startDate = "" })
+                    </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.EndDate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.EndDate, new { @class = "datepicker form-control", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), format = "mm/dd/yyyy", placeholder = FieldNameRes.FieldNameResource.EndDate, startDate = "" })
+                    </div>
+                </div>
+                <div class="col-xs-9">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.CompanyTableId)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DropDownList("CompanyTableId", (IEnumerable<SelectListItem>)ViewBag.CompanyList, new { @class = "selectpicker selectpickerfull", @data_live_search = "true", @data_size = "10" })
+                    </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ProcessTableId)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DropDownList("ProcessTableId", (IEnumerable<SelectListItem>)ViewBag.ProcessList, new { @class = "selectpicker selectpickerfull", @data_live_search = "true", @data_size = "10" })
+                    </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.CreatedEmplTableId)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DropDownList("CreatedEmplTableId", (IEnumerable<SelectListItem>)ViewBag.EmplList, new { @class = "selectpicker selectpickerfull", @data_live_search = "true", @data_size = "10" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <p>
         <input class="btn btn-primary btn-sm pull-right" type="submit" value=@UIElementRes.UIElement.Search />
     </p>
@@ -53,13 +94,24 @@
          src="@Url.Content("~/Content/Custom/image-icon/autoload.gif")" />
 </div>
 
+@section Scripts {
+    @Scripts.Render("~/bundles/editentity")
+}
 @section jslaunch {
 <script type="text/javascript">
 $(function () {
+    selectpickerfull_init();
+    datepicker_init("@UIElementRes.UIElement.LangName");
+
     var blockNumber = 2;
     var NoMoreData = false;
     var inProgress = false;
     var searchText = $("#SearchText").val();
+    var startDate = $("#StartDate").val();
+    var endDate = $("#EndDate").val();
+    var companyTableId = $("#CompanyTableId").val();
+    var processTableId = $("#ProcessTableId").val();
+    var createdEmplTableId = $("#CreatedEmplTableId").val();
 
     $('input').keydown(function(e) {
     if (e.keyCode == 13) {
@@ -72,20 +124,24 @@ $(function () {
     {
     inProgress = true;
     $("#loadingDiv").show();
-    $.post("@Url.Action("InfinateScroll", "Search")", { BlockSize : blockNumber, SearchText : searchText},
+    $.post("@Url.Action("InfinateScroll", "Search")", {
+        BlockSize: blockNumber, SearchText: searchText,
+        StartDate: startDate, EndDate: endDate, CompanyTableId: companyTableId,
+        ProcessTableId: processTableId, CreatedEmplTableId: createdEmplTableId
+    },
     function (data) {
 
-    blockNumber = blockNumber + 1;
-    NoMoreData = data.NoMoreData;
-    $("#searchAjaxResult").append(data.HTMLString);
-    $("#loadingDiv").hide();
-    inProgress = false;
+        blockNumber = blockNumber + 1;
+        NoMoreData = data.NoMoreData;
+        $("#searchAjaxResult").append(data.HTMLString);
+        $("#loadingDiv").hide();
+        inProgress = false;
     });
-    }
+}
     });
 
     function clearTextSearch(result) {
-    $('#SearchText').val(searchText);
+        $('#SearchText').val(searchText);
     }
 });
 </script>

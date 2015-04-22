@@ -91,6 +91,15 @@ namespace RapidDoc.Models.ViewModels
                 return (SecondName + " " + FirstName + " " + MiddleName);
             }
         }
+
+        [Display(Name = "FirstName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string FullNameAddon
+        {
+            get
+            {
+                return ("(" + AliasCompanyName + ") " + SecondName + " " + FirstName + " " + MiddleName);
+            }
+        }
     }
 
     public class DelegationView : BasicCompanyNullView
