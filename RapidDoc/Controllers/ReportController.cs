@@ -28,8 +28,9 @@ namespace RapidDoc.Controllers
         private readonly IProcessService _ProcessService;
         private readonly IEmplService _EmplService;
         private readonly IReportService _ReportService;
+        private readonly IWorkScheduleService _WorkScheduleService;
 
-        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService, ICompanyService companyService, IAccountService accountService, IProcessService processService, IEmplService emplService, IReportService reportService)
+        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService, ICompanyService companyService, IAccountService accountService, IProcessService processService, IEmplService emplService, IReportService reportService, IWorkScheduleService workScheduleService)
             : base(companyService, accountService)
         {
             _WorkflowTrackerService = workflowTrackerService;
@@ -38,6 +39,7 @@ namespace RapidDoc.Controllers
             _ProcessService = processService;
             _EmplService = emplService;
             _ReportService = reportService;
+            _WorkScheduleService = workScheduleService;
         }
 
         public ActionResult PerformanceDepartment()
@@ -71,6 +73,7 @@ namespace RapidDoc.Controllers
             Excel.Worksheet excelWorksheet;
 
             int rowCount = 3;
+            int minutes;
 
             model.EndDate = model.EndDate.AddDays(1);
 
@@ -83,6 +86,7 @@ namespace RapidDoc.Controllers
                               from emplExecutor in eA.DefaultIfEmpty()*/
 
                               where wfTracker.CreatedDate >= model.StartDate && wfTracker.CreatedDate <= model.EndDate
+                             // && (document.DocumentNum == "RD0004724" || document.DocumentNum == "RDK000270")
                               select new DetailReportModel
                               {
                                   GroupProcessName = process.GroupProcessTable.GroupProcessName,
@@ -116,7 +120,52 @@ namespace RapidDoc.Controllers
 
             ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
-            
+            WorkScheduleTable workScheduleTable = _WorkScheduleService.FirstOrDefault(x => x.WorkEndTime != null && x.WorkStartTime != null);
+
+            foreach (var item in detailData.Where(x => x.Date != null && x.SignDate != null))
+	        {
+                minutes = 0; int cacheMinutes = 0;
+                int year = item.Date.Value.Year;
+                int c = item.Date.Value.DayOfYear;
+                int s = item.SignDate.Value.DayOfYear;
+
+                DateTime createDateWorkEndTime = new DateTime(item.Date.Value.Year, item.Date.Value.Month, item.Date.Value.Day, workScheduleTable.WorkEndTime.Hours, workScheduleTable.WorkEndTime.Minutes, workScheduleTable.WorkEndTime.Seconds);
+                DateTime signDateWorkStartTime = new DateTime(item.SignDate.Value.Year, item.SignDate.Value.Month, item.SignDate.Value.Day, workScheduleTable.WorkStartTime.Hours, workScheduleTable.WorkStartTime.Minutes, workScheduleTable.WorkStartTime.Seconds);
+              
+                if (_WorkScheduleService.CheckDayType(workScheduleTable.Id, signDateWorkStartTime) == false && signDateWorkStartTime < item.SignDate.Value )
+                {
+                    if (c < s)
+                    {
+                        cacheMinutes += Convert.ToInt32((item.SignDate.Value - signDateWorkStartTime).TotalMinutes);
+                    }
+                    else if(c == s)
+                        cacheMinutes += Convert.ToInt32((item.SignDate.Value - item.Date.Value).TotalMinutes);
+                }
+                if(c < s)
+                {
+                    if (_WorkScheduleService.CheckDayType(workScheduleTable.Id, createDateWorkEndTime) == false && createDateWorkEndTime > item.Date.Value)
+                    {
+                        cacheMinutes += Convert.ToInt32((createDateWorkEndTime - item.Date.Value).TotalMinutes);
+                        
+                    }
+
+                    c++;
+                }
+                 while (c < s)
+                 {
+                     DateTime date = new DateTime(year,1,1).AddDays(c -1);
+                     if (_WorkScheduleService.CheckDayType(workScheduleTable.Id, new DateTime(year,1,1).AddDays(c -1)) == false)
+                     {                       
+                        minutes += 480;
+                     }
+                     c++;
+                 }
+                 
+                 minutes += cacheMinutes;
+                 item.Minutes = minutes;
+
+	        }
+
             foreach (var line in detailData)
             {
                 rowCount++;
@@ -137,8 +186,10 @@ namespace RapidDoc.Controllers
                 excelWorksheet.Cells[rowCount, 5] = line.CreateDate.ToString() == "" ? "" : TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(line.CreateDate), timeZoneInfo).ToString();
                 excelWorksheet.Cells[rowCount, 6] = line.TrackerType.ToString();
                 excelWorksheet.Cells[rowCount, 7] = line.ActivityName.ToString();
-                excelWorksheet.Cells[rowCount, 9] = line.SignDate.ToString() == "" ? "" : TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(line.SignDate), timeZoneInfo).ToString();
-                excelWorksheet.Cells[rowCount, 10] = line.PerformDate.ToString() == "" ? "" : TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(line.PerformDate), timeZoneInfo).ToString();
+                excelWorksheet.Cells[rowCount, 9] = line.Date.ToString() == "" ? "" : TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(line.Date), timeZoneInfo).ToString();
+                excelWorksheet.Cells[rowCount, 10] = line.SignDate.ToString() == "" ? "" : TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(line.SignDate), timeZoneInfo).ToString();
+                excelWorksheet.Cells[rowCount, 11] = line.PerformDate.ToString() == "" ? "" : TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(line.PerformDate), timeZoneInfo).ToString();
+                excelWorksheet.Cells[rowCount, 12] = line.Minutes.ToString() == "" ? "" : line.Minutes.ToString();
             }
 
             object misValue = System.Reflection.Missing.Value;
@@ -408,5 +459,6 @@ namespace RapidDoc.Controllers
         public int SLAOffset { get; set; }
         public Guid DocumentId { get; set; }
         public DateTime? Date { get; set; }
+        public int? Minutes { get; set; }
     }
 }
