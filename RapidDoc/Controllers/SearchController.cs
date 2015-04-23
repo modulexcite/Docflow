@@ -47,8 +47,8 @@ namespace RapidDoc.Controllers
                 int blockSize = 20;
                 var documents = _Service.GetDocuments(1, blockSize, model);
 
-                ViewBag.SearchCount = documents.Count;
-                ViewBag.SearchResult = documents;
+                ViewBag.SearchCount = documents.Item1;
+                ViewBag.SearchResult = documents.Item2;
             }
 
             ViewBag.CompanyList = _CompanyService.GetDropListCompanyNull(model.CompanyTableId);
@@ -65,11 +65,10 @@ namespace RapidDoc.Controllers
             int blockSize = 20;
             var documents = _Service.GetDocuments(blockNumber, blockSize, new SearchFormView { SearchText = data.SearchText, StartDate = data.StartDate, EndDate = data.EndDate, CompanyTableId = data.CompanyTableId, ProcessTableId = data.ProcessTableId, CreatedEmplTableId = data.CreatedEmplTableId });
             SearchFormView searchFormView = new SearchFormView();
-            searchFormView.NoMoreData = documents.Count < blockSize;
+            searchFormView.NoMoreData = documents.Item1 < blockSize;
+            ViewBag.SearchResult = documents.Item2;
 
-            ViewBag.SearchResult = documents;
-
-            searchFormView.HTMLString = RenderPartialViewToString("_AjaxSearchDocument", documents);
+            searchFormView.HTMLString = RenderPartialViewToString("_AjaxSearchDocument", documents.Item2);
             return Json(searchFormView);
         }
 
