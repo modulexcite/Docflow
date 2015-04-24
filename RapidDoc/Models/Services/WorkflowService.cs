@@ -705,6 +705,9 @@ namespace RapidDoc.Models.Services
                     allSteps = this.GetRequestTree(activity);
                     documentData["DocumentWhom"] = users;
                     break;
+                case DocumentType.Task:
+                    allSteps = this.GetRequestTree(activity);
+                    break;
             }
             
             return allSteps;

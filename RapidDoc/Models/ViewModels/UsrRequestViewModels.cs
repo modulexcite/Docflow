@@ -8601,4 +8601,13 @@ namespace RapidDoc.Models.ViewModels
     
     }
     #endregion
+
+    #region Задачи
+
+    public class USR_TAS_DailyTasks_View : BasicDailyTasksView
+    {
+        
+    }
+
+    #endregion
 }

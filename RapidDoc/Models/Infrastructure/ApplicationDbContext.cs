@@ -270,6 +270,7 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_UZL_RequestForCrashedStone_Table> USR_REQ_UZL_RequestForCrashedStone_Table { get; set; }
         public DbSet<USR_OFM_UIT_OfficeMemo_Table> USR_OFM_UIT_OfficeMemo_Table { get; set; }
         public DbSet<USR_REQ_IT_CTP_RequestTRU_Table> USR_REQ_IT_CTP_RequestTRU_Table { get; set; }
+        public DbSet<USR_TAS_DailyTasks_Table> USR_TAS_DailyTasks_Table { get; set; }
 
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {

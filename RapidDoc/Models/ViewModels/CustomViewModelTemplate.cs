@@ -55,4 +55,24 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Параллельно")]
         public bool Parallel { get; set; }
     }
+
+    public abstract class BasicDailyTasksView : BasicDocumentView
+    {
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата исполнения")]
+        public DateTime? Date { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Задача")]
+        public string MainText { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Исполнители")]
+        public string Users { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Отчет")]
+        public string ReportText { get; set; }
+    }
 }

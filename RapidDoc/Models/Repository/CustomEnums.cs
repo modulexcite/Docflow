@@ -1052,6 +1052,9 @@ namespace RapidDoc.Models.Repository
         Request = 0,
 
         [Display(Name = "Служебная записка")]
-        OfficeMemo = 1
+        OfficeMemo = 1,
+
+        [Display(Name = "Задача")]
+        Task = 2
     }
 }

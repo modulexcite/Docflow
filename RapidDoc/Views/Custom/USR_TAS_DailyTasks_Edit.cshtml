@@ -1,0 +1,27 @@
+﻿@model RapidDoc.Models.ViewModels.USR_TAS_DailyTasks_View
+@using RapidDoc.Extensions;
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Date)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => model.Date, null, new { @class = "datepicker form-control form-control-date", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), format = "mm/dd/yyyy", placeholder = "Дата", startDate = "" })
+</div>
+
+<div class="editor-label">
+        @Html.LabelForRequired(model => Model.MainText)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.MainText, new { @class = "form-control summernote" })
+</div>
+<br />
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Users)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.Users, new { @class = "form-control", @data_role = "tagsinputEmpl", @size = 256, @maxlength = 256, placeholder = "Исполнители" })
+</div>
+
+<script type="text/javascript">
+    $('#MainText').val("123");
+</script>

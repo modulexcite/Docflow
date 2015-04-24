@@ -6387,5 +6387,13 @@ namespace RapidDoc.Models.DomainModels
 
     }
     #endregion
+
+    #region Задачи
+
+    public class USR_TAS_DailyTasks_Table : BasicDailyTasksTable
+    {
+    
+    }
+    #endregion
 }
     
