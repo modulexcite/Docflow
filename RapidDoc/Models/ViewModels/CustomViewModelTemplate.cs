@@ -61,11 +61,11 @@ namespace RapidDoc.Models.ViewModels
         [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Дата исполнения")]
-        public DateTime? Date { get; set; }
+        public DateTime? ExecutionDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Задача")]
-        public string MainText { get; set; }
+        public string MainField { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Исполнители")]

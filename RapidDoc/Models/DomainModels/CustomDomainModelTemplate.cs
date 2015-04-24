@@ -57,13 +57,13 @@ namespace RapidDoc.Models.DomainModels
     public abstract class BasicDailyTasksTable : BasicDocumentTable
     {
         [Required]
-        public string MainText { get; set; }
+        public string MainField { get; set; }
 
         [Required]
         public string Users { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime ExecutionDate { get; set; }
 
         public string ReportText { get; set; }
     
