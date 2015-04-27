@@ -70,6 +70,7 @@
       <AssemblyReference>Ninject</AssemblyReference>
       <AssemblyReference>Ninject.Web.Common</AssemblyReference>
       <AssemblyReference>Ninject.Web.Mvc</AssemblyReference>
+      <AssemblyReference>Ninject.Web.WebApi</AssemblyReference>
       <AssemblyReference>PresentationCore</AssemblyReference>
       <AssemblyReference>PresentationFramework</AssemblyReference>
       <AssemblyReference>RazorEngine</AssemblyReference>
@@ -118,7 +119,6 @@
       <AssemblyReference>System.Net.Http</AssemblyReference>
       <AssemblyReference>System.Net.Http.WebRequest</AssemblyReference>
       <AssemblyReference>System.Xml.Linq</AssemblyReference>
-      <AssemblyReference>WebActivator</AssemblyReference>
       <AssemblyReference>WebActivatorEx</AssemblyReference>
       <AssemblyReference>WebGrease</AssemblyReference>
       <AssemblyReference>WindowsBase</AssemblyReference>
@@ -300,7 +300,7 @@
                         <Flowchart DisplayName="СК" sap2010:WorkflowViewState.IdRef="Flowchart_2">
                           <Flowchart.StartNode>
                             <FlowStep x:Name="__ReferenceID8" sap2010:WorkflowViewState.IdRef="FlowStep_6">
-                              <local1:WFChooseRoleUser _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="СК" sap2010:WorkflowViewState.IdRef="WFChooseRoleUser_1" inputRoleName="ApproveUKR_URP" useManual="False">
+                              <local1:WFChooseRoleUser _service="{x:Null}" executionStep="{x:Null}" noneSkip="{x:Null}" slaOffset="{x:Null}" DisplayName="СК" sap2010:WorkflowViewState.IdRef="WFChooseRoleUser_1" inputRoleName="ApproveSK" useManual="False">
                                 <local1:WFChooseRoleUser.inputCurrentUser>
                                   <InArgument x:TypeArguments="x:String">
                                     <mca:CSharpValue x:TypeArguments="x:String">inputCurrentUser</mca:CSharpValue>
@@ -789,7 +789,7 @@
     <x:Reference>__ReferenceID34</x:Reference>
     <x:Reference>__ReferenceID35</x:Reference>
     <x:Reference>__ReferenceID36</x:Reference>
-    <sads:DebugSymbol.Symbol>d2JEOlxVc2Vyc1xndWtvemhcU291cmNlXFJlcG9zXERvY2Zsb3dcUmFwaWREb2NcQWN0aXZpdGllc1xVU1JfUkVRX1VSUF9SZXF1ZXN0Rm9ySFJDaEdyYXBoQ29uc3QueGFtbIYBGgcaZwEDAakBAa8BAQKEAQOZBg8CAQGKAQnTARUDAeQF1wEP1wFzAwHbBfMFEf4FGgMByAXbARGkAh0DAd8EqAIXqAJ7AwHWBN8FGeoFIgMBwwSsAhn6AiUDAdID/gIf/gKDAQMByQPLBSHWBSoDAbYDggMhywMtAwHOAs8DJ88DiwEDAcUCtwUpwgUyAwGyAtMDKaEENQMBwAGlBC+lBJMBAwG3AaMFMa4FOgMBpAGpBDH3BD0CATH7BDf7BJsBAgEojwU5mgVCAgEV/wQ5igVCAgECjQEPrAEqAwGTBrABFbABagMBiga0ARfJATgDAeUF+wUX+wVqAwHSBfYFF/YFcgMByQXeARf9ATIDAY4FgQIdgQJyAwGFBYUCH5oCQAMB4ATnBR/nBXIDAc0E4gUf4gV6AwHEBK8CH84COQMBigTSAiXSAnoDAYEE1gIn8AJIAwHTA9MFJ9MFegMBwAPOBSfOBYIBAwG3A4UDJ6QDRQMB/QKoAy2oA4IBAwH0AqwDL8EDUAMBzwK/BS+/BYIBAwG8AroFL7oFigEDAbMC1gMv+gNQAwHvAf4DNf4DigEDAeYBggQ3lwRYAwHBAasFN6sFigEDAa4BpgU3pgWSAQMBpQGsBDfLBFECAWnPBD3PBJIBAgFg0wQ/7QRgAgEylwU/lwWfAQIBH5IFP5IFmgECARaHBT+HBZwBAgEMggU/ggWaAQIBA5oBFZoBZwMBxAaNAf4BjQGFAgMBwwakARWkAWoDAboGnwEVnwFnAwGxBo0B7wGNAfMBAwGwBqkBFakBcAMBpwaNAd8BjQHiAQMBpgaVARWVAWADAZ0GkAEVkAFjAwGUBrwBHbwBbwMBgQbBAR3BAXMDAfgFtwEdtwFnAwHvBcYBHcYBeAMB5gXrAR3rAW8DAb8F3gGKAt4BkQIDAb4F9QEd9QFyAwG1BfABHfABbwMBrAXeAfsB3gH/AQMBqwX6AR36AXgDAaIF3gHrAd4B7gEDAaEF5gEd5gFoAwGYBeEBHeEBawMBjwWNAiWNAncDAfwEkgIlkgJ7AwHzBIgCJYgCbwMB6gSXAiWXAoABAwHhBLwCJbwCdwMBugSvAv0BrwKEAgMBuQTGAiXGAnoDAbAEwQIlwQJ3AwGnBMsCJcsCgAEDAZ4ErwLiAa8C8gEDAZ0EtwIltwJwAwGUBLICJbICcwMBiwTeAi3eAn8DAfgD4wIt4wKDAQMB7wPZAi3ZAncDAeYD7QIt7QKIAQMB3QPoAi3oApkBAwHUA5IDLZIDfwMBrQOFA48ChQOWAgMBrAOcAy2cA4IBAwGjA5cDLZcDfwMBmgOhAy2hA4gBAwGRA4UD/AGFA4QCAwGQA40DLY0DeAMBhwOIAy2IA3sDAf4CtAM1tAOHAQMB6wK5AzW5A4sBAwHiAq8DNa8DfwMB2QK+AzW+A5ABAwHQAugDNegDhwEDAakC1gPzAdYDhgIDAagC1gOhAtYDqAIDAacC8gM18gOKAQMBngLtAzXtA4cBAwGVAvcDNfcDkAEDAYwC1gOQAtYDlgIDAYsC4wM14wOAAQMBggLZAzXZA4MBAwH5Ad4DNd4DmQEDAfABigQ9igSPAQMB3QGPBD2PBJMBAwHUAYUEPYUEhwEDAcsBlAQ9lASYAQMBwgG5BD25BI8BAwGbAawEmQKsBKACAwGaAcMEPcMEkgEDAZEBvgQ9vgSPAQMBiAGsBNYBrATcAQMBhwHIBD3IBJgBAgF+rATrAawE/gECAX2sBIgCrASOAgIBfLQEPbQEiAECAXOvBD2vBIsBAgFq2wRF2wSXAQIBV+AEReAEmwECAU7WBEXWBI8BAgFF6gRF6gSgAQIBPOUEReUEsQECATM=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d2JEOlxVc2Vyc1xndWtvemhcU291cmNlXFJlcG9zXERvY2Zsb3dcUmFwaWREb2NcQWN0aXZpdGllc1xVU1JfUkVRX1VSUF9SZXF1ZXN0Rm9ySFJDaEdyYXBoQ29uc3QueGFtbIYBGgcaZwEDAakBAa8BAQKEAQOZBg8CAQGKAQnTARUDAeQF1wEP1wFzAwHbBfMFEf4FGgMByAXbARGkAh0DAd8EqAIXqAJ7AwHWBN8FGeoFIgMBwwSsAhn6AiUDAdID/gIf/gKDAQMByQPLBSHWBSoDAbYDggMhywMtAwHOAs8DJ88DiwEDAcUCtwUpwgUyAwGyAtMDKaEENQMBwAGlBC+lBJMBAwG3AaMFMa4FOgMBpAGpBDH3BD0CATH7BDf7BJsBAgEojwU5mgVCAgEV/wQ5igVCAgECjQEPrAEqAwGTBrABFbABagMBiga0ARfJATgDAeUF+wUX+wVqAwHSBfYFF/YFcgMByQXeARf9ATIDAY4FgQIdgQJyAwGFBYUCH5oCQAMB4ATnBR/nBXIDAc0E4gUf4gV6AwHEBK8CH84COQMBigTSAiXSAnoDAYEE1gIn8AJIAwHTA9MFJ9MFegMBwAPOBSfOBYIBAwG3A4UDJ6QDRQMB/QKoAy2oA4IBAwH0AqwDL8EDUAMBzwK/BS+/BYIBAwG8AroFL7oFigEDAbMC1gMv+gNQAwHvAf4DNf4DigEDAeYBggQ3lwRYAwHBAasFN6sFigEDAa4BpgU3pgWSAQMBpQGsBDfLBFECAWnPBD3PBJIBAgFg0wQ/7QRgAgEylwU/lwWfAQIBH5IFP5IFmgECARaHBT+HBZwBAgEMggU/ggWaAQIBA5oBFZoBZwMBxAaNAf4BjQGFAgMBwwakARWkAWoDAboGnwEVnwFnAwGxBo0B7wGNAfMBAwGwBqkBFakBcAMBpwaNAd8BjQHiAQMBpgaVARWVAWADAZ0GkAEVkAFjAwGUBrwBHbwBbwMBgQbBAR3BAXMDAfgFtwEdtwFnAwHvBcYBHcYBeAMB5gXrAR3rAW8DAb8F3gGKAt4BkQIDAb4F9QEd9QFyAwG1BfABHfABbwMBrAXeAfsB3gH/AQMBqwX6AR36AXgDAaIF3gHrAd4B7gEDAaEF5gEd5gFoAwGYBeEBHeEBawMBjwWNAiWNAncDAfwEkgIlkgJ7AwHzBIgCJYgCbwMB6gSXAiWXAoABAwHhBLwCJbwCdwMBugSvAvgBrwL/AQMBuQTGAiXGAnoDAbAEwQIlwQJ3AwGnBMsCJcsCgAEDAZ4ErwLiAa8C7QEDAZ0EtwIltwJwAwGUBLICJbICcwMBiwTeAi3eAn8DAfgD4wIt4wKDAQMB7wPZAi3ZAncDAeYD7QIt7QKIAQMB3QPoAi3oApkBAwHUA5IDLZIDfwMBrQOFA48ChQOWAgMBrAOcAy2cA4IBAwGjA5cDLZcDfwMBmgOhAy2hA4gBAwGRA4UD/AGFA4QCAwGQA40DLY0DeAMBhwOIAy2IA3sDAf4CtAM1tAOHAQMB6wK5AzW5A4sBAwHiAq8DNa8DfwMB2QK+AzW+A5ABAwHQAugDNegDhwEDAakC1gPzAdYDhgIDAagC1gOhAtYDqAIDAacC8gM18gOKAQMBngLtAzXtA4cBAwGVAvcDNfcDkAEDAYwC1gOQAtYDlgIDAYsC4wM14wOAAQMBggLZAzXZA4MBAwH5Ad4DNd4DmQEDAfABigQ9igSPAQMB3QGPBD2PBJMBAwHUAYUEPYUEhwEDAcsBlAQ9lASYAQMBwgG5BD25BI8BAwGbAawEmQKsBKACAwGaAcMEPcMEkgEDAZEBvgQ9vgSPAQMBiAGsBNYBrATcAQMBhwHIBD3IBJgBAgF+rATrAawE/gECAX2sBIgCrASOAgIBfLQEPbQEiAECAXOvBD2vBIsBAgFq2wRF2wSXAQIBV+AEReAEmwECAU7WBEXWBI8BAgFF6gRF6gSgAQIBPOUEReUEsQECATM=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
