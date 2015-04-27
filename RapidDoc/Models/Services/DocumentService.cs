@@ -236,9 +236,9 @@ namespace RapidDoc.Models.Services
                                 (document.ApplicationUserCreatedId == user.Id ||
                                     contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id)) ||
 
-                                    (contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.Users.Any(b => b.UserId == user.Id)) && document.DocType == DocumentType.Task) 
+                                    //(contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.Users.Any(b => b.UserId == user.Id)) && document.DocType == DocumentType.Task) ||
 
-                                    || ((contextQuery.DocumentReaderTable.Any(r => r.DocumentTableId == document.Id && r.UserId == user.Id) || (
+                                    ((contextQuery.DocumentReaderTable.Any(r => r.DocumentTableId == document.Id && r.UserId == user.Id) || (
 
                                     contextQuery.DocumentReaderTable.Any(d => d.RoleId != null && d.DocumentTableId == document.Id && contextQuery.Roles.Where( r => r.Id == d.RoleId).ToList().Any(x => x.Users.ToList().Any(z => z.UserId == user.Id )))
                                     
@@ -274,7 +274,7 @@ namespace RapidDoc.Models.Services
                                 ProcessName = process.ProcessName,
                                 CreatedBy = createdUser.UserName
                             };
-                List<DocumentView> exampleTest = items.Where(x => x.DocumentNum == "TAS000033").ToList();
+
                 return items.AsQueryable();
             }
         }
@@ -1028,7 +1028,6 @@ namespace RapidDoc.Models.Services
                             trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.DocumentTableId == documentId && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(p => p.UserId == item.ApplicationUserId));
                             if (trackerTable != null)
                             {
-                                trackerTable.ActivityName = "Исполнитель";
                                 SaveSignData(new List<WFTrackerTable>{ trackerTable}, trackerType);
                                 isSign = true;
                                 break;
@@ -1039,7 +1038,6 @@ namespace RapidDoc.Models.Services
             }
             else
             {
-                 trackerTable.ActivityName = "Исполнитель";
                  SaveSignData(new List<WFTrackerTable>{ trackerTable}, TrackerType.Approved);
             }
 

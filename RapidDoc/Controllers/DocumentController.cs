@@ -45,7 +45,6 @@ namespace RapidDoc.Controllers
         private readonly ISearchService _SearchService;
         private readonly ICustomCheckDocument _CustomCheckDocument;
         private readonly IItemCauseService _ItemCauseService;
-        private readonly IDelegationService _DelegationService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected RoleManager<ApplicationRole> RoleManager { get; private set; }
@@ -54,7 +53,7 @@ namespace RapidDoc.Controllers
             IWorkflowService workflowService, IEmplService emplService, IAccountService accountService, ISystemService systemService,
             IWorkflowTrackerService workflowTrackerService, IReviewDocLogService reviewDocLogService,
             IDocumentReaderService documentReaderService, ICommentService commentService, IEmailService emailService,
-            IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument, IItemCauseService itemCauseService, IDelegationService delegationService)
+            IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument, IItemCauseService itemCauseService)
             : base(companyService, accountService)
         {
             _DocumentService = documentService;
@@ -71,7 +70,6 @@ namespace RapidDoc.Controllers
             _SearchService = searchService;
             _CustomCheckDocument = customCheckDocument;
             _ItemCauseService = itemCauseService;
-            _DelegationService = delegationService;
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
@@ -430,7 +428,7 @@ namespace RapidDoc.Controllers
                 List<string> users = _WorkflowService.GetUniqueUserList(documentId, documentData, "Flow");
                 if (users.Count > 0)
                 {
-                    _WorkflowTrackerService.SaveTrackList(documentId, new List<Array> { new string[] { "Исполнители", "", "" } });
+                    _WorkflowTrackerService.SaveTrackList(documentId, new List<Array> { new string[] { "Исполнитель", "", "" } });
                     users.ForEach(x => userList.Add(new WFTrackerUsersTable { UserId = x }));
 
                     WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.NonActive);
