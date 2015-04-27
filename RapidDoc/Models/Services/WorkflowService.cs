@@ -242,8 +242,8 @@ namespace RapidDoc.Models.Services
                     }
                 }
             }
-
-            userList.Add(new WFTrackerUsersTable { UserId = documentTable.ApplicationUserCreatedId });
+            if (documentTable.DocType != DocumentType.Task)
+                userList.Add(new WFTrackerUsersTable { UserId = documentTable.ApplicationUserCreatedId });
             return new WFUserFunctionResult { Users = userList, Skip = false };
         }
         public string WFChooseSpecificUserFromService(string serviceName, ServiceIncidientPriority priority, ServiceIncidientLevel level, ServiceIncidientLocation location)

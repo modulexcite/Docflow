@@ -143,7 +143,7 @@ namespace RapidDoc.Models.Services
                     if (performToDate != null)
                         model.PerformToDate = TimeZoneInfo.ConvertTimeFromUtc(performToDate ?? DateTime.MinValue, currentTimeZoneInfo);
 
-                    if (documentType == DocumentType.Request || (!trackerViewItems.Any(x => x.SignUserId == item.SignUserId) && documentType == DocumentType.OfficeMemo))
+                    if (documentType == DocumentType.Request || (documentType == DocumentType.Task && item.TrackerType != TrackerType.NonActive) || (!trackerViewItems.Any(x => x.SignUserId == item.SignUserId) && documentType == DocumentType.OfficeMemo))
                         trackerViewItems.Add(model);
                 }
                 else

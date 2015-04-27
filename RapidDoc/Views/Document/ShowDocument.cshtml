@@ -123,7 +123,7 @@
             else
             {
                 <button type="button" class="btn btn-success hidden-print" data-toggle="modal" data-target=".approvecz-modal-sm">@UIElementRes.UIElement.Approve</button>
-                <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".rejectcz-modal-sm">@UIElementRes.UIElement.Reject</button>
+                <button type="button" class="btn btn-danger hidden-print" data-toggle="modal" data-target=".rejectcz-modal-sm">@UIElementRes.UIElement.Reject</button>                       
             }
         }
 
@@ -163,6 +163,14 @@
                     <li>
                         <a href="#" data-toggle="modal" data-target=".addusers-modal">@UIElementRes.UIElement.SendBookmark</a>
                     </li>   
+                }
+                @if (Model.DocumentView.DocType == RapidDoc.Models.Repository.DocumentType.Task &&
+                    (Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement ||
+                    Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.OnSign))
+                {
+                    <li>
+                        <a href="#" data-toggle="modal" data-target=".delegatetask-modal-sm">@UIElementRes.UIElement.Delegate</a>
+                    </li>
                 }
             </ul>
         </div>

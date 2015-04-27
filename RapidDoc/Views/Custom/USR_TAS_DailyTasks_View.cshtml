@@ -11,3 +11,59 @@
     @Html.DisplayTextFor(model => Model.MainField)
 </div>
 <br />
+
+<div class="modal fade delegatetask-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@CustomRes.Custom.Users</h4>
+            </div>
+            <div class="modal-body" style="min-height: 180px;">
+                @Html.TextBox("Flow", "", new { @class = "form-control", @data_role = "tagsinputGroup2", @size = 256, @maxlength = 256, placeholder = "Сотрудники" })
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" name="action:DelegateDocumentTask">@UIElementRes.UIElement.Delegate</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade rejectcz-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div id="alert_placeholder"></div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Отмена документа</h4>
+            </div>
+            <div class="modal-body" style="min-height:250px;">
+                @Html.TextArea("RejectCommentRequest", new { @class = "form-control", @placeholder = "Обязательно укажите причину отмены" })
+                <br>
+                <div>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
+                    <button type="submit" id="rejectRequest" class="btn btn-danger pull-right" name="action:RejectDocumentTask">@UIElementRes.UIElement.Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade approvecz-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Закрытие документа</h4>
+            </div>
+            <div class="modal-body" style="min-height:200px;">
+                @Html.TextArea("ApproveCommentRequest", new { @class = "form-control", @placeholder = "Замечания" })
+                <br>
+                <div>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
+                    <button type="submit" id="approveRequest" class="btn btn-success pull-right" name="action:ApproveDocumentTask">@UIElementRes.UIElement.Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

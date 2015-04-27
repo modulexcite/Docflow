@@ -45,6 +45,7 @@ namespace RapidDoc.Controllers
         private readonly ISearchService _SearchService;
         private readonly ICustomCheckDocument _CustomCheckDocument;
         private readonly IItemCauseService _ItemCauseService;
+        private readonly IDelegationService _DelegationService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected RoleManager<ApplicationRole> RoleManager { get; private set; }
@@ -53,7 +54,7 @@ namespace RapidDoc.Controllers
             IWorkflowService workflowService, IEmplService emplService, IAccountService accountService, ISystemService systemService,
             IWorkflowTrackerService workflowTrackerService, IReviewDocLogService reviewDocLogService,
             IDocumentReaderService documentReaderService, ICommentService commentService, IEmailService emailService,
-            IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument, IItemCauseService itemCauseService)
+            IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument, IItemCauseService itemCauseService, IDelegationService delegationService)
             : base(companyService, accountService)
         {
             _DocumentService = documentService;
@@ -70,6 +71,7 @@ namespace RapidDoc.Controllers
             _SearchService = searchService;
             _CustomCheckDocument = customCheckDocument;
             _ItemCauseService = itemCauseService;
+            _DelegationService = delegationService;
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
@@ -409,6 +411,85 @@ namespace RapidDoc.Controllers
                 DocumentTable documentTable = _DocumentService.Find(documentId);
                 _DocumentService.UpdateDocument(documentTable, currentUserId);
             }
+
+            return RedirectToAction("ShowDocument", new { id = documentId, isAfterView = true });
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "DelegateDocumentTask")]
+        public ActionResult DelegateDocumentTask(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
+        {
+            string currentUserId = User.Identity.GetUserId();
+            IDictionary<string, object> documentData = new Dictionary<string, object>();
+            List<WFTrackerUsersTable> userList = new List<WFTrackerUsersTable>();
+
+            if (collection["Flow"] != null && collection["Flow"] != String.Empty)
+            {
+                documentData.Add("Flow", collection["Flow"]);
+
+                List<string> users = _WorkflowService.GetUniqueUserList(documentId, documentData, "Flow");
+                if (users.Count > 0)
+                {
+                    _WorkflowTrackerService.SaveTrackList(documentId, new List<Array> { new string[] { "Исполнители", "", "" } });
+                    users.ForEach(x => userList.Add(new WFTrackerUsersTable { UserId = x }));
+
+                    WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.DocumentTableId == documentId && x.TrackerType == TrackerType.NonActive);
+                    trackerTable.Users = userList;
+                    trackerTable.TrackerType = TrackerType.Waiting;
+                    _WorkflowTrackerService.SaveDomain(trackerTable, currentUserId);
+                }   
+
+                DocumentTable documentTable = _DocumentService.Find(documentId);
+                _DocumentService.UpdateDocument(documentTable, currentUserId);
+            }
+
+            return RedirectToAction("ShowDocument", new { id = documentId, isAfterView = true }); 
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "ApproveDocumentTask")]
+        public ActionResult ApproveDocumentTask(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            _DocumentService.SignTaskDocument(documentId, TrackerType.Approved);
+
+            if (!String.IsNullOrEmpty(collection["ApproveCommentRequest"]))
+            {
+                string approveCommentRequest = collection["ApproveCommentRequest"].ToString();
+                SaveComment(GuidNull2Guid(documentId), approveCommentRequest);
+            }
+
+            DocumentTable documentTable = _DocumentService.Find(documentId);
+            documentTable.DocumentState = DocumentState.Closed;
+
+            _DocumentService.UpdateDocument(documentTable, User.Identity.GetUserId());
+
+            _EmailService.SendInitiatorClosedEmail(documentTable.Id);
+
+            return RedirectToAction("ShowDocument", new { id = documentId, isAfterView = true });
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "RejectDocumentTask")]
+        public ActionResult RejectDocumentTask(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            _DocumentService.SignTaskDocument(documentId, TrackerType.Cancelled);
+
+            if (!String.IsNullOrEmpty(collection["RejectCommentRequest"]))
+            {
+                string rejectCommentRequest = collection["RejectCommentRequest"].ToString();
+                SaveComment(GuidNull2Guid(documentId), rejectCommentRequest);
+            }
+
+            DocumentTable documentTable = _DocumentService.Find(documentId);
+            documentTable.DocumentState = DocumentState.Closed;
+
+            _DocumentService.UpdateDocument(documentTable, User.Identity.GetUserId());
+
+            _EmailService.SendInitiatorClosedEmail(documentTable.Id);
 
             return RedirectToAction("ShowDocument", new { id = documentId, isAfterView = true });
         }

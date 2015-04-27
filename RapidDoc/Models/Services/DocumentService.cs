@@ -62,6 +62,7 @@ namespace RapidDoc.Models.Services
         void DeleteDocumentDraft(Guid documentId, string tableName, Guid refDocumentId);
         void Delete(Guid Id);
         List<string> SignDocumentCZ(Guid documentId, TrackerType trackerType, string comment = "");
+        void SignTaskDocument(Guid documentId, TrackerType trackerType);
     }
 
     public class DocumentService : IDocumentService
@@ -234,7 +235,10 @@ namespace RapidDoc.Models.Services
                             where
                                 (document.ApplicationUserCreatedId == user.Id ||
                                     contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id)) ||
-                                    ((contextQuery.DocumentReaderTable.Any(r => r.DocumentTableId == document.Id && r.UserId == user.Id) || (
+
+                                    (contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.Users.Any(b => b.UserId == user.Id)) && document.DocType == DocumentType.Task) 
+
+                                    || ((contextQuery.DocumentReaderTable.Any(r => r.DocumentTableId == document.Id && r.UserId == user.Id) || (
 
                                     contextQuery.DocumentReaderTable.Any(d => d.RoleId != null && d.DocumentTableId == document.Id && contextQuery.Roles.Where( r => r.Id == d.RoleId).ToList().Any(x => x.Users.ToList().Any(z => z.UserId == user.Id )))
                                     
@@ -270,7 +274,7 @@ namespace RapidDoc.Models.Services
                                 ProcessName = process.ProcessName,
                                 CreatedBy = createdUser.UserName
                             };
-
+                List<DocumentView> exampleTest = items.Where(x => x.DocumentNum == "TAS000033").ToList();
                 return items.AsQueryable();
             }
         }
@@ -997,6 +1001,52 @@ namespace RapidDoc.Models.Services
             }
 
             return ret;
+        }
+
+        public void SignTaskDocument(Guid documentId, TrackerType trackerType)
+        {
+ 	        string currentUserId = HttpContext.Current.User.Identity.GetUserId();
+            bool isSign = false;
+
+            WFTrackerTable trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.DocumentTableId == documentId && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(p => p.UserId == currentUserId));
+            if (trackerTable == null)
+            {
+                var emplTables = _EmplService.GetPartialIntercompany(x => x.ApplicationUserId == currentUserId && x.Enable == true).ToList();
+
+                foreach (var empl in emplTables)
+                {
+                    var delegationItems = _DelegationService.GetPartial(x => x.EmplTableToId == empl.Id
+                        && x.DateFrom <= DateTime.UtcNow && x.DateTo >= DateTime.UtcNow
+                        && x.isArchive == false && x.CompanyTableId == empl.CompanyTable.Id).ToList();
+                    if (isSign == true)
+                        break;
+                    foreach (var delegation in delegationItems)
+                    {
+                        var item = _EmplService.FirstOrDefault(x => x.Id == delegation.EmplTableFromId && x.CompanyTableId == delegation.CompanyTableId && x.Enable == true);
+                        if (item != null)
+                        {
+                            trackerTable = _WorkflowTrackerService.FirstOrDefault(x => x.DocumentTableId == documentId && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(p => p.UserId == item.ApplicationUserId));
+                            if (trackerTable != null)
+                            {
+                                trackerTable.ActivityName = "Исполнитель";
+                                SaveSignData(new List<WFTrackerTable>{ trackerTable}, trackerType);
+                                isSign = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                 trackerTable.ActivityName = "Исполнитель";
+                 SaveSignData(new List<WFTrackerTable>{ trackerTable}, TrackerType.Approved);
+            }
+
+             var trackerTables = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.SignUserId == null && x.TrackerType == TrackerType.Waiting).ToList();
+
+            if (trackerTables != null && trackerTables.Count > 0)
+                SaveSignData(trackerTables, TrackerType.NonActive);
         }
     }
 }
