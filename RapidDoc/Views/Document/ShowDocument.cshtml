@@ -171,6 +171,17 @@
                     <li>
                         <a href="#" data-toggle="modal" data-target=".delegatetask-modal-sm">@UIElementRes.UIElement.Delegate</a>
                     </li>
+                    <li>
+                        <a href=@Url.Action("ProlongDocumentTask", new { tableName = Model.ProcessView.TableName, documentId = Model.DocumentView.Id })>@UIElementRes.UIElement.Prolong</a>
+                    </li>
+                }
+                @if (Model.DocumentView.DocType != RapidDoc.Models.Repository.DocumentType.Task &&
+                    (Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement ||
+                    Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.OnSign))
+                {
+                    <li>
+                        <a href=@Url.Action("CreateTaskFromDocument", new {documentId = Model.DocumentView.Id})>@UIElementRes.UIElement.CreateTask</a>
+                    </li>
                 }
             </ul>
         </div>

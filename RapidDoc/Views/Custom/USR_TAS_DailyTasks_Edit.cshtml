@@ -1,6 +1,22 @@
 ﻿@model RapidDoc.Models.ViewModels.USR_TAS_DailyTasks_View
 @using RapidDoc.Extensions;
 
+
+@if (Model.RefDocumentId.HasValue && Model.RefDocumentId != Guid.Empty)
+{
+    <div class="editor-label">
+        @Html.LabelForRequired(model => Model.RefDocNum)
+    </div>
+    @Html.ActionLink(Model.RefDocNum.ToString(), "ShowDocument", "Document", new { id = Model.RefDocumentId, isAfterView = true }, null)
+
+    @Html.Partial("_DocumentViewFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "ExecutionDate" } })
+    @Html.Partial("_DocumentViewFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "TextTask" } })
+
+    @Html.HiddenFor(model => model.RefDocumentId)
+    @Html.HiddenFor(model => model.RefDocNum)
+    <br />
+}    
+
 <div class="editor-label">
     @Html.LabelForRequired(model => Model.ExecutionDate)
 </div>

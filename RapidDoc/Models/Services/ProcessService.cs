@@ -29,8 +29,8 @@ namespace RapidDoc.Models.Services
         void Save(ProcessView viewTable);
         void SaveDomain(ProcessTable domainTable);
         void Delete(Guid id);
-        ProcessTable Find(Guid id);
-        ProcessView FindView(Guid id);
+        ProcessTable Find(Guid id, string currentUserId = "");
+        ProcessView FindView(Guid id, string currentUserId = "");
         SelectList GetDropListProcessNull(Guid? id);
         SelectList GetDropListProcess(Guid? id);
     }
@@ -128,14 +128,14 @@ namespace RapidDoc.Models.Services
             repo.Delete(a => a.Id == id);
             _uow.Commit();
         }
-        public ProcessTable Find(Guid id)
+        public ProcessTable Find(Guid id, string currentUserId = "")
         {
-            ApplicationUser user = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
+            ApplicationUser user = getCurrentUserId(currentUserId);
             return repo.Find(a => a.Id == id && a.CompanyTableId == user.CompanyTableId);
         }
-        public ProcessView FindView(Guid id)
+        public ProcessView FindView(Guid id, string currentUserId = "")
         {
-            return Mapper.Map<ProcessTable, ProcessView>(Find(id));
+            return Mapper.Map<ProcessTable, ProcessView>(Find(id, currentUserId));
         }
         public SelectList GetDropListProcessNull(Guid? id)
         {
@@ -147,6 +147,18 @@ namespace RapidDoc.Models.Services
         {
             var items = GetAllView().ToList();
             return new SelectList(items, "Id", "ProcessName", id);
+        }
+
+        private ApplicationUser getCurrentUserId(string currentUserId = "")
+        {
+            if (currentUserId != string.Empty)
+            {
+                return repoUser.GetById(currentUserId);
+            }
+            else
+            {
+                return repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
+            }
         }
     }
 }

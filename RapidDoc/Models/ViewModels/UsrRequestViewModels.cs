@@ -8609,5 +8609,29 @@ namespace RapidDoc.Models.ViewModels
         
     }
 
+    public class USR_TAS_DailyTasksProlongation_View : BasicDocumentView
+    {
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата продления")]
+        public DateTime? ProlongationDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Причина")]
+        public string Reason { get; set; }
+       
+        [Display(Name = "Текст задачи")]
+        public string TextTask { get; set; }
+
+        [DataType(DataType.Date)]        
+        [Display(Name = "Дата исполнения")]
+        public DateTime? ExecutionDate { get; set; }
+
+        public Guid RefDocumentId { get; set; }
+
+        [Display(Name = "Ссылка на исходный документ")]
+        public string RefDocNum { get; set; }
+
+    }
     #endregion
 }

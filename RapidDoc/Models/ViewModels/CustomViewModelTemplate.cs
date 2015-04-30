@@ -63,6 +63,10 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Дата исполнения")]
         public DateTime? ExecutionDate { get; set; }
 
+        [DataType(DataType.Date)]
+        [Display(Name = "Дата продления")]
+        public DateTime? ProlongationDate { get; set; }
+
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Задача")]
         public string MainField { get; set; }
@@ -73,6 +77,11 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Отчет")]
-        public string ReportText { get; set; }
+        public string ReportText { get; set; }        
+
+        [Display(Name = "Ссылка на исходный документ")]
+        public string RefDocNum { get; set; }
+
+        public Guid? RefDocumentId { get; set; }
     }
 }

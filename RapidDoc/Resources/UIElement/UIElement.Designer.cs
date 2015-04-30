@@ -412,6 +412,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Создать задачу.
+        /// </summary>
+        public static string CreateTask {
+            get {
+                return ResourceManager.GetString("CreateTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Новая должность.
         /// </summary>
         public static string CreateTitle {
@@ -948,6 +957,15 @@ namespace UIElementRes {
         public static string ProgressWork {
             get {
                 return ResourceManager.GetString("ProgressWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Продление срока.
+        /// </summary>
+        public static string Prolong {
+            get {
+                return ResourceManager.GetString("Prolong", resourceCulture);
             }
         }
         

@@ -46,10 +46,11 @@ namespace RapidDoc.Models.Services
         void AgreementWorkflowReject(Guid documentId, string TableName, Guid WWFInstanceId, Guid processId, IDictionary<string, object> documentData);
         void AgreementWorkflowWithdraw(Guid documentId, string TableName, Guid WWFInstanceId, Guid processId);
         void CreateTrackerRecord(DocumentState step, Guid documentId, string bookmarkName, List<WFTrackerUsersTable> listUser, string currentUserId, string workflowId, bool useManual, int slaOffset, bool executionStep);
-        List<Array> GetRequestTree(Activity activity, string _parallel = "");
+        List<Array> GetRequestTree(Activity activity, IDictionary<string, object> documentData, string _parallel = "");
         List<Array> GetTrackerList(Guid documentId, Activity activity, IDictionary<string, object> documentData, DocumentType documentType);
         List<string> GetUniqueUserList(Guid documentId, IDictionary<string, object> documentData, string nameField);
         void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel);
+        void UpdateProlongationDate(Guid refDocumentid, DateTime prolongationDate, string currentUserId);
     }
 
     public class WorkflowService : IWorkflowService
@@ -64,12 +65,13 @@ namespace RapidDoc.Models.Services
         private readonly IHistoryUserService _HistoryUserService;
         private readonly IReviewDocLogService _ReviewDocLogService;
         private readonly ICustomCheckDocument _CustomCheckDocument;
+        private readonly IProcessService _ProcessService;
         
         IDictionary<string, object> outputParameters;              
 
         public WorkflowService(IUnitOfWork uow, IDocumentService documentService, IEmplService emplService, 
             IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService,
-            IReviewDocLogService reviewDocLogService, ICustomCheckDocument customCheckDocument)
+            IReviewDocLogService reviewDocLogService, ICustomCheckDocument customCheckDocument, IProcessService processService)
         {
             repoUser = uow.GetRepository<ApplicationUser>();
             repoIncident = uow.GetRepository<ServiceIncidentTable>();
@@ -81,6 +83,7 @@ namespace RapidDoc.Models.Services
             _HistoryUserService = historyUserService;
             _ReviewDocLogService = reviewDocLogService;
             _CustomCheckDocument = customCheckDocument;
+            _ProcessService = processService;
         }
 
         public WFUserFunctionResult WFMatchingUpManager(Guid documentId, string currentUserId, int level = 1, string profileName = "")
@@ -653,9 +656,9 @@ namespace RapidDoc.Models.Services
                     }
                 }
             }
-        }     
+        }
 
-        public List<Array> GetRequestTree(Activity activity, string _parallel = "")
+        public List<Array> GetRequestTree(Activity activity, IDictionary<string, object> _documentData, string _parallel = "")
         {
             string[] myIntArray = new string[3];
             List<Array> allSteps = new List<Array>();
@@ -674,6 +677,30 @@ namespace RapidDoc.Models.Services
                 myIntArray.SetValue(_parallel, 2);
                 allSteps.Add(myIntArray);
             }
+
+            if (activity.GetType() == typeof(WFSetUsersForTaskProlongation))
+            {
+                Guid refDocId = (Guid)_documentData["RefDocumentId"];
+                DocumentTable documentTable = _DocumentService.Find(refDocId);
+                int i = 0;
+                List<List<WFTrackerUsersTable>> endListUsers = new List<List<WFTrackerUsersTable>>();
+                string currentUser = HttpContext.Current.User.Identity.GetUserId();
+                WFTrackerTable trackerTableUser = _WorkflowTrackerService.FirstOrDefault(x => x.DocumentTableId == refDocId && x.Users.Any(y => y.UserId == currentUser));
+                List<WFTrackerTable> trackerTalbeUserList = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == refDocId && x.LineNum < trackerTableUser.LineNum).OrderBy( x => x.LineNum).ToList();
+                trackerTalbeUserList.ForEach(x => {
+                    List<WFTrackerUsersTable> users = new List<WFTrackerUsersTable>();
+                    x.Users.ForEach(z => users.Add(new WFTrackerUsersTable { UserId = z.UserId }));
+                    endListUsers.Add(users);
+                    allSteps.Add(new string[3] { "Исполнитель", (++i).ToString(), "" });
+                });
+
+                endListUsers.Add(new List<WFTrackerUsersTable> {new WFTrackerUsersTable { UserId = documentTable.ApplicationUserCreatedId }});
+                allSteps.Add(new string[3] { "Исполнитель", (++i).ToString(), "" });
+                _documentData.Add("endListUsers", endListUsers);
+                
+
+            }
+
             if ((activity is Parallel))
                 _parallel = activity.Id;
 
@@ -681,7 +708,7 @@ namespace RapidDoc.Models.Services
 
             while (list.MoveNext())
             {
-                var allStepsBuf = allSteps.Concat(GetRequestTree(list.Current, _parallel));
+                var allStepsBuf = allSteps.Concat(GetRequestTree(list.Current, _documentData, _parallel));
                 allSteps = allStepsBuf.ToList();
             }
             if ((activity is Parallel) && (activity.Id == _parallel))
@@ -698,15 +725,15 @@ namespace RapidDoc.Models.Services
             switch (documentType)
             {
                 case DocumentType.Request:
-                    allSteps = this.GetRequestTree(activity);
+                    allSteps = this.GetRequestTree(activity, documentData);
                     break;
                 case DocumentType.OfficeMemo:
                     List<string> users = this.GetUniqueUserList(documentId, documentData, "DocumentWhom");
-                    allSteps = this.GetRequestTree(activity);
+                    allSteps = this.GetRequestTree(activity, documentData);
                     documentData["DocumentWhom"] = users;
                     break;
                 case DocumentType.Task:
-                    allSteps = this.GetRequestTree(activity);
+                    allSteps = this.GetRequestTree(activity, documentData);
                     break;
             }
             
@@ -898,6 +925,20 @@ namespace RapidDoc.Models.Services
             }
 
             _EmailService.SendNewExecutorEmail(documentId, reminderList);
+        }
+
+
+        public void UpdateProlongationDate(Guid refDocumentid, DateTime prolongationDate, string currentUserId)
+        {
+            ApplicationDbContext contextQuery = _uow.GetDbContext<ApplicationDbContext>();
+            DocumentTable documentTable = _DocumentService.Find(refDocumentid);
+            ProcessTable processTable = _ProcessService.FirstOrDefault(x => x.Id == documentTable.ProcessTableId);
+            ProcessView processView = _ProcessService.FindView(processTable.Id, currentUserId);
+
+            var documentIdNew = _DocumentService.GetDocumentView(_DocumentService.Find(refDocumentid).RefDocumentId, processTable.TableName);
+
+            documentIdNew.ProlongationDate = prolongationDate;
+            _DocumentService.UpdateDocumentFields(documentIdNew, processView);
         }
     }
 }

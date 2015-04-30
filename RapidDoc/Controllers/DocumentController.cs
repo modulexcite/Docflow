@@ -451,18 +451,21 @@ namespace RapidDoc.Controllers
         public ActionResult ApproveDocumentTask(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
             string currentUserId = User.Identity.GetUserId();
+            ProcessView process = _ProcessService.FindView(processId);
 
             _DocumentService.SignTaskDocument(documentId, TrackerType.Approved);
 
-            if (!String.IsNullOrEmpty(collection["ApproveCommentRequest"]))
+            if (!String.IsNullOrEmpty(collection["ApproveCommentRep"]))
             {
-                string approveCommentRequest = collection["ApproveCommentRequest"].ToString();
-                SaveComment(GuidNull2Guid(documentId), approveCommentRequest);
+                string approveCommentRequest = collection["ApproveCommentRep"].ToString(); 
+                var documentIdNew = _DocumentService.GetDocumentView(_DocumentService.Find(documentId).RefDocumentId, process.TableName);
+                documentIdNew.ReportText = approveCommentRequest;
+                _DocumentService.UpdateDocumentFields(documentIdNew, process);
             }
 
             DocumentTable documentTable = _DocumentService.Find(documentId);
             documentTable.DocumentState = DocumentState.Closed;
-
+            
             _DocumentService.UpdateDocument(documentTable, User.Identity.GetUserId());
 
             _EmailService.SendInitiatorClosedEmail(documentTable.Id);
@@ -485,7 +488,7 @@ namespace RapidDoc.Controllers
             }
 
             DocumentTable documentTable = _DocumentService.Find(documentId);
-            documentTable.DocumentState = DocumentState.Closed;
+            documentTable.DocumentState = DocumentState.Cancelled;
 
             _DocumentService.UpdateDocument(documentTable, User.Identity.GetUserId());
 
@@ -494,6 +497,69 @@ namespace RapidDoc.Controllers
             return RedirectToAction("ShowDocument", new { id = documentId, isAfterView = true });
         }
 
+        public ActionResult ProlongDocumentTask(string tableName, Guid documentId)
+        {
+            ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
+            DocumentTable docTable = _DocumentService.Find(documentId);
+            var  refDocument = _DocumentService.GetDocument(docTable.RefDocumentId, docTable.ProcessTable.TableName);
+            if (userTable == null) return RedirectToAction("PageNotFound", "Error");
+
+            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id && x.Enable == true);
+            if (emplTable == null) return RedirectToAction("PageNotFound", "Error");
+
+            ProcessView process = _ProcessService.FirstOrDefaultView(x => x.TableName == tableName + "Prolongation");
+
+            if (!String.IsNullOrEmpty(process.RoleId))
+            {
+                string roleName = RoleManager.FindById(process.RoleId).Name;
+                if (!UserManager.IsInRole(userTable.Id, roleName))
+                {
+                    return RedirectToAction("PageNotFound", "Error");
+                }
+            }
+           
+            var viewModel = new DocumentComposite();
+            viewModel.ProcessView = process;
+            viewModel.docData = _DocumentService.RouteCustomModelView(process.TableName);
+            viewModel.docData.RefDocumentId = documentId;
+            viewModel.docData.TextTask = refDocument.MainField;
+            viewModel.docData.ExecutionDate = refDocument.ExecutionDate;
+            viewModel.docData.RefDocNum = docTable.DocumentNum;
+            viewModel.fileId = Guid.NewGuid();
+            viewModel.ProcessTemplates = _DocumentService.GetAllTemplatesDocument((Guid)process.Id);
+            return View("Create", viewModel);
+        }
+
+        public ActionResult CreateTaskFromDocument(Guid documentId)
+        {
+            ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
+            DocumentTable docTable = _DocumentService.Find(documentId);
+            var refDocument = _DocumentService.GetDocument(docTable.RefDocumentId, docTable.ProcessTable.TableName);
+            if (userTable == null) return RedirectToAction("PageNotFound", "Error");
+
+            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id && x.Enable == true);
+            if (emplTable == null) return RedirectToAction("PageNotFound", "Error");
+
+            ProcessView process = _ProcessService.FirstOrDefaultView(x => x.TableName == "USR_TAS_DailyTasks");
+
+            if (!String.IsNullOrEmpty(process.RoleId))
+            {
+                string roleName = RoleManager.FindById(process.RoleId).Name;
+                if (!UserManager.IsInRole(userTable.Id, roleName))
+                {
+                    return RedirectToAction("PageNotFound", "Error");
+                }
+            }
+
+            var viewModel = new DocumentComposite();
+            viewModel.ProcessView = process;
+            viewModel.docData = _DocumentService.RouteCustomModelView(process.TableName);
+            viewModel.docData.RefDocumentId = documentId;
+            viewModel.docData.RefDocNum = docTable.DocumentNum;
+            viewModel.fileId = Guid.NewGuid();
+            viewModel.ProcessTemplates = _DocumentService.GetAllTemplatesDocument((Guid)process.Id);
+            return View("Create", viewModel);
+        }
         public ActionResult CopyDocument(Guid processId, Guid fileId,Guid documentId)
         {
             ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());

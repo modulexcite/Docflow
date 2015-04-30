@@ -6394,6 +6394,27 @@ namespace RapidDoc.Models.DomainModels
     {
     
     }
+
+    public class USR_TAS_DailyTasksProlongation_Table : BasicDocumentTable
+    {
+        [Required]
+        public DateTime ProlongationDate { get; set; }
+
+        [Required]
+        public string Reason { get; set; }
+
+        [Required]
+        public Guid RefDocumentId { get; set; }
+
+        [Required]
+        public string RefDocNum { get; set; }
+
+        [Required]
+        public DateTime ExecutionDate { get; set; }
+
+        [Required]
+        public string TextTask { get; set; }
+    }
     #endregion
 }
     

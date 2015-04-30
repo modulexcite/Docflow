@@ -2,6 +2,21 @@
 @using RapidDoc.Extensions;
 
 
+@if (Model.RefDocumentId.HasValue && Model.RefDocumentId != Guid.Empty)
+{
+    <div class="editor-label">
+        @Html.LabelForRequired(model => Model.RefDocNum)
+    </div>
+    @Html.ActionLink(Model.RefDocNum.ToString(), "ShowDocument", "Document", new { id = Model.RefDocumentId, isAfterView = true }, null)
+
+    @Html.Partial("_DocumentViewFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "ExecutionDate" } })
+    @Html.Partial("_DocumentViewFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "TextTask" } })
+
+    @Html.HiddenFor(model => model.RefDocumentId)
+    @Html.HiddenFor(model => model.RefDocNum)
+    <br />
+}
+
 @Html.Partial("_DocumentViewFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "ExecutionDate" } })
 
 <div class="editor-label">
@@ -11,6 +26,21 @@
     @Html.DisplayTextFor(model => Model.MainField)
 </div>
 <br />
+
+@if (Model.ProlongationDate.HasValue && Model.ProlongationDate != DateTime.MinValue)
+{ 
+    @Html.Partial("_DocumentViewFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "ProlongationDate" } })
+}
+
+@if (Model.ReportText != null && Model.ReportText != "")
+{
+    <div class="editor-label">
+        @Html.LabelFor(model => Model.ReportText)
+    </div>
+    <div class="editor-field">
+        @Html.DisplayTextFor(model => Model.ReportText)
+    </div>
+}
 
 <div class="modal fade delegatetask-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -53,11 +83,12 @@
     <div class="modal-dialog modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
+                <div id="alert_placeholderReport"></div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Закрытие документа</h4>
             </div>
             <div class="modal-body" style="min-height:200px;">
-                @Html.TextArea("ApproveCommentRequest", new { @class = "form-control", @placeholder = "Замечания" })
+                @Html.TextArea("ApproveCommentRep", new { @class = "form-control", @placeholder = "Отчет" })
                 <br>
                 <div>
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
@@ -67,3 +98,18 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    bootstrap_alertReport = function () { }
+    bootstrap_alertReport.warning = function (message) {
+        $('#alert_placeholderReport').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>' + message + '</div>')
+    }
+    $('#approveRequest').click(function (event) {
+        var comment = $('#ApproveCommentRep').val();
+        if (comment == "") {
+            bootstrap_alertReport.warning('Необходимо заполнить отчет о закрытии');
+            event.preventDefault();
+            return false;
+        }
+    });
+</script>

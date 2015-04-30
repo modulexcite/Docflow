@@ -65,7 +65,13 @@ namespace RapidDoc.Models.DomainModels
         [Required]
         public DateTime ExecutionDate { get; set; }
 
+        public DateTime? ProlongationDate { get; set; }
+
         public string ReportText { get; set; }
+       
+        public Guid? RefDocumentId { get; set; }
+      
+        public string RefDocNum { get; set; }
     
     }
 }
