@@ -63,6 +63,7 @@ namespace RapidDoc.Models.Services
         void Delete(Guid Id);
         List<string> SignDocumentCZ(Guid documentId, TrackerType trackerType, string comment = "");
         void SignTaskDocument(Guid documentId, TrackerType trackerType);
+        List<USR_TAS_DailyTasks_Table> GetDocumentRefTask(Guid documentId);
     }
 
     public class DocumentService : IDocumentService
@@ -1051,6 +1052,11 @@ namespace RapidDoc.Models.Services
 
             if (trackerTables != null && trackerTables.Count > 0)
                 SaveSignData(trackerTables, TrackerType.NonActive);
+        }
+
+        public List<USR_TAS_DailyTasks_Table> GetDocumentRefTask(Guid documentId)
+        {
+            return _uow.GetDbContext<ApplicationDbContext>().USR_TAS_DailyTasks_Table.Where(x => x.RefDocumentId == documentId).ToList();
         }
     }
 }
