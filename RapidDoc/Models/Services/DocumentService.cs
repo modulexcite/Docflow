@@ -456,6 +456,12 @@ namespace RapidDoc.Models.Services
                 {
                     foreach (var item in items)
                     {
+                        if (domainTable.DocType == DocumentType.Task)
+                        {
+                            currentName = item.ActivityName + "/";
+                            break;
+                        }
+
                         currentName += item.ActivityName + "/";
                         if(currentName.Length > 60)
                             break;
