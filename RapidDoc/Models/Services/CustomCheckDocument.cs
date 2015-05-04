@@ -616,6 +616,14 @@ namespace RapidDoc.Models.Services
                 }
             }
 
+            if (type == (new USR_TAS_DailyTasksProlongation_View()).GetType())
+            {
+                if (actionModel.ExecutionDate >= actionModel.ProlongationDate)
+                {
+                    errorList.Add("Дата продления должна быть больше даты исполнения");
+                }
+            }
+
             return errorList;
         }
 
@@ -1182,7 +1190,7 @@ namespace RapidDoc.Models.Services
                         errorList.Add("Нужно заполнить поле Исполнители");
                     }
                 }
-            }
+            }        
 
             return errorList;
         }
