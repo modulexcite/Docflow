@@ -1697,6 +1697,12 @@ namespace RapidDoc.Controllers
             }
         }
 
+        public ActionResult GetTaskList(Guid id)
+        {
+            var model = _DocumentService.GetDocumentRefTask(id);
+            return PartialView("~/Views/Document/_TaskList.cshtml", model);       
+        }
+
         private void CheckAttachedFiles(ProcessView process, Guid fileId, Guid? documentId)
         {
             var files = _DocumentService.GetAllFilesDocument(fileId).ToList();
