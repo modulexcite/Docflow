@@ -453,9 +453,9 @@ namespace RapidDoc.Controllers
 
             _DocumentService.SignTaskDocument(documentId, TrackerType.Approved);
 
-            if (!String.IsNullOrEmpty(collection["ApproveCommentRep"]))
+            if (!String.IsNullOrEmpty(collection["ApproveCommentTask"]))
             {
-                string approveCommentRequest = collection["ApproveCommentRep"].ToString(); 
+                string approveCommentRequest = collection["ApproveCommentTask"].ToString(); 
                 var documentIdNew = _DocumentService.GetDocumentView(_DocumentService.Find(documentId).RefDocumentId, process.TableName);
                 documentIdNew.ReportText = approveCommentRequest;
                 _DocumentService.UpdateDocumentFields(documentIdNew, process);
@@ -477,22 +477,33 @@ namespace RapidDoc.Controllers
         {
             string currentUserId = User.Identity.GetUserId();
 
-            _DocumentService.SignTaskDocument(documentId, TrackerType.Cancelled);
-
-            if (!String.IsNullOrEmpty(collection["RejectCommentRequest"]))
+            if (!String.IsNullOrEmpty(collection["RejectCommentTask"]))
             {
-                string rejectCommentRequest = collection["RejectCommentRequest"].ToString();
+                string rejectCommentRequest = collection["RejectCommentTask"].ToString();
                 SaveComment(GuidNull2Guid(documentId), rejectCommentRequest);
             }
 
             DocumentTable documentTable = _DocumentService.Find(documentId);
-            documentTable.DocumentState = DocumentState.Cancelled;
+            documentTable.WWFInstanceId = Guid.Empty;
+            documentTable.DocumentState = DocumentState.Created;
+            documentTable.ActivityName = String.Empty;
 
             _DocumentService.UpdateDocument(documentTable, User.Identity.GetUserId());
 
+            IEnumerable<WFTrackerTable> wftrackers = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId).ToList();
+            foreach (var item in wftrackers)
+            {
+                item.Users.Clear();
+                _WorkflowTrackerService.SaveDomain(item, currentUserId);
+            }
+
+            _WorkflowTrackerService.DeleteAll(documentId);
+          
+            var view = PostDocument(processId, type, OperationType.SaveDraft, documentId, fileId, collection, actionModelName);
+
             _EmailService.SendInitiatorClosedEmail(documentTable.Id);
 
-            return RedirectToAction("ShowDocument", new { id = documentId, isAfterView = true });
+            return view;          
         }
 
         public ActionResult ProlongDocumentTask(string tableName, Guid documentId)

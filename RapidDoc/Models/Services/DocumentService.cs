@@ -1038,7 +1038,7 @@ namespace RapidDoc.Models.Services
             }
             else
             {
-                 SaveSignData(new List<WFTrackerTable>{ trackerTable}, TrackerType.Approved);
+                SaveSignData(new List<WFTrackerTable> { trackerTable }, trackerType);
             }
 
              var trackerTables = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId && x.SignUserId == null && x.TrackerType == TrackerType.Waiting).ToList();

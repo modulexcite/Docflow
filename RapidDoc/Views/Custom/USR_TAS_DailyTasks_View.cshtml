@@ -69,11 +69,11 @@
                 <h4 class="modal-title">Отмена документа</h4>
             </div>
             <div class="modal-body" style="min-height:250px;">
-                @Html.TextArea("RejectCommentRequest", new { @class = "form-control", @placeholder = "Обязательно укажите причину отмены" })
+                @Html.TextArea("RejectCommentTask", new { @class = "form-control", @placeholder = "Обязательно укажите причину отмены" })
                 <br>
                 <div>
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
-                    <button type="submit" id="rejectRequest" class="btn btn-danger pull-right" name="action:RejectDocumentTask">@UIElementRes.UIElement.Reject</button>
+                    <button type="submit" id="rejectTask" class="btn btn-danger pull-right" name="action:RejectDocumentTask">@UIElementRes.UIElement.Reject</button>
                 </div>
             </div>
         </div>
@@ -88,11 +88,11 @@
                 <h4 class="modal-title">Закрытие документа</h4>
             </div>
             <div class="modal-body" style="min-height:200px;">
-                @Html.TextArea("ApproveCommentRep", new { @class = "form-control", @placeholder = "Отчет" })
+                @Html.TextArea("ApproveCommentTask", new { @class = "form-control", @placeholder = "Отчет" })
                 <br>
                 <div>
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
-                    <button type="submit" id="approveRequest" class="btn btn-success pull-right" name="action:ApproveDocumentTask">@UIElementRes.UIElement.Approve</button>
+                    <button type="submit" id="approveTask" class="btn btn-success pull-right" name="action:ApproveDocumentTask">@UIElementRes.UIElement.Approve</button>
                 </div>
             </div>
         </div>
@@ -104,10 +104,19 @@
     bootstrap_alertReport.warning = function (message) {
         $('#alert_placeholderReport').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>' + message + '</div>')
     }
-    $('#approveRequest').click(function (event) {
-        var comment = $('#ApproveCommentRep').val();
+    $('#approveTask').click(function (event) {
+        var comment = $('#ApproveCommentTask').val();
         if (comment == "") {
             bootstrap_alertReport.warning('Необходимо заполнить отчет о закрытии');
+            event.preventDefault();
+            return false;
+        }
+    });
+
+    $('#rejectTask').click(function (event) {
+        var comment = $('#RejectCommentTask').val();
+        if (comment == "") {
+            bootstrap_alert.warning('Необходимо заполнить причину отклонения');
             event.preventDefault();
             return false;
         }
