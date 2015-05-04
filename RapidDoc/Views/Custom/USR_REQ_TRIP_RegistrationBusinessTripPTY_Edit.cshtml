@@ -1,0 +1,422 @@
+﻿@model RapidDoc.Models.ViewModels.USR_REQ_TRIP_RegistrationBusinessTripPTY_View
+@using RapidDoc.Extensions;
+
+<div class="alert alert-info" role="alert">
+    <p>В случае создания заявки на командировочные расходы после 16:00 будет рассмотрена, утверждена и передана в службу ГЗП на следующий рабочий день.</p>
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Users)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.Users, new { @class = "form-control", @data_role = "tagsinputEmpl", @size = 256, @maxlength = 256, placeholder = "Работник (ФИО)", @autofocus = "required" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.UserChooseManual1)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.UserChooseManual1, new { @class = "form-control", @data_role = "tagsinputEmpl2", @size = 256, @maxlength = 256, placeholder = "Делопроизводитель", @autofocus = "required" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.CategoryTrip)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => Model.CategoryTrip, new { @class = "selectpicker" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.TypeTrip)
+</div>
+<div class="editor-field">
+    @Html.EnumDropDownListFor(model => Model.TypeTrip, new { @class = "selectpicker" })
+</div>
+
+<hr />
+<h4 class="text-info">Срок командировки</h4>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.StartDate)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.StartDate, new { @class = "datepicker form-control form-control-date", placeholder = "c", startDate = "" })
+</div>
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.EndDate)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.EndDate, new { @class = "datepicker form-control form-control-date", placeholder = "по", startDate = "" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.City)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.City, new { @class = "form-control", placeholder = "Город" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Purpose)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.Purpose, new { @class = "form-control", @row = 5, placeholder = "Цель командировки" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Organization)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.Organization, new { @class = "form-control", placeholder = "Организация" })
+</div>
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.Description)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => Model.Description, new { @class = "form-control", @row = 5, placeholder = "Цель командировки" })
+</div>
+
+<hr />
+<div class="row">
+    <div class="col-md-3" style="background-color: #eee; border-left: 3px dashed #bdc3c7;">
+        <span class="label label-primary rowNum cellAligmentMiddle">1</span>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.FIO1)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.FIO1, new { @class = "form-control", @size = 256, @maxlength = 256, @style = "resize: none;" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.EmplTripType1)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.EmplTripType1, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.TripDirection1)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.TripDirection1, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.Day1)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.Day1, new { @class = "form-control bfh-number" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.DayLive1)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.DayLive1, new { @class = "form-control bfh-number" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.TripPassage1)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.TripPassage1, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.TicketSum1)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.TicketSum1, new { @class = "form-control bfh-number", @data_max = "9999999" })
+        </div>
+        <div id="Block1">
+        </div>
+        <br />
+    </div>
+    <div class="col-md-3" style="background-color: #eee; border-left: 2px dashed #bdc3c7;">
+        <span class="label label-primary rowNum cellAligmentMiddle">2</span>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.FIO2)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.FIO2, new { @class = "form-control", @size = 256, @maxlength = 256, @style = "resize: none;" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.EmplTripType2)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.EmplTripType2, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.TripDirection2)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.TripDirection2, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.Day2)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.Day2, new { @class = "form-control bfh-number" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.DayLive2)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.DayLive2, new { @class = "form-control bfh-number" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.TripPassage2)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.TripPassage2, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.TicketSum2)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.TicketSum2, new { @class = "form-control bfh-number", @data_max = "9999999" })
+        </div>
+        <div id="Block2">
+        </div>
+        <br />
+    </div>
+    <div class="col-md-3" style="background-color: #eee; border-left: 2px dashed #bdc3c7;">
+        <span class="label label-primary rowNum cellAligmentMiddle">3</span>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.FIO3)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.FIO3, new { @class = "form-control", @size = 256, @maxlength = 256, @style = "resize: none;" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.EmplTripType3)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.EmplTripType3, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.TripDirection3)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.TripDirection3, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.Day3)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.Day3, new { @class = "form-control bfh-number" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.DayLive3)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.DayLive3, new { @class = "form-control bfh-number" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.TripPassage3)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.TripPassage3, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.TicketSum3)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.TicketSum3, new { @class = "form-control bfh-number", @data_max = "9999999" })
+        </div>
+        <div id="Block3">
+        </div>
+        <br />
+    </div>
+    <div class="col-md-3" style="background-color: #eee; border-left: 2px dashed #bdc3c7; border-right: 3px dashed #bdc3c7;">
+        <span class="label label-primary rowNum cellAligmentMiddle">4</span>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.FIO4)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.FIO4, new { @class = "form-control", @size = 256, @maxlength = 256, @style = "resize: none;" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.EmplTripType4)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.EmplTripType4, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.TripDirection4)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.TripDirection4, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.Day4)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.Day4, new { @class = "form-control bfh-number" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.DayLive4)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.DayLive4, new { @class = "form-control bfh-number" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => Model.TripPassage4)
+        </div>
+        <div class="editor-field">
+            @Html.EnumDropDownListFor(model => Model.TripPassage4, new { @class = "selectpickerfull" })
+        </div>
+        <div class="editor-label">
+            @Html.LabelForRequired(model => Model.TicketSum4)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => Model.TicketSum4, new { @class = "form-control bfh-number", @data_max = "9999999" })
+        </div>
+        <div id="Block4">
+        </div>
+        <br />
+    </div>
+</div>
+<br />
+<div class="alert alert-info" role="alert">
+    <p>1. Лимиты установлены для проживания в отелях и гостиницах, в иных случаях (аренда квартир и т.п.) данные нормы уменьшаються на 50%.</p>
+    <p>2. В случае нахождения в пути менее 6 часов предусмотрен проезд поездом в платкартном вагоне, общем вагоне, электричке либо автобусом.</p>
+    <p>3. При выезде в командировку за границу, расчет осуществляется в УБУиО, согласно приказа.</p>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#EmplTripType1").change(function () {
+            tripUpdate("1");
+        });
+        $("#TripDirection1").change(function () {
+            tripUpdate("1");
+        });
+        $('#Day1').on('blur', function () {
+            tripUpdate("1");
+        });
+        $('#Day1').on('change.bfh-number', function (e) {
+            tripUpdate("1");
+            return false;
+        });
+        $('#DayLive1').on('blur', function () {
+            tripUpdate("1");
+        });
+        $('#DayLive1').on('change.bfh-number', function (e) {
+            tripUpdate("1");
+            return false;
+        });
+        $('#TicketSum1').on('blur', function () {
+            tripUpdate("1");
+        });
+        $('#TicketSum1').on('change.bfh-number', function (e) {
+            tripUpdate("1");
+            return false;
+        });
+
+        $("#EmplTripType2").change(function () {
+            tripUpdate("2");
+        });
+        $("#TripDirection2").change(function () {
+            tripUpdate("2");
+        });
+        $('#Day2').on('blur', function () {
+            tripUpdate("2");
+        });
+        $('#Day2').on('change.bfh-number', function (e) {
+            tripUpdate("2");
+            return false;
+        });
+        $('#DayLive2').on('blur', function () {
+            tripUpdate("2");
+        });
+        $('#DayLive2').on('change.bfh-number', function (e) {
+            tripUpdate("2");
+            return false;
+        });
+        $('#TicketSum2').on('blur', function () {
+            tripUpdate("2");
+        });
+        $('#TicketSum2').on('change.bfh-number', function (e) {
+            tripUpdate("2");
+            return false;
+        });
+
+        $("#EmplTripType3").change(function () {
+            tripUpdate("3");
+        });
+        $("#TripDirection3").change(function () {
+            tripUpdate("3");
+        });
+        $('#Day3').on('blur', function () {
+            tripUpdate("3");
+        });
+        $('#Day3').on('change.bfh-number', function (e) {
+            tripUpdate("3");
+            return false;
+        });
+        $('#DayLive3').on('blur', function () {
+            tripUpdate("3");
+        });
+        $('#DayLive3').on('change.bfh-number', function (e) {
+            tripUpdate("3");
+            return false;
+        });
+        $('#TicketSum3').on('blur', function () {
+            tripUpdate("3");
+        });
+        $('#TicketSum3').on('change.bfh-number', function (e) {
+            tripUpdate("3");
+            return false;
+        });
+
+        $("#EmplTripType4").change(function () {
+            tripUpdate("4");
+        });
+        $("#TripDirection4").change(function () {
+            tripUpdate("4");
+        });
+        $('#Day4').on('blur', function () {
+            tripUpdate("4");
+        });
+        $('#Day4').on('change.bfh-number', function (e) {
+            tripUpdate("4");
+            return false;
+        });
+        $('#DayLive4').on('blur', function () {
+            tripUpdate("4");
+        });
+        $('#DayLive4').on('change.bfh-number', function (e) {
+            tripUpdate("4");
+            return false;
+        });
+        $('#TicketSum4').on('blur', function () {
+            tripUpdate("4");
+        });
+        $('#TicketSum4').on('change.bfh-number', function (e) {
+            tripUpdate("4");
+            return false;
+        });
+    });
+
+    function tripUpdate(blockId) {
+        var day = $("#Day" + blockId).val();
+        var dayLive = $("#DayLive" + blockId).val();
+
+        if (day > 0 || dayLive > 0) {
+            var emplTripType = $("#EmplTripType" + blockId).val();
+            var tripDirection = $("#TripDirection" + blockId).val();
+            var ticketSum = $("#TicketSum" + blockId).val();
+
+            var formData = new FormData();
+            formData.append('EmplTripType', emplTripType);
+            formData.append('TripDirection', tripDirection);
+            formData.append('Day', day);
+            formData.append('DayLive', dayLive);
+            formData.append('TicketSum', ticketSum);
+
+            $.ajax({
+                type: 'POST',
+                url: '/@ViewContext.RouteData.Values["company"]/Custom/UpdateCalcBTripPPTRIP/',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $('#Block' + blockId).html(response);
+                }
+            });
+        }
+    }
+</script>

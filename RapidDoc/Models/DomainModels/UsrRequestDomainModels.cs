@@ -6370,6 +6370,79 @@ namespace RapidDoc.Models.DomainModels
         public int ResidenceRate3 { get; set; }
         public int ResidenceRate4 { get; set; }
     }
+
+    public class USR_REQ_TRIP_RegistrationBusinessTripPTY_Table : BasicDocumentTable
+    {
+        [Required]
+        public string Users { get; set; }
+
+        public string UserChooseManual1 { get; set; }
+
+        public CategoryTrip CategoryTrip { get; set; }
+
+        public TypeTrip TypeTrip { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public string City { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        public string Organization { get; set; }
+
+        public string Description { get; set; }
+
+        public string FIO1 { get; set; }
+        public string FIO2 { get; set; }
+        public string FIO3 { get; set; }
+        public string FIO4 { get; set; }
+
+        public EmplTripType EmplTripType1 { get; set; }
+        public EmplTripType EmplTripType2 { get; set; }
+        public EmplTripType EmplTripType3 { get; set; }
+        public EmplTripType EmplTripType4 { get; set; }
+
+        public TripDirection TripDirection1 { get; set; }
+        public TripDirection TripDirection2 { get; set; }
+        public TripDirection TripDirection3 { get; set; }
+        public TripDirection TripDirection4 { get; set; }
+
+        public int Day1 { get; set; }
+        public int Day2 { get; set; }
+        public int Day3 { get; set; }
+        public int Day4 { get; set; }
+
+        public int DayLive1 { get; set; }
+        public int DayLive2 { get; set; }
+        public int DayLive3 { get; set; }
+        public int DayLive4 { get; set; }
+
+        public TripPassage TripPassage1 { get; set; }
+        public TripPassage TripPassage2 { get; set; }
+        public TripPassage TripPassage3 { get; set; }
+        public TripPassage TripPassage4 { get; set; }
+
+        public int TicketSum1 { get; set; }
+        public int TicketSum2 { get; set; }
+        public int TicketSum3 { get; set; }
+        public int TicketSum4 { get; set; }
+
+        public int DayRate1 { get; set; }
+        public int DayRate2 { get; set; }
+        public int DayRate3 { get; set; }
+        public int DayRate4 { get; set; }
+
+        public int ResidenceRate1 { get; set; }
+        public int ResidenceRate2 { get; set; }
+        public int ResidenceRate3 { get; set; }
+        public int ResidenceRate4 { get; set; }
+    }
     #endregion
 
     #region Заявки Kazzink Holdings ИТ служба

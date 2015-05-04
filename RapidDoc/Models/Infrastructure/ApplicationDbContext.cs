@@ -245,6 +245,7 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_TRIP_RegistrationBusinessTripForeign_Table> USR_REQ_TRIP_RegistrationBusinessTripForeign_Table { get; set; }
         public DbSet<USR_REQ_TRIP_RegistrationBusinessTripKZ_Table> USR_REQ_TRIP_RegistrationBusinessTripKZ_Table { get; set; }
         public DbSet<USR_REQ_TRIP_RegistrationBusinessTripPP_Table> USR_REQ_TRIP_RegistrationBusinessTripPP_Table { get; set; }
+        public DbSet<USR_REQ_TRIP_RegistrationBusinessTripPTY_Table> USR_REQ_TRIP_RegistrationBusinessTripPTY_Table { get; set; }
         public DbSet<USK_REQ_IT_CTP_IncidentIT_Table> USK_REQ_IT_CTP_IncidentIT_Table { get; set; }
         public DbSet<USR_REQ_IT_CAP_AccessRightInternetBGP_Table> USR_REQ_IT_CAP_AccessRightInternetBGP_Table { get; set; }
         public DbSet<USR_REQ_IT_CAP_RequestForITWeekend_Table> USR_REQ_IT_CAP_RequestForITWeekend_Table { get; set; }

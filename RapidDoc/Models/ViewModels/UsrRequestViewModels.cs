@@ -8540,9 +8540,166 @@ namespace RapidDoc.Models.ViewModels
         public int ResidenceRate3 { get; set; }
         public int ResidenceRate4 { get; set; }
     }
+
+    public class USR_REQ_TRIP_RegistrationBusinessTripPTY_View : BasicDocumentView
+    {
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Сотрудник")]
+        public string Users { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Делопроизводитель")]
+        public string UserChooseManual1 { get; set; }
+
+        [Display(Name = "Категория командировки")]
+        public CategoryTrip CategoryTrip { get; set; }
+
+        [Display(Name = "Вид командировки")]
+        public TypeTrip TypeTrip { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "с")]
+        public DateTime? StartDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "по")]
+        public DateTime? EndDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Город")]
+        public string City { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель командировки")]
+        public string Purpose { get; set; }
+
+        [Display(Name = "Организация")]
+        public string Organization { get; set; }
+
+        [Display(Name = "Примечание")]
+        public string Description { get; set; }
+
+        [Display(Name = "ФИО")]
+        public string FIO1 { get; set; }
+
+        [Display(Name = "ФИО")]
+        public string FIO2 { get; set; }
+
+        [Display(Name = "ФИО")]
+        public string FIO3 { get; set; }
+
+        [Display(Name = "ФИО")]
+        public string FIO4 { get; set; }
+
+        [Display(Name = "Категория сотрудника")]
+        public EmplTripType EmplTripType1 { get; set; }
+
+        [Display(Name = "Категория сотрудника")]
+        public EmplTripType EmplTripType2 { get; set; }
+
+        [Display(Name = "Категория сотрудника")]
+        public EmplTripType EmplTripType3 { get; set; }
+
+        [Display(Name = "Категория сотрудника")]
+        public EmplTripType EmplTripType4 { get; set; }
+
+        [Display(Name = "Направление")]
+        public TripDirection TripDirection1 { get; set; }
+
+        [Display(Name = "Направление")]
+        public TripDirection TripDirection2 { get; set; }
+
+        [Display(Name = "Направление")]
+        public TripDirection TripDirection3 { get; set; }
+
+        [Display(Name = "Направление")]
+        public TripDirection TripDirection4 { get; set; }
+
+        [Display(Name = "Количество суток")]
+        public int Day1 { get; set; }
+
+        [Display(Name = "Количество суток")]
+        public int Day2 { get; set; }
+
+        [Display(Name = "Количество суток")]
+        public int Day3 { get; set; }
+
+        [Display(Name = "Количество суток")]
+        public int Day4 { get; set; }
+
+        [Display(Name = "Количество суток проживания")]
+        public int DayLive1 { get; set; }
+
+        [Display(Name = "Количество суток проживания")]
+        public int DayLive2 { get; set; }
+
+        [Display(Name = "Количество суток проживания")]
+        public int DayLive3 { get; set; }
+
+        [Display(Name = "Количество суток проживания")]
+        public int DayLive4 { get; set; }
+
+        [Display(Name = "Проезд")]
+        public TripPassage TripPassage1 { get; set; }
+
+        [Display(Name = "Проезд")]
+        public TripPassage TripPassage2 { get; set; }
+
+        [Display(Name = "Проезд")]
+        public TripPassage TripPassage3 { get; set; }
+
+        [Display(Name = "Проезд")]
+        public TripPassage TripPassage4 { get; set; }
+
+        [Display(Name = "Сумма проезда")]
+        public int TicketSum1 { get; set; }
+
+        [Display(Name = "Сумма проезда")]
+        public int TicketSum2 { get; set; }
+
+        [Display(Name = "Сумма проезда")]
+        public int TicketSum3 { get; set; }
+
+        [Display(Name = "Сумма проезда")]
+        public int TicketSum4 { get; set; }
+
+        public int DayRate1 { get; set; }
+        public int DayRate2 { get; set; }
+        public int DayRate3 { get; set; }
+        public int DayRate4 { get; set; }
+
+        public int ResidenceRate1 { get; set; }
+        public int ResidenceRate2 { get; set; }
+        public int ResidenceRate3 { get; set; }
+        public int ResidenceRate4 { get; set; }
+    }
     public class USR_REQ_TRIP_RequestCalcDriveBTripCalsPP_View
     {
         public USR_REQ_TRIP_RequestCalcDriveBTripCalsPP_View(EmplTripType emplTripType, TripDirection tripDirection, int day, int dayLive, int ticketSum, int dayRate, int residenceRate)
+        {
+            EmplTripType = emplTripType;
+            TripDirection = tripDirection;
+            Day = day;
+            DayLive = dayLive;
+            TicketSum = ticketSum;
+            DayRate = dayRate;
+            ResidenceRate = residenceRate;
+        }
+
+        public EmplTripType EmplTripType { get; set; }
+        public TripDirection TripDirection { get; set; }
+        public int Day { get; set; }
+        public int DayLive { get; set; }
+        public int TicketSum { get; set; }
+        public int DayRate { get; set; }
+        public int ResidenceRate { get; set; }
+    }
+
+    public class USR_REQ_TRIP_RequestCalcDriveBTripCalsPTY_View
+    {
+        public USR_REQ_TRIP_RequestCalcDriveBTripCalsPTY_View(EmplTripType emplTripType, TripDirection tripDirection, int day, int dayLive, int ticketSum, int dayRate, int residenceRate)
         {
             EmplTripType = emplTripType;
             TripDirection = tripDirection;
