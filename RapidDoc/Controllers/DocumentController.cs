@@ -1084,11 +1084,10 @@ namespace RapidDoc.Controllers
                 contentType = files.ContentType.ToString().ToUpper();
                 thumbnail = GetThumbnail(data, contentType);
 
-                if (_DocumentService.GetAllFilesDocument(fileId).ToList().Exists(x => x.ApplicationUserCreatedId == User.Identity.GetUserId() && x.CreatedDate > DateTime.UtcNow.AddMinutes(-5)) == false)
+                if (document != null && document.DocumentState != DocumentState.Created && _DocumentService.GetAllFilesDocument(fileId).ToList().Exists(x => x.ApplicationUserCreatedId == User.Identity.GetUserId() && x.ApplicationUserCreatedId != document.ApplicationUserCreatedId && x.CreatedDate > DateTime.UtcNow.AddMinutes(-5)) == false)
                 {
                     _EmailService.SendInitiatorEmailDocAdding(document.Id);
                 }
-
                 // here you can save your file to the database...
                 FileTable doc = new FileTable();
                 doc.DocumentFileId = fileId;
