@@ -13,6 +13,8 @@ using RapidDoc.Models.DomainModels;
 using RapidDoc.Models.Repository;
 using RapidDoc.Models.Services;
 using RapidDoc.Models.ViewModels;
+using RapidDoc.Models.Infrastructure;
+using System.Data.Entity.Core.Objects;
 
 namespace RapidDoc.Controllers
 {
@@ -154,6 +156,31 @@ namespace RapidDoc.Controllers
                     if (listProcesses.Where(x => x.Color == Color.LightPink).Count() > 0)
                     {
                         _Emailservice.SendFailedRoutesAdministrator(listProcesses.Where(x => x.Color == Color.LightPink).ToList());
+                    }
+                    break;
+                case 6:
+                    if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
+                    {
+                        var users = _AccountService.GetPartial(x => x.Email != null && x.Enable == true).ToList();
+                        List<ReminderUsers> checkData = new List<ReminderUsers>();
+                        ApplicationDbContext dbContext = new ApplicationDbContext();
+                        List<ApplicationUser> usersReminder = new List<ApplicationUser>();
+
+                        List<USR_TAS_DailyTasks_Table> listDocuments = dbContext.USR_TAS_DailyTasks_Table.Where(x => x.ReportText == null && ((x.ProlongationDate == null /*&& x.ExecutionDate > DateTime.UtcNow*/ && EntityFunctions.DiffDays(DateTime.UtcNow, x.ExecutionDate) < 5) || (x.ProlongationDate != null && /*x.ProlongationDate > DateTime.UtcNow &&*/ EntityFunctions.DiffDays(DateTime.UtcNow, x.ProlongationDate) < 5))).ToList();
+                         
+                        foreach (USR_TAS_DailyTasks_Table item in listDocuments)
+                        {
+                            DocumentTable document = allDocument.FirstOrDefault(x => x.Id == item.DocumentTableId);
+                            var usersTask = _Documentservice.GetSignUsersDirect(document).ToList();
+                            checkData.Add(new ReminderUsers(document, usersTask));
+                        }
+
+                        foreach (var user in users)
+                        {
+                            var userDocuments = checkData.Where(x => x.Users.Any(a => a.Id == user.Id)).GroupBy(b => b.DocumentTable).Select(group => group.Key).ToList();
+                            if (userDocuments.Count() > 0)
+                                _Emailservice.SendReminderTasksEmail(user, userDocuments, listDocuments);
+                        }
                     }
                     break;
             }

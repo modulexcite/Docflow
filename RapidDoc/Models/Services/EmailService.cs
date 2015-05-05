@@ -48,6 +48,7 @@ namespace RapidDoc.Models.Services
         void SendSLAWarningEmail(string userId, IEnumerable<DocumentTable> documents);
         void SendSLADisturbanceEmail(string userId, IEnumerable<DocumentTable> documents);
         void SendReminderEmail(ApplicationUser user, List<DocumentTable> documents);
+        void SendReminderTasksEmail(ApplicationUser user, List<DocumentTable> documents, List<USR_TAS_DailyTasks_Table> listDocuments);
         void SendFailedRoutesAdministrator(List<ReportProcessesView> listProcesses);
     }
 
@@ -784,6 +785,59 @@ namespace RapidDoc.Models.Services
                     Thread.CurrentThread.CurrentUICulture = ci;
                     string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.AddingNewDocEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
                     SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Добавлен новый файл в документ [{0}]", documentTable.DocumentNum), body);
+                    ci = CultureInfo.GetCultureInfo(currentLang);
+                    Thread.CurrentThread.CurrentCulture = ci;
+                    Thread.CurrentThread.CurrentUICulture = ci;
+                }).Start();
+            }
+        }
+
+
+        public void SendReminderTasksEmail(ApplicationUser user, List<DocumentTable> documents, List<USR_TAS_DailyTasks_Table> listDocuments)
+        {
+            List<string> documentUrls = new List<string>();
+            List<string> documentNums = new List<string>();
+            List<string> documentText = new List<string>();
+
+            if (!String.IsNullOrEmpty(user.Email))
+            {
+                int num = 0; string countHours = String.Empty;
+                foreach (var documentTable in documents)
+                {
+                    num++;
+                    documentUrls.Add("http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true");
+                    documentNums.Add(documentTable.DocumentNum + " - " + documentTable.ProcessName);
+                    USR_TAS_DailyTasks_Table countHourTable = listDocuments.FirstOrDefault(x => x.DocumentTableId == documentTable.Id);
+
+                    if(countHourTable.ProlongationDate == null)
+                        countHours = DateTime.UtcNow > countHourTable.ExecutionDate ? "Задача просрочена" : String.Format("Осталось {0} дн.",
+                        (int)Math.Abs(Math.Round((countHourTable.ExecutionDate - DateTime.UtcNow).TotalDays)));
+                    else
+                        countHours = DateTime.UtcNow > countHourTable.ProlongationDate ? "Задача просрочена" : String.Format("Осталось {0} дн.", (int)Math.Abs(Math.Round(((DateTime)countHourTable.ProlongationDate - DateTime.UtcNow).TotalDays)));
+
+                    if (!String.IsNullOrEmpty(documentTable.DocumentText) && documentTable.DocumentText.Length > 60)
+                        documentText.Add(countHours + " " + documentTable.DocumentText.Substring(0, 60) + "...");
+                    else
+                        documentText.Add(countHours + " " + documentTable.DocumentText);
+                }
+
+                EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
+
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
+                new Task(() =>
+                {
+                    string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\SLAEmailTemplate.cshtml";
+                    string razorText = System.IO.File.ReadAllText(absFile);
+
+                    string currentLang = Thread.CurrentThread.CurrentCulture.Name;
+                    CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
+                    Thread.CurrentThread.CurrentCulture = ci;
+                    Thread.CurrentThread.CurrentUICulture = ci;
+                    string body = Razor.Parse(razorText, new { DocumentUri = "", DocumentUris = documentUrls.ToArray(), DocumentNums = documentNums.ToArray(), documentText = documentText.ToArray(), EmplName = emplTable.FullName, BodyText = "задачи на выполнении" }, "emailTemplateSLAStatus");
+                    SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, "У вас на выполнении находятся следующие задачи", body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
