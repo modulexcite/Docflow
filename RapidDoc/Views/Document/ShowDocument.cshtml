@@ -6,7 +6,7 @@
 
 <div class="row hidden-print">
     <div class="col-xs-6"> 
-        <h5><a href="@ViewBag.DocumentUrl" id="documenturl">#@Model.DocumentView.DocumentNum</a><strong> - @Model.ProcessView.ProcessName</strong></h5>
+        <h5><a href="@ViewBag.DocumentUrl" id="documenturl" target="_blank">#@Model.DocumentView.DocumentNum</a><strong> - @Model.ProcessView.ProcessName</strong></h5>
         <h5>
             <small class="">@Model.DocumentView.DocumentState.GetDescription()</small>
             @if (Model.DocumentView.isArchive == true)
@@ -134,14 +134,14 @@
         }
         
         @if (Model.DocumentView.isArchive == true)
-        { 
-            <a href=@Url.Action("DocumentFromArchive", new { id = Model.DocumentView.Id }) class="btn btn-primary">@UIElementRes.UIElement.FromArchive</a>
+        {
+            <a href=@Url.Action("DocumentFromArchive", new { id = Model.DocumentView.Id }) class="btn btn-primary hidden-print">@UIElementRes.UIElement.FromArchive</a>
         }
         else
         {
             if (Model.DocumentView.isSign == false)
             {
-                <a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentView.Id }) class="btn btn-primary">@UIElementRes.UIElement.ToArchive</a>
+                <a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentView.Id }) class="btn btn-primary hidden-print">@UIElementRes.UIElement.ToArchive</a>
             }
         }
 
