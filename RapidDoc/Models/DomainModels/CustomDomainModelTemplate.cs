@@ -44,7 +44,12 @@ namespace RapidDoc.Models.DomainModels
 
         public string DocumentWhom { get; set; }
 
+        public string Whom { get; set; }
+
         public string DocumentCopy { get; set; }
+
+        [Required]
+        public string FromWhom { get; set; }
 
         [Required]
         public string DocumentTitle { get; set; }
