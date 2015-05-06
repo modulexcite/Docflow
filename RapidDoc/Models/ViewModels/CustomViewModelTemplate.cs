@@ -41,8 +41,15 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Кому")]
         public string DocumentWhom { get; set; }
 
+        [Display(Name = "Кому")]
+        public string Whom { get; set; }
+
         [Display(Name = "Копия")]
         public string DocumentCopy { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "От кого")]
+        public string FromWhom { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Тема документа")]

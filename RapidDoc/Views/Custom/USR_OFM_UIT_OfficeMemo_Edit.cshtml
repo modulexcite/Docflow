@@ -1,11 +1,9 @@
 ﻿@model RapidDoc.Models.ViewModels.USR_OFM_UIT_OfficeMemo_View
 @{
-    Model.Parallel = true;         
+    Model.Parallel = true;
 }
 @using RapidDoc.Extensions;
-
 @Html.ValidationSummary(true)
-
 <div class="row">
     <div class="col-md-4">
         <div class="editor-label">
@@ -33,7 +31,6 @@
     </div>
 </div>
 <br />
-
 <div class="form-group">
     <div class="input-group">
         <span class="input-group-addon">
@@ -45,6 +42,45 @@
         @Html.TextBoxFor(model => Model.DocumentWhom, new { @class = "form-control", @data_role = "tagsinputGroup2", @size = 256, @maxlength = 256, placeholder = "Маршрут согласования" })
     </div>
 </div>
+
+@*<div class="editor-field">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" id="sizing-addon3"><strong>Кому:</strong>&nbsp;</span>
+            @Html.TextBoxFor(model => Model.Whom, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Кому", aria_describedby = "sizing-addon3" })
+        </div>
+    </div>
+    <br />
+
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" id="sizing-addon3"><strong>Копия:</strong>&nbsp;</span>
+            @Html.TextBoxFor(model => Model.DocumentCopy, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Копия", aria_describedby = "sizing-addon3" })
+        </div>
+
+
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" id="sizing-addon3"><strong>От кого:<span class="required">*</span></strong>&nbsp;</span>
+            @Html.TextBoxFor(model => Model.FromWhom, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "От кого", aria_describedby = "sizing-addon3" })
+
+   </div>*@
+<div class="panel panel-default">
+    <table class="table-bordered">
+        <tbody>
+            <tr>
+                <td><span class="input-group-addon" id="sizing-addon1" style="height:43px; width:100px;border-width:0px"><strong>Кому:</strong></span></td>
+                <td>@Html.TextBoxFor(model => Model.Whom, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Кому", aria_describedby = "sizing-addon3", @style = "border-width:0px"})</td>
+            </tr>
+            <tr>
+                <td><span class="input-group-addon" id="sizing-addon1" style="height: 43px;width:100px;border-width:0px"><strong>Копия:</strong></span></td>
+                <td>@Html.TextBoxFor(model => Model.DocumentCopy, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Копия", aria_describedby = "sizing-addon3", @style = "border-width:0px" })</td>
+            </tr>
+            <tr>
+                <td><span class="input-group-addon" id="sizing-addon1" style="height:43px;width:100px;border-width:0px"><strong>От кого:<span class="required">*</span></strong></span></td>
+                <td>@Html.TextBoxFor(model => Model.FromWhom, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "От кого", aria_describedby = "sizing-addon3", @style = "border-width:0px" })</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 <div class="editor-field">
     <div class="input-group input-group-sm">
         <span class="input-group-addon" id="sizing-addon3"><strong>Тема:<span class="required">*</span></strong>&nbsp;</span>
@@ -95,8 +131,6 @@
     </div>
 </div>
 <script type="text/javascript">
-    $('#MainField').val("<div style=\"line-height: 21.4285717010498px;\"><span style=\"font-weight: bold;\">Кому: &nbsp; &nbsp; &nbsp;</span><span style=\"font-weight: bold;\">&nbsp;</span>Исполнительным директорам</div><div style=\"line-height: 21.4285717010498px;\"><span style=\"font-weight: bold;\">Копия: &nbsp; &nbsp;&nbsp;</span>Руководителям структурных подразделений</div><div style=\"line-height: 21.4285717010498px;\"><span style=\"font-weight: bold;\">От кого: &nbsp;&nbsp;</span>Исполнительного директора</div><div style=\"line-height: 21.4285717010498px;\"><br></div><div style=\"line-height: 21.4285717010498px; margin-left: 25px;\">Текст служебной записки ...</div><div style=\"line-height: 21.4285717010498px;\"><br></div><div style=\"line-height: 21.4285717010498px;\"><div>исп.&nbsp;</div><div>вн.&nbsp;</div></div>");
-
     $(function () {
         $('.itemcauseslink').click(function (event) {
             var element = $(event.target);
