@@ -166,7 +166,7 @@ namespace RapidDoc.Controllers
                         ApplicationDbContext dbContext = new ApplicationDbContext();
                         List<ApplicationUser> usersReminder = new List<ApplicationUser>();
 
-                        List<USR_TAS_DailyTasks_Table> listDocuments = dbContext.USR_TAS_DailyTasks_Table.Where(x => x.ReportText == null && ((x.ProlongationDate == null /*&& x.ExecutionDate > DateTime.UtcNow*/ && EntityFunctions.DiffDays(DateTime.UtcNow, x.ExecutionDate) < 5) || (x.ProlongationDate != null && /*x.ProlongationDate > DateTime.UtcNow &&*/ EntityFunctions.DiffDays(DateTime.UtcNow, x.ProlongationDate) < 5))).ToList();
+                        List<USR_TAS_DailyTasks_Table> listDocuments = dbContext.USR_TAS_DailyTasks_Table.Where(x => x.ReportText == null && ((x.ProlongationDate == null /*&& x.ExecutionDate > DateTime.UtcNow*/ && EntityFunctions.DiffDays(DateTime.UtcNow, x.ExecutionDate) < 8) || (x.ProlongationDate != null && /*x.ProlongationDate > DateTime.UtcNow &&*/ EntityFunctions.DiffDays(DateTime.UtcNow, x.ProlongationDate) < 8))).ToList();
                          
                         foreach (USR_TAS_DailyTasks_Table item in listDocuments)
                         {
