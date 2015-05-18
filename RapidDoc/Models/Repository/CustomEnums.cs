@@ -803,11 +803,11 @@ namespace RapidDoc.Models.Repository
 
     public enum StatusResidence : byte
     {
-        [Display(Name = "Привлеченный")]
-        Recruiting = 0,
-
         [Display(Name = "Непривлеченный")]
-        Failure = 1
+        Failure = 0,
+
+        [Display(Name = "Привлеченный")]
+        Recruiting = 1 
     }
 
     public enum HRGraphics : byte
