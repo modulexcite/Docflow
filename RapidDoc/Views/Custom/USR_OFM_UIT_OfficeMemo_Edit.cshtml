@@ -66,28 +66,24 @@
     <table class="table-bordered">
         <tbody>
             <tr>
-                <td><span class="input-group-addon" id="sizing-addon1" style="height:43px; width:100px;border-width:0px"><strong>Кому:</strong></span></td>
+                <td><span class="input-group-addon" id="sizing-addon1" style="height:43px; width:100px;border-width:0px; text-align:left;"><strong>Кому:</strong></span></td>
                 <td>@Html.TextBoxFor(model => Model.Whom, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Кому", aria_describedby = "sizing-addon3", @style = "border-width:0px"})</td>
             </tr>
             <tr>
-                <td><span class="input-group-addon" id="sizing-addon1" style="height: 43px;width:100px;border-width:0px"><strong>Копия:</strong></span></td>
+                <td><span class="input-group-addon" id="sizing-addon1" style="height: 43px;width:100px;border-width:0px; text-align:left;"><strong>Копия:</strong></span></td>
                 <td>@Html.TextBoxFor(model => Model.DocumentCopy, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Копия", aria_describedby = "sizing-addon3", @style = "border-width:0px" })</td>
             </tr>
             <tr>
-                <td><span class="input-group-addon" id="sizing-addon1" style="height:43px;width:100px;border-width:0px"><strong>От кого:<span class="required">*</span></strong></span></td>
+                <td><span class="input-group-addon" id="sizing-addon1" style="height:43px;width:100px;border-width:0px; text-align:left;"><strong>От кого:<span class="required">*</span></strong></span></td>
                 <td>@Html.TextBoxFor(model => Model.FromWhom, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "От кого", aria_describedby = "sizing-addon3", @style = "border-width:0px" })</td>
+            </tr>
+            <tr>
+                <td><span class="input-group-addon" id="sizing-addon1" style="height:43px;width:100px;border-width:0px; text-align:left;"><strong>Тема:<span class="required">*</span></strong></span></td>
+                <td>@Html.TextBoxFor(model => Model.DocumentTitle, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Тема", aria_describedby = "sizing-addon3", @style = "border-width:0px" })</td>
             </tr>
         </tbody>
     </table>
 </div>
-
-<div class="editor-field">
-    <div class="input-group input-group-sm">
-        <span class="input-group-addon" id="sizing-addon3"><strong>Тема:<span class="required">*</span></strong>&nbsp;</span>
-        @Html.TextBoxFor(model => Model.DocumentTitle, new { @class = "form-control", @size = 256, @maxlength = 256, placeholder = "Тема", aria_describedby = "sizing-addon3", autofocus = "required" })
-    </div>
-</div>
-<br />
 <div class="editor-field">
     @Html.TextAreaFor(model => Model.MainField, new { @class = "form-control summernote" })
 </div>
@@ -132,6 +128,8 @@
 </div>
 <script type="text/javascript">
     $(function () {
+        $('#MainField').val("<div style=\"line-height: 21.4285717010498px; margin-left: 25px;\">Текст служебной записки ...</div>");
+
         $('.itemcauseslink').click(function (event) {
             var element = $(event.target);
             $('#ItemCauseTableId').val(element.attr('data-itemid'));
