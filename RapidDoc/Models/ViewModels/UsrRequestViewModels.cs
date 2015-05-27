@@ -3492,6 +3492,43 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Пост №28(Реагентное отделение)")]
         public bool Post7 { get; set; }
     }
+
+    public class USR_REQ_UB_RequestForPhotoRealization_View : BasicDocumentView
+    {
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Дата проведения")]
+        public DateTime? PhotoDate { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Тип")]
+        public PhotoType PhotoType { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Участок/цех проведения")]
+        public string Department { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Место проведения")]
+        public string Place { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Объект фото/видеосъеки")]
+        public string Target { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Цель")]
+        public string Purpose { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ФИО производителя фото/видеосъемки, должность, участок")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Оборудование для фото/видеосъеки")]
+        public string Equipment { get; set; }
+    }
     #endregion
 
     #region УБУиО

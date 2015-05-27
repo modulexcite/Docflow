@@ -2573,6 +2573,33 @@ namespace RapidDoc.Models.DomainModels
         public bool Post6 { get; set; }
         public bool Post7 { get; set; }
     }
+
+    public class USR_REQ_UB_RequestForPhotoRealization_Table : BasicDocumentTable
+    {       
+        [Required]
+        public DateTime PhotoDate { get; set; }
+
+        [Required]
+        public PhotoType PhotoType { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Target { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Equipment { get; set; }
+    }
     #endregion 
 
     #region УБУиО

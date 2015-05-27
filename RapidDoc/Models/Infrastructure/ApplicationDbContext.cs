@@ -273,7 +273,8 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_REQ_IT_CTP_RequestTRU_Table> USR_REQ_IT_CTP_RequestTRU_Table { get; set; }
         public DbSet<USR_TAS_DailyTasks_Table> USR_TAS_DailyTasks_Table { get; set; }
         public DbSet<USR_TAS_DailyTasksProlongation_Table> USR_TAS_DailyTasksProlongation_Table { get; set; }
-
+        public DbSet<USR_REQ_UB_RequestForPhotoRealization_Table> USR_REQ_UB_RequestForPhotoRealization_Table { get; set; }
+        
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();

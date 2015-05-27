@@ -51,6 +51,13 @@ namespace RapidDoc.Controllers
             return Json(jsondata, JsonRequestBehavior.AllowGet);
         }
 
+        [AcceptVerbs(HttpVerbs.Get)]
+        public JsonResult JsonRoles()
+        {
+            var jsondata = _EmplService.GetJsonRoles();
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
+        }
+
         //Custom
         public ActionResult GetIncidentAdminData(RapidDoc.Models.ViewModels.USR_REQ_IT_CTP_IncidentIT_View model)
         {

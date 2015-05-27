@@ -36,6 +36,9 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "DepartmentNameParent", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string ParentDepartmentName { get; set; }
+
+        [Display(Name = "Обязательные роли")]
+        public string RequiredRoles { get; set; }
     }
 
     public class EmplView : BasicCompanyNullView

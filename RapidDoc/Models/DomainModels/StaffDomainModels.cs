@@ -60,6 +60,7 @@ namespace RapidDoc.Models.DomainModels
                 return string.Empty;
             }
         }
+        public string RequiredRoles { get; set; }
     }
 
     public class EmplTable : BasicCompanyNullTable

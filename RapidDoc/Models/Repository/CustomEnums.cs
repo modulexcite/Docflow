@@ -1057,4 +1057,16 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "Задача")]
         Task = 2
     }
+
+    public enum PhotoType: byte
+    {
+        [Display(Name = "Фото")]
+        Element1 = 0,
+
+        [Display(Name = "Видео")]
+        Element2 = 1,
+
+        [Display(Name = "Фото и видео")]
+        Element3 = 2
+    }
 }
