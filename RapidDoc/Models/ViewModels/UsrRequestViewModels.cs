@@ -3513,7 +3513,7 @@ namespace RapidDoc.Models.ViewModels
         public string Place { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Объект фото/видеосъеки")]
+        [Display(Name = "Объект фото/видеосъемки")]
         public string Target { get; set; }
 
         [DataType(DataType.MultilineText)]
@@ -3526,7 +3526,7 @@ namespace RapidDoc.Models.ViewModels
         public string Name { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Оборудование для фото/видеосъеки")]
+        [Display(Name = "Оборудование для проведения фото/видеосъемки")]
         public string Equipment { get; set; }
     }
     #endregion
