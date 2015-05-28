@@ -1,4 +1,25 @@
 ﻿@model RapidDoc.Models.ViewModels.USR_REQ_UB_RequestForPhotoRealization_View
 @using RapidDoc.Extensions;
 
-@Html.Partial("_DocumentEditFields", Model)
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.FromPhotoDate)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.FromPhotoDate, "{0:dd.MM.yyyy}", new { @class = "datepicker form-control form-control-date", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), placeholder = "Дата начала", startDate = "" })
+</div>
+
+
+<div class="editor-label">
+    @Html.LabelForRequired(model => Model.ToPhotoDate)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => Model.ToPhotoDate, "{0:dd.MM.yyyy}", new { @class = "datepicker form-control form-control-date", data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower(), placeholder = "Дата окончания", startDate = "" })
+</div>
+<br />
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "PhotoType" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Department" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Place" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Target" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Purpose" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Name" } })
+@Html.Partial("_DocumentEditFields", Model, new ViewDataDictionary(ViewData) { { "FieldName", "Equipment" } })

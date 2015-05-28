@@ -130,5 +130,15 @@ namespace RapidDoc.Models.DomainModels
         public string Password { get; set; }
         public bool EnableSsl { get; set; }
         public int Timeout { get; set; }
+
+        [StringLength(256)]
+        [Required]
+        public string ReportAdminDomain { get; set; }
+
+        [StringLength(256)]
+        [Required]
+        public string ReportAdminUser { get; set; }
+
+        public string ReportAdminPassword { get; set; }
     }
 }

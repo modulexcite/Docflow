@@ -3497,8 +3497,13 @@ namespace RapidDoc.Models.ViewModels
     {
         [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
-        [Display(Name = "Дата проведения")]
-        public DateTime? PhotoDate { get; set; }
+        [Display(Name = "Начальная дата проведения")]
+        public DateTime? FromPhotoDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "Конечная дата проведения")]
+        public DateTime? ToPhotoDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Тип")]

@@ -2575,9 +2575,12 @@ namespace RapidDoc.Models.DomainModels
     }
 
     public class USR_REQ_UB_RequestForPhotoRealization_Table : BasicDocumentTable
-    {       
+    {
         [Required]
-        public DateTime PhotoDate { get; set; }
+        public DateTime FromPhotoDate { get; set; }
+
+        [Required]
+        public DateTime ToPhotoDate { get; set; }
 
         [Required]
         public PhotoType PhotoType { get; set; }

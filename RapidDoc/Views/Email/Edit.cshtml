@@ -7,11 +7,14 @@
 
 <h2>@UIElementRes.UIElement.EmailParameter</h2>
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
     <fieldset>
         <legend></legend>
+        @Html.HiddenFor(model => model.Id)
 
         <div class="editor-label">
             @Html.LabelForRequired(model => model.SmtpServer)
@@ -49,7 +52,7 @@
             @Html.LabelForRequired(model => model.Password)
         </div>
         <div class="editor-field">
-            @Html.PasswordFor(model => model.Password, new { @class = "form-control", @size = 20, @maxlength = 256 })
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control", @size = 20, @maxlength = 256, @value = Model.Password})
             @Html.ValidationMessageFor(model => model.Password)
         </div>
 
@@ -68,11 +71,37 @@
             @Html.TextBoxFor(model => model.Timeout, new { @class = "form-control bfh-number", placeholder = "5000" })
             @Html.ValidationMessageFor(model => model.Timeout)
         </div>
+        <br>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.ReportAdminDomain)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.ReportAdminDomain, new { @class = "form-control", @size = 20, @maxlength = 256, placeholder = "smtp.contoso.com", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.ReportAdminDomain)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.ReportAdminUser)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.ReportAdminUser, new { @class = "form-control", @size = 20, @maxlength = 256, placeholder = "user", @x_webkit_speech = "" })
+            @Html.ValidationMessageFor(model => model.ReportAdminUser)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelForRequired(model => model.ReportAdminPassword)
+        </div>
+        <div class="editor-field">
+            @Html.PasswordFor(model => model.ReportAdminPassword, new { @class = "form-control", @size = 20, @maxlength = 256, @value = Model.Password })
+            @Html.ValidationMessageFor(model => model.ReportAdminPassword)
+        </div>
+
 
         <br>
         <p>
-            <input class="btn btn-primary btn-sm" type="submit" value=@UIElementRes.UIElement.Save />
-            @Html.ActionLink(UIElementRes.UIElement.Back, "Index", "Document")
-        </p>
+        <input class="btn btn-primary btn-sm" type="submit" value=@UIElementRes.UIElement.Save />
+    @Html.ActionLink(UIElementRes.UIElement.Back, "Index", "Document")
+    </p>
     </fieldset>
 }

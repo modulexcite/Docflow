@@ -49,7 +49,7 @@ namespace RapidDoc.Controllers
                 try
                 {
                     _Service.Save(model);
-                    return RedirectToAction("Edit");
+                    return RedirectToAction("Index", "Document");
                 }
                 catch (Exception e)
                 {
