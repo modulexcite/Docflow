@@ -3601,7 +3601,7 @@ namespace RapidDoc.Models.DomainModels
         public string UserChooseManual1 { get; set; }
 
         [Required]
-        public DateTime PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required]
         public string TransferDate { get; set; }
@@ -3626,7 +3626,7 @@ namespace RapidDoc.Models.DomainModels
         public string UserChooseManual1 { get; set; }
 
         [Required]
-        public DateTime PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required]
         public string TransferDate { get; set; }

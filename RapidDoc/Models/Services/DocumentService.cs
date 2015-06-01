@@ -659,7 +659,7 @@ namespace RapidDoc.Models.Services
                 {
                     if (trackerTable.Users != null)
                     {
-                        if (trackerTable.Users.Exists(x => x.UserId == userId))
+                        if (trackerTable.Users.Exists(x => x.UserId == userId) || trackerTable.SignUserId == userId)
                         {
                             return true;
                         }
