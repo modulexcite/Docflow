@@ -4897,7 +4897,7 @@ namespace RapidDoc.Models.ViewModels
         [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Запланированная дата отпуска по графику")]
-        public DateTime? PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Перенести на")]
@@ -4927,7 +4927,7 @@ namespace RapidDoc.Models.ViewModels
         [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Запланированная дата отпуска по графику")]
-        public DateTime? PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Перенести на")]
@@ -4961,7 +4961,7 @@ namespace RapidDoc.Models.ViewModels
         [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Запланированная дата отпуска по графику")]
-        public DateTime? PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Перенести на")]
@@ -4991,7 +4991,7 @@ namespace RapidDoc.Models.ViewModels
         [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Запланированная дата отпуска по графику")]
-        public DateTime? PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Перенести на")]
