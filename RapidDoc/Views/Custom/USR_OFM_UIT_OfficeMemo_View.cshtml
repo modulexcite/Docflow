@@ -2,6 +2,7 @@
 @using RapidDoc.Extensions;
 
 @Html.HiddenFor(model => Model.DocumentWhom)
+@Html.HiddenFor(model => Model.AdditionalText)
 <div class="row">
     <div class="col-md-12">
         <div>
@@ -41,17 +42,6 @@
         @Html.DisplayTextFor(model => Model.DocumentTitle)
     </div>
 </div>
-
-@if (Model.AdditionalText != null && Model.AdditionalText != String.Empty)
-{
-    <div class="editor-label hidden-print">
-        @Html.LabelFor(model => Model.AdditionalText)
-    </div>
-    <div class="editor-field">
-        @Html.DisplayTextFor(model => Model.AdditionalText)
-    </div>
-    <br />
-}
 
 <div class="row visible-print">
     <div class="col-xs-12">
@@ -174,7 +164,6 @@
         });
 
         $('#rejectCZ').click(function (event) {
-            alert('hghhh');
             var comment = $('#RejectComment').val();
             if (comment == "") {
                 bootstrap_alert.warning('Необходимо заполнить причину отмены');
