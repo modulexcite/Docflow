@@ -1547,6 +1547,12 @@ namespace RapidDoc.Controllers
             {
                 Guid documentGuidId = GuidNull2Guid(documentId);
                 string rejectCommentRequest = collection["RejectCommentRequest"].ToString();
+                SaveComment(documentGuidId, rejectCommentRequest);
+            }
+            else if (!String.IsNullOrEmpty(collection["RejectComment"]))
+            {
+                Guid documentGuidId = GuidNull2Guid(documentId);
+                string rejectCommentRequest = collection["RejectComment"].ToString();
                 if (actionModelName == "USR_OFM_UIT_OfficeMemo")
                 {
                     var trackers = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentGuidId && x.TrackerType == TrackerType.Waiting);
@@ -1555,10 +1561,6 @@ namespace RapidDoc.Controllers
                         tracker.Comments = rejectCommentRequest;
                         _WorkflowTrackerService.SaveDomain(tracker);
                     }
-                }
-                else
-                {
-                    SaveComment(GuidNull2Guid(documentId), rejectCommentRequest);
                 }
             }
             else
@@ -1662,10 +1664,10 @@ namespace RapidDoc.Controllers
             if (documentId != null)
             {
                 DocumentTable docuTable = _DocumentService.Find(GuidNull2Guid(documentId));
-                CheckCustomDocument(typeActionModel, actionModel, docuTable, _DocumentService.isSignDocument(docuTable.Id));
+                CheckCustomDocument(typeActionModel, actionModel, operationType, docuTable, _DocumentService.isSignDocument(docuTable.Id));
             }
 
-            CheckCustomDocument(typeActionModel, actionModel);
+            CheckCustomDocument(typeActionModel, actionModel, operationType);
             CheckAttachedFiles(processView, fileId, documentId);
             _CustomCheckDocument.PreUpdateViewModel(typeActionModel, actionModel);
 
@@ -1728,14 +1730,15 @@ namespace RapidDoc.Controllers
             }
         }
 
-        private void CheckCustomDocument(Type type, dynamic actionModel, DocumentTable documentTable = null, bool isSign = false)
+        private void CheckCustomDocument(Type type, dynamic actionModel, OperationType operationType, DocumentTable documentTable = null, bool isSign = false)
         {
             List<string> errorList = new List<string>();
 
             if (documentTable == null)
             {
-                errorList.AddRange(_CustomCheckDocument.CheckCustomDocument(type, actionModel));
-                errorList.AddRange(_CustomCheckDocument.CheckCustomDocumentHY(type, actionModel));
+                errorList.AddRange(_CustomCheckDocument.CheckCustomDocument(type, actionModel, operationType));
+                errorList.AddRange(_CustomCheckDocument.CheckCustomDocumentHY(type, actionModel, operationType));
+                errorList.AddRange(_CustomCheckDocument.CheckCustomDocumentCZ(type, actionModel, operationType));
             }
             else
                 errorList.AddRange(_CustomCheckDocument.CheckCustomPostDocument(type, actionModel, documentTable, isSign));

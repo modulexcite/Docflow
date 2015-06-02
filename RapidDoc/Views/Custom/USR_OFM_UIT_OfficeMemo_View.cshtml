@@ -117,7 +117,7 @@
     <div class="modal-dialog modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <div id="alert_placeholder"></div>
+                <div class="alert_placeholder"></div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Отмена документа</h4>
             </div>
@@ -126,7 +126,7 @@
                 <br>
                 <div>
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
-                    <button type="submit" id="rejectButton" class="btn btn-danger pull-right" name="action:RejectDocumentCZ">@UIElementRes.UIElement.Reject</button>
+                    <button type="submit" id="rejectCZ" class="btn btn-danger pull-right" name="action:RejectDocumentCZ">@UIElementRes.UIElement.Reject</button>
                 </div>
             </div>
         </div>
@@ -155,22 +155,22 @@
     $(function () {
         bootstrap_alert = function () { }
         bootstrap_alert.warning = function (message) {
-            $('#alert_placeholder').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>' + message + '</div>')
+            $('.alert_placeholder').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>' + message + '</div>')
         }
-
         $('.distributiongrouplink_whom').click(function () {
             var element = $(event.target);
             var tagId = element.attr('data-itemid') + ', ' + element.attr('data-rolename');
             $('input[data-role=tagsinputGroup2]').tagsinput('add', { value: tagId, text: element.text() });
         });
 
-        $('#rejectButton').click(function (event) {
+        $('#rejectCZ').click(function (event) {
+            alert('hghhh');
             var comment = $('#RejectComment').val();
             if (comment == "") {
                 bootstrap_alert.warning('Необходимо заполнить причину отмены');
                 event.preventDefault();
+                return false;
             }
         });
-
     });
 </script>

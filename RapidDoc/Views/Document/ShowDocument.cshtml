@@ -139,7 +139,10 @@
         }
         else
         {
-            if (Model.DocumentView.isSign == false)
+            if (Model.DocumentView.isSign == false && (Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Closed ||
+                    Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Cancelled ||
+                    Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.Created ||
+                    Model.DocumentView.DocumentState == RapidDoc.Models.Repository.DocumentState.OnSign))
             {
                 <a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentView.Id }) class="btn btn-primary hidden-print">@UIElementRes.UIElement.ToArchive</a>
             }
@@ -151,10 +154,6 @@
             </button>
             <ul class="dropdown-menu" role="menu">
                 <li><a href=@Url.Action("AddReader", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.Reader</a></li>
-                @if (Model.DocumentView.isArchive == false)
-                {
-                    <li><a href=@Url.Action("DocumentToArchive", new { id = Model.DocumentView.Id })>@UIElementRes.UIElement.ToArchive</a></li>
-                }
                 <li>
                     <a href=@Url.Action("CopyDocument", new { processId = Model.ProcessView.Id, fileId = Model.fileId, documentId = Model.DocumentView.Id })>@UIElementRes.UIElement.Copy</a>
                 </li>
@@ -191,7 +190,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <div id="alert_placeholder"></div>
+                        <div class="alert_placeholder"></div>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">Отмена документа</h4>
                     </div>
@@ -404,7 +403,7 @@
 
         bootstrap_alert = function () { }
         bootstrap_alert.warning = function (message) {
-            $('#alert_placeholder').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>' + message + '</div>')
+            $('.alert_placeholder').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>' + message + '</div>')
         }
 
         $('#rejectRequest').click(function (event) {

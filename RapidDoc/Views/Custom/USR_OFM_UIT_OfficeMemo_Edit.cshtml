@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="col-md-10">
-                <input id="ItemCauseTableId" name="ItemCauseTableId" type="hidden" value="" />
+                @Html.HiddenFor(model => Model.ItemCauseTableId)
                 <span id="ItemCauseNumber">@Html.DisplayTextFor(model => Model.ItemCauseNumber)</span>
             </div>
         </div>
@@ -128,7 +128,9 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        $('#MainField').val("<div style=\"line-height: 21.4285717010498px; margin-left: 25px;\">Текст служебной записки ...</div>");
+        if ($('#MainField').val() == '') {
+            $('#MainField').val("<div style=\"line-height: 21.4285717010498px; margin-left: 25px;\">Текст служебной записки ...</div>");
+        }
 
         $('.itemcauseslink').click(function (event) {
             var element = $(event.target);
