@@ -61,6 +61,9 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "Параллельно")]
         public bool Parallel { get; set; }
+
+        [Display(Name = "Сопроводительный текст")]
+        public string AdditionalText { get; set; } 
     }
 
     public abstract class BasicDailyTasksView : BasicDocumentView

@@ -23,6 +23,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNet.Identity;
 using System.Configuration;
 using Microsoft.AspNet.Identity.EntityFramework;
+using RazorEngine.Templating;
 
 namespace RapidDoc.Models.Services
 {
@@ -37,13 +38,13 @@ namespace RapidDoc.Models.Services
         void SendEmail(EmailParameterTable emailParameter, string[] emailTo, string[] ccTo, string subject, string body);
         void SendInitiatorEmail(Guid documentId);
         void SendInitiatorEmailDocAdding(Guid documentId);
-        void SendExecutorEmail(Guid documentId);
+        void SendExecutorEmail(Guid documentId, string additionalTextCZ = "");
         void SendInitiatorRejectEmail(Guid documentId);
         void SendInitiatorClosedEmail(Guid documentId);
         void SendInitiatorCommentEmail(Guid documentId, string lastComment);
         void SendDelegationEmplEmail(DelegationView delegationView);
         void SendReaderEmail(Guid documentId, List<string> newReader);
-        void SendNewExecutorEmail(Guid documentId, string userId);
+        void SendNewExecutorEmail(Guid documentId, string userId, string additionalTextCZ = "");
         void SendNewExecutorEmail(Guid documentId, List<string> userListId);
         void SendSLAWarningEmail(string userId, IEnumerable<DocumentTable> documents);
         void SendSLADisturbanceEmail(string userId, IEnumerable<DocumentTable> documents);
@@ -212,11 +213,14 @@ namespace RapidDoc.Models.Services
             }
         }
 
-        public void SendExecutorEmail(Guid documentId)
+        public void SendExecutorEmail(Guid documentId, string additionalTextCZ = "")
         {
             var documentTable = _DocumentService.Find(documentId);
             if (documentTable == null || (documentTable.DocumentState != DocumentState.Agreement && documentTable.DocumentState != DocumentState.Execution))
                 return;
+
+            dynamic ViewBag = new DynamicViewBag();
+            ViewBag.AdditionalText = additionalTextCZ;
 
             var userList = _DocumentService.GetSignUsersDirect(documentTable);
 
@@ -244,7 +248,7 @@ namespace RapidDoc.Models.Services
                             CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
                             Thread.CurrentThread.CurrentCulture = ci;
                             Thread.CurrentThread.CurrentUICulture = ci;
-                            string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
+                            string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText}, ViewBag, "emailTemplateDefaultWithCZ");
                             SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
                             ci = CultureInfo.GetCultureInfo(currentLang);
                             Thread.CurrentThread.CurrentCulture = ci;
@@ -275,7 +279,7 @@ namespace RapidDoc.Models.Services
                         CultureInfo ci = CultureInfo.GetCultureInfo("ru-RU");
                         Thread.CurrentThread.CurrentCulture = ci;
                         Thread.CurrentThread.CurrentUICulture = ci;
-                        string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailBulkTemplateDefault");
+                        string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, ViewBag, "emailBulkTemplateDefault");
                         SendEmail(emailParameter, emails.ToArray(), new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
                         ci = CultureInfo.GetCultureInfo(currentLang);
                         Thread.CurrentThread.CurrentCulture = ci;
@@ -502,12 +506,15 @@ namespace RapidDoc.Models.Services
             }
         }
 
-        public void SendNewExecutorEmail(Guid documentId, string userId)
+        public void SendNewExecutorEmail(Guid documentId, string userId, string additionalTextCZ = "")
         {
             var documentTable = _DocumentService.Find(documentId);
             if (documentTable == null)
                 return;
             ApplicationUser user = repoUser.GetById(userId);
+
+            dynamic ViewBag = new DynamicViewBag();
+            ViewBag.AdditionalText = additionalTextCZ;
 
             if (!String.IsNullOrEmpty(user.Email))
             {
@@ -529,7 +536,7 @@ namespace RapidDoc.Models.Services
                     CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
-                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailTemplateDefault");
+                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText, AdditionalText = additionalTextCZ }, ViewBag, "emailTemplateDefault");
                     SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;

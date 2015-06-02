@@ -367,7 +367,7 @@ namespace RapidDoc.Controllers
 
             foreach (var userid in users)
             {
-                _EmailService.SendNewExecutorEmail(documentId, userid);
+                _EmailService.SendNewExecutorEmail(documentId, userid, collection["AdditionalText"] != null | collection["AdditionalText"] != string.Empty ? (string)collection["AdditionalText"] : "");
             }
             return RedirectToAction("Index", "Document");
         }
@@ -593,6 +593,7 @@ namespace RapidDoc.Controllers
                     return RedirectToAction("PageNotFound", "Error");
                 }
             }
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentIdNew, HistoryType = Models.Repository.HistoryType.CopyDocumment }, User.Identity.GetUserId());
 
             return RedirectToAction("ShowDraft", "Document", new { id = documentIdNew });
         }

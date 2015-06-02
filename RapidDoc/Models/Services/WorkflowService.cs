@@ -270,7 +270,7 @@ namespace RapidDoc.Models.Services
             _WorkflowTrackerService.SaveTrackList(documentTable.Id, this.GetTrackerList(documentTable.Id, activity, documentData, documentTable.DocType));     
             StartAndPersistInstance(documentTable.Id, DocumentState.Agreement, documentData, instanceStore, activity, fileTableWF); 
             DeleteInstanceStoreOwner(instanceStore);
-            _EmailService.SendExecutorEmail(documentTable.Id);
+            _EmailService.SendExecutorEmail(documentTable.Id, documentData.ContainsKey("AdditionalText") ? (string)documentData["AdditionalText"] : "");
         }
         public void AgreementWorkflowApprove(Guid documentId, string TableName, Guid WWFInstanceId, Guid processId, IDictionary<string, object> documentData)
         {
@@ -284,7 +284,7 @@ namespace RapidDoc.Models.Services
             LoadAOrCompleteInstance(documentId, DocumentState.Agreement, TrackerType.Approved, documentData, instanceStore, activity, instanceInfo);
             DeleteInstanceStoreOwner(instanceStore);
             _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.ApproveDocument }, HttpContext.Current.User.Identity.GetUserId());
-            _EmailService.SendExecutorEmail(documentId);
+            _EmailService.SendExecutorEmail(documentId, documentData.ContainsKey("AdditionalText") ? (string)documentData["AdditionalText"] : "");
         }
         public void AgreementWorkflowReject(Guid documentId, string TableName, Guid WWFInstanceId, Guid processId, IDictionary<string, object> documentData)
         {

@@ -1,6 +1,7 @@
 ﻿@model RapidDoc.Models.ViewModels.USR_OFM_UIT_OfficeMemo_View
 @using RapidDoc.Extensions;
 
+@Html.HiddenFor(model => Model.DocumentWhom)
 <div class="row">
     <div class="col-md-12">
         <div>
@@ -41,7 +42,16 @@
     </div>
 </div>
 
-
+@if (Model.AdditionalText != null && Model.AdditionalText != String.Empty)
+{
+    <div class="editor-label hidden-print">
+        @Html.LabelFor(model => Model.AdditionalText)
+    </div>
+    <div class="editor-field">
+        @Html.DisplayTextFor(model => Model.AdditionalText)
+    </div>
+    <br />
+}
 
 <div class="row visible-print">
     <div class="col-xs-12">
