@@ -49,7 +49,7 @@ namespace RapidDoc.Models.Services
         List<Array> GetRequestTree(Activity activity, IDictionary<string, object> documentData, string _parallel = "");
         List<Array> GetTrackerList(Guid documentId, Activity activity, IDictionary<string, object> documentData, DocumentType documentType);
         List<string> GetUniqueUserList(Guid documentId, IDictionary<string, object> documentData, string nameField);
-        void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel);
+        void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel, string additionalText = "");
         void UpdateProlongationDate(Guid refDocumentid, DateTime prolongationDate, string currentUserId);
     }
 
@@ -797,7 +797,7 @@ namespace RapidDoc.Models.Services
         }
 
 
-        public void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel)
+        public void CreateDynamicTracker(List<string> users, Guid documentId, string currentUserId, bool parallel, string additionalText = "")
         {
             List<string> result = new List<string>();
             List<string> reminderList = new List<string>();
@@ -846,6 +846,7 @@ namespace RapidDoc.Models.Services
                 table.Columns.Add("ApplicationUserCreatedId", typeof(string));
                 table.Columns.Add("ApplicationUserModifiedId", typeof(string));
                 table.Columns.Add("StartDateSLA", typeof(DateTime));
+                table.Columns.Add("AdditionalText", typeof(string));
 
                 int num = 0;
                 foreach (string item in result)
@@ -886,6 +887,7 @@ namespace RapidDoc.Models.Services
                     row["ApplicationUserCreatedId"] = currentUserId;
                     row["ApplicationUserModifiedId"] = currentUserId;
                     row["StartDateSLA"] = DBNull.Value;
+                    row["AdditionalText"] = additionalText;
 
                     table.Rows.Add(row);
                 }
@@ -924,7 +926,7 @@ namespace RapidDoc.Models.Services
                 _uow.Commit();
             }
 
-            _EmailService.SendNewExecutorEmail(documentId, reminderList);
+            _EmailService.SendNewExecutorEmail(documentId, reminderList, additionalText);
         }
 
 

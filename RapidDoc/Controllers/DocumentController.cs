@@ -359,7 +359,7 @@ namespace RapidDoc.Controllers
         [MultipleButton(Name = "action", Argument = "ApproveDocumentCZ")]
         public ActionResult ApproveDocumentCZ(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
-            var users = _DocumentService.SignDocumentCZ(documentId,  TrackerType.Approved, 
+            var users = _DocumentService.SignDocumentCZ(documentId,  TrackerType.Approved,
                 (collection["ApproveComment"] != null | collection["ApproveComment"] != string.Empty) ? (string)collection["ApproveComment"] : "");
 
             DocumentTable documentTable = _DocumentService.Find(documentId);
@@ -367,7 +367,8 @@ namespace RapidDoc.Controllers
 
             foreach (var userid in users)
             {
-                _EmailService.SendNewExecutorEmail(documentId, userid, collection["AdditionalText"] != null | collection["AdditionalText"] != string.Empty ? (string)collection["AdditionalText"] : "");
+                string[] arrayStructrue = userid.Split('|');
+                _EmailService.SendNewExecutorEmail(documentId, arrayStructrue[0], arrayStructrue[1] != null | arrayStructrue[1] != string.Empty ? arrayStructrue[1] : "");
             }
             return RedirectToAction("Index", "Document");
         }
@@ -404,7 +405,7 @@ namespace RapidDoc.Controllers
                 List<string> users = _WorkflowService.GetUniqueUserList(documentId, documentData, "Flow");
 
                 if(users.Count > 0)
-                    _WorkflowService.CreateDynamicTracker(users, documentId, currentUserId, (bool)documentData["IsParallel"]);
+                    _WorkflowService.CreateDynamicTracker(users, documentId, currentUserId, (bool)documentData["IsParallel"], (collection["AdditionaltextCZ"] != null | collection["AdditionaltextCZ"] != string.Empty) ? (string)collection["AdditionaltextCZ"] : "");
 
                 DocumentTable documentTable = _DocumentService.Find(documentId);
                 _DocumentService.UpdateDocument(documentTable, currentUserId);

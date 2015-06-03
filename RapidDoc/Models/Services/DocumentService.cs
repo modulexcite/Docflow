@@ -1001,7 +1001,9 @@ namespace RapidDoc.Models.Services
                             nextstep.StartDateSLA = DateTime.UtcNow;
                             _WorkflowTrackerService.SaveDomain(nextstep, userid);
                             if (nextstep.Users != null)
-                                ret.AddRange(nextstep.Users.Select(x => x.UserId));
+                            {
+                                    ret.AddRange(nextstep.Users.Select(x => x.UserId + "|" + nextstep.AdditionalText));
+                            }
                         }
                     }
                 }

@@ -177,6 +177,8 @@ namespace RapidDoc.Models.ViewModels
         public TrackerType TrackerType { get; set; }
 
         public string Comments { get; set; }
+
+        public string AdditionalText { get; set; }
     }
 
     public class CommentView : BasicCompanyNullView

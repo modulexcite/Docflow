@@ -45,7 +45,7 @@ namespace RapidDoc.Models.Services
         void SendDelegationEmplEmail(DelegationView delegationView);
         void SendReaderEmail(Guid documentId, List<string> newReader);
         void SendNewExecutorEmail(Guid documentId, string userId, string additionalTextCZ = "");
-        void SendNewExecutorEmail(Guid documentId, List<string> userListId);
+        void SendNewExecutorEmail(Guid documentId, List<string> userListId, string additionalTextCZ = "");
         void SendSLAWarningEmail(string userId, IEnumerable<DocumentTable> documents);
         void SendSLADisturbanceEmail(string userId, IEnumerable<DocumentTable> documents);
         void SendReminderEmail(ApplicationUser user, List<DocumentTable> documents);
@@ -545,11 +545,14 @@ namespace RapidDoc.Models.Services
             }
         }
 
-        public void SendNewExecutorEmail(Guid documentId, List<string> userListId)
+        public void SendNewExecutorEmail(Guid documentId, List<string> userListId,string additionalTextCZ = "")
         {
             var documentTable = _DocumentService.Find(documentId);
             if (documentTable == null)
                 return;
+
+            dynamic ViewBag = new DynamicViewBag();
+            ViewBag.AdditionalText = additionalTextCZ;
 
             List<string> emails = repoUser.FindAll(x => userListId.Contains(x.Id) && x.Email != String.Empty).GroupBy(x => x.Email).Select(x => x.Key).ToList();
 
@@ -572,7 +575,7 @@ namespace RapidDoc.Models.Services
                     CultureInfo ci = CultureInfo.GetCultureInfo("ru-RU");
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;
-                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, "emailBulkTemplateDefault");
+                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, BodyText = UIElementRes.UIElement.SendExecutorEmail, DocumentText = documentTable.DocumentText }, ViewBag, "emailBulkTemplateDefault");
                     SendEmail(emailParameter, emails.ToArray(), new string[] { }, String.Format("Требуется ваша подпись, документ [{0}]", documentTable.DocumentNum), body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
