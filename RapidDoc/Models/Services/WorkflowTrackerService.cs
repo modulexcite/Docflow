@@ -125,6 +125,7 @@ namespace RapidDoc.Models.Services
                 if (item.SignDate != null)
                 {
                     EmplTable signEmpl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == item.SignUserId);
+                    EmplTable createdEmpl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId);
 
                     WFTrackerListView model = new WFTrackerListView
                     {
@@ -134,9 +135,11 @@ namespace RapidDoc.Models.Services
                         SignUserId = item.SignUserId,
                         TrackerType = item.TrackerType,
                         ActivityID = item.ActivityID,
+                        ParallelID = item.ParallelID,
                         SLAOffset = item.SLAOffset,
                         CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(item.CreatedDate, currentTimeZoneInfo),
-                        Comments = item.Comments
+                        Comments = item.Comments,
+                        CreatedBy = createdEmpl != null ? createdEmpl.FullName : item.CreatedBy
                     };
                     model.SignDate = TimeZoneInfo.ConvertTimeFromUtc(item.SignDate ?? DateTime.MinValue, currentTimeZoneInfo);
                     DateTime? performToDate = item.PerformToDate();
@@ -148,6 +151,8 @@ namespace RapidDoc.Models.Services
                 }
                 else
                 {
+                    EmplTable createdEmpl = cacheEmplList.FirstOrDefault(x => x.ApplicationUserId == item.ApplicationUserCreatedId);
+
                     WFTrackerListView model = new WFTrackerListView
                     {
                         ActivityName = item.ActivityName,
@@ -156,9 +161,11 @@ namespace RapidDoc.Models.Services
                         TrackerType = item.TrackerType,
                         ManualExecutor = item.ManualExecutor,
                         ActivityID = item.ActivityID,
+                        ParallelID = item.ParallelID,
                         SLAOffset = item.SLAOffset,
                         CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(item.CreatedDate, currentTimeZoneInfo),
-                        Comments = item.Comments
+                        Comments = item.Comments,
+                        CreatedBy = createdEmpl != null ? createdEmpl.FullName : item.CreatedBy
                     };
                     DateTime? performToDate = item.PerformToDate();
                     if (performToDate != null)

@@ -1766,9 +1766,9 @@ namespace RapidDoc.Controllers
             ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
             DocumentTable documentTable = _DocumentService.Find(id);
-            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id && x.TrackerType == TrackerType.Waiting, timeZoneInfo, documentTable.DocType);
+            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id && (x.TrackerType == TrackerType.Waiting || x.TrackerType == TrackerType.NonActive), timeZoneInfo, documentTable.DocType).OrderBy(x => x.CreatedDate);
             ViewBag.DocumentId = id;
-            return View("~/Views/Document/ShowWaitingUsersCZ.cshtml", model);          
+            return View("~/Views/Document/ShowWaitingUsersCZ.cshtml", model);       
         }
 
         protected override void Dispose(bool disposing)
