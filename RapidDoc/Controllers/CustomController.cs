@@ -1538,6 +1538,22 @@ namespace RapidDoc.Controllers
         }
 
         [HttpPost]
+        public ActionResult UpdateCalcBTripPTY(byte EmplTripType, byte TripDirection, int Day, int DayLive, int TicketSum)
+        {
+            EmplTripType emplTripType = (EmplTripType)EmplTripType;
+            TripDirection tripDirection = (TripDirection)TripDirection;
+
+            TripSettingsTable tripSettingsTable = _TripSettingsService.FirstOrDefault(x => x.EmplTripType == emplTripType && x.TripDirection == tripDirection);
+            if (tripSettingsTable != null)
+            {
+                var model = new USR_REQ_TRIP_RequestCalcDriveBTripCalsPTY_View(emplTripType, tripDirection, Day, DayLive, TicketSum, tripSettingsTable.DayRate, tripSettingsTable.ResidenceRate);
+                return PartialView(@"~/Views/Custom/USR_REQ_TRIP_RegistrationBusinessTripPTY_Calc.cshtml", model);
+            }
+
+            return PartialView("_Empty");
+        }
+
+        [HttpPost]
         public ActionResult UpdateCalcBTripKZTRIP(byte EmplTripType, byte TripDirection, int Day, int DayLive, int TicketSum)
         {
             EmplTripType emplTripType = (EmplTripType)EmplTripType;

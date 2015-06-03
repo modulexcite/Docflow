@@ -2,25 +2,51 @@
 @using RapidDoc.Extensions;
 @{
     ViewBag.Title = "Ожидают подписи";
+    int num = 0;
+    RapidDoc.Models.ViewModels.WFTrackerListView tmp = null;
 }
 
 <h2>Ожидают подписи</h2>
 
 @if (Model.Count() > 0)
 {
-    <ul>
-        @foreach (var trackerItem in Model.Where(x => x.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting))
-        {
-            <li>
-                <h5>
-                    @Html.DisplayFor(modelItem => trackerItem.Executors)
-                    <span> - </span>
-                    @UIElementRes.UIElement.Waiting
-                    <small>@Html.DisplayFor(modelItem => trackerItem.CreatedDate)</small>
-                </h5>
-            </li>
+    foreach (var groupTrackerItem in Model.Where(x => !String.IsNullOrEmpty(x.Executors)).GroupBy(x => x.ActivityID))
+    {
+        { 
+            num++;
+            tmp = Model.Where(x => !String.IsNullOrEmpty(x.Executors) && x.ActivityID == groupTrackerItem.Key).FirstOrDefault();
         }
-    </ul>
+        <h5> 
+            <strong>
+                @if (String.IsNullOrEmpty(tmp.ParallelID))
+                {
+                    <span>[ <i class="fa fa-indent"></i> Последовательный ]</span>
+                }
+                else
+                {
+                    <span>[ <i class="fa fa-sitemap"></i> Параллельный ]</span>
+                }
+                Маршрут: @num,
+            </strong> @tmp.CreatedBy <small>@tmp.CreatedDate</small>
+        </h5>
+        <ul>
+            @foreach (var trackerItem in Model.Where(x => !String.IsNullOrEmpty(x.Executors) && x.ActivityID == groupTrackerItem.Key))
+            {
+                <li>
+                    <h5>
+                        @if (trackerItem.TrackerType == RapidDoc.Models.Repository.TrackerType.Waiting)
+                        {
+                            <span>[</span>
+                            @UIElementRes.UIElement.Waiting
+                            <span>] </span>
+                        }
+                        @Html.DisplayFor(modelItem => trackerItem.Executors)
+                    </h5>
+                </li>
+            }
+        </ul>
+        <br />
+    }
 }
 
 <a href="@Url.Action("ShowDocument", "Document", new { id = ViewBag.DocumentId, isAfterView = true })" class="btn btn-default" role="button">@UIElementRes.UIElement.Back</a>
