@@ -15,6 +15,9 @@ using RapidDoc.Models.Services;
 using RapidDoc.Models.ViewModels;
 using RapidDoc.Models.Infrastructure;
 using System.Data.Entity.Core.Objects;
+using System.Text.RegularExpressions;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Controllers
 {
@@ -28,10 +31,11 @@ namespace RapidDoc.Controllers
         protected readonly IAccountService _AccountService;
         protected readonly IProcessService _ProcessService;
         protected readonly IReportService _ReportService;
+        protected readonly IDepartmentService _DepartmentService;
 
         public BatchController(IEmplService emplService, IWorkScheduleService workScheduleService,
             IEmailService emailservice, IDocumentService documentservice, IReviewDocLogService reviewDocLogService,
-            IAccountService accountService, IProcessService processService, IReportService reportService)
+            IAccountService accountService, IProcessService processService, IReportService reportService, IDepartmentService departmentService)
         {
             _EmplService = emplService;
             _WorkScheduleService = workScheduleService;
@@ -41,6 +45,7 @@ namespace RapidDoc.Controllers
             _AccountService = accountService;
             _ProcessService = processService;
             _ReportService = reportService;
+            _DepartmentService = departmentService;
         }
 
         // GET api/<controller>
@@ -183,6 +188,50 @@ namespace RapidDoc.Controllers
                         }
                     }
                     break;
+                case 7:
+                    if (_WorkScheduleService.CheckWorkTime(null, DateTime.UtcNow))
+                    {
+                        var users = _EmplService.GetPartial(x => x.Enable == true).ToList();
+
+                        UserManager<ApplicationUser>  userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                        RoleManager<ApplicationRole> roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(new ApplicationDbContext()));
+
+                        foreach (var user in users)
+                        {
+                            DepartmentTable rolesDepartment = this.getParentDepartment(user.DepartmentTableId);
+
+                            if (rolesDepartment != null)
+                            {
+                                string[] arrayTempStructrue = rolesDepartment.RequiredRoles.Split(',');
+                                Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
+                                string[] arrayStructure = arrayTempStructrue.Where(a => isGuid.IsMatch(a) == true).ToArray();
+
+                                foreach (var role in arrayStructure)
+                                {
+                                    string roleName = roleManager.FindById(role).Name;
+
+                                    if (!userManager.IsInRole(user.ApplicationUserId, roleName))
+                                    {
+                                        userManager.AddToRole(user.ApplicationUserId, roleName);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    break;
+            }      
+        }
+
+        public DepartmentTable getParentDepartment(Guid? id)
+        {
+            DepartmentTable childDepartment = _DepartmentService.FirstOrDefault(x => x.Id == id);
+            if (childDepartment != null && childDepartment.RequiredRoles != null)
+                return childDepartment;
+            else
+            {
+
+                return childDepartment != null && childDepartment.ParentDepartmentId != null ? this.getParentDepartment(childDepartment.ParentDepartmentId) : null;
             }
         }
     }
@@ -209,4 +258,5 @@ namespace RapidDoc.Controllers
         public DocumentTable DocumentTable { get; set; }
         public List<ApplicationUser> Users { get; set; }
     }
+
 }

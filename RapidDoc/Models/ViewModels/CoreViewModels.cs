@@ -125,6 +125,22 @@ namespace RapidDoc.Models.ViewModels
 
         [Display(Name = "Timeout", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public int Timeout { get; set; }
+
+        [StringLength(256, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ReportAdminDomain", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string ReportAdminDomain { get; set; }
+
+        [StringLength(256, ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisLong")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        [Display(Name = "ReportAdminUser", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string ReportAdminUser { get; set; }
+
+        [StringLength(256, ErrorMessageResourceName = "ErrorFieldSize", ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), MinimumLength = 8)]
+        [DataType(DataType.Password)]
+        [Display(Name = "ReportAdminPassword", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public string ReportAdminPassword { get; set; }
+        
     }
 
     public class ViewDataUploadFilesResult

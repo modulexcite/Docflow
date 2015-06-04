@@ -628,6 +628,33 @@ namespace FieldNameRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Название домена отчетности.
+        /// </summary>
+        public static string ReportAdminDomain {
+            get {
+                return ResourceManager.GetString("ReportAdminDomain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пароль пользователя отчетности.
+        /// </summary>
+        public static string ReportAdminPassword {
+            get {
+                return ResourceManager.GetString("ReportAdminPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пользователь отчетности.
+        /// </summary>
+        public static string ReportAdminUser {
+            get {
+                return ResourceManager.GetString("ReportAdminUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Роль (Доступ).
         /// </summary>
         public static string RoleName {

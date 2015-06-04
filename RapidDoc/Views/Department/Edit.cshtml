@@ -30,17 +30,27 @@
             @Html.ValidationMessageFor(model => model.ParentDepartmentId)
         </div>
 
+        <div class="editor-label">
+            @Html.LabelFor(model => model.RequiredRoles)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.RequiredRoles, new { @class = "form-control", @data_role = "tagsinputRoles", @size = 256, @maxlength = 256, placeholder = "Необходиые роли" })
+        </div>
+
         @{Html.RenderPartial("SaveBackBtn");}
     </fieldset>
 }
+
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/editentity")
 }
 @section jslaunch {
 <script type="text/javascript">
-$(function () {
-    selectpicker_init();
+    $(function () {
+        selectpicker_init();
+        custom_tagsinputRoles_init("@Url.Action("JsonRoles", "Custom")");
 });
 </script>
 }

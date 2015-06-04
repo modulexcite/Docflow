@@ -204,6 +204,8 @@ namespace RapidDoc.Models.DomainModels
         public virtual List<WFTrackerUsersTable> Users { get; set; }
 
         public string Comments { get; set; }
+
+        public string AdditionalText { get; set; }
     }
 
     public class WFTrackerUsersTable

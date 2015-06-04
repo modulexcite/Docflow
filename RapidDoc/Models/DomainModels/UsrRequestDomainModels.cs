@@ -2573,6 +2573,36 @@ namespace RapidDoc.Models.DomainModels
         public bool Post6 { get; set; }
         public bool Post7 { get; set; }
     }
+
+    public class USR_REQ_UB_RequestForPhotoRealization_Table : BasicDocumentTable
+    {
+        [Required]
+        public DateTime FromPhotoDate { get; set; }
+
+        [Required]
+        public DateTime ToPhotoDate { get; set; }
+
+        [Required]
+        public PhotoType PhotoType { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Place { get; set; }
+
+        [Required]
+        public string Target { get; set; }
+
+        [Required]
+        public string Purpose { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Equipment { get; set; }
+    }
     #endregion 
 
     #region УБУиО
@@ -3571,7 +3601,7 @@ namespace RapidDoc.Models.DomainModels
         public string UserChooseManual1 { get; set; }
 
         [Required]
-        public DateTime PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required]
         public string TransferDate { get; set; }
@@ -3596,7 +3626,7 @@ namespace RapidDoc.Models.DomainModels
         public string UserChooseManual1 { get; set; }
 
         [Required]
-        public DateTime PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required]
         public string TransferDate { get; set; }
@@ -3619,7 +3649,7 @@ namespace RapidDoc.Models.DomainModels
         public string Department { get; set; }
 
         [Required]
-        public DateTime PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required]
         public string TransferDate { get; set; }
@@ -3642,7 +3672,7 @@ namespace RapidDoc.Models.DomainModels
         public string Department { get; set; }
 
         [Required]
-        public DateTime PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required]
         public string TransferDate { get; set; }
@@ -3668,7 +3698,7 @@ namespace RapidDoc.Models.DomainModels
         public string UserChooseManual1 { get; set; }
 
         [Required]
-        public DateTime PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required]
         public string TransferDate { get; set; }
@@ -3691,7 +3721,7 @@ namespace RapidDoc.Models.DomainModels
         public string Department { get; set; }
 
         [Required]
-        public DateTime PlanDate { get; set; }
+        public string PlanDate { get; set; }
 
         [Required]
         public string TransferDate { get; set; }

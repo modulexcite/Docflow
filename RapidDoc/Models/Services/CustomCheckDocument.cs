@@ -11,8 +11,9 @@ namespace RapidDoc.Models.Services
 {
     public interface ICustomCheckDocument
     {
-        List<string> CheckCustomDocument(Type type, dynamic actionModel);
-        List<string> CheckCustomDocumentHY(Type type, dynamic actionModel);
+        List<string> CheckCustomDocument(Type type, dynamic actionModel, OperationType operationType);
+        List<string> CheckCustomDocumentHY(Type type, dynamic actionModel, OperationType operationType);
+        List<string> CheckCustomDocumentCZ(Type type, dynamic actionModel, OperationType operationType);
         List<string> CheckCustomPostDocument(Type type, dynamic actionModel, DocumentTable documentTable, bool isSign);
         dynamic PreUpdateViewModel(Type type, dynamic actionModel);
         void UpdateDocumentData(DocumentTable document, IDictionary<string, object> documentData);
@@ -33,7 +34,7 @@ namespace RapidDoc.Models.Services
             _TripSettingsService = tripSettingsService;
         }
 
-        public List<string> CheckCustomDocument(Type type, dynamic actionModel)
+        public List<string> CheckCustomDocument(Type type, dynamic actionModel, OperationType operationType)
         {
             List<string> errorList = new List<string>();
 
@@ -627,7 +628,7 @@ namespace RapidDoc.Models.Services
             return errorList;
         }
 
-        public List<string> CheckCustomDocumentHY(Type type, dynamic actionModel)
+        public List<string> CheckCustomDocumentHY(Type type, dynamic actionModel, OperationType operationType)
         {
             List<string> errorList = new List<string>();
 
@@ -892,6 +893,21 @@ namespace RapidDoc.Models.Services
                 if (actionModel.ItemName17 != String.Empty && (actionModel.Unit17 == String.Empty || actionModel.Qty17 == String.Empty || actionModel.Location17 == String.Empty || actionModel.Reason17 == String.Empty || (actionModel.Price1 == String.Empty && actionModel.Amount1 == String.Empty) || actionModel.AccountBZ1 == String.Empty))
                 {
                     errorList.Add("В строке 17 не заполнены все необходимые поля");
+                }
+            }
+
+            return errorList;
+        }
+
+        public List<string> CheckCustomDocumentCZ(Type type, dynamic actionModel, OperationType operationType)
+        {
+            List<string> errorList = new List<string>();
+
+            if (type == (new USR_OFM_UIT_OfficeMemo_View()).GetType() && operationType == OperationType.ApproveDocument)
+            {
+                if (String.IsNullOrEmpty(actionModel.DocumentWhom))
+                {
+                    errorList.Add("Для утверждения СЗ необходимо указать маршрут согласования");
                 }
             }
 
@@ -1197,7 +1213,7 @@ namespace RapidDoc.Models.Services
 
         public dynamic PreUpdateViewModel(Type type, dynamic actionModel)
         {
-            if (type == (new USR_REQ_UBUO_RequestCalcDriveTrip_View()).GetType() || type == (new USR_REQ_TRIP_RegistrationBusinessTripKZ_View()).GetType() || type == (new USR_REQ_TRIP_RegistrationBusinessTripPP_View()).GetType())
+            if (type == (new USR_REQ_UBUO_RequestCalcDriveTrip_View()).GetType() || type == (new USR_REQ_TRIP_RegistrationBusinessTripKZ_View()).GetType() || type == (new USR_REQ_TRIP_RegistrationBusinessTripPP_View()).GetType() || type == (new USR_REQ_TRIP_RegistrationBusinessTripPTY_View()).GetType())
             {
                 if (actionModel.FIO1 != null)
                 {
@@ -1264,7 +1280,6 @@ namespace RapidDoc.Models.Services
                                 dbset.Attach(item);
                                 entry.State = System.Data.Entity.EntityState.Modified;
                                 dbContext.SaveChanges();
-                                //_WorkflowTrackerService.SaveDomain(item);
                             }
                         }
                     }

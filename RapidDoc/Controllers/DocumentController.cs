@@ -359,7 +359,7 @@ namespace RapidDoc.Controllers
         [MultipleButton(Name = "action", Argument = "ApproveDocumentCZ")]
         public ActionResult ApproveDocumentCZ(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {
-            var users = _DocumentService.SignDocumentCZ(documentId,  TrackerType.Approved, 
+            var users = _DocumentService.SignDocumentCZ(documentId,  TrackerType.Approved,
                 (collection["ApproveComment"] != null | collection["ApproveComment"] != string.Empty) ? (string)collection["ApproveComment"] : "");
 
             DocumentTable documentTable = _DocumentService.Find(documentId);
@@ -367,7 +367,8 @@ namespace RapidDoc.Controllers
 
             foreach (var userid in users)
             {
-                _EmailService.SendNewExecutorEmail(documentId, userid);
+                string[] arrayStructrue = userid.Split('|');
+                _EmailService.SendNewExecutorEmail(documentId, arrayStructrue[0], arrayStructrue[1] != null | arrayStructrue[1] != string.Empty ? arrayStructrue[1] : "");
             }
             return RedirectToAction("Index", "Document");
         }
@@ -404,7 +405,7 @@ namespace RapidDoc.Controllers
                 List<string> users = _WorkflowService.GetUniqueUserList(documentId, documentData, "Flow");
 
                 if(users.Count > 0)
-                    _WorkflowService.CreateDynamicTracker(users, documentId, currentUserId, (bool)documentData["IsParallel"]);
+                    _WorkflowService.CreateDynamicTracker(users, documentId, currentUserId, (bool)documentData["IsParallel"], (collection["AdditionaltextCZ"] != null | collection["AdditionaltextCZ"] != string.Empty) ? (string)collection["AdditionaltextCZ"] : "");
 
                 DocumentTable documentTable = _DocumentService.Find(documentId);
                 _DocumentService.UpdateDocument(documentTable, currentUserId);
@@ -593,6 +594,7 @@ namespace RapidDoc.Controllers
                     return RedirectToAction("PageNotFound", "Error");
                 }
             }
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentIdNew, HistoryType = Models.Repository.HistoryType.CopyDocumment }, User.Identity.GetUserId());
 
             return RedirectToAction("ShowDraft", "Document", new { id = documentIdNew });
         }
@@ -1547,6 +1549,12 @@ namespace RapidDoc.Controllers
             {
                 Guid documentGuidId = GuidNull2Guid(documentId);
                 string rejectCommentRequest = collection["RejectCommentRequest"].ToString();
+                SaveComment(documentGuidId, rejectCommentRequest);
+            }
+            else if (!String.IsNullOrEmpty(collection["RejectComment"]))
+            {
+                Guid documentGuidId = GuidNull2Guid(documentId);
+                string rejectCommentRequest = collection["RejectComment"].ToString();
                 if (actionModelName == "USR_OFM_UIT_OfficeMemo")
                 {
                     var trackers = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentGuidId && x.TrackerType == TrackerType.Waiting);
@@ -1555,10 +1563,6 @@ namespace RapidDoc.Controllers
                         tracker.Comments = rejectCommentRequest;
                         _WorkflowTrackerService.SaveDomain(tracker);
                     }
-                }
-                else
-                {
-                    SaveComment(GuidNull2Guid(documentId), rejectCommentRequest);
                 }
             }
             else
@@ -1662,10 +1666,10 @@ namespace RapidDoc.Controllers
             if (documentId != null)
             {
                 DocumentTable docuTable = _DocumentService.Find(GuidNull2Guid(documentId));
-                CheckCustomDocument(typeActionModel, actionModel, docuTable, _DocumentService.isSignDocument(docuTable.Id));
+                CheckCustomDocument(typeActionModel, actionModel, operationType, docuTable, _DocumentService.isSignDocument(docuTable.Id));
             }
 
-            CheckCustomDocument(typeActionModel, actionModel);
+            CheckCustomDocument(typeActionModel, actionModel, operationType);
             CheckAttachedFiles(processView, fileId, documentId);
             _CustomCheckDocument.PreUpdateViewModel(typeActionModel, actionModel);
 
@@ -1728,14 +1732,15 @@ namespace RapidDoc.Controllers
             }
         }
 
-        private void CheckCustomDocument(Type type, dynamic actionModel, DocumentTable documentTable = null, bool isSign = false)
+        private void CheckCustomDocument(Type type, dynamic actionModel, OperationType operationType, DocumentTable documentTable = null, bool isSign = false)
         {
             List<string> errorList = new List<string>();
 
             if (documentTable == null)
             {
-                errorList.AddRange(_CustomCheckDocument.CheckCustomDocument(type, actionModel));
-                errorList.AddRange(_CustomCheckDocument.CheckCustomDocumentHY(type, actionModel));
+                errorList.AddRange(_CustomCheckDocument.CheckCustomDocument(type, actionModel, operationType));
+                errorList.AddRange(_CustomCheckDocument.CheckCustomDocumentHY(type, actionModel, operationType));
+                errorList.AddRange(_CustomCheckDocument.CheckCustomDocumentCZ(type, actionModel, operationType));
             }
             else
                 errorList.AddRange(_CustomCheckDocument.CheckCustomPostDocument(type, actionModel, documentTable, isSign));
@@ -1762,9 +1767,9 @@ namespace RapidDoc.Controllers
             ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
             DocumentTable documentTable = _DocumentService.Find(id);
-            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id && x.TrackerType == TrackerType.Waiting, timeZoneInfo, documentTable.DocType);
+            var model = _WorkflowTrackerService.GetPartialView(x => x.DocumentTableId == id && (x.TrackerType == TrackerType.Waiting || x.TrackerType == TrackerType.NonActive), timeZoneInfo, documentTable.DocType).OrderBy(x => x.CreatedDate);
             ViewBag.DocumentId = id;
-            return View("~/Views/Document/ShowWaitingUsersCZ.cshtml", model);          
+            return View("~/Views/Document/ShowWaitingUsersCZ.cshtml", model);       
         }
 
         protected override void Dispose(bool disposing)

@@ -29,8 +29,9 @@ namespace RapidDoc.Controllers
         private readonly IEmplService _EmplService;
         private readonly IReportService _ReportService;
         private readonly IWorkScheduleService _WorkScheduleService;
+        private readonly IEmailService _EmailService;
 
-        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService, ICompanyService companyService, IAccountService accountService, IProcessService processService, IEmplService emplService, IReportService reportService, IWorkScheduleService workScheduleService)
+        public ReportController(IWorkflowTrackerService workflowTrackerService, IDocumentService documentService, IDepartmentService departmentService, ICompanyService companyService, IAccountService accountService, IProcessService processService, IEmplService emplService, IReportService reportService, IWorkScheduleService workScheduleService, IEmailService emailService)
             : base(companyService, accountService)
         {
             _WorkflowTrackerService = workflowTrackerService;
@@ -40,6 +41,7 @@ namespace RapidDoc.Controllers
             _EmplService = emplService;
             _ReportService = reportService;
             _WorkScheduleService = workScheduleService;
+            _EmailService = emailService;
         }
 
         public ActionResult PerformanceDepartment()
@@ -63,7 +65,9 @@ namespace RapidDoc.Controllers
         [HttpPost]
         public FileContentResult GenerateDetail(ReportParametersBasicView model)
         {
-            WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(ConfigurationManager.AppSettings["ReportAdminDomain"], ConfigurationManager.AppSettings["ReportAdminUser"], ConfigurationManager.AppSettings["ReportAdminPassword"]);
+            EmailParameterTable emailParameter = _EmailService.FirstOrDefault(x => x.SmtpServer != String.Empty);
+
+            WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(emailParameter.ReportAdminDomain, emailParameter.ReportAdminUser, emailParameter.ReportAdminPassword);
             contextImpersonation.Enter();
 
             ApplicationDbContext context = new ApplicationDbContext();
@@ -216,7 +220,9 @@ namespace RapidDoc.Controllers
         public FileContentResult GenerateReport(ReportParametersBasicView model)
         {
             List<string> listdepartmentId = new List<string>();
-            WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(ConfigurationManager.AppSettings["ReportAdminDomain"], ConfigurationManager.AppSettings["ReportAdminUser"], ConfigurationManager.AppSettings["ReportAdminPassword"]);
+            EmailParameterTable emailParameter = _EmailService.FirstOrDefault(x => x.SmtpServer != String.Empty);
+
+            WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(emailParameter.ReportAdminDomain, emailParameter.ReportAdminUser, emailParameter.ReportAdminPassword);
             contextImpersonation.Enter();
 
             List<DepartmentTable> departmentTableList = _DepartmentService.GetPartial(x => x.Id == model.DepartmentTableId).ToList();
@@ -355,7 +361,9 @@ namespace RapidDoc.Controllers
                 rows = rows.Concat(_ReportService.GetActivityStages(typeDict, _ReportService.GetActivity(process), process)).ToList();
             }
 
-            WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(ConfigurationManager.AppSettings["ReportAdminDomain"], ConfigurationManager.AppSettings["ReportAdminUser"], ConfigurationManager.AppSettings["ReportAdminPassword"]);
+            EmailParameterTable emailParameter = _EmailService.FirstOrDefault(x => x.SmtpServer != String.Empty);
+
+            WrapperImpersonationContext contextImpersonation = new WrapperImpersonationContext(emailParameter.ReportAdminDomain, emailParameter.ReportAdminUser, emailParameter.ReportAdminPassword);
             contextImpersonation.Enter();
             
             excelAppl = new Excel.Application();

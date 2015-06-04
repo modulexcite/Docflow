@@ -51,6 +51,13 @@ namespace RapidDoc.Controllers
             return Json(jsondata, JsonRequestBehavior.AllowGet);
         }
 
+        [AcceptVerbs(HttpVerbs.Get)]
+        public JsonResult JsonRoles()
+        {
+            var jsondata = _EmplService.GetJsonRoles();
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
+        }
+
         //Custom
         public ActionResult GetIncidentAdminData(RapidDoc.Models.ViewModels.USR_REQ_IT_CTP_IncidentIT_View model)
         {
@@ -1525,6 +1532,22 @@ namespace RapidDoc.Controllers
             {
                 var model = new USR_REQ_TRIP_RequestCalcDriveBTripCalsPP_View(emplTripType, tripDirection, Day, DayLive, TicketSum, tripSettingsTable.DayRate, tripSettingsTable.ResidenceRate);
                 return PartialView(@"~/Views/Custom/USR_REQ_TRIP_RegistrationBusinessTripPP_Calc.cshtml", model);
+            }
+
+            return PartialView("_Empty");
+        }
+
+        [HttpPost]
+        public ActionResult UpdateCalcBTripPTY(byte EmplTripType, byte TripDirection, int Day, int DayLive, int TicketSum)
+        {
+            EmplTripType emplTripType = (EmplTripType)EmplTripType;
+            TripDirection tripDirection = (TripDirection)TripDirection;
+
+            TripSettingsTable tripSettingsTable = _TripSettingsService.FirstOrDefault(x => x.EmplTripType == emplTripType && x.TripDirection == tripDirection);
+            if (tripSettingsTable != null)
+            {
+                var model = new USR_REQ_TRIP_RequestCalcDriveBTripCalsPTY_View(emplTripType, tripDirection, Day, DayLive, TicketSum, tripSettingsTable.DayRate, tripSettingsTable.ResidenceRate);
+                return PartialView(@"~/Views/Custom/USR_REQ_TRIP_RegistrationBusinessTripPTY_Calc.cshtml", model);
             }
 
             return PartialView("_Empty");

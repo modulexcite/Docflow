@@ -157,6 +157,8 @@ namespace RapidDoc.Models.ViewModels
 
         public string ActivityID { get; set; }
 
+        public string ParallelID { get; set; }
+
         [Display(Name = "Executor", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string Executors { get; set; }
 
@@ -177,6 +179,8 @@ namespace RapidDoc.Models.ViewModels
         public TrackerType TrackerType { get; set; }
 
         public string Comments { get; set; }
+
+        public string AdditionalText { get; set; }
     }
 
     public class CommentView : BasicCompanyNullView
