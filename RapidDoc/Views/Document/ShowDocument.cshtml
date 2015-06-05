@@ -62,7 +62,7 @@
                 <h5 class="text-danger hidden-print">@UIElementRes.UIElement.SupportFileTypes: @Model.ProcessView.MandatoryFileTypes</h5>
             }
         }
-        <table role="presentation" class="table table-striped hidden-print"><tbody class="files"></tbody></table>
+        <table role="presentation" class="table table-striped table-condensed"><tbody class="files"></tbody></table>
         <h4 class="hidden-print">@UIElementRes.UIElement.ProgressWork</h4>
         <br class="visible-print">
         @Html.Action("GetTrackerList", "Document", new { id = Model.DocumentView.Id, signDocument = Model.DocumentView.isSign })
@@ -293,7 +293,10 @@
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
     {% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-download fade">
+    <tr class="visible-print">
+        <td>{%=file.name%}, {%=file.createdDate%}, {%=file.versionName%}</td>
+    </tr>
+    <tr class="template-download fade hidden-print">
         <td class="fileuploadtdid hidden">
             {%=file.id%}
         </td>
