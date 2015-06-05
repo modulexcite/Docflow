@@ -93,5 +93,8 @@ namespace RapidDoc.Models.ViewModels
         public string RefDocNum { get; set; }
 
         public Guid? RefDocumentId { get; set; }
+
+        [Display(Name = "Каждому исполнителю отдельную карточку")]
+        public bool Separated { get; set; }
     }
 }

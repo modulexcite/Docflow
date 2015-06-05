@@ -79,6 +79,8 @@ namespace RapidDoc.Models.DomainModels
         public Guid? RefDocumentId { get; set; }
       
         public string RefDocNum { get; set; }
+
+        public bool Separated { get; set; }
     
     }
 }

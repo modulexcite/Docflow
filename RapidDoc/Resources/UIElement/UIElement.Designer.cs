@@ -484,6 +484,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Делегирована задача.
+        /// </summary>
+        public static string DelegateTaskHistory {
+            get {
+                return ResourceManager.GetString("DelegateTaskHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Делегирование.
         /// </summary>
         public static string Delegations {
@@ -1033,7 +1042,7 @@ namespace UIElementRes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Связанные задачи.
+        ///   Looks up a localized string similar to Связанные документы.
         /// </summary>
         public static string RelatedTasks {
             get {

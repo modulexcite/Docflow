@@ -238,7 +238,7 @@ namespace RapidDoc.Models.Services
                         Guid emplId = Guid.Parse(item);
                         EmplTable empl = _EmplService.FindIntercompany(emplId);
 
-                        if (empl != null && empl.Enable == true && empl.ApplicationUserId != null && empl.ApplicationUserId != documentTable.ApplicationUserCreatedId)
+                        if (empl != null && empl.Enable == true && empl.ApplicationUserId != null && (empl.ApplicationUserId != documentTable.ApplicationUserCreatedId || documentTable.DocType == DocumentType.Task))
                         {
                             userList.Add(new WFTrackerUsersTable { UserId = empl.ApplicationUserId });
                         }
