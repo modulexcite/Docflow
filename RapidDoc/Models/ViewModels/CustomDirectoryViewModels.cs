@@ -68,4 +68,10 @@ namespace RapidDoc.Models.ViewModels
         [Display(Name = "Включено")]
         public bool Enable { get; set; }
     }
+
+    public class TaskDelegationView
+    {
+        public string DocumentNum { get; set; }
+        public Guid DocumentId { get; set; }
+    }
 }

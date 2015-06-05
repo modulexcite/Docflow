@@ -63,7 +63,7 @@ namespace RapidDoc.Models.Services
         void Delete(Guid Id);
         List<string> SignDocumentCZ(Guid documentId, TrackerType trackerType, string comment = "");
         void SignTaskDocument(Guid documentId, TrackerType trackerType);
-        List<USR_TAS_DailyTasks_Table> GetDocumentRefTask(Guid documentId);
+        List<TaskDelegationView> GetDocumentRefTask(Guid documentId);
     }
 
     public class DocumentService : IDocumentService
@@ -1056,9 +1056,18 @@ namespace RapidDoc.Models.Services
                 SaveSignData(trackerTables, TrackerType.NonActive);
         }
 
-        public List<USR_TAS_DailyTasks_Table> GetDocumentRefTask(Guid documentId)
+        public List<TaskDelegationView> GetDocumentRefTask(Guid documentId)
         {
-            return _uow.GetDbContext<ApplicationDbContext>().USR_TAS_DailyTasks_Table.Where(x => x.RefDocumentId == documentId).ToList();
+            List<TaskDelegationView> taskDelegationList = new List<TaskDelegationView>();
+
+            var  taskList= _uow.GetDbContext<ApplicationDbContext>().USR_TAS_DailyTasks_Table.Where(x => x.RefDocumentId == documentId).ToList();
+
+            taskList.ForEach(y => taskDelegationList.Add(new TaskDelegationView{ DocumentNum = y.DocumentTable.DocumentNum, DocumentId = y.DocumentTable.Id}));
+
+            var  prolongationsList= _uow.GetDbContext<ApplicationDbContext>().USR_TAS_DailyTasksProlongation_Table.Where(x => x.RefDocumentId == documentId).ToList();
+            prolongationsList.ForEach(y => taskDelegationList.Add(new TaskDelegationView { DocumentNum = y.DocumentTable.DocumentNum, DocumentId = y.DocumentTable.Id }));
+
+             return taskDelegationList;
         }
     }
 }

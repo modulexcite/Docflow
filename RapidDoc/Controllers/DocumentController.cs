@@ -365,6 +365,8 @@ namespace RapidDoc.Controllers
             DocumentTable documentTable = _DocumentService.Find(documentId);
             _DocumentService.UpdateDocument(documentTable, User.Identity.GetUserId());
 
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.ApproveDocument }, User.Identity.GetUserId());
+
             foreach (var userid in users)
             {
                 string[] arrayStructrue = userid.Split('|');
@@ -380,11 +382,13 @@ namespace RapidDoc.Controllers
             ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
 
             var users = _DocumentService.SignDocumentCZ(documentId, TrackerType.Cancelled,
-                (collection["RejectComment"] != null | collection["RejectComment"] != string.Empty) ? (string)collection["RejectComment"] : "");
+                (collection["RejectComment"] != null | collection["RejectComment"] != string.Empty) ? (string)collection["RejectComment"] : "");         
 
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
             DocumentTable documentTable = _DocumentService.Find(documentId);
             _DocumentService.UpdateDocument(documentTable, user.Id);
+
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.CancelledDocument }, User.Identity.GetUserId());
 
             _EmailService.SendInitiatorRejectEmail(documentId);
             return RedirectToAction("Index", "Document");
@@ -440,6 +444,10 @@ namespace RapidDoc.Controllers
 
                 DocumentTable documentTable = _DocumentService.Find(documentId);
                 _DocumentService.UpdateDocument(documentTable, currentUserId);
+
+                _EmailService.SendNewExecutorEmail(documentId, users);
+
+                _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.DelegateTask }, User.Identity.GetUserId());
             }
 
             return RedirectToAction("ShowDocument", new { id = documentId, isAfterView = true }); 
@@ -467,6 +475,8 @@ namespace RapidDoc.Controllers
             
             _DocumentService.UpdateDocument(documentTable, User.Identity.GetUserId());
 
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.ApproveDocument }, User.Identity.GetUserId());
+
             _EmailService.SendInitiatorClosedEmail(documentTable.Id);
 
             return RedirectToAction("ShowDocument", new { id = documentId, isAfterView = true });
@@ -486,25 +496,18 @@ namespace RapidDoc.Controllers
 
             DocumentTable documentTable = _DocumentService.Find(documentId);
             documentTable.WWFInstanceId = Guid.Empty;
-            documentTable.DocumentState = DocumentState.Created;
+            documentTable.DocumentState = DocumentState.Cancelled;
             documentTable.ActivityName = String.Empty;
 
             _DocumentService.UpdateDocument(documentTable, User.Identity.GetUserId());
 
-            IEnumerable<WFTrackerTable> wftrackers = _WorkflowTrackerService.GetPartial(x => x.DocumentTableId == documentId).ToList();
-            foreach (var item in wftrackers)
-            {
-                item.Users.Clear();
-                _WorkflowTrackerService.SaveDomain(item, currentUserId);
-            }
+            _DocumentService.SaveSignData(_DocumentService.GetCurrentSignStep(documentId, currentUserId).ToList(), TrackerType.Cancelled);
 
-            _WorkflowTrackerService.DeleteAll(documentId);
-          
-            var view = PostDocument(processId, type, OperationType.SaveDraft, documentId, fileId, collection, actionModelName);
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.CancelledDocument }, User.Identity.GetUserId());
 
             _EmailService.SendInitiatorClosedEmail(documentTable.Id);
 
-            return view;          
+            return RedirectToAction("Index", "Document");         
         }
 
         public ActionResult ProlongDocumentTask(string tableName, Guid documentId)
@@ -527,7 +530,9 @@ namespace RapidDoc.Controllers
                     return RedirectToAction("PageNotFound", "Error");
                 }
             }
-           
+
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument }, User.Identity.GetUserId());
+
             var viewModel = new DocumentComposite();
             viewModel.ProcessView = process;
             viewModel.docData = _DocumentService.RouteCustomModelView(process.TableName);
@@ -561,6 +566,8 @@ namespace RapidDoc.Controllers
                 }
             }
 
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument }, User.Identity.GetUserId());
+            
             var viewModel = new DocumentComposite();
             viewModel.ProcessView = process;
             viewModel.docData = _DocumentService.RouteCustomModelView(process.TableName);
@@ -781,6 +788,26 @@ namespace RapidDoc.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (processView.DocType == DocumentType.Task && docModel.Separated == true)
+                {
+                    string initailStructure = (string)documentData["Users"];
+                    string[] arrayTempStructrue = initailStructure.Split(',');
+
+                    Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
+                    string[] arrayStructure = arrayTempStructrue.Where(a => isGuid.IsMatch(a) == true).ToArray();
+                    if (arrayStructure.Count() > 0)
+                    {
+                        foreach (var item in arrayStructure)
+                        {
+                            string seprateUser = item + "," + arrayTempStructrue[Array.IndexOf(arrayTempStructrue, item) + 1];
+                            docModel.Users = seprateUser;
+                            documentData["Users"] = seprateUser;
+                            this.CreateSeparateTasks(processView, operationType, docModel, fileId, actionModelName, documentData);
+                        }
+
+                        return RedirectToAction("Index", "Document");
+                    }
+                }
                 //Save Document
                 ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
                 var documentId = _DocumentService.SaveDocument(docModel, processView.TableName, GuidNull2Guid(processView.Id), fileId, user);
@@ -1785,6 +1812,41 @@ namespace RapidDoc.Controllers
                 RoleManager = null;
             }
             base.Dispose(disposing);
+        }
+
+        private void CreateSeparateTasks(ProcessView processView, OperationType operationType, dynamic docModel, Guid fileId, String actionModelName, IDictionary<string, object> documentData)
+        {
+            ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
+            var documentId = _DocumentService.SaveDocument(docModel, processView.TableName, GuidNull2Guid(processView.Id), fileId, user);
+            DocumentTable documentTable = _DocumentService.Find(documentId);
+
+            Task.Run(() =>
+            {
+                IReviewDocLogService _ReviewDocLogServiceTask = DependencyResolver.Current.GetService<IReviewDocLogService>();
+                IHistoryUserService _HistoryUserServiceTask = DependencyResolver.Current.GetService<IHistoryUserService>();
+                _ReviewDocLogServiceTask.SaveDomain(new ReviewDocLogTable { DocumentTableId = documentId }, "", user);
+                _HistoryUserServiceTask.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.NewDocument }, user.Id);
+            });
+
+            _SearchService.SaveSearchData(documentId, docModel, actionModelName);
+
+            if (operationType == OperationType.ApproveDocument)
+            {
+                if (documentTable.ProcessTable != null && !String.IsNullOrEmpty(documentTable.ProcessTable.StartReaderRoleId))
+                {
+                    try
+                    {
+                        var role = RoleManager.FindById(documentTable.ProcessTable.StartReaderRoleId);
+                        if (role != null && role.Users != null && role.Users.Count > 0)
+                        {
+                            List<string> newReader = _DocumentReaderService.AddReader(documentTable.Id, role.Users.ToList());
+                            _EmailService.SendReaderEmail(documentTable.Id, newReader);
+                        }
+                    }
+                    catch { }
+                }
+                _WorkflowService.RunWorkflow(documentTable, processView.TableName, documentData);
+            }
         }
 	}
 }
