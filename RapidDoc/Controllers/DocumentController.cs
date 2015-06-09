@@ -45,6 +45,7 @@ namespace RapidDoc.Controllers
         private readonly ISearchService _SearchService;
         private readonly ICustomCheckDocument _CustomCheckDocument;
         private readonly IItemCauseService _ItemCauseService;
+        private readonly IModificationUsersService _ModificationUsersService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected RoleManager<ApplicationRole> RoleManager { get; private set; }
@@ -53,7 +54,7 @@ namespace RapidDoc.Controllers
             IWorkflowService workflowService, IEmplService emplService, IAccountService accountService, ISystemService systemService,
             IWorkflowTrackerService workflowTrackerService, IReviewDocLogService reviewDocLogService,
             IDocumentReaderService documentReaderService, ICommentService commentService, IEmailService emailService,
-            IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument, IItemCauseService itemCauseService)
+            IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument, IItemCauseService itemCauseService, IModificationUsersService modificationUsers)
             : base(companyService, accountService)
         {
             _DocumentService = documentService;
@@ -70,6 +71,7 @@ namespace RapidDoc.Controllers
             _SearchService = searchService;
             _CustomCheckDocument = customCheckDocument;
             _ItemCauseService = itemCauseService;
+            _ModificationUsersService = modificationUsers;
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
@@ -154,7 +156,7 @@ namespace RapidDoc.Controllers
 
             if (documentTable.DocumentState == DocumentState.Created)
             {
-                if (documentTable.ApplicationUserCreatedId == currentUser.Id || UserManager.IsInRole(currentUser.Id, "Administrator"))
+                if (documentTable.ApplicationUserCreatedId == currentUser.Id || UserManager.IsInRole(currentUser.Id, "Administrator") || _ModificationUsersService.ContainDocumentUser(id, currentUser.Id))
                     return RedirectToAction("ShowDraft", "Document", new { id = id });
                 else
                     return RedirectToAction("WithDrawnDocument", "Error");
@@ -314,6 +316,73 @@ namespace RapidDoc.Controllers
             return view;
         }
 
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "SendOnRework")]
+        public ActionResult SendOnRework(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
+        {
+            string[] users = _DocumentService.GetUserListFromStructure(collection["ReworkUsers"]);
+            foreach (string user in users)
+            {
+                EmplTable empluser = _EmplService.FirstOrDefault(x => x.Id == new Guid(user) && x.Enable == true);
+                if (!_ModificationUsersService.ContainDocumentUser(documentId, empluser.ApplicationUserId) && empluser != null && empluser.ApplicationUserId != User.Identity.GetUserId())
+	            {
+                    ModificationUsersTable modificationUsers = new ModificationUsersTable();
+                    modificationUsers.DocumentTableId = documentId;
+                    modificationUsers.UserId = empluser.ApplicationUserId;
+                    _ModificationUsersService.SaveDomain(modificationUsers);
+
+                    _EmailService.SendNewModificationUserEmail(documentId, empluser.ApplicationUserId, collection["AdditionalText"] != null | collection["AdditionalText"] != string.Empty ? collection["AdditionalText"] : "");
+	            }
+                
+            }
+            return RedirectToAction("Index", "Document");
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "SaveReworkDocument")]
+        public ActionResult SaveReworkDocument(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
+        {           
+            ApplicationUser userTableCurrent = _AccountService.Find(User.Identity.GetUserId());
+
+            if (_ModificationUsersService.FirstOrDefault(x => x.UserId == userTableCurrent.Id && x.DocumentTableId == documentId).OriginalDocumentId != null)
+                return PostDocument(processId, type, OperationType.SaveDraft, documentId, fileId, collection, actionModelName);;
+
+            ApplicationUser userTablePrev = _AccountService.Find(_DocumentService.Find(documentId).ApplicationUserCreatedId);
+            if (userTableCurrent == null) return RedirectToAction("PageNotFound", "Error");
+
+            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTablePrev.Id && x.Enable == true);
+            if (emplTable == null) return RedirectToAction("PageNotFound", "Error");
+
+            ProcessView process = _ProcessService.FindView(processId);
+            var documentIdNew = _DocumentService.SaveDocument(_DocumentService.GetDocumentView(_DocumentService.Find(documentId).RefDocumentId, process.TableName), process.TableName, GuidNull2Guid(process.Id), fileId, userTablePrev);
+
+            DateTime date = DateTime.UtcNow;
+            DateTime startTime = new DateTime(date.Year, date.Month, date.Day) + process.StartWorkTime;
+            DateTime endTime = new DateTime(date.Year, date.Month, date.Day) + process.EndWorkTime;
+            if ((startTime > date || date > endTime) && process.StartWorkTime != process.EndWorkTime) return RedirectToAction("PageNotFound", "Error");
+
+            if (!String.IsNullOrEmpty(process.RoleId))
+            {
+                string roleName = RoleManager.FindById(process.RoleId).Name;
+                if (!UserManager.IsInRole(userTableCurrent.Id, roleName))
+                {
+                    return RedirectToAction("PageNotFound", "Error");
+                }
+            }
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentIdNew, HistoryType = Models.Repository.HistoryType.CopyDocumment }, User.Identity.GetUserId());
+
+            var view = PostDocument(processId, type, OperationType.SaveDraft, documentIdNew, fileId, collection, actionModelName);
+            
+            ModificationUsersTable modificationUsers = new ModificationUsersTable();
+            modificationUsers.DocumentTableId = documentIdNew;
+            modificationUsers.UserId = userTableCurrent.Id;
+            modificationUsers.OriginalDocumentId = documentId;
+            _ModificationUsersService.SaveDomain(modificationUsers);
+
+            _EmailService.SendNoteReadyModificationUserEmail(documentIdNew, _DocumentService.Find(documentId).ApplicationUserCreatedId);
+
+            return RedirectToAction("ShowDraft", "Document", new { id = documentIdNew });
+        }    
         [HttpPost]
         [MultipleButton(Name = "action", Argument = "DeleteDraft")]
         public ActionResult DeleteDraft(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
@@ -680,7 +749,12 @@ namespace RapidDoc.Controllers
                 ViewBag.DepartmentName = String.Empty;
                 ViewBag.CompanyName = String.Empty;
             }
-
+            if (_ModificationUsersService.ContainDocumentUser(id, User.Identity.GetUserId()))
+            {
+                ViewBag.CountModificationUsers = _ModificationUsersService.GetPartial(x => x.DocumentTableId == id && x.UserId == currentUser.Id).Count();
+            }
+            else
+                ViewBag.CountModificationUsers = 0;
             ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
             ViewBag.AddReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.AddReader);
             ViewBag.RemoveReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.RemoveReader);

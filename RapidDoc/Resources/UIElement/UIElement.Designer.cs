@@ -880,6 +880,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to На доработку.
+        /// </summary>
+        public static string OnRework {
+            get {
+                return ResourceManager.GetString("OnRework", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Страница не найдена.
         /// </summary>
         public static string PageNotFound {
@@ -1209,6 +1218,15 @@ namespace UIElementRes {
         public static string SendInitiatorRejectEmail {
             get {
                 return ResourceManager.GetString("SendInitiatorRejectEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Документ на доработку.
+        /// </summary>
+        public static string SendModificationUserEmail {
+            get {
+                return ResourceManager.GetString("SendModificationUserEmail", resourceCulture);
             }
         }
         

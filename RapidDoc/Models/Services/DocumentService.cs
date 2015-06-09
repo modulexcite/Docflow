@@ -15,6 +15,7 @@ using RapidDoc.Models.Infrastructure;
 using RapidDoc.Models.Interfaces;
 using RapidDoc.Models.Repository;
 using RapidDoc.Models.ViewModels;
+using System.Text.RegularExpressions;
 
 namespace RapidDoc.Models.Services
 {
@@ -64,6 +65,7 @@ namespace RapidDoc.Models.Services
         List<string> SignDocumentCZ(Guid documentId, TrackerType trackerType, string comment = "");
         void SignTaskDocument(Guid documentId, TrackerType trackerType);
         List<TaskDelegationView> GetDocumentRefTask(Guid documentId);
+        string[] GetUserListFromStructure(string users);
     }
 
     public class DocumentService : IDocumentService
@@ -81,6 +83,7 @@ namespace RapidDoc.Models.Services
         private readonly IWorkScheduleService _WorkScheduleService;
         private readonly IReviewDocLogService _ReviewDocLogService;
         private readonly IEmplService _EmplService;
+        private readonly IModificationUsersService _ModificationUsersService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected RoleManager<ApplicationRole> RoleManager { get; private set; }
@@ -88,7 +91,7 @@ namespace RapidDoc.Models.Services
         public DocumentService(IUnitOfWork uow, INumberSeqService numberSeqService, IProcessService processService, 
             IWorkflowTrackerService workflowTrackerService,
             IDelegationService delegationService, IDocumentReaderService documentReaderService, IWorkScheduleService workScheduleService,
-            IReviewDocLogService reviewDocLogService, IEmplService emplService)
+            IReviewDocLogService reviewDocLogService, IEmplService emplService, IModificationUsersService modificationUsersService)
         {
             _uow = uow;
             repoProcess = uow.GetRepository<ProcessTable>();
@@ -103,6 +106,7 @@ namespace RapidDoc.Models.Services
             _WorkScheduleService = workScheduleService;
             _ReviewDocLogService = reviewDocLogService;
             _EmplService = emplService;
+            _ModificationUsersService = modificationUsersService;
 
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_uow.GetDbContext<ApplicationDbContext>()));
             RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
@@ -235,6 +239,7 @@ namespace RapidDoc.Models.Services
                 var items = from document in contextQuery.DocumentTable
                             where
                                 (document.ApplicationUserCreatedId == user.Id ||
+                                    contextQuery.ModificationUsersTable.Any(m => m.UserId == user.Id && document.DocumentState == DocumentState.Created) ||
                                     contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id)) ||
 
                                     //(contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.Users.Any(b => b.UserId == user.Id)) && document.DocType == DocumentType.Task) ||
@@ -530,6 +535,11 @@ namespace RapidDoc.Models.Services
             }
 
             if (UserManager.IsInRole(user.Id, "Administrator"))
+            {
+                return true;
+            }
+
+            if (_ModificationUsersService.ContainDocumentUser(documentTable.Id, user.Id))
             {
                 return true;
             }
@@ -1068,6 +1078,18 @@ namespace RapidDoc.Models.Services
             prolongationsList.ForEach(y => taskDelegationList.Add(new TaskDelegationView { DocumentNum = y.DocumentTable.DocumentNum, DocumentId = y.DocumentTable.Id }));
 
              return taskDelegationList;
+        }
+
+
+        public string[] GetUserListFromStructure(string users)
+        {
+            string initailStructure = users;
+            string[] arrayTempStructrue = initailStructure.Split(',');
+
+            Regex isGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
+            string[] arrayStructure = arrayTempStructrue.Where(a => isGuid.IsMatch(a) == true).ToArray();
+
+            return arrayStructure;
         }
     }
 }

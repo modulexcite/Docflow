@@ -93,6 +93,7 @@ namespace RapidDoc.App_Start
             kernel.Bind<ITripSettingsService>().To<TripSettingsService>();
             kernel.Bind<IItemCauseService>().To<ItemCauseService>();
             kernel.Bind<IReportService>().To<ReportService>();
+            kernel.Bind<IModificationUsersService>().To<ModificationUsersService>();
         }        
     }
 }

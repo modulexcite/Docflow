@@ -253,4 +253,15 @@ namespace RapidDoc.Models.DomainModels
         public Guid DocumentTableId { get; set; }
         public virtual DocumentTable DocumentTable { get; set; }
     }
+
+    public class ModificationUsersTable : BasicTable
+    {
+        public Guid DocumentTableId { get; set; }
+        public virtual DocumentTable DocumentTable { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
+
+        public Guid? OriginalDocumentId { get; set; }
+    }
 }
