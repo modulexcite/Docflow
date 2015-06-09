@@ -277,6 +277,13 @@ namespace RapidDoc.Controllers
                 ViewBag.CompanyName = String.Empty;
             }
 
+            ModificationUsersTable modificationUser = _ModificationUsersService.FirstOrDefault(x => x.DocumentTableId == documentTable.Id && x.OriginalDocumentId != null);
+            if (modificationUser != null)
+
+                ViewBag.ModificationUser = ", проработано " + _EmplService.FirstOrDefault(x => x.ApplicationUserId == modificationUser.UserId).FullName;
+            else
+                ViewBag.ModificationUser = String.Empty;
+
             ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
             ViewBag.AddReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.AddReader);
             ViewBag.RemoveReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.RemoveReader);
@@ -331,7 +338,11 @@ namespace RapidDoc.Controllers
                     modificationUsers.UserId = empluser.ApplicationUserId;
                     _ModificationUsersService.SaveDomain(modificationUsers);
 
-                    _EmailService.SendNewModificationUserEmail(documentId, empluser.ApplicationUserId, collection["AdditionalText"] != null | collection["AdditionalText"] != string.Empty ? collection["AdditionalText"] : "");
+                    DocumentTable docTable = _DocumentService.FirstOrDefault(x => x.Id == documentId);
+                    docTable.ActivityName = "На доработке";
+                    _DocumentService.UpdateDocument(docTable, User.Identity.GetUserId());
+
+                    _EmailService.SendNewModificationUserEmail(documentId, empluser.ApplicationUserId, collection["AdditionalTextRework"] != null | collection["AdditionalTextRework"] != string.Empty ? collection["AdditionalTextRework"] : "");
 	            }
                 
             }
@@ -369,7 +380,7 @@ namespace RapidDoc.Controllers
                     return RedirectToAction("PageNotFound", "Error");
                 }
             }
-            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentIdNew, HistoryType = Models.Repository.HistoryType.CopyDocumment }, User.Identity.GetUserId());
+            _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentIdNew, HistoryType = Models.Repository.HistoryType.ModifiedDocument }, User.Identity.GetUserId());
 
             var view = PostDocument(processId, type, OperationType.SaveDraft, documentIdNew, fileId, collection, actionModelName);
             
@@ -379,10 +390,16 @@ namespace RapidDoc.Controllers
             modificationUsers.OriginalDocumentId = documentId;
             _ModificationUsersService.SaveDomain(modificationUsers);
 
+            Guid newDocGuid = documentIdNew;
+            DocumentTable docTable = _DocumentService.FirstOrDefault(x => x.Id == newDocGuid);
+            docTable.ActivityName = "Доработан";
+            _DocumentService.UpdateDocument(docTable, User.Identity.GetUserId());
+
             _EmailService.SendNoteReadyModificationUserEmail(documentIdNew, _DocumentService.Find(documentId).ApplicationUserCreatedId);
 
             return RedirectToAction("ShowDraft", "Document", new { id = documentIdNew });
         }    
+
         [HttpPost]
         [MultipleButton(Name = "action", Argument = "DeleteDraft")]
         public ActionResult DeleteDraft(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
@@ -401,6 +418,7 @@ namespace RapidDoc.Controllers
                 _ReviewDocLogService.DeleteAll(documentId);
                 _HistoryUserService.DeleteAll(documentId);
                 _DocumentReaderService.Delete(documentId);
+                _ModificationUsersService.DeleteAll(documentId);
                 _DocumentService.Delete(documentId);
                 return RedirectToAction("Index", "Document");
             }
@@ -749,12 +767,20 @@ namespace RapidDoc.Controllers
                 ViewBag.DepartmentName = String.Empty;
                 ViewBag.CompanyName = String.Empty;
             }
+
             if (_ModificationUsersService.ContainDocumentUser(id, User.Identity.GetUserId()))
             {
                 ViewBag.CountModificationUsers = _ModificationUsersService.GetPartial(x => x.DocumentTableId == id && x.UserId == currentUser.Id).Count();
             }
             else
                 ViewBag.CountModificationUsers = 0;
+            ModificationUsersTable modificationUser = _ModificationUsersService.FirstOrDefault(x => x.DocumentTableId == id && x.OriginalDocumentId != null);
+            if (modificationUser != null)
+
+                ViewBag.ModificationUser = ", проработано " + _EmplService.FirstOrDefault(x => x.ApplicationUserId == modificationUser.UserId).FullName;
+            else
+                ViewBag.ModificationUser = String.Empty;
+
             ViewBag.RejectHistory = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.CancelledDocument);
             ViewBag.AddReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.AddReader);
             ViewBag.RemoveReaders = _HistoryUserService.GetPartialView(x => x.DocumentTableId == documentTable.Id && x.HistoryType == Models.Repository.HistoryType.RemoveReader);

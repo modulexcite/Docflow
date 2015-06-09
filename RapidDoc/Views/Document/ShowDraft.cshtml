@@ -13,7 +13,7 @@
         </h5>
     </div>
     <div class="col-xs-6">
-        <h5 class="text-right"><small class="hidden-print">(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate</small></h5>
+        <h5 class="text-right"><small class="hidden-print">(@ViewBag.CompanyName)</small> @ViewBag.Initiator <small>@ViewBag.TitleName, @ViewBag.DepartmentName, @ViewBag.CreatedDate@ViewBag.ModificationUser</small></h5>
     </div>
 </div>
 
@@ -140,10 +140,10 @@
                         <h4 class="modal-title">@CustomRes.Custom.Users</h4>
                     </div>
                     <div class="modal-body" style="min-height: 180px;">
-                        @Html.TextBox("ReworkUsers", "", new { @class = "form-control", @data_role = "tagsinputGroup2", @size = 256, @maxlength = 256, placeholder = "Сотрудники" })
+                        @Html.TextBox("ReworkUsers", "", new { @class = "form-control", @data_role = "tagsinputEmpl5", @size = 256, @maxlength = 256, placeholder = "Сотрудники" })
                         <br />
                         <br />
-                        @Html.TextArea("AdditionalText", new { @class = "form-control", @placeholder = "Cопроводительный текст" })
+                        @Html.TextArea("AdditionalTextRework", new { @class = "form-control", @placeholder = "Cопроводительный текст" })
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary" name="action:SendOnRework" id="applyRework">@UIElementRes.UIElement.Apply</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">@UIElementRes.UIElement.Cancel</button>
@@ -300,18 +300,7 @@
 
             return false;
         });
-        bootstrap_alertReport.warning = function (message) {
-            $('#alert_placeholderReport').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error:</span>' + message + '</div>')
-        }
-
-        $('#applyRework').click(function (event) {
-            var comment = $('#ReworkUsers').val();
-            if (comment == "") {
-                bootstrap_alert.warning('Необходимо указать сотрудников');
-                event.preventDefault();
-                return false;
-            }
-        });
+       
     });
 </script>
 }

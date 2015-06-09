@@ -754,6 +754,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Проработан документ.
+        /// </summary>
+        public static string ModifiedDocumentHistory {
+            get {
+                return ResourceManager.GetString("ModifiedDocumentHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Мониторинг.
         /// </summary>
         public static string Monitoring {
