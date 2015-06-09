@@ -280,7 +280,7 @@ namespace RapidDoc.Controllers
             ModificationUsersTable modificationUser = _ModificationUsersService.FirstOrDefault(x => x.DocumentTableId == documentTable.Id && x.OriginalDocumentId != null);
             if (modificationUser != null)
 
-                ViewBag.ModificationUser = ", проработано " + _EmplService.FirstOrDefault(x => x.ApplicationUserId == modificationUser.UserId).FullName;
+                ViewBag.ModificationUser = _EmplService.FirstOrDefault(x => x.ApplicationUserId == modificationUser.UserId).FullName;
             else
                 ViewBag.ModificationUser = String.Empty;
 
@@ -777,7 +777,7 @@ namespace RapidDoc.Controllers
             ModificationUsersTable modificationUser = _ModificationUsersService.FirstOrDefault(x => x.DocumentTableId == id && x.OriginalDocumentId != null);
             if (modificationUser != null)
 
-                ViewBag.ModificationUser = ", проработано " + _EmplService.FirstOrDefault(x => x.ApplicationUserId == modificationUser.UserId).FullName;
+                ViewBag.ModificationUser = _EmplService.FirstOrDefault(x => x.ApplicationUserId == modificationUser.UserId).FullName;
             else
                 ViewBag.ModificationUser = String.Empty;
 
