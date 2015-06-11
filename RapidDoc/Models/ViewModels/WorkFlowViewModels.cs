@@ -146,6 +146,8 @@ namespace RapidDoc.Models.ViewModels
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "DepartmentName", ResourceType = typeof(FieldNameRes.FieldNameResource))]
         public string DepartmentName { get; set; }
+        [Display(Name = "Notify", ResourceType = typeof(FieldNameRes.FieldNameResource))]
+        public bool IsNotified { get; set; }
     }
 
     public class WFTrackerListView : BasicCompanyNullView

@@ -42,6 +42,7 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<TripSettingsTable> TripSettingsTable { get; set; }
         public DbSet<ItemCauseTable> ItemCauseTable { get; set; }
         public DbSet<ModificationUsersTable> ModificationUsersTable { get; set; }
+        public DbSet<NotificationUsersTable> NotificationUsersTable { get; set; }
 
         //Custom Requests
         public DbSet<USR_REQ_IT_CTS_DeliveryOfPinCode_Table> USR_REQ_IT_CTS_DeliveryOfPinCode_Table { get; set; }

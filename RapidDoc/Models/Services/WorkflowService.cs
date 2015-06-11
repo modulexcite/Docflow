@@ -66,12 +66,13 @@ namespace RapidDoc.Models.Services
         private readonly IReviewDocLogService _ReviewDocLogService;
         private readonly ICustomCheckDocument _CustomCheckDocument;
         private readonly IProcessService _ProcessService;
+        private readonly INotificationUsersService _NotificationUsersService;
         
         IDictionary<string, object> outputParameters;              
 
         public WorkflowService(IUnitOfWork uow, IDocumentService documentService, IEmplService emplService, 
             IWorkflowTrackerService workflowTrackerService, IEmailService emailService, IHistoryUserService historyUserService,
-            IReviewDocLogService reviewDocLogService, ICustomCheckDocument customCheckDocument, IProcessService processService)
+            IReviewDocLogService reviewDocLogService, ICustomCheckDocument customCheckDocument, IProcessService processService, INotificationUsersService notificationUsersService)
         {
             repoUser = uow.GetRepository<ApplicationUser>();
             repoIncident = uow.GetRepository<ServiceIncidentTable>();
@@ -84,6 +85,7 @@ namespace RapidDoc.Models.Services
             _ReviewDocLogService = reviewDocLogService;
             _CustomCheckDocument = customCheckDocument;
             _ProcessService = processService;
+            _NotificationUsersService = notificationUsersService;
         }
 
         public WFUserFunctionResult WFMatchingUpManager(Guid documentId, string currentUserId, int level = 1, string profileName = "")
@@ -271,6 +273,13 @@ namespace RapidDoc.Models.Services
             StartAndPersistInstance(documentTable.Id, DocumentState.Agreement, documentData, instanceStore, activity, fileTableWF); 
             DeleteInstanceStoreOwner(instanceStore);
             _EmailService.SendExecutorEmail(documentTable.Id, documentData.ContainsKey("AdditionalText") ? (string)documentData["AdditionalText"] : "");
+            if (documentTable.IsNotified == true)
+            {
+                foreach (var user in _DocumentService.GetSignUsersDirect(documentTable))
+                {
+                    _NotificationUsersService.CreateNotifyForUser(documentTable.Id, documentTable.ApplicationUserCreatedId, user.Id);
+                }
+            }                     
         }
         public void AgreementWorkflowApprove(Guid documentId, string TableName, Guid WWFInstanceId, Guid processId, IDictionary<string, object> documentData)
         {
@@ -285,6 +294,14 @@ namespace RapidDoc.Models.Services
             DeleteInstanceStoreOwner(instanceStore);
             _HistoryUserService.SaveDomain(new HistoryUserTable { DocumentTableId = documentId, HistoryType = Models.Repository.HistoryType.ApproveDocument }, HttpContext.Current.User.Identity.GetUserId());
             _EmailService.SendExecutorEmail(documentId, documentData.ContainsKey("AdditionalText") ? (string)documentData["AdditionalText"] : "");
+            DocumentTable docTable = _DocumentService.FirstOrDefault(x => x.Id == documentId);
+            if (docTable.IsNotified == true)
+            {
+                foreach (var user in _DocumentService.GetSignUsersDirect(docTable))
+                {
+                    _NotificationUsersService.CreateNotifyForUser(documentId, _DocumentService.FirstOrDefault(x => x.Id == documentId).ApplicationUserCreatedId, user.Id);
+                }    
+            }           
         }
         public void AgreementWorkflowReject(Guid documentId, string TableName, Guid WWFInstanceId, Guid processId, IDictionary<string, object> documentData)
         {

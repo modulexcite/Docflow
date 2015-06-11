@@ -53,6 +53,7 @@ namespace RapidDoc.Models.Services
         void SendFailedRoutesAdministrator(List<ReportProcessesView> listProcesses);
         void SendNewModificationUserEmail(Guid documentId, string userId, string additionalTextCZ = "");
         void SendNoteReadyModificationUserEmail(Guid documentId, string userId, string additionalTextCZ = "");
+        void SendNotificationForUserEmail(Guid documentId, string userId, string additionalTextCZ = "");
     }
 
     public class EmailService : IEmailService
@@ -930,6 +931,49 @@ namespace RapidDoc.Models.Services
                     Thread.CurrentThread.CurrentUICulture = ci;
                     string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = "Новая версия документа", DocumentText = documentTable.DocumentText, AdditionalText = additionalTextCZ }, ViewBag, "emailTemplateDefault");
                     SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Новая версия документа [{0}]", documentTable.DocumentNum), body);
+                    ci = CultureInfo.GetCultureInfo(currentLang);
+                    Thread.CurrentThread.CurrentCulture = ci;
+                    Thread.CurrentThread.CurrentUICulture = ci;
+                }).Start();
+            }
+        }
+
+
+        public void SendNotificationForUserEmail(Guid documentId, string userId, string additionalTextCZ = "")
+        {
+            var documentTable = _DocumentService.Find(documentId);
+            if (documentTable == null)
+                return;
+            ApplicationUser user = repoUser.GetById(userId);
+
+            dynamic ViewBag = new DynamicViewBag();
+            ViewBag.AdditionalText = additionalTextCZ;
+
+            if (!String.IsNullOrEmpty(user.Email))
+            {
+                string documentUri = "http://" + ConfigurationManager.AppSettings.Get("WebSiteUrl").ToString() + "/" + documentTable.CompanyTable.AliasCompanyName + "/Document/ShowDocument/" + documentTable.Id + "?isAfterView=true";
+                EmplTable emplTable = repoEmpl.Find(x => x.ApplicationUserId == user.Id && x.Enable == true);
+
+                EmailParameterTable emailParameter = FirstOrDefault(x => x.SmtpServer != String.Empty);
+                if (emailParameter == null)
+                    return;
+
+                string processName = documentTable.ProcessName;
+
+                ApplicationUser currentWatchingUser = repoUser.GetById(HttpContext.Current.User.Identity.GetUserId());
+                EmplTable currentWatchingEmplTable = repoEmpl.Find(x => x.ApplicationUserId == currentWatchingUser.Id && x.Enable == true);
+
+                new Task(() =>
+                {
+                    string absFile = HostingEnvironment.ApplicationPhysicalPath + @"Views\\EmailTemplate\\BasicEmailTemplate.cshtml";
+                    string razorText = System.IO.File.ReadAllText(absFile);
+
+                    string currentLang = Thread.CurrentThread.CurrentCulture.Name;
+                    CultureInfo ci = CultureInfo.GetCultureInfo(user.Lang);
+                    Thread.CurrentThread.CurrentCulture = ci;
+                    Thread.CurrentThread.CurrentUICulture = ci;
+                    string body = Razor.Parse(razorText, new { DocumentNum = String.Format("{0} - {1}", documentTable.DocumentNum, processName), DocumentUri = documentUri, EmplName = emplTable.FullName, BodyText = "Уведомление о просмотре документа", DocumentText = documentTable.DocumentText, AdditionalText = additionalTextCZ }, ViewBag, "emailTemplateDefault");
+                    SendEmail(emailParameter, new string[] { user.Email }, new string[] { }, String.Format("Просмотрен пользователем {1} документ [{0}]", documentTable.DocumentNum, currentWatchingEmplTable.FullName), body);
                     ci = CultureInfo.GetCultureInfo(currentLang);
                     Thread.CurrentThread.CurrentCulture = ci;
                     Thread.CurrentThread.CurrentUICulture = ci;

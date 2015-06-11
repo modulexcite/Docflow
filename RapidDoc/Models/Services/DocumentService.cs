@@ -21,7 +21,7 @@ namespace RapidDoc.Models.Services
 {
     public interface IDocumentService
     {
-        Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId, ApplicationUser user);
+        Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId, ApplicationUser user, bool isNotify = false);
         IEnumerable<DocumentTable> GetAll();
         IQueryable<DocumentView> GetAllView();
         IQueryable<DocumentView> GetArchiveView();
@@ -112,7 +112,7 @@ namespace RapidDoc.Models.Services
             RoleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_uow.GetDbContext<ApplicationDbContext>()));
         }
 
-        public Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId, ApplicationUser user)
+        public Guid SaveDocument(dynamic viewTable, string tableName, Guid processId, Guid fileId, ApplicationUser user, bool isNotify = false)
         {
             var docuTable = new DocumentTable();
             docuTable.ProcessTableId = processId;
@@ -124,6 +124,7 @@ namespace RapidDoc.Models.Services
             docuTable.ApplicationUserCreatedId = user.Id;
             docuTable.ApplicationUserModifiedId = user.Id;
             docuTable.DocType = _ProcessService.Find(processId).DocType;
+            docuTable.IsNotified = isNotify;
 
             Guid numberSeqId = _ProcessService.Find(processId).GroupProcessTable.NumberSeriesTableId ?? Guid.Empty;
             docuTable.DocumentNum = _NumberSeqService.GetDocumentNum(numberSeqId);

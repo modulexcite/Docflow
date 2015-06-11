@@ -118,6 +118,7 @@ namespace RapidDoc.Models.DomainModels
         public DocumentState DocumentState { get; set; }
         public string ActivityName { get; set; }
         public DocumentType DocType { get; set; }
+        public bool IsNotified { get; set; }
 
         public string GroupProcessName 
         {
@@ -263,5 +264,19 @@ namespace RapidDoc.Models.DomainModels
         public string UserId { get; set; }
 
         public Guid? OriginalDocumentId { get; set; }
+    }
+
+    public class NotificationUsersTable : BasicTable
+    {
+        public Guid DocumentTableId { get; set; }
+        public virtual DocumentTable DocumentTable { get; set; }
+
+        [Required]
+        public string FromUserId { get; set; }
+
+        [Required]
+        public string ToUserId { get; set; }
+
+        public bool IsNotify { get; set; }
     }
 }

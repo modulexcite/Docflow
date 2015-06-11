@@ -32,6 +32,14 @@
         @Html.HiddenFor(model => model.DocumentView.Id)
         @Html.HiddenFor(model => model.fileId)
         @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "Edit" })
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DocumentView.IsNotified)
+        </div>
+        <div class="editor-field">
+            @Html.CheckBoxFor(model => model.DocumentView.IsNotified)
+            @Html.ValidationMessageFor(model => model.DocumentView.IsNotified)
+        </div>
+
         @if (Model.ProcessTemplates.Count() > 0)
         { 
             <br>

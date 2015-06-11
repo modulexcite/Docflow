@@ -46,6 +46,7 @@ namespace RapidDoc.Controllers
         private readonly ICustomCheckDocument _CustomCheckDocument;
         private readonly IItemCauseService _ItemCauseService;
         private readonly IModificationUsersService _ModificationUsersService;
+        private readonly INotificationUsersService _NotificationUsersService;
 
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected RoleManager<ApplicationRole> RoleManager { get; private set; }
@@ -54,7 +55,7 @@ namespace RapidDoc.Controllers
             IWorkflowService workflowService, IEmplService emplService, IAccountService accountService, ISystemService systemService,
             IWorkflowTrackerService workflowTrackerService, IReviewDocLogService reviewDocLogService,
             IDocumentReaderService documentReaderService, ICommentService commentService, IEmailService emailService,
-            IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument, IItemCauseService itemCauseService, IModificationUsersService modificationUsers)
+            IHistoryUserService historyUserService, ISearchService searchService, ICompanyService companyService, ICustomCheckDocument customCheckDocument, IItemCauseService itemCauseService, IModificationUsersService modificationUsers, INotificationUsersService notificationUsersService)
             : base(companyService, accountService)
         {
             _DocumentService = documentService;
@@ -72,6 +73,7 @@ namespace RapidDoc.Controllers
             _CustomCheckDocument = customCheckDocument;
             _ItemCauseService = itemCauseService;
             _ModificationUsersService = modificationUsers;
+            _NotificationUsersService = notificationUsersService;
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
@@ -184,7 +186,14 @@ namespace RapidDoc.Controllers
                 IReviewDocLogService _ReviewDocLogServiceTask = DependencyResolver.Current.GetService<IReviewDocLogService>();
                 _ReviewDocLogServiceTask.SaveDomain(new ReviewDocLogTable { DocumentTableId = id }, "", currentUser);
             });
-
+            if (_NotificationUsersService.ContainDocumentUser(id, currentUser.Id))
+            {
+                foreach (var item in _NotificationUsersService.GetPartial(x => x.FromUserId == currentUser.Id && x.DocumentTableId == id))
+                {
+                    _EmailService.SendNotificationForUserEmail(id, item.ToUserId);                     
+                }
+                _NotificationUsersService.SetNotifyForUser(id, currentUser.Id);
+            }
             object viewModel = InitialViewShowDocument(documentTable, process, docuView, currentUser, emplTable);
             return View(viewModel);
         }
@@ -499,6 +508,13 @@ namespace RapidDoc.Controllers
                     _WorkflowService.CreateDynamicTracker(users, documentId, currentUserId, (bool)documentData["IsParallel"], (collection["AdditionaltextCZ"] != null | collection["AdditionaltextCZ"] != string.Empty) ? (string)collection["AdditionaltextCZ"] : "");
 
                 DocumentTable documentTable = _DocumentService.Find(documentId);
+                if (collection["IsNotifyCZ"].ToLower().Contains("true") == true)
+                {
+                    foreach (var user in users)
+                    {
+                        _NotificationUsersService.CreateNotifyForUser(documentId, currentUserId, user);
+                    }
+                }
                 _DocumentService.UpdateDocument(documentTable, currentUserId);
             }
 
@@ -531,6 +547,14 @@ namespace RapidDoc.Controllers
 
                 DocumentTable documentTable = _DocumentService.Find(documentId);
                 _DocumentService.UpdateDocument(documentTable, currentUserId);
+
+                if (collection["IsNotifyTask"].ToLower().Contains("true") == true)
+                {
+                    foreach (var user in users)
+                    {
+                        _NotificationUsersService.CreateNotifyForUser(documentId, currentUserId, user);
+                    }
+                }
 
                 _EmailService.SendNewExecutorEmail(documentId, users);
 
@@ -910,7 +934,7 @@ namespace RapidDoc.Controllers
                 }
                 //Save Document
                 ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
-                var documentId = _DocumentService.SaveDocument(docModel, processView.TableName, GuidNull2Guid(processView.Id), fileId, user);
+                var documentId = _DocumentService.SaveDocument(docModel, processView.TableName, GuidNull2Guid(processView.Id), fileId, user, documentData.ContainsKey("IsNotified") ? (bool)documentData["IsNotified"] : false);
                 DocumentTable documentTable = _DocumentService.Find(documentId);
 
                 Task.Run(() =>
@@ -1649,6 +1673,9 @@ namespace RapidDoc.Controllers
             Type typeActionModel = Type.GetType("RapidDoc.Models.ViewModels." + actionModelName + "_View");
             var actionModel = Activator.CreateInstance(typeActionModel);
 
+            if (collection.AllKeys.Contains("DocumentView.IsNotified"))
+                documentData.Add("IsNotified", collection["DocumentView.IsNotified"].ToLower().Contains("true"));
+
             ProcessView processView = _ProcessService.FindView(processId);
             if (processView == null)
                 return RedirectToAction("PageNotFound", "Error");
@@ -1917,7 +1944,7 @@ namespace RapidDoc.Controllers
         private void CreateSeparateTasks(ProcessView processView, OperationType operationType, dynamic docModel, Guid fileId, String actionModelName, IDictionary<string, object> documentData)
         {
             ApplicationUser user = _AccountService.Find(User.Identity.GetUserId());
-            var documentId = _DocumentService.SaveDocument(docModel, processView.TableName, GuidNull2Guid(processView.Id), fileId, user);
+            var documentId = _DocumentService.SaveDocument(docModel, processView.TableName, GuidNull2Guid(processView.Id), fileId, user, documentData.ContainsKey("IsNotified") ? (bool)documentData["IsNotified"] : false);
             DocumentTable documentTable = _DocumentService.Find(documentId);
 
             Task.Run(() =>
