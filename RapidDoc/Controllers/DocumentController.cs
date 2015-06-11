@@ -95,6 +95,11 @@ namespace RapidDoc.Controllers
             return View();
         }
 
+        public ActionResult MyDocuments()
+        {
+            return View();
+        }
+
         public ActionResult GetAllDocument()
         {
             var grid = new DocumentAjaxPagingGrid(_DocumentService.GetAllView(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
@@ -110,6 +115,12 @@ namespace RapidDoc.Controllers
         public ActionResult GetAllAgreedDocument()
         {
             var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
+            return PartialView("~/Views/Document/DocumentList.cshtml", grid);
+        }
+
+        public ActionResult GetAllMyDocument()
+        {
+            var grid = new MyDocumentAjaxPagingGrid(_DocumentService.GetMyDocumentView(), 1, false, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
             return PartialView("~/Views/Document/DocumentList.cshtml", grid);
         }
 
@@ -138,6 +149,17 @@ namespace RapidDoc.Controllers
         public JsonResult GetAgreedDocumentList(int page)
         {
             var grid = new AgreedDocumentAjaxPagingGrid(_DocumentService.GetAgreedDocument(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
+
+            return Json(new
+            {
+                Html = RenderPartialViewToString("DocumentList", grid),
+                HasItems = grid.DisplayingItemsCount >= grid.Pager.PageSize
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetMyDocumentList(int page)
+        {
+            var grid = new MyDocumentAjaxPagingGrid(_DocumentService.GetMyDocumentView(), page, true, _ReviewDocLogService, _DocumentService, _AccountService, _SearchService, _EmplService);
 
             return Json(new
             {

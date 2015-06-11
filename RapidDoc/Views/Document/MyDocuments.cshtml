@@ -5,14 +5,14 @@
 <br class="hidden-print">
 <ul class="nav nav-tabs" role="tablist">
     <li><a href="@Url.Action("Index", "Document")"><span class="fa fa-tasks"></span> @UIElementRes.UIElement.MyProcesses</a></li>
-    <li class="active"><a href="@Url.Action("AgreedDocuments", "Document")"><strong><span class="fa fa-check-circle"></span> @UIElementRes.UIElement.AgreedDocument</strong></a></li>
-    <li><a href="@Url.Action("MyDocuments", "Document")"><span class="fa fa-check-circle"></span> @UIElementRes.UIElement.MyDocument</a></li>
+    <li><a href="@Url.Action("AgreedDocuments", "Document")"><strong><span class="fa fa-check-circle"></span> @UIElementRes.UIElement.AgreedDocument</strong></a></li>
+    <li class="active"><a href="@Url.Action("MyDocuments", "Document")"><strong><span class="fa fa-check-circle"></span> @UIElementRes.UIElement.MyDocument</strong></a></li>
     <li><a href="@Url.Action("Index", "HistoryUser")"><span class="fa fa-list"></span> @UIElementRes.UIElement.History</a></li>
     <li><a href="@Url.Action("ArchiveDocuments", "Document")"><span class="fa fa-archive"></span> @UIElementRes.UIElement.DocumentArchive</a></li>
 </ul>
 
 <div>
-    @Html.Action("GetAllAgreedDocument", "Document")
+    @Html.Action("GetAllMyDocument", "Document")
 </div>
 
 @section Scripts {
@@ -21,7 +21,7 @@
 @section jslaunch {
 <script type="text/javascript">
 $(function () {
-    grid_init("@Url.Action("GetAgreedDocumentList", "Document")")
+    grid_init("@Url.Action("GetMyDocumentList", "Document")")
 
     var detailsUrl = '@Url.Action("ShowDocument", "Document")';
     pageGrids.ordersGrid.onRowSelect(function (e) {

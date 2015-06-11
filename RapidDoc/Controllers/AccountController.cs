@@ -31,8 +31,23 @@ namespace RapidDoc.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public async Task<ActionResult> Login(string returnUrl, bool signout = false)
         {
+            if (!String.IsNullOrEmpty(Request.LogonUserIdentity.User.ToString()) && signout == false)
+            {
+                var loginInfo = new UserLoginInfo("Windows", Request.LogonUserIdentity.User.ToString());
+                if (loginInfo != null)
+                {
+                    // Sign in the user with this external login provider if the user already has a login
+                    var user = await UserManager.FindAsync(loginInfo);
+                    if (user != null)
+                    {
+                        await SignInAsync(user, isPersistent: false);
+                        return RedirectToLocal(returnUrl);
+                    }
+                }
+            }
+
             LoginViewModel model = new LoginViewModel();
             model.UserName = @"altyntau\";
             ViewBag.ReturnUrl = returnUrl;
@@ -311,7 +326,7 @@ namespace RapidDoc.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Document");
+            return RedirectToAction("Login", "Account", new { signout = true });
         }
 
         //
@@ -383,6 +398,14 @@ namespace RapidDoc.Controllers
                 ViewBag.LoginProvider = "Windows";
                 return View("WindowsLoginConfirmation", new WindowsLoginConfirmationViewModel { UserName = name });
             }
+        }
+
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<ActionResult> WindowsLogoff()
+        {
+            return RedirectToAction("Login");
         }
 
         #region Helpers

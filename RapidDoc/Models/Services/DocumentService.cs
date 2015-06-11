@@ -25,6 +25,7 @@ namespace RapidDoc.Models.Services
         IEnumerable<DocumentTable> GetAll();
         IQueryable<DocumentView> GetAllView();
         IQueryable<DocumentView> GetArchiveView();
+        IQueryable<DocumentView> GetMyDocumentView();
         IEnumerable<DocumentTable> GetPartial(Expression<Func<DocumentTable, bool>> predicate);
         DocumentTable FirstOrDefault(Expression<Func<DocumentTable, bool>> predicate);
         DocumentView FirstOrDefaultView(Expression<Func<DocumentTable, bool>> predicate);
@@ -397,6 +398,39 @@ namespace RapidDoc.Models.Services
                         ProcessName = process.ProcessName,
                         CreatedBy = createdUser.UserName
                     };
+
+            return items.AsQueryable();
+        }
+
+        public IQueryable<DocumentView> GetMyDocumentView()
+        {
+            ApplicationUser user = getCurrentUserId();
+            ApplicationDbContext contextQuery = _uow.GetDbContext<ApplicationDbContext>();
+
+            var items = from document in contextQuery.DocumentTable
+                        where document.ApplicationUserCreatedId == user.Id
+                            join company in contextQuery.CompanyTable on document.CompanyTableId equals company.Id
+                            join process in contextQuery.ProcessTable on document.ProcessTableId equals process.Id
+                            join createdUser in contextQuery.Users on document.ApplicationUserCreatedId equals createdUser.Id
+                        orderby document.CreatedDate descending
+                        select new DocumentView
+                        {
+                            ActivityName = document.ActivityName,
+                            ApplicationUserCreatedId = document.ApplicationUserCreatedId,
+                            ApplicationUserModifiedId = document.ApplicationUserModifiedId,
+                            CompanyTableId = document.CompanyTableId,
+                            CreatedDate = document.CreatedDate,
+                            DocumentNum = document.DocumentNum,
+                            DocumentState = document.DocumentState,
+                            DocumentText = document.DocumentText,
+                            FileId = document.FileId,
+                            Id = document.Id,
+                            ModifiedDate = document.ModifiedDate,
+                            ProcessTableId = document.ProcessTableId,
+                            AliasCompanyName = company.AliasCompanyName,
+                            ProcessName = process.ProcessName,
+                            CreatedBy = createdUser.UserName
+                        };
 
             return items.AsQueryable();
         }
