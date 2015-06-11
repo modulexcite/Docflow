@@ -32,13 +32,6 @@
         @Html.HiddenFor(model => model.DocumentView.Id)
         @Html.HiddenFor(model => model.fileId)
         @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "Edit" })
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DocumentView.IsNotified)
-        </div>
-        <div class="editor-field">
-            @Html.CheckBoxFor(model => model.DocumentView.IsNotified)
-            @Html.ValidationMessageFor(model => model.DocumentView.IsNotified)
-        </div>
 
         @if (Model.ProcessTemplates.Count() > 0)
         { 
@@ -69,6 +62,14 @@
         }
         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
 
+        <div class="editor-label hidden-print">
+            @Html.LabelFor(model => model.DocumentView.IsNotified)
+            <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="@UIElementRes.UIElement.TooltipAboutReading"></i>
+        </div>
+        <div class="editor-field hidden-print">
+            @Html.CheckBoxFor(model => model.DocumentView.IsNotified)
+            @Html.ValidationMessageFor(model => model.DocumentView.IsNotified)
+        </div>
         <br class="hidden-print">
         <div class="hidden-print">
             @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0)
