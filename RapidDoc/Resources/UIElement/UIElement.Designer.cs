@@ -1375,6 +1375,15 @@ namespace UIElementRes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Уведомление о прочтении документа при следовании по маршруту согласования.
+        /// </summary>
+        public static string TooltipAboutReading {
+            get {
+                return ResourceManager.GetString("TooltipAboutReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ТОП.
         /// </summary>
         public static string TOP {

@@ -22,14 +22,6 @@
         @Html.HiddenFor(model => model.fileId)
         @Html.Action("GetDocumentData", new { modelDoc = Model.docData, Model.ProcessView.TableName, viewType = "Edit" })
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DocumentView.IsNotified)
-        </div>
-        <div class="editor-field">
-            @Html.CheckBoxFor(model => model.DocumentView.IsNotified)
-            @Html.ValidationMessageFor(model => model.DocumentView.IsNotified)
-        </div>
-
         @if (Model.ProcessTemplates.Count() > 0)
         { 
             <br>
@@ -58,6 +50,14 @@
             <h5 class="text-danger">@String.Format(UIElementRes.UIElement.MustAttachedFiles, Model.ProcessView.MandatoryNumberFiles)</h5>
         }
         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+        <div class="editor-label hidden-print">
+            @Html.LabelFor(model => model.DocumentView.IsNotified)
+            <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="@UIElementRes.UIElement.TooltipAboutReading"></i>
+        </div>
+        <div class="editor-field hidden-print">
+            @Html.CheckBoxFor(model => model.DocumentView.IsNotified)
+            @Html.ValidationMessageFor(model => model.DocumentView.IsNotified)
+        </div>
         <br>
         <p>
             <button type="submit" class="btn btn-success btn-lg" name="action:ApproveNewDocument">@UIElementRes.UIElement.Approve</button>
@@ -162,6 +162,8 @@
         custom_tagsinputGroup_init("@Url.Action("JsonGroup", "Custom")");
         custom_tagsinputGroup2_init("@Url.Action("JsonGroup", "Custom")");
         custom_tagsinputEmplIntercompany_init("@Url.Action("JsonEmplIntercompany", "Custom")");
+
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
 }

@@ -66,7 +66,7 @@ namespace RapidDoc.Models.ViewModels
         public string AdditionalText { get; set; } 
     }
 
-    public abstract class BasicDailyTasksView : BasicDocumentView
+    public abstract class  BasicDailyTasksView : BasicDocumentView
     {
         [DataType(DataType.Date)]
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
@@ -94,7 +94,7 @@ namespace RapidDoc.Models.ViewModels
 
         public Guid? RefDocumentId { get; set; }
 
-        [Display(Name = "Каждому исполнителю отдельную карточку")]
+        [Display(Name = "Отдельная карточка каждому исполнителю")]
         public bool Separated { get; set; }
     }
 }
