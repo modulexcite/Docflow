@@ -276,6 +276,7 @@ namespace RapidDoc.Models.Infrastructure
         public DbSet<USR_TAS_DailyTasks_Table> USR_TAS_DailyTasks_Table { get; set; }
         public DbSet<USR_TAS_DailyTasksProlongation_Table> USR_TAS_DailyTasksProlongation_Table { get; set; }
         public DbSet<USR_REQ_UB_RequestForPhotoRealization_Table> USR_REQ_UB_RequestForPhotoRealization_Table { get; set; }
+        public DbSet<USR_REQ_UZL_RequestForContractNoneresidentCustoms_Table> USR_REQ_UZL_RequestForContractNoneresidentCustoms_Table { get; set; }
         
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {

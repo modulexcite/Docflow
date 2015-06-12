@@ -4084,6 +4084,13 @@ namespace RapidDoc.Models.ViewModels
         public string UserChooseManual1 { get; set; }
     }
 
+    public class USR_REQ_UZL_RequestForContractNoneresidentCustoms_View : BasicDocumentView
+    {
+        [Display(Name = "Исполнитель")]
+        [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
+        public string UserChooseManual1 { get; set; }
+    }
+
     public class USR_REQ_UZL_RequestForContractResident_View : BasicDocumentView
     {
         [Display(Name = "Исполнитель")]

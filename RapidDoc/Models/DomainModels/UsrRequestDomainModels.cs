@@ -3040,6 +3040,13 @@ namespace RapidDoc.Models.DomainModels
 
     }
 
+    public class USR_REQ_UZL_RequestForContractNoneresidentCustoms_Table : BasicDocumentTable
+    {
+
+        public string UserChooseManual1 { get; set; }
+
+    }
+
     public class USR_REQ_UZL_RequestForContractResident_Table : BasicDocumentTable
     {
 
