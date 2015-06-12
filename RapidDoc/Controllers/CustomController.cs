@@ -1496,6 +1496,24 @@ namespace RapidDoc.Controllers
 
             return PartialView("USR_REQ_HY_RequestTRU_View_Full", model);
         }
+        public ActionResult GetManualOfficeMemo(RapidDoc.Models.ViewModels.USR_OFM_UIT_OfficeMemo_View model)
+        {
+            DocumentTable document = _DocumentService.Find(model.DocumentTableId);
+
+            if ((document.DocumentState == RapidDoc.Models.Repository.DocumentState.Agreement || document.DocumentState == RapidDoc.Models.Repository.DocumentState.Execution) && _DocumentService.isSignDocument(document.Id))
+            {
+                var current = _DocumentService.GetCurrentSignStep(document.Id);
+                if (current != null)
+                {
+                    if (current.Any(x => x.ActivityName == "Начальник службы" || x.ActivityName == "Начальник управления"))
+                    {
+                        return PartialView("USR_OFM_UIT_OfficeMemo_Edit_Part", model);
+                    }
+                }
+            }
+
+            return PartialView("USR_OFM_UIT_OfficeMemo_View_Full", model);
+        }
 
         public ActionResult GetRequestCTPTRU(RapidDoc.Models.ViewModels.USR_REQ_IT_CTP_RequestTRU_View model)
         {
