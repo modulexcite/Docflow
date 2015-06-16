@@ -22,12 +22,12 @@
 
 @helper CreatedByFull(RapidDoc.Models.ViewModels.DocumentView item)
 {
-    <abbr title="@item.FullName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@item.DepartmentName - @item.TitleName">@item.CreatedBy</abbr>
+    <abbr title="@item.TitleName" class="initialism popover-link" data-container="body" data-toggle="popover" data-placement="left" data-content="@item.DepartmentName">@item.FullName</abbr>
 }
 
-@helper CreatedDate(RapidDoc.Models.ViewModels.DocumentView item)
+@helper DocumentState(RapidDoc.Models.ViewModels.DocumentView item)
 {
-    <a href="@String.Format("/{0}/Document/ShowDocument/{1}?isAfterView=true", item.AliasCompanyName, item.Id)">@item.CreatedDate</a>
+    <a href="@String.Format("/{0}/Document/ShowDocument/{1}?isAfterView=true", item.AliasCompanyName, item.Id)">@item.DocumentState.GetDescription()</a>
 }
 
 @Html.Grid(Model).Named("ordersGrid").Columns(columns =>
@@ -51,14 +51,14 @@
     columns.Add(o => o.ProcessName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.DocumentView)o.Columns).ProcessName).ToHtmlString()).Sortable(true).Filterable(true);
     columns.Add(o => o.DocumentText).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.DocumentView)o.Columns).DocumentText).ToHtmlString()).Sortable(false).Filterable(true);
     columns.Add(o => o.ActivityName).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.DocumentView)o.Columns).ActivityName).ToHtmlString()).Sortable(true).Filterable(true);
-    columns.Add(o => o.DocumentState).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.DocumentView)o.Columns).DocumentState).ToHtmlString()).Sortable(true).Filterable(false).RenderValueAs(o => o.DocumentState.GetDescription());
     columns.Add()
         .Encoded(false)
         .Sanitized(false)
         .SetWidth(1)
-        .Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.DocumentView)o.Columns).CreatedDate).ToHtmlString())
+        .Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.DocumentView)o.Columns).DocumentState).ToHtmlString())
         .Sortable(true)
         .Filterable(true)
-        .RenderValueAs(o => CreatedDate(o));
-    columns.Add(o => o.CreatedBy).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.DocumentView)o.Columns).CreatedBy).ToHtmlString()).Encoded(false).Sortable(true).Sanitized(false).Filterable(true).RenderValueAs(o => CreatedByFull(o));
+        .RenderValueAs(o => DocumentState(o));
+    columns.Add(o => o.CreatedDate).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.DocumentView)o.Columns).CreatedDate).ToHtmlString()).Sortable(true).Filterable(true);
+    columns.Add(o => o.CreatedBy).Titled(Html.DisplayNameFor(o => ((RapidDoc.Models.ViewModels.DocumentView)o.Columns).CreatedBy).ToHtmlString()).Encoded(false).Sortable(true).Sanitized(false).Filterable(false).RenderValueAs(o => CreatedByFull(o));
 }).Selectable(true).SetLanguage(UIElementRes.UIElement.LangName).WithPaging(20).SetColCssClasses(o => o.isNotReview ? "" : "info allocation text-center empty")

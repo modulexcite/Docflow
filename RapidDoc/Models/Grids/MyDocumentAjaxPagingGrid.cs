@@ -53,7 +53,7 @@ namespace RapidDoc.Models.Grids
                     empl = _EmplService.GetEmployer(displayedItem.ApplicationUserCreatedId, displayedItem.CompanyTableId);
                     cacheEmplList.Add(empl);
                 }
-                displayedItem.FullName = empl.FullName;
+                displayedItem.FullName = empl.ShortFullName;
                 displayedItem.TitleName = empl.TitleName;
                 displayedItem.DepartmentName = empl.DepartmentName;
                 displayedItem.CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(Convert.ToDateTime(displayedItem.CreatedDate), timeZoneInfo);

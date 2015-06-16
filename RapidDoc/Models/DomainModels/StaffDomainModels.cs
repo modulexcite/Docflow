@@ -185,6 +185,14 @@ namespace RapidDoc.Models.DomainModels
                 return (SecondName + " " + FirstName + " " + MiddleName);
             }
         }
+
+        public string ShortFullName
+        {
+            get
+            {
+                return (SecondName + "_" + FirstName.Substring(0, 1) + "." + MiddleName.Substring(0, 1));
+            }
+        }
     }
 
     public class DelegationTable : BasicCompanyNullTable
