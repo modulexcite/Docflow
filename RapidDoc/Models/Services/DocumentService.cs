@@ -241,7 +241,7 @@ namespace RapidDoc.Models.Services
                 var items = from document in contextQuery.DocumentTable
                             where
                                 (document.ApplicationUserCreatedId == user.Id ||
-                                    contextQuery.ModificationUsersTable.Any(m => m.UserId == user.Id && document.DocumentState == DocumentState.Created) ||
+                                    contextQuery.ModificationUsersTable.Any(m => m.UserId == user.Id && m.DocumentTableId == document.Id && document.DocumentState == DocumentState.Created) ||
                                     contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.SignUserId == null && x.TrackerType == TrackerType.Waiting && x.Users.Any(b => b.UserId == user.Id)) ||
 
                                     //(contextQuery.WFTrackerTable.Any(x => x.DocumentTableId == document.Id && x.Users.Any(b => b.UserId == user.Id)) && document.DocType == DocumentType.Task) ||

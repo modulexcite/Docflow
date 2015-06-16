@@ -1,0 +1,42 @@
+﻿@model IEnumerable<RapidDoc.Models.ViewModels.ModificationDocumentView>
+
+@if (Model.Count() > 0)
+{
+    <div class="hidden-print">
+        <a data-toggle="collapse" href="#collapseTask" aria-expanded="false" aria-controls="collapseTask">@UIElementRes.UIElement.RelatedTasks</a>
+        <div class="collapse" id="collapseTask">
+            <div class="well">
+                @BuildTree(Model, null) 
+            </div>
+        </div>
+    </div>
+}
+
+@helper BuildTree(IEnumerable<RapidDoc.Models.ViewModels.ModificationDocumentView> nodes, Guid? parentId)
+{
+    if (nodes.Any(n => n.ParentDocumentId == parentId)) {
+    <ul>
+        @foreach (var node in nodes.Where(n => n.ParentDocumentId == parentId)) {
+            <li>               
+                <p>
+                    <h5 class="text-left">
+                        @if (node.Enable == true)
+                        {
+                            @Html.ActionLink(node.DocumentNum, "ShowDocument", "Document", new { id = node.DocumentId, isAfterView = true }, null)
+                        }
+                        else
+                        { 
+                            @Html.DisplayFor(itemNode => node.DocumentNum)
+                        }
+                        &nbsp;&nbsp;<small>Проработано:</small> @Html.DisplayFor(itemNode => node.Name)
+                        <small>(@Html.DisplayFor(itemNode => node.CreateDateTime))</small>
+                    </h5>
+                </p>
+                @BuildTree(nodes, node.DocumentId)
+            </li>
+        }
+    </ul>
+    }
+}
+
+

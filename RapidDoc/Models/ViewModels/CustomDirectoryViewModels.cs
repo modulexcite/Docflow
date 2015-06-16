@@ -74,4 +74,14 @@ namespace RapidDoc.Models.ViewModels
         public string DocumentNum { get; set; }
         public Guid DocumentId { get; set; }
     }
+
+    public class ModificationDocumentView
+    {
+        public string DocumentNum { get; set; }
+        public Guid? DocumentId { get; set; }
+        public Guid? ParentDocumentId { get; set; }
+        public DateTime? CreateDateTime { get; set; }
+        public string Name { get; set; }
+        public bool Enable { get; set; }
+    }
 }

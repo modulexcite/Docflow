@@ -385,18 +385,19 @@ namespace RapidDoc.Controllers
         public ActionResult SaveReworkDocument(Guid processId, int type, Guid fileId, FormCollection collection, string actionModelName, Guid documentId)
         {           
             ApplicationUser userTableCurrent = _AccountService.Find(User.Identity.GetUserId());
+            DocumentTable documentTable = _DocumentService.FirstOrDefault(x => x.Id == documentId);
 
-            if (_ModificationUsersService.FirstOrDefault(x => x.UserId == userTableCurrent.Id && x.DocumentTableId == documentId).OriginalDocumentId != null)
-                return PostDocument(processId, type, OperationType.SaveDraft, documentId, fileId, collection, actionModelName);;
+            if (_ModificationUsersService.FirstOrDefault(x => x.UserId == userTableCurrent.Id && x.DocumentTableId == documentTable.Id).OriginalDocumentId != null)
+                return PostDocument(processId, type, OperationType.SaveDraft, documentId, fileId, collection, actionModelName);
 
-            ApplicationUser userTablePrev = _AccountService.Find(_DocumentService.Find(documentId).ApplicationUserCreatedId);
+            ApplicationUser userTablePrev = _AccountService.Find(documentTable.ApplicationUserCreatedId);
             if (userTableCurrent == null) return RedirectToAction("PageNotFound", "Error");
 
             EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTablePrev.Id && x.Enable == true);
             if (emplTable == null) return RedirectToAction("PageNotFound", "Error");
 
             ProcessView process = _ProcessService.FindView(processId);
-            var documentIdNew = _DocumentService.SaveDocument(_DocumentService.GetDocumentView(_DocumentService.Find(documentId).RefDocumentId, process.TableName), process.TableName, GuidNull2Guid(process.Id), fileId, userTablePrev);
+            var documentIdNew = _DocumentService.SaveDocument(_DocumentService.GetDocumentView(documentTable.RefDocumentId, process.TableName), process.TableName, GuidNull2Guid(process.Id), fileId, userTablePrev);
 
             DateTime date = DateTime.UtcNow;
             DateTime startTime = new DateTime(date.Year, date.Month, date.Day) + process.StartWorkTime;
@@ -425,11 +426,25 @@ namespace RapidDoc.Controllers
             DocumentTable docTable = _DocumentService.FirstOrDefault(x => x.Id == newDocGuid);
             docTable.ActivityName = "Доработан";
             _DocumentService.UpdateDocument(docTable, User.Identity.GetUserId());
+            documentTable.ActivityName = "";
+            _DocumentService.UpdateDocument(documentTable, User.Identity.GetUserId());
 
             _EmailService.SendNoteReadyModificationUserEmail(documentIdNew, _DocumentService.Find(documentId).ApplicationUserCreatedId);
 
             return RedirectToAction("ShowDraft", "Document", new { id = documentIdNew });
-        }    
+        }
+
+        public ActionResult GetModificationsList(Guid documentId)
+        {
+            string currentUserId = User.Identity.GetUserId();
+            Guid? parentDocId = _ModificationUsersService.GetParentDocument(documentId);
+            DocumentTable  documentParentTable = _DocumentService.FirstOrDefault(x => x.Id == parentDocId);
+
+            List<ModificationDocumentView> hierarchyModification = new List<ModificationDocumentView>();
+            hierarchyModification.Add(new ModificationDocumentView { DocumentId = parentDocId, DocumentNum = documentParentTable.DocumentNum, ParentDocumentId = null, Name = _EmplService.FirstOrDefault(x => x.ApplicationUserId == documentParentTable.ApplicationUserCreatedId).FullName, CreateDateTime = documentParentTable.CreatedDate, Enable = currentUserId == documentParentTable.ApplicationUserCreatedId ? true : false});
+            hierarchyModification.AddRange(_ModificationUsersService.GetHierarchyModification(parentDocId));
+            return PartialView("~/Views/Document/_ModificationDocumentList.cshtml", hierarchyModification); 
+        }
 
         [HttpPost]
         [MultipleButton(Name = "action", Argument = "DeleteDraft")]
@@ -1996,6 +2011,6 @@ namespace RapidDoc.Controllers
                 }
                 _WorkflowService.RunWorkflow(documentTable, processView.TableName, documentData);
             }
-        }
+        }       
 	}
 }

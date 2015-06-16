@@ -25,19 +25,23 @@ namespace RapidDoc.Models.Services
         ModificationUsersTable Find(Guid id);
         void DeleteAll(Guid documenId);
         bool ContainDocumentUser(Guid documentId, string user);
+        Guid? GetParentDocument(Guid? documentId);
+        List<ModificationDocumentView> GetHierarchyModification(Guid? parentDocumentId);
     }
 
     public class ModificationUsersService : IModificationUsersService
-    {
+    {        
         private IRepository<ModificationUsersTable> repo;
         private IRepository<ApplicationUser> repoUser;
         private IUnitOfWork _uow;
+        private readonly IEmplService _EmplService;
 
-        public ModificationUsersService(IUnitOfWork uow)
+        public ModificationUsersService(IUnitOfWork uow, IEmplService emplService)
         {
             _uow = uow;
             repo = uow.GetRepository<ModificationUsersTable>();
             repoUser = uow.GetRepository<ApplicationUser>();
+            _EmplService = emplService;
         }
 
         public IEnumerable<ModificationUsersTable> GetAll()
@@ -92,6 +96,31 @@ namespace RapidDoc.Models.Services
         public bool ContainDocumentUser(Guid documentId, string user)
         {
             return repo.Contains(x => x.UserId == user && x.DocumentTableId == documentId);
+        }
+
+
+        public Guid? GetParentDocument(Guid? documentId)
+        {
+            ModificationUsersTable modificationTable = this.FirstOrDefault(x => x.DocumentTableId == documentId);
+            Guid? docId = modificationTable != null && modificationTable.OriginalDocumentId != null ? modificationTable.OriginalDocumentId : null;
+
+            return docId != null && docId != Guid.Empty ?
+                this.GetParentDocument(docId) : documentId;
+        }
+
+        public List<ModificationDocumentView> GetHierarchyModification(Guid? parentDocumentId)
+        {
+            List<ModificationDocumentView> listModificationHierarchy = new List<ModificationDocumentView>();
+            string currentUserId = HttpContext.Current.User.Identity.GetUserId();
+            foreach (var item in this.GetPartial(x => x.OriginalDocumentId == parentDocumentId))
+            {
+                DocumentTable docTable = _uow.GetRepository<DocumentTable>().GetById(item.DocumentTableId);
+
+                listModificationHierarchy.Add(new ModificationDocumentView { DocumentId = item.DocumentTableId, DocumentNum = docTable.DocumentNum, ParentDocumentId = parentDocumentId, Name = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId).FullName, CreateDateTime = docTable.CreatedDate, Enable = (currentUserId == docTable.ApplicationUserCreatedId || item.UserId == currentUserId) ? true : false});
+                listModificationHierarchy.AddRange(this.GetHierarchyModification(item.DocumentTableId));    
+            }
+
+            return listModificationHierarchy;
         }
     }
 }
