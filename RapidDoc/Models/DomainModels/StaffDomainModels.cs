@@ -190,7 +190,7 @@ namespace RapidDoc.Models.DomainModels
         {
             get
             {
-                return (SecondName + "_" + FirstName.Substring(0, 1) + "." + MiddleName.Substring(0, 1));
+                return (SecondName + "_" + FirstName.Substring(0, 1) + ".");
             }
         }
     }

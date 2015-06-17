@@ -818,7 +818,7 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "№1 (день-ночь) (для JDE №1)")]
         Graphics2 = 1,
 
-        [Display(Name = "№1 (ночь)")]
+        [Display(Name = "№1 (ночь) (для JDE №8)")]
         Graphics3 = 2,
 
         [Display(Name = "№3 (день-ночь) (для JDE №3)")]
@@ -827,7 +827,7 @@ namespace RapidDoc.Models.Repository
         [Display(Name = "№3 (день) (для JDE №5)")]
         Graphics5 = 4,
 
-        [Display(Name = "№3 (ночь)")]
+        [Display(Name = "№3 (ночь) (для JDE №9)")]
         Graphics6 = 5,
 
         [Display(Name = "№1 (день) для ПТО БГП (для JDE №6)")]
@@ -837,7 +837,13 @@ namespace RapidDoc.Models.Repository
         Graphics8 = 7,
 
         [Display(Name = "№4")]
-        Graphics9 = 8
+        Graphics9 = 8,
+
+        [Display(Name = "№7 для механиков по выпуску ЦЛТ, ЦПТ (для JDE №7)")]
+        Graphics10 = 9,
+
+        [Display(Name = "№6 (день-ночь) (для JDE №10)")]
+        Graphics11 = 10,
     }
 
     public enum HRDuration : byte
