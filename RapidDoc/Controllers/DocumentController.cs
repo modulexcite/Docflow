@@ -756,10 +756,9 @@ namespace RapidDoc.Controllers
 
         public ActionResult Create(Guid id)
         {
-            ApplicationUser userTable = _AccountService.Find(User.Identity.GetUserId());
-            if (userTable == null) return RedirectToAction("PageNotFound", "Error");
+            string userId = User.Identity.GetUserId();
 
-            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userTable.Id && x.Enable == true);
+            EmplTable emplTable = _EmplService.FirstOrDefault(x => x.ApplicationUserId == userId && x.Enable == true);
             if (emplTable == null) return RedirectToAction("PageNotFound", "Error");
 
             ProcessView process = _ProcessService.FindView(id);
@@ -772,7 +771,7 @@ namespace RapidDoc.Controllers
             if (!String.IsNullOrEmpty(process.RoleId))
             {
                 string roleName = RoleManager.FindById(process.RoleId).Name;
-                if (!UserManager.IsInRole(userTable.Id, roleName))
+                if (!UserManager.IsInRole(userId, roleName))
                 {
                     return RedirectToAction("PageNotFound", "Error");
                 }

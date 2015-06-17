@@ -36,8 +36,7 @@ namespace RapidDoc.Controllers
             _EmplService = emplService;
             _EmailService = emailService;
 
-            ApplicationDbContext dbContext = new ApplicationDbContext();
-            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
         }
 
         public ActionResult Index()
@@ -46,25 +45,30 @@ namespace RapidDoc.Controllers
         }
 
         public ActionResult Grid()
-        {      
-            if(UserManager.IsInRole(User.Identity.GetUserId(), "Administrator"))
-            {
-                var grid = new DelegationAjaxPagingGrid(_Service.GetAllView(), 1, false);                    
-                return PartialView("_DelegationGrid", grid);
-            }
-            else
-            {
-                ApplicationUser userTableCurrent =  UserManager.FindById(User.Identity.GetUserId());
-                var gridUser = new DelegationAjaxPagingGrid(_Service.GetPartialView(x => x.EmplTableFrom.ApplicationUserId == userTableCurrent.Id), 1, false);        
-                return PartialView("_DelegationGrid", gridUser);
-            
-            }
+        {
+            List<DelegationView> data = new List<DelegationView>();
+            string userId = User.Identity.GetUserId();
 
+            if (UserManager.IsInRole(userId, "Administrator") || UserManager.IsInRole(userId, "Delegations"))
+                data.AddRange(_Service.GetAllView().OrderByDescending(x => x.CreatedDate));                    
+            else
+                data.AddRange(_Service.GetPartialView(x => x.EmplTableFrom.ApplicationUserId == userId).OrderByDescending(x => x.CreatedDate));
+
+            var grid = new DelegationAjaxPagingGrid(data, 1, false);
+            return PartialView("_DelegationGrid", grid);
         }
 
         public JsonResult GetDelegationList(int page)
         {
-            var grid = new DelegationAjaxPagingGrid(_Service.GetAllView(), page, true);
+            List<DelegationView> data = new List<DelegationView>();
+            string userId = User.Identity.GetUserId();
+
+            if (UserManager.IsInRole(userId, "Administrator") || UserManager.IsInRole(userId, "Delegations"))
+                data.AddRange(_Service.GetAllView().OrderByDescending(x => x.CreatedDate));
+            else
+                data.AddRange(_Service.GetPartialView(x => x.EmplTableFrom.ApplicationUserId == userId).OrderByDescending(x => x.CreatedDate));
+
+            var grid = new DelegationAjaxPagingGrid(data, page, true);
 
             return Json(new
             {
@@ -75,12 +79,13 @@ namespace RapidDoc.Controllers
 
         public ActionResult Create()
         {
+            string userId = User.Identity.GetUserId();
             ViewBag.CompanyList = _CompanyService.GetDropListCompany(null);
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcessNull(null);
             ViewBag.ProcessList = _ProcessService.GetDropListProcessNull(null);
             var droplistTmp = _EmplService.GetDropListEmplNull(null);
             ViewBag.EmplToList = droplistTmp;
-            if(UserManager.IsInRole(User.Identity.GetUserId(), "Administrator"))
+            if (UserManager.IsInRole(userId, "Administrator") || UserManager.IsInRole(userId, "Delegations"))
                 ViewBag.EmplFromList = droplistTmp;
             else
                 ViewBag.EmplFromList = _EmplService.GetDropListCurrentEmplNull(null);
@@ -108,12 +113,13 @@ namespace RapidDoc.Controllers
                 }
             }
 
+            string userId = User.Identity.GetUserId();
             ViewBag.CompanyList = _CompanyService.GetDropListCompany(null);
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcessNull(null);
             ViewBag.ProcessList = _ProcessService.GetDropListProcessNull(null);
             var droplistTmp = _EmplService.GetDropListEmplNull(null);
             ViewBag.EmplToList = droplistTmp;
-            if (UserManager.IsInRole(User.Identity.GetUserId(), "Administrator"))
+            if (UserManager.IsInRole(userId, "Administrator") || UserManager.IsInRole(userId, "Delegations"))
                 ViewBag.EmplFromList = droplistTmp;
             else
                 ViewBag.EmplFromList = _EmplService.GetDropListCurrentEmplNull(null);
@@ -129,11 +135,12 @@ namespace RapidDoc.Controllers
                 return HttpNotFound();
             }
 
+            string userId = User.Identity.GetUserId();
             ViewBag.CompanyList = _CompanyService.GetDropListCompany(model.CompanyTableId);
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcessNull(model.GroupProcessTableId);
             ViewBag.ProcessList = _ProcessService.GetDropListProcessNull(model.ProcessTableId);
             ViewBag.EmplToList = _EmplService.GetDropListEmplNull(model.EmplTableToId);
-            if (UserManager.IsInRole(User.Identity.GetUserId(), "Administrator"))
+            if (UserManager.IsInRole(userId, "Administrator") || UserManager.IsInRole(userId, "Delegations"))
                 ViewBag.EmplFromList = _EmplService.GetDropListEmplNull(model.EmplTableFromId);
             else
                 ViewBag.EmplFromList = _EmplService.GetDropListCurrentEmplNull(model.EmplTableFromId);
@@ -157,11 +164,12 @@ namespace RapidDoc.Controllers
                 }
             }
 
+            string userId = User.Identity.GetUserId();
             ViewBag.CompanyList = _CompanyService.GetDropListCompany(model.CompanyTableId);
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcessNull(model.GroupProcessTableId);
             ViewBag.ProcessList = _ProcessService.GetDropListProcessNull(model.ProcessTableId);
             ViewBag.EmplToList = _EmplService.GetDropListEmplNull(model.EmplTableToId);
-            if (UserManager.IsInRole(User.Identity.GetUserId(), "Administrator"))
+            if (UserManager.IsInRole(userId, "Administrator") || UserManager.IsInRole(userId, "Delegations"))
                 ViewBag.EmplFromList = _EmplService.GetDropListEmplNull(model.EmplTableFromId);
             else
                 ViewBag.EmplFromList = _EmplService.GetDropListCurrentEmplNull(model.EmplTableFromId);
