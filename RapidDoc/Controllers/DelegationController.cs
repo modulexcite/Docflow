@@ -11,6 +11,8 @@ using System.Web;
 using System.Web.Mvc;
 using RapidDoc.Extensions;
 using RapidDoc.Models.Grids;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidDoc.Controllers
 {
@@ -22,6 +24,8 @@ namespace RapidDoc.Controllers
         private readonly IEmplService _EmplService;
         private readonly IEmailService _EmailService;
 
+        protected UserManager<ApplicationUser> UserManager { get; private set; }
+
         public DelegationController(IDelegationService service, ICompanyService companyService,
             IGroupProcessService groupProcessService, IProcessService processService, IEmplService emplService, IEmailService emailService, IAccountService accountService)
             : base(companyService, accountService)
@@ -31,6 +35,9 @@ namespace RapidDoc.Controllers
             _ProcessService = processService;
             _EmplService = emplService;
             _EmailService = emailService;
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
         }
 
         public ActionResult Index()
@@ -39,9 +46,20 @@ namespace RapidDoc.Controllers
         }
 
         public ActionResult Grid()
-        {
-            var grid = new DelegationAjaxPagingGrid(_Service.GetAllView(), 1, false);
-            return PartialView("_DelegationGrid", grid);
+        {      
+            if(UserManager.IsInRole(User.Identity.GetUserId(), "Administrator"))
+            {
+                var grid = new DelegationAjaxPagingGrid(_Service.GetAllView(), 1, false);                    
+                return PartialView("_DelegationGrid", grid);
+            }
+            else
+            {
+                ApplicationUser userTableCurrent =  UserManager.FindById(User.Identity.GetUserId());
+                var gridUser = new DelegationAjaxPagingGrid(_Service.GetPartialView(x => x.EmplTableFrom.ApplicationUserId == userTableCurrent.Id), 1, false);        
+                return PartialView("_DelegationGrid", gridUser);
+            
+            }
+
         }
 
         public JsonResult GetDelegationList(int page)
@@ -62,7 +80,11 @@ namespace RapidDoc.Controllers
             ViewBag.ProcessList = _ProcessService.GetDropListProcessNull(null);
             var droplistTmp = _EmplService.GetDropListEmplNull(null);
             ViewBag.EmplToList = droplistTmp;
-            ViewBag.EmplFromList = droplistTmp;
+            if(UserManager.IsInRole(User.Identity.GetUserId(), "Administrator"))
+                ViewBag.EmplFromList = droplistTmp;
+            else
+                ViewBag.EmplFromList = _EmplService.GetDropListCurrentEmplNull(null);
+
             return View();
         }
 
@@ -91,7 +113,10 @@ namespace RapidDoc.Controllers
             ViewBag.ProcessList = _ProcessService.GetDropListProcessNull(null);
             var droplistTmp = _EmplService.GetDropListEmplNull(null);
             ViewBag.EmplToList = droplistTmp;
-            ViewBag.EmplFromList = droplistTmp;
+            if (UserManager.IsInRole(User.Identity.GetUserId(), "Administrator"))
+                ViewBag.EmplFromList = droplistTmp;
+            else
+                ViewBag.EmplFromList = _EmplService.GetDropListCurrentEmplNull(null);
             return View(model);
         }
 
@@ -108,7 +133,11 @@ namespace RapidDoc.Controllers
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcessNull(model.GroupProcessTableId);
             ViewBag.ProcessList = _ProcessService.GetDropListProcessNull(model.ProcessTableId);
             ViewBag.EmplToList = _EmplService.GetDropListEmplNull(model.EmplTableToId);
-            ViewBag.EmplFromList = _EmplService.GetDropListEmplNull(model.EmplTableFromId);
+            if (UserManager.IsInRole(User.Identity.GetUserId(), "Administrator"))
+                ViewBag.EmplFromList = _EmplService.GetDropListEmplNull(model.EmplTableFromId);
+            else
+                ViewBag.EmplFromList = _EmplService.GetDropListCurrentEmplNull(model.EmplTableFromId);
+            
             return View(model);
         }
 
@@ -132,7 +161,10 @@ namespace RapidDoc.Controllers
             ViewBag.GroupProcessList = _GroupProcessService.GetDropListGroupProcessNull(model.GroupProcessTableId);
             ViewBag.ProcessList = _ProcessService.GetDropListProcessNull(model.ProcessTableId);
             ViewBag.EmplToList = _EmplService.GetDropListEmplNull(model.EmplTableToId);
-            ViewBag.EmplFromList = _EmplService.GetDropListEmplNull(model.EmplTableFromId);
+            if (UserManager.IsInRole(User.Identity.GetUserId(), "Administrator"))
+                ViewBag.EmplFromList = _EmplService.GetDropListEmplNull(model.EmplTableFromId);
+            else
+                ViewBag.EmplFromList = _EmplService.GetDropListCurrentEmplNull(model.EmplTableFromId);
             return View(model);
         }
 
