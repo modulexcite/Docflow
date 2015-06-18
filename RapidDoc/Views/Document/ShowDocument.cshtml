@@ -72,7 +72,7 @@
         @Html.Action("GetTrackerList", "Document", new { id = Model.DocumentView.Id, signDocument = Model.DocumentView.isSign })
         @Html.Action("GetTaskList", "Document", new { id = Model.DocumentView.Id })
         <div class="hidden-print">
-        @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0 && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Cancelled)
+        @if (((List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory).Count() > 0 && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.Cancelled && Model.DocumentView.DocumentState != RapidDoc.Models.Repository.DocumentState.OnSign)
         {
             <ul>
                 @foreach (var history in (List<RapidDoc.Models.ViewModels.HistoryUserView>)ViewBag.RejectHistory)

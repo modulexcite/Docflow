@@ -1739,6 +1739,13 @@ namespace RapidDoc.Controllers
             {
                 Guid documentGuidId = GuidNull2Guid(documentId);
                 string rejectCommentRequest = collection["RejectCommentRequest"].ToString();
+
+                var trackers = _WorkflowTrackerService.GetCurrentStep(x => x.DocumentTableId == documentGuidId && x.TrackerType == TrackerType.Waiting);
+                foreach (var tracker in trackers)
+                {
+                    tracker.Comments = rejectCommentRequest;
+                    _WorkflowTrackerService.SaveDomain(tracker);
+                }
                 SaveComment(documentGuidId, rejectCommentRequest);
             }
             else if (!String.IsNullOrEmpty(collection["RejectComment"]))
@@ -1753,6 +1760,7 @@ namespace RapidDoc.Controllers
                         tracker.Comments = rejectCommentRequest;
                         _WorkflowTrackerService.SaveDomain(tracker);
                     }
+                    SaveComment(documentGuidId, rejectCommentRequest);
                 }
             }
             else
@@ -1762,7 +1770,7 @@ namespace RapidDoc.Controllers
             }
             //---------------------------------------------------------------------------
 
-            foreach (var key in collection.AllKeys)
+            foreach (var key in collection.AllKeys.OrderBy(x => x))
             {
                 System.Reflection.PropertyInfo propertyInfo = typeActionModel.GetProperty(key);
 

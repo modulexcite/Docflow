@@ -53,7 +53,7 @@ namespace RapidDoc.Models.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Тема документа")]
-        public string DocumentTitle { get; set; }
+        public string _DocumentTitle { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationRes.ValidationResource), ErrorMessageResourceName = "ErrorFieldisNull")]
         [Display(Name = "Основное поле")]

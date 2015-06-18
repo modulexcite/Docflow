@@ -52,7 +52,7 @@ namespace RapidDoc.Models.DomainModels
         public string FromWhom { get; set; }
 
         [Required]
-        public string DocumentTitle { get; set; }
+        public string _DocumentTitle { get; set; }
 
         [Required]
         public string MainField { get; set; }
