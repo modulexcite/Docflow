@@ -1001,6 +1001,9 @@ namespace RapidDoc.Controllers
                     _WorkflowService.RunWorkflow(documentTable, processView.TableName, documentData);
                 }
 
+                if (operationType == OperationType.SaveDraft)
+                    return RedirectToAction("MyDocuments", "Document");
+
                 return RedirectToAction("Index", "Document");
             }
 
