@@ -24,9 +24,10 @@ namespace RapidDoc.Models.Services
         void Delete(Guid Id);
         ModificationUsersTable Find(Guid id);
         void DeleteAll(Guid documenId);
-        bool ContainDocumentUser(Guid documentId, string user);
+        bool ContainDocumentUser(Guid? documentId, string user);
         Guid? GetParentDocument(Guid? documentId);
         List<ModificationDocumentView> GetHierarchyModification(Guid? parentDocumentId);
+        string GetModificationUserNamesFromDocument(Guid? documentId, string currentWokerUser);
     }
 
     public class ModificationUsersService : IModificationUsersService
@@ -93,7 +94,7 @@ namespace RapidDoc.Models.Services
         }
 
 
-        public bool ContainDocumentUser(Guid documentId, string user)
+        public bool ContainDocumentUser(Guid? documentId, string user)
         {
             return repo.Contains(x => x.UserId == user && x.DocumentTableId == documentId);
         }
@@ -116,11 +117,21 @@ namespace RapidDoc.Models.Services
             {
                 DocumentTable docTable = _uow.GetRepository<DocumentTable>().GetById(item.DocumentTableId);
 
-                listModificationHierarchy.Add(new ModificationDocumentView { DocumentId = item.DocumentTableId, DocumentNum = docTable.DocumentNum, ParentDocumentId = parentDocumentId, Name = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId).FullName, CreateDateTime = docTable.CreatedDate, Enable = (currentUserId == docTable.ApplicationUserCreatedId || item.UserId == currentUserId) ? true : false});
+                listModificationHierarchy.Add(new ModificationDocumentView { DocumentId = item.DocumentTableId, DocumentNum = docTable.DocumentNum, ParentDocumentId = parentDocumentId, Name = _EmplService.FirstOrDefault(x => x.ApplicationUserId == item.UserId).FullName, CreateDateTime = docTable.CreatedDate, Enable = (currentUserId == docTable.ApplicationUserCreatedId || item.UserId == currentUserId) ? true : false, NamesTo = this.GetModificationUserNamesFromDocument(item.DocumentTableId, item.UserId) });
                 listModificationHierarchy.AddRange(this.GetHierarchyModification(item.DocumentTableId));    
             }
 
             return listModificationHierarchy;
+        }
+
+
+        public string GetModificationUserNamesFromDocument(Guid? documentId, string currentWokerUser)
+        {
+            string names = "";
+
+            this.GetPartial(x => x.DocumentTableId == documentId).ToList().ForEach(x => names += !this.GetAll().ToList().Any(z => z.OriginalDocumentId == documentId && z.UserId == x.UserId) && x.UserId != currentWokerUser ? _EmplService.FirstOrDefault(y => y.ApplicationUserId == x.UserId).FullName + ";" : "");
+
+            return names;
         }
     }
 }

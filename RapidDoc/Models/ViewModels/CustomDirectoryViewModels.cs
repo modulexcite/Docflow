@@ -83,5 +83,6 @@ namespace RapidDoc.Models.ViewModels
         public DateTime? CreateDateTime { get; set; }
         public string Name { get; set; }
         public bool Enable { get; set; }
+        public string NamesTo { get; set; }
     }
 }

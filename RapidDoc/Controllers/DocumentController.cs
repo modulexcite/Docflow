@@ -441,7 +441,7 @@ namespace RapidDoc.Controllers
             DocumentTable  documentParentTable = _DocumentService.FirstOrDefault(x => x.Id == parentDocId);
 
             List<ModificationDocumentView> hierarchyModification = new List<ModificationDocumentView>();
-            hierarchyModification.Add(new ModificationDocumentView { DocumentId = parentDocId, DocumentNum = documentParentTable.DocumentNum, ParentDocumentId = null, Name = _EmplService.FirstOrDefault(x => x.ApplicationUserId == documentParentTable.ApplicationUserCreatedId).FullName, CreateDateTime = documentParentTable.CreatedDate, Enable = currentUserId == documentParentTable.ApplicationUserCreatedId ? true : false});
+            hierarchyModification.Add(new ModificationDocumentView { DocumentId = parentDocId, DocumentNum = documentParentTable.DocumentNum, ParentDocumentId = null, Name = _EmplService.FirstOrDefault(x => x.ApplicationUserId == documentParentTable.ApplicationUserCreatedId).FullName, CreateDateTime = documentParentTable.CreatedDate, Enable = currentUserId == documentParentTable.ApplicationUserCreatedId || _ModificationUsersService.ContainDocumentUser(parentDocId, currentUserId) ? true : false, NamesTo = _ModificationUsersService.GetModificationUserNamesFromDocument(parentDocId, documentParentTable.ApplicationUserCreatedId) });
             hierarchyModification.AddRange(_ModificationUsersService.GetHierarchyModification(parentDocId));
             return PartialView("~/Views/Document/_ModificationDocumentList.cshtml", hierarchyModification); 
         }
